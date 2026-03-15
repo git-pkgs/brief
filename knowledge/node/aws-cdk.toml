@@ -1,0 +1,20 @@
+[tool]
+name = "AWS CDK"
+category = "infrastructure"
+homepage = "https://aws.amazon.com/cdk/"
+docs = "https://docs.aws.amazon.com/cdk/"
+repo = "https://github.com/aws/aws-cdk"
+description = "Cloud infrastructure using code"
+
+[detect]
+files = ["cdk.json"]
+dependencies = ["aws-cdk-lib"]
+dev_dependencies = ["aws-cdk"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx cdk deploy"
+alternatives = ["npx cdk synth", "npx cdk diff"]
+
+[config]
+files = ["cdk.json"]

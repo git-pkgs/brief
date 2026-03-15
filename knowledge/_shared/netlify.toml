@@ -1,0 +1,12 @@
+[tool]
+name = "Netlify"
+category = "ci"
+homepage = "https://www.netlify.com"
+docs = "https://docs.netlify.com"
+description = "Deployment platform for web projects"
+
+[detect]
+files = ["netlify.toml"]
+
+[config]
+files = ["netlify.toml"]

@@ -1,0 +1,17 @@
+[tool]
+name = "Pulumi"
+category = "infrastructure"
+homepage = "https://www.pulumi.com"
+docs = "https://www.pulumi.com/docs/"
+repo = "https://github.com/pulumi/pulumi"
+description = "Infrastructure as code using general-purpose languages"
+
+[detect]
+files = ["Pulumi.yaml", "Pulumi.yml"]
+
+[commands]
+run = "pulumi up"
+alternatives = ["pulumi preview"]
+
+[config]
+files = ["Pulumi.yaml", "Pulumi.yml"]

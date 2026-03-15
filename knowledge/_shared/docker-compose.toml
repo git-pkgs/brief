@@ -1,0 +1,17 @@
+[tool]
+name = "Docker Compose"
+category = "container"
+homepage = "https://docs.docker.com/compose/"
+docs = "https://docs.docker.com/compose/compose-file/"
+repo = "https://github.com/docker/compose"
+description = "Multi-container application orchestration"
+
+[detect]
+files = ["docker-compose.yml", "docker-compose.yaml", "compose.yml", "compose.yaml"]
+
+[commands]
+run = "docker compose up"
+alternatives = ["docker compose up -d", "docker compose build"]
+
+[config]
+files = ["docker-compose.yml", "docker-compose.yaml", "compose.yml", "compose.yaml", "docker-compose.override.yml"]

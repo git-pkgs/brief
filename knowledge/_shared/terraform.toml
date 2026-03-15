@@ -1,0 +1,17 @@
+[tool]
+name = "Terraform"
+category = "infrastructure"
+homepage = "https://www.terraform.io"
+docs = "https://developer.hashicorp.com/terraform/docs"
+repo = "https://github.com/hashicorp/terraform"
+description = "Infrastructure as code provisioning tool"
+
+[detect]
+files = ["**/*.tf", "terraform.tfvars", ".terraform.lock.hcl"]
+
+[commands]
+run = "terraform plan"
+alternatives = ["terraform apply", "terraform init"]
+
+[config]
+files = ["terraform.tfvars", ".terraform.lock.hcl"]

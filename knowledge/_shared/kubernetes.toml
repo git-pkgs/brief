@@ -1,0 +1,16 @@
+[tool]
+name = "Kubernetes"
+category = "infrastructure"
+homepage = "https://kubernetes.io"
+docs = "https://kubernetes.io/docs/"
+repo = "https://github.com/kubernetes/kubernetes"
+description = "Container orchestration manifests"
+
+[detect]
+files = ["k8s/", "kubernetes/", "kustomization.yaml", "kustomization.yml"]
+
+[commands]
+run = "kubectl apply"
+
+[config]
+files = ["kustomization.yaml", "kustomization.yml"]

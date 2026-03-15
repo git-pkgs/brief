@@ -1,0 +1,12 @@
+[tool]
+name = "Vercel"
+category = "ci"
+homepage = "https://vercel.com"
+docs = "https://vercel.com/docs"
+description = "Deployment platform for frontend frameworks"
+
+[detect]
+files = ["vercel.json", ".vercel/"]
+
+[config]
+files = ["vercel.json"]

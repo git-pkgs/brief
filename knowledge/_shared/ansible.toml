@@ -1,0 +1,16 @@
+[tool]
+name = "Ansible"
+category = "infrastructure"
+homepage = "https://www.ansible.com"
+docs = "https://docs.ansible.com"
+repo = "https://github.com/ansible/ansible"
+description = "IT automation and configuration management"
+
+[detect]
+files = ["ansible.cfg", "playbooks/", "roles/", "inventory/"]
+
+[commands]
+run = "ansible-playbook"
+
+[config]
+files = ["ansible.cfg"]

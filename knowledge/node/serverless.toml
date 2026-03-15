@@ -1,0 +1,19 @@
+[tool]
+name = "Serverless Framework"
+category = "infrastructure"
+homepage = "https://www.serverless.com"
+docs = "https://www.serverless.com/framework/docs"
+repo = "https://github.com/serverless/serverless"
+description = "Serverless application framework"
+
+[detect]
+files = ["serverless.yml", "serverless.yaml", "serverless.ts", "serverless.json"]
+dev_dependencies = ["serverless"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx serverless deploy"
+alternatives = ["npx serverless invoke local"]
+
+[config]
+files = ["serverless.yml", "serverless.yaml", "serverless.ts", "serverless.json"]

@@ -1,0 +1,17 @@
+[tool]
+name = "Helm"
+category = "infrastructure"
+homepage = "https://helm.sh"
+docs = "https://helm.sh/docs/"
+repo = "https://github.com/helm/helm"
+description = "Kubernetes package manager"
+
+[detect]
+files = ["Chart.yaml", "Chart.yml", "charts/"]
+
+[commands]
+run = "helm install"
+alternatives = ["helm upgrade", "helm template"]
+
+[config]
+files = ["Chart.yaml", "Chart.yml", "values.yaml"]

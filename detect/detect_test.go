@@ -89,6 +89,14 @@ func TestRubyProject(t *testing.T) {
 	if v, ok := r.Platforms.RuntimeVersionFiles[".ruby-version"]; !ok || v != "3.4.2" {
 		t.Errorf("expected .ruby-version 3.4.2, got %v", r.Platforms.RuntimeVersionFiles)
 	}
+	if versions, ok := r.Platforms.CIMatrixVersions["ruby"]; !ok || len(versions) == 0 {
+		t.Error("expected ruby versions from CI matrix")
+	} else if len(versions) != 3 {
+		t.Errorf("expected 3 ruby versions from CI matrix, got %d", len(versions))
+	}
+	if len(r.Platforms.CIMatrixOS) == 0 {
+		t.Error("expected OS targets from CI matrix")
+	}
 
 	// Layout
 	if r.Layout == nil {

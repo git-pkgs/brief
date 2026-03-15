@@ -4,6 +4,7 @@ package detect
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -15,6 +16,7 @@ import (
 	"github.com/git-pkgs/manifests"
 	"github.com/git-pkgs/spdx"
 	"github.com/google/licensecheck"
+	"gopkg.in/yaml.v3"
 )
 
 // Engine runs detection against a project directory.
@@ -614,14 +616,11 @@ func (e *Engine) detectResources() *brief.ResourceInfo {
 	return res
 }
 
-// detectPlatforms checks for runtime version files defined in the knowledge base.
+// detectPlatforms checks for runtime version files and CI matrices.
 func (e *Engine) detectPlatforms() *brief.PlatformInfo {
-	if len(e.KB.Runtimes) == 0 {
-		return nil
-	}
-
 	platforms := &brief.PlatformInfo{
 		RuntimeVersionFiles: make(map[string]string),
+		CIMatrixVersions:    make(map[string][]string),
 	}
 
 	for _, rt := range e.KB.Runtimes {
@@ -638,11 +637,100 @@ func (e *Engine) detectPlatforms() *brief.PlatformInfo {
 		}
 	}
 
-	if len(platforms.RuntimeVersionFiles) == 0 {
+	// Parse CI matrices
+	if e.KB.CIConfig != nil {
+		e.parseCIMatrices(platforms)
+	}
+
+	if len(platforms.RuntimeVersionFiles) == 0 &&
+		len(platforms.CIMatrixVersions) == 0 &&
+		len(platforms.CIMatrixOS) == 0 {
 		return nil
 	}
 
 	return platforms
+}
+
+// parseCIMatrices extracts version matrices from CI configuration files.
+func (e *Engine) parseCIMatrices(platforms *brief.PlatformInfo) {
+	ci := e.KB.CIConfig.CI
+
+	for _, fp := range ci.Files {
+		matches, err := filepath.Glob(filepath.Join(e.Root, fp.Pattern))
+		if err != nil {
+			continue
+		}
+
+		for _, path := range matches {
+			data, err := os.ReadFile(path)
+			if err != nil {
+				continue
+			}
+
+			var workflow map[string]any
+			if err := yaml.Unmarshal(data, &workflow); err != nil {
+				continue
+			}
+
+			jobs, ok := workflow["jobs"].(map[string]any)
+			if !ok {
+				continue
+			}
+
+			for _, job := range jobs {
+				jobMap, ok := job.(map[string]any)
+				if !ok {
+					continue
+				}
+
+				strategy, ok := jobMap["strategy"].(map[string]any)
+				if !ok {
+					continue
+				}
+
+				matrix, ok := strategy["matrix"].(map[string]any)
+				if !ok {
+					continue
+				}
+
+				for ourKey, ciKey := range ci.MatrixKeys {
+					values, ok := matrix[ciKey]
+					if !ok {
+						continue
+					}
+
+					versions := toStringSlice(values)
+					if len(versions) == 0 {
+						continue
+					}
+
+					if ourKey == "os" {
+						platforms.CIMatrixOS = append(platforms.CIMatrixOS, versions...)
+					} else {
+						platforms.CIMatrixVersions[ourKey] = append(
+							platforms.CIMatrixVersions[ourKey], versions...,
+						)
+					}
+				}
+			}
+		}
+	}
+}
+
+// toStringSlice converts a YAML value (string or []any) to []string.
+func toStringSlice(v any) []string {
+	switch val := v.(type) {
+	case []any:
+		result := make([]string, 0, len(val))
+		for _, item := range val {
+			result = append(result, fmt.Sprint(item))
+		}
+		return result
+	case string:
+		return []string{val}
+	default:
+		return []string{fmt.Sprint(val)}
+	}
 }
 
 // globMatch returns files matching a glob pattern relative to the project root.

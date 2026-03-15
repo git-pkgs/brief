@@ -116,6 +116,23 @@ type RuntimeInfo struct {
 	Files []string `toml:"files"` // e.g. [".ruby-version", ".tool-versions"]
 }
 
+// CIConfigDef defines CI configuration for matrix parsing.
+type CIConfigDef struct {
+	CI CIConfig `toml:"ci"`
+}
+
+// CIConfig holds CI parsing rules.
+type CIConfig struct {
+	Format     string            `toml:"format"`
+	Files      []CIFilePattern   `toml:"files"`
+	MatrixKeys map[string]string `toml:"matrix_keys"` // maps our key name to the CI matrix key
+}
+
+// CIFilePattern defines a file pattern for CI configs.
+type CIFilePattern struct {
+	Pattern string `toml:"pattern"`
+}
+
 // ManifestFileDef defines manifest files the dependency checker should look at.
 type ManifestFileDef struct {
 	Manifests ManifestInfo `toml:"manifests"`
@@ -138,6 +155,7 @@ type KnowledgeBase struct {
 	StyleConfig    *StyleConfigDef
 	Runtimes       []RuntimeVersionDef
 	ManifestFiles  []string
+	CIConfig       *CIConfigDef
 }
 
 // Load reads all TOML files from the embedded filesystem and returns a KnowledgeBase.
@@ -177,6 +195,8 @@ func Load(fsys embed.FS) (*KnowledgeBase, error) {
 			return base.loadRuntimes(data, path)
 		case name == "_manifests.toml":
 			return base.loadManifests(data, path)
+		case name == "_ci.toml":
+			return base.loadCIConfig(data, path)
 		default:
 			return base.loadTool(data, path)
 		}
@@ -270,6 +290,15 @@ func (base *KnowledgeBase) loadManifests(data []byte, path string) error {
 		return fmt.Errorf("parsing %s: %w", path, err)
 	}
 	base.ManifestFiles = append(base.ManifestFiles, def.Manifests.Files...)
+	return nil
+}
+
+func (base *KnowledgeBase) loadCIConfig(data []byte, path string) error {
+	var def CIConfigDef
+	if err := toml.Unmarshal(data, &def); err != nil {
+		return fmt.Errorf("parsing %s: %w", path, err)
+	}
+	base.CIConfig = &def
 	return nil
 }
 

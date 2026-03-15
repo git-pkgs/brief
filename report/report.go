@@ -167,8 +167,14 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 	// Platforms
 	if r.Platforms != nil {
 		fmt.Fprintln(w)
+		for name, versions := range r.Platforms.CIMatrixVersions {
+			fmt.Fprintf(w, "Platforms:   %s %s (CI matrix)\n", name, strings.Join(versions, ", "))
+		}
 		for file, version := range r.Platforms.RuntimeVersionFiles {
-			fmt.Fprintf(w, "Runtime:     %s: %s\n", file, version)
+			fmt.Fprintf(w, "             %s: %s\n", file, version)
+		}
+		if len(r.Platforms.CIMatrixOS) > 0 {
+			fmt.Fprintf(w, "             OS: %s (CI matrix)\n", strings.Join(r.Platforms.CIMatrixOS, ", "))
 		}
 	}
 

@@ -1,0 +1,15 @@
+[ci]
+format = "github_actions"
+
+[[ci.files]]
+pattern = ".github/workflows/*.yml"
+
+[[ci.files]]
+pattern = ".github/workflows/*.yaml"
+
+[ci.matrix_keys]
+os = "os"
+ruby = "ruby-version"
+node = "node-version"
+python = "python-version"
+go = "go-version"

@@ -6,9 +6,24 @@ import (
 	"fmt"
 	"io"
 	"strings"
+	"unicode"
 
 	"github.com/git-pkgs/brief"
 )
+
+// sanitize strips control characters (ANSI escapes, OSC sequences, etc.)
+// from repo-controlled strings before printing to a terminal.
+func sanitize(s string) string {
+	return strings.Map(func(r rune) rune {
+		if r == '\t' || r == '\n' {
+			return r
+		}
+		if unicode.IsControl(r) {
+			return -1
+		}
+		return r
+	}, s)
+}
 
 // JSON writes the report as JSON.
 func JSON(w io.Writer, r *brief.Report) error {
@@ -19,7 +34,7 @@ func JSON(w io.Writer, r *brief.Report) error {
 
 // Human writes the report in human-readable format.
 func Human(w io.Writer, r *brief.Report, verbose bool) {
-	_, _ = fmt.Fprintf(w, "brief %s — %s\n\n", r.Version, r.Path)
+	_, _ = fmt.Fprintf(w, "brief %s — %s\n\n", r.Version, sanitize(r.Path))
 
 	// Languages
 	if len(r.Languages) > 0 {
@@ -93,7 +108,7 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 				_, _ = fmt.Fprintf(w, "\nScripts (%s):\n", s.Source)
 				source = s.Source
 			}
-			_, _ = fmt.Fprintf(w, "  %-8s %s\n", s.Name+":", s.Run)
+			_, _ = fmt.Fprintf(w, "  %-8s %s\n", sanitize(s.Name)+":", sanitize(s.Run))
 		}
 	}
 
@@ -138,10 +153,10 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 			}
 			line := t.Name
 			if t.Command != nil {
-				line += " (" + t.Command.Run + ")"
+				line += " (" + sanitize(t.Command.Run) + ")"
 			}
 			if len(t.ConfigFiles) > 0 {
-				line += "  [" + strings.Join(t.ConfigFiles, ", ") + "]"
+				line += "  [" + sanitize(strings.Join(t.ConfigFiles, ", ")) + "]"
 			}
 			_, _ = fmt.Fprintf(w, "%-13s%s\n", prefix, line)
 
@@ -218,7 +233,7 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 			_, _ = fmt.Fprintf(w, "Platforms:   %s %s (CI matrix)\n", name, strings.Join(versions, ", "))
 		}
 		for file, version := range r.Platforms.RuntimeVersionFiles {
-			_, _ = fmt.Fprintf(w, "             %s: %s\n", file, version)
+			_, _ = fmt.Fprintf(w, "             %s: %s\n", sanitize(file), sanitize(version))
 		}
 		if len(r.Platforms.CIMatrixOS) > 0 {
 			_, _ = fmt.Fprintf(w, "             OS: %s (CI matrix)\n", strings.Join(r.Platforms.CIMatrixOS, ", "))
@@ -246,9 +261,9 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 	if r.Git != nil {
 		_, _ = fmt.Fprintln(w)
 		if r.Git.Branch != "" {
-			_, _ = fmt.Fprintf(w, "Git:         branch %s", r.Git.Branch)
+			_, _ = fmt.Fprintf(w, "Git:         branch %s", sanitize(r.Git.Branch))
 			if r.Git.DefaultBranch != "" && r.Git.DefaultBranch != r.Git.Branch {
-				_, _ = fmt.Fprintf(w, " (default: %s)", r.Git.DefaultBranch)
+				_, _ = fmt.Fprintf(w, " (default: %s)", sanitize(r.Git.DefaultBranch))
 			}
 			if r.Git.CommitCount > 0 {
 				_, _ = fmt.Fprintf(w, "  %d commits", r.Git.CommitCount)
@@ -256,7 +271,7 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 			_, _ = fmt.Fprintln(w)
 		}
 		for name, url := range r.Git.Remotes {
-			_, _ = fmt.Fprintf(w, "             %s: %s\n", name, url)
+			_, _ = fmt.Fprintf(w, "             %s: %s\n", sanitize(name), sanitize(url))
 		}
 	}
 

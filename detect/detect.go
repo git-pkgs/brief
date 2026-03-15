@@ -443,9 +443,30 @@ func (e *Engine) loadFileExts() {
 	})
 }
 
+// safeReadFile reads a file within the project root, rejecting symlinks
+// that point outside the root to prevent file disclosure attacks.
+func (e *Engine) safeReadFile(file string) ([]byte, error) {
+	path := filepath.Join(e.Root, file)
+	info, err := os.Lstat(path)
+	if err != nil {
+		return nil, err
+	}
+	if info.Mode()&os.ModeSymlink != 0 {
+		target, err := filepath.EvalSymlinks(path)
+		if err != nil {
+			return nil, err
+		}
+		absRoot, _ := filepath.Abs(e.Root)
+		if !strings.HasPrefix(target, absRoot+string(filepath.Separator)) {
+			return nil, fmt.Errorf("symlink escapes project root: %s -> %s", file, target)
+		}
+	}
+	return os.ReadFile(path)
+}
+
 // contains checks if a file contains any of the given strings.
 func (e *Engine) contains(file string, patterns []string) bool {
-	data, err := os.ReadFile(filepath.Join(e.Root, file))
+	data, err := e.safeReadFile(file)
 	if err != nil {
 		return false
 	}
@@ -485,8 +506,7 @@ func (e *Engine) loadDeps() {
 	}
 
 	for _, mf := range manifestPaths {
-		path := filepath.Join(e.Root, mf)
-		data, err := os.ReadFile(path)
+		data, err := e.safeReadFile(mf)
 		if err != nil {
 			continue
 		}
@@ -555,7 +575,7 @@ func (e *Engine) hasDependency(tool *kb.ToolDef) bool {
 // hasKey checks if a structured file (JSON, TOML) contains any of the given
 // dot-separated key paths (e.g. "scripts.test" in package.json).
 func (e *Engine) hasKey(file string, keys []string) bool {
-	data, err := os.ReadFile(filepath.Join(e.Root, file))
+	data, err := e.safeReadFile(file)
 	if err != nil {
 		return false
 	}
@@ -620,8 +640,7 @@ func (e *Engine) detectScripts() []brief.Script {
 	var scripts []brief.Script
 
 	for _, src := range e.KB.ScriptSources {
-		path := filepath.Join(e.Root, src.Source.File)
-		data, err := os.ReadFile(path)
+		data, err := e.safeReadFile(src.Source.File)
 		if err != nil {
 			continue
 		}
@@ -632,7 +651,7 @@ func (e *Engine) detectScripts() []brief.Script {
 			if cmd == "" {
 				cmd = "make"
 			}
-			scripts = append(scripts, e.parseMakefile(data, src.Source.File, src.Source.Name, cmd)...)
+			scripts = append(scripts, e.parseMakefile(data, src.Source.Name, cmd)...)
 		case "targets":
 			if cmd == "" {
 				cmd = src.Source.Name
@@ -655,59 +674,11 @@ func (e *Engine) detectScripts() []brief.Script {
 	return scripts
 }
 
-// parseMakefile extracts targets from a Makefile. Tries make -qp for accurate
-// parsing (handles includes, generated targets), falls back to regex.
-func (e *Engine) parseMakefile(data []byte, file string, sourceName string, cmd string) []brief.Script {
-	if _, err := exec.LookPath("make"); err == nil {
-		if scripts := e.parseMakefileWithMake(file, sourceName); len(scripts) > 0 {
-			return scripts
-		}
-	}
+// parseMakefile extracts targets from a Makefile using static parsing.
+// We intentionally avoid running make -qp because it executes $(shell ...)
+// directives, which is an RCE vector when scanning untrusted repositories.
+func (e *Engine) parseMakefile(data []byte, sourceName string, cmd string) []brief.Script {
 	return parseTargets(data, sourceName, cmd)
-}
-
-// parseMakefileWithMake uses make -qp to get an accurate list of targets.
-func (e *Engine) parseMakefileWithMake(file string, sourceName string) []brief.Script {
-	// make -qp exits non-zero when targets are not up to date, but
-	// stdout still contains the database dump we need.
-	cmd := exec.Command("make", "-qp", "-f", file)
-	cmd.Dir = e.Root
-	out, _ := cmd.Output()
-	if len(out) == 0 {
-		return nil
-	}
-
-	var scripts []brief.Script
-	seen := make(map[string]bool)
-	inTargets := false
-
-	for _, line := range strings.Split(string(out), "\n") {
-		// Targets appear after "# Files" section
-		if strings.HasPrefix(line, "# Files") {
-			inTargets = true
-			continue
-		}
-		if !inTargets {
-			continue
-		}
-		// Skip comments and non-target lines
-		if strings.HasPrefix(line, "#") || strings.HasPrefix(line, "\t") || strings.HasPrefix(line, ".") {
-			continue
-		}
-		if idx := strings.Index(line, ":"); idx > 0 {
-			target := strings.TrimSpace(line[:idx])
-			if strings.ContainsAny(target, " \t$%/") || seen[target] || target == "Makefile" || target == "makefile" || target == "GNUmakefile" {
-				continue
-			}
-			seen[target] = true
-			scripts = append(scripts, brief.Script{
-				Name:   target,
-				Run:    "make " + target,
-				Source: sourceName,
-			})
-		}
-	}
-	return scripts
 }
 
 // parseYAMLTasks extracts task names from Taskfile.yml format.
@@ -981,8 +952,7 @@ func (e *Engine) detectPlatforms() *brief.PlatformInfo {
 
 	for _, rt := range e.KB.Runtimes {
 		for _, file := range rt.Runtime.Files {
-			path := filepath.Join(e.Root, file)
-			data, err := os.ReadFile(path)
+			data, err := e.safeReadFile(file)
 			if err != nil {
 				continue
 			}
@@ -1018,7 +988,11 @@ func (e *Engine) parseCIMatrices(platforms *brief.PlatformInfo) {
 		}
 
 		for _, path := range matches {
-			data, err := os.ReadFile(path)
+			rel, err := filepath.Rel(e.Root, path)
+			if err != nil {
+				continue
+			}
+			data, err := e.safeReadFile(rel)
 			if err != nil {
 				continue
 			}
@@ -1259,6 +1233,11 @@ func parseTokeiOutput(data []byte) *brief.LineCount {
 
 // detectLicenseType reads a license file and identifies its SPDX license type.
 func detectLicenseType(path string) string {
+	// Reject symlinks to prevent file disclosure
+	info, err := os.Lstat(path)
+	if err != nil || info.Mode()&os.ModeSymlink != 0 {
+		return ""
+	}
 	data, err := os.ReadFile(path)
 	if err != nil || len(data) == 0 {
 		return ""

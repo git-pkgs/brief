@@ -86,6 +86,14 @@ type ResourceInfo struct {
 	Security     string `json:"security,omitempty"`
 }
 
+// GitInfo describes the git repository state.
+type GitInfo struct {
+	Branch        string            `json:"branch,omitempty"`
+	DefaultBranch string            `json:"default_branch,omitempty"`
+	Remotes       map[string]string `json:"remotes,omitempty"` // name -> URL
+	CommitCount   int               `json:"commit_count,omitempty"`
+}
+
 // Stats holds performance and coverage metrics from the detection run.
 type Stats struct {
 	Duration     time.Duration `json:"-"`
@@ -107,5 +115,6 @@ type Report struct {
 	Layout          *LayoutInfo            `json:"layout,omitempty"`
 	Platforms       *PlatformInfo          `json:"platforms,omitempty"`
 	Resources       *ResourceInfo          `json:"resources,omitempty"`
+	Git             *GitInfo               `json:"git,omitempty"`
 	Stats           Stats                  `json:"stats"`
 }

@@ -6,8 +6,10 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/BurntSushi/toml"
@@ -107,8 +109,21 @@ func (e *Engine) Run() (*brief.Report, error) {
 
 	report.Style = e.detectStyle()
 	report.Layout = e.detectLayout()
-	report.Resources = e.detectResources()
 	report.Platforms = e.detectPlatforms()
+
+	// Run resource detection (includes license scanning) and git detection
+	// concurrently since they're independent and both can be slow.
+	var wg sync.WaitGroup
+	wg.Add(2)
+	go func() {
+		defer wg.Done()
+		report.Resources = e.detectResources()
+	}()
+	go func() {
+		defer wg.Done()
+		report.Git = e.detectGit(abs)
+	}()
+	wg.Wait()
 
 	elapsed := time.Since(start)
 	report.Stats = brief.Stats{
@@ -740,6 +755,89 @@ func (e *Engine) globMatch(pattern string) []string {
 		return nil
 	}
 	return matches
+}
+
+// detectGit extracts git repository metadata by shelling out to git.
+// Returns nil if git is not installed or the directory is not a git repo.
+func (e *Engine) detectGit(absPath string) *brief.GitInfo {
+	if _, err := exec.LookPath("git"); err != nil {
+		return nil
+	}
+
+	// Check if this is a git repo
+	if out, err := e.git(absPath, "rev-parse", "--is-inside-work-tree"); err != nil || strings.TrimSpace(string(out)) != "true" {
+		return nil
+	}
+
+	info := &brief.GitInfo{
+		Remotes: make(map[string]string),
+	}
+
+	var wg sync.WaitGroup
+	var mu sync.Mutex
+
+	wg.Add(4)
+
+	go func() {
+		defer wg.Done()
+		if out, err := e.git(absPath, "branch", "--show-current"); err == nil {
+			mu.Lock()
+			info.Branch = strings.TrimSpace(string(out))
+			mu.Unlock()
+		}
+	}()
+
+	go func() {
+		defer wg.Done()
+		if out, err := e.git(absPath, "rev-parse", "--abbrev-ref", "origin/HEAD"); err == nil {
+			ref := strings.TrimSpace(string(out))
+			if after, ok := strings.CutPrefix(ref, "origin/"); ok {
+				mu.Lock()
+				info.DefaultBranch = after
+				mu.Unlock()
+			}
+		}
+	}()
+
+	go func() {
+		defer wg.Done()
+		if out, err := e.git(absPath, "remote"); err == nil {
+			for _, name := range strings.Fields(string(out)) {
+				if url, err := e.git(absPath, "remote", "get-url", name); err == nil {
+					mu.Lock()
+					info.Remotes[name] = strings.TrimSpace(string(url))
+					mu.Unlock()
+				}
+			}
+		}
+	}()
+
+	go func() {
+		defer wg.Done()
+		if out, err := e.git(absPath, "rev-list", "--count", "HEAD"); err == nil {
+			var count int
+			if _, err := fmt.Sscanf(strings.TrimSpace(string(out)), "%d", &count); err == nil {
+				mu.Lock()
+				info.CommitCount = count
+				mu.Unlock()
+			}
+		}
+	}()
+
+	wg.Wait()
+
+	if info.Branch == "" && len(info.Remotes) == 0 {
+		return nil
+	}
+
+	return info
+}
+
+// git runs a git command in the given directory and returns its output.
+func (e *Engine) git(dir string, args ...string) ([]byte, error) {
+	cmd := exec.Command("git", args...)
+	cmd.Dir = dir
+	return cmd.Output()
 }
 
 // detectLicenseType reads a license file and identifies its SPDX license type.

@@ -195,6 +195,24 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 		printResource(w, res.Security)
 	}
 
+	// Git
+	if r.Git != nil {
+		_, _ = fmt.Fprintln(w)
+		if r.Git.Branch != "" {
+			_, _ = fmt.Fprintf(w, "Git:         branch %s", r.Git.Branch)
+			if r.Git.DefaultBranch != "" && r.Git.DefaultBranch != r.Git.Branch {
+				_, _ = fmt.Fprintf(w, " (default: %s)", r.Git.DefaultBranch)
+			}
+			if r.Git.CommitCount > 0 {
+				_, _ = fmt.Fprintf(w, "  %d commits", r.Git.CommitCount)
+			}
+			_, _ = fmt.Fprintln(w)
+		}
+		for name, url := range r.Git.Remotes {
+			_, _ = fmt.Fprintf(w, "             %s: %s\n", name, url)
+		}
+	}
+
 	// Stats
 	_, _ = fmt.Fprintf(w, "\n%.1fms  %d files checked  %d/%d tools matched\n",
 		r.Stats.DurationMS, r.Stats.FilesChecked, r.Stats.ToolsMatched, r.Stats.ToolsChecked)

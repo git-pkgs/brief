@@ -1,0 +1,20 @@
+[tool]
+name = "PHP CS Fixer"
+category = "format"
+homepage = "https://cs.symfony.com"
+docs = "https://cs.symfony.com/doc/usage.html"
+repo = "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer"
+description = "PHP code style fixer"
+
+[detect]
+files = [".php-cs-fixer.php", ".php-cs-fixer.dist.php", ".php_cs", ".php_cs.dist"]
+dependencies = ["friendsofphp/php-cs-fixer"]
+dev_dependencies = ["friendsofphp/php-cs-fixer"]
+ecosystems = ["php"]
+
+[commands]
+run = "vendor/bin/php-cs-fixer fix"
+alternatives = ["php-cs-fixer fix"]
+
+[config]
+files = [".php-cs-fixer.php", ".php-cs-fixer.dist.php"]

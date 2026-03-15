@@ -1,0 +1,11 @@
+[tool]
+name = "Julia"
+category = "language"
+homepage = "https://julialang.org"
+docs = "https://docs.julialang.org"
+repo = "https://github.com/JuliaLang/julia"
+description = "High-performance language for technical computing"
+
+[detect]
+files = ["Project.toml", "*.jl"]
+ecosystems = ["julia"]

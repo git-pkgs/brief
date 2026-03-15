@@ -1,0 +1,18 @@
+[tool]
+name = "pub"
+category = "package_manager"
+homepage = "https://pub.dev"
+docs = "https://dart.dev/tools/pub/cmd"
+description = "Dart package manager"
+
+[detect]
+files = ["pubspec.yaml"]
+ecosystems = ["dart"]
+
+[commands]
+run = "dart pub get"
+alternatives = ["flutter pub get"]
+
+[config]
+files = ["pubspec.yaml", "pubspec.lock"]
+lockfile = "pubspec.lock"

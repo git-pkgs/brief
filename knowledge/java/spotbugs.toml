@@ -1,0 +1,15 @@
+[tool]
+name = "SpotBugs"
+category = "lint"
+homepage = "https://spotbugs.github.io"
+docs = "https://spotbugs.readthedocs.io"
+repo = "https://github.com/spotbugs/spotbugs"
+description = "Static analysis tool for finding bugs in Java"
+
+[detect]
+dependencies = ["spotbugs", "spotbugs-maven-plugin", "com.github.spotbugs"]
+ecosystems = ["java"]
+
+[commands]
+run = "mvn spotbugs:check"
+alternatives = ["gradle spotbugsMain"]

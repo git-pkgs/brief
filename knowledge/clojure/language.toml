@@ -1,0 +1,11 @@
+[tool]
+name = "Clojure"
+category = "language"
+homepage = "https://clojure.org"
+docs = "https://clojure.org/reference"
+repo = "https://github.com/clojure/clojure"
+description = "Dynamic, functional Lisp dialect for the JVM"
+
+[detect]
+files = ["project.clj", "deps.edn", "*.clj", "*.cljs"]
+ecosystems = ["clojure"]

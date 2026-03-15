@@ -1,0 +1,11 @@
+[tool]
+name = "Kotlin"
+category = "language"
+homepage = "https://kotlinlang.org"
+docs = "https://kotlinlang.org/docs/"
+repo = "https://github.com/JetBrains/kotlin"
+description = "Modern, concise programming language for the JVM"
+
+[detect]
+files = ["*.kt", "*.kts", "build.gradle.kts"]
+ecosystems = ["kotlin"]

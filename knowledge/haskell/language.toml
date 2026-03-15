@@ -1,0 +1,10 @@
+[tool]
+name = "Haskell"
+category = "language"
+homepage = "https://www.haskell.org"
+docs = "https://www.haskell.org/documentation/"
+description = "Purely functional programming language"
+
+[detect]
+files = ["*.cabal", "stack.yaml", "cabal.project", "*.hs"]
+ecosystems = ["haskell"]

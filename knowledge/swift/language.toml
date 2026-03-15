@@ -1,0 +1,11 @@
+[tool]
+name = "Swift"
+category = "language"
+homepage = "https://www.swift.org"
+docs = "https://www.swift.org/documentation/"
+repo = "https://github.com/swiftlang/swift"
+description = "General-purpose programming language from Apple"
+
+[detect]
+files = ["Package.swift", "*.swift"]
+ecosystems = ["swift"]

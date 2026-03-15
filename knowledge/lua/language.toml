@@ -1,0 +1,10 @@
+[tool]
+name = "Lua"
+category = "language"
+homepage = "https://www.lua.org"
+docs = "https://www.lua.org/manual/"
+description = "Lightweight, embeddable scripting language"
+
+[detect]
+files = ["*.lua", ".luacheckrc"]
+ecosystems = ["lua"]

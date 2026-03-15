@@ -1,0 +1,18 @@
+[tool]
+name = "NuGet"
+category = "package_manager"
+homepage = "https://www.nuget.org"
+docs = "https://learn.microsoft.com/en-us/nuget/"
+description = ".NET package manager"
+
+[detect]
+files = ["*.csproj", "packages.config", "nuget.config"]
+ecosystems = ["csharp"]
+
+[commands]
+run = "dotnet restore"
+alternatives = ["nuget restore"]
+
+[config]
+files = ["nuget.config"]
+lockfile = "packages.lock.json"

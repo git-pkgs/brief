@@ -1,0 +1,11 @@
+[tool]
+name = "Dart"
+category = "language"
+homepage = "https://dart.dev"
+docs = "https://dart.dev/guides"
+repo = "https://github.com/dart-lang/sdk"
+description = "Client-optimized language for fast apps"
+
+[detect]
+files = ["pubspec.yaml", "*.dart"]
+ecosystems = ["dart"]

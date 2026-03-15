@@ -1,0 +1,18 @@
+[tool]
+name = "Cabal"
+category = "package_manager"
+homepage = "https://www.haskell.org/cabal/"
+docs = "https://cabal.readthedocs.io"
+description = "Haskell build and package manager"
+
+[detect]
+files = ["*.cabal", "cabal.project"]
+ecosystems = ["haskell"]
+
+[commands]
+run = "cabal install"
+alternatives = ["cabal build"]
+
+[config]
+files = ["cabal.project", "cabal.project.local"]
+lockfile = "cabal.project.freeze"

@@ -1,0 +1,11 @@
+[tool]
+name = "Crystal"
+category = "language"
+homepage = "https://crystal-lang.org"
+docs = "https://crystal-lang.org/reference/"
+repo = "https://github.com/crystal-lang/crystal"
+description = "Compiled language with Ruby-like syntax"
+
+[detect]
+files = ["shard.yml", "*.cr"]
+ecosystems = ["crystal"]

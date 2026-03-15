@@ -1,0 +1,19 @@
+[tool]
+name = "Composer"
+category = "package_manager"
+homepage = "https://getcomposer.org"
+docs = "https://getcomposer.org/doc/"
+repo = "https://github.com/composer/composer"
+description = "PHP dependency manager"
+
+[detect]
+files = ["composer.json"]
+ecosystems = ["php"]
+
+[commands]
+run = "composer install"
+alternatives = ["composer update"]
+
+[config]
+files = ["composer.json", "composer.lock"]
+lockfile = "composer.lock"

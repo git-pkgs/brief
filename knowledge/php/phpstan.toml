@@ -1,0 +1,20 @@
+[tool]
+name = "PHPStan"
+category = "typecheck"
+homepage = "https://phpstan.org"
+docs = "https://phpstan.org/user-guide/getting-started"
+repo = "https://github.com/phpstan/phpstan"
+description = "Static analysis tool for PHP"
+
+[detect]
+files = ["phpstan.neon", "phpstan.neon.dist"]
+dependencies = ["phpstan/phpstan"]
+dev_dependencies = ["phpstan/phpstan"]
+ecosystems = ["php"]
+
+[commands]
+run = "vendor/bin/phpstan analyse"
+alternatives = ["phpstan analyse"]
+
+[config]
+files = ["phpstan.neon", "phpstan.neon.dist"]

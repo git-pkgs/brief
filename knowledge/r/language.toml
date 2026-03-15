@@ -1,0 +1,10 @@
+[tool]
+name = "R"
+category = "language"
+homepage = "https://www.r-project.org"
+docs = "https://cran.r-project.org/manuals.html"
+description = "Statistical computing and graphics language"
+
+[detect]
+files = ["DESCRIPTION", "NAMESPACE", "*.R", "*.Rmd"]
+ecosystems = ["r"]

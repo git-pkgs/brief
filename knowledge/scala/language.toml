@@ -1,0 +1,11 @@
+[tool]
+name = "Scala"
+category = "language"
+homepage = "https://www.scala-lang.org"
+docs = "https://docs.scala-lang.org"
+repo = "https://github.com/scala/scala3"
+description = "Multi-paradigm language for the JVM"
+
+[detect]
+files = ["build.sbt", "*.scala", "project/build.properties"]
+ecosystems = ["scala"]

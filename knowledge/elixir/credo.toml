@@ -1,0 +1,19 @@
+[tool]
+name = "Credo"
+category = "lint"
+homepage = "https://hexdocs.pm/credo"
+docs = "https://hexdocs.pm/credo/overview.html"
+repo = "https://github.com/rrrene/credo"
+description = "Static code analysis tool for Elixir"
+
+[detect]
+files = [".credo.exs"]
+dependencies = ["credo"]
+ecosystems = ["elixir"]
+
+[commands]
+run = "mix credo"
+alternatives = ["mix credo --strict"]
+
+[config]
+files = [".credo.exs"]

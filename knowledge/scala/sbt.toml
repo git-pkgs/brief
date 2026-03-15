@@ -1,0 +1,18 @@
+[tool]
+name = "sbt"
+category = "package_manager"
+homepage = "https://www.scala-sbt.org"
+docs = "https://www.scala-sbt.org/1.x/docs/"
+repo = "https://github.com/sbt/sbt"
+description = "Scala build tool"
+
+[detect]
+files = ["build.sbt"]
+ecosystems = ["scala"]
+
+[commands]
+run = "sbt compile"
+alternatives = ["sbt update"]
+
+[config]
+files = ["build.sbt", "project/build.properties", "project/plugins.sbt"]

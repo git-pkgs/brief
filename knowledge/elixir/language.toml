@@ -1,0 +1,11 @@
+[tool]
+name = "Elixir"
+category = "language"
+homepage = "https://elixir-lang.org"
+docs = "https://hexdocs.pm/elixir"
+repo = "https://github.com/elixir-lang/elixir"
+description = "Dynamic, functional language for building scalable applications"
+
+[detect]
+files = ["mix.exs", "*.ex", "*.exs"]
+ecosystems = ["elixir"]

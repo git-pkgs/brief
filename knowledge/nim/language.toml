@@ -1,0 +1,11 @@
+[tool]
+name = "Nim"
+category = "language"
+homepage = "https://nim-lang.org"
+docs = "https://nim-lang.org/documentation.html"
+repo = "https://github.com/nim-lang/Nim"
+description = "Statically typed compiled systems programming language"
+
+[detect]
+files = ["*.nimble", "*.nim"]
+ecosystems = ["nim"]

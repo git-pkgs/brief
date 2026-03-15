@@ -1,0 +1,14 @@
+[tool]
+name = "Zig"
+category = "language"
+homepage = "https://ziglang.org"
+docs = "https://ziglang.org/documentation/"
+repo = "https://github.com/ziglang/zig"
+description = "Systems programming language"
+
+[detect]
+files = ["build.zig", "build.zig.zon", "*.zig"]
+ecosystems = ["zig"]
+
+[commands]
+run = "zig build"

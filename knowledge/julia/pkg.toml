@@ -1,0 +1,17 @@
+[tool]
+name = "Pkg"
+category = "package_manager"
+homepage = "https://pkgdocs.julialang.org"
+docs = "https://pkgdocs.julialang.org/v1/"
+description = "Julia package manager"
+
+[detect]
+files = ["Project.toml"]
+ecosystems = ["julia"]
+
+[commands]
+run = "julia -e 'using Pkg; Pkg.instantiate()'"
+
+[config]
+files = ["Project.toml", "Manifest.toml"]
+lockfile = "Manifest.toml"

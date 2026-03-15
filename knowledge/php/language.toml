@@ -1,0 +1,11 @@
+[tool]
+name = "PHP"
+category = "language"
+homepage = "https://www.php.net"
+docs = "https://www.php.net/manual"
+repo = "https://github.com/php/php-src"
+description = "General-purpose scripting language for web development"
+
+[detect]
+files = ["composer.json", "*.php"]
+ecosystems = ["php"]

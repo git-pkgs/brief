@@ -1,0 +1,18 @@
+[tool]
+name = "Mix"
+category = "package_manager"
+homepage = "https://hexdocs.pm/mix"
+docs = "https://hexdocs.pm/mix/Mix.html"
+description = "Elixir build tool and package manager"
+
+[detect]
+files = ["mix.exs"]
+ecosystems = ["elixir"]
+
+[commands]
+run = "mix deps.get"
+alternatives = ["mix deps.compile"]
+
+[config]
+files = ["mix.exs", "mix.lock"]
+lockfile = "mix.lock"

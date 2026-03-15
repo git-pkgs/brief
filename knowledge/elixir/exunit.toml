@@ -1,0 +1,17 @@
+[tool]
+name = "ExUnit"
+category = "test"
+homepage = "https://hexdocs.pm/ex_unit"
+docs = "https://hexdocs.pm/ex_unit/ExUnit.html"
+description = "Built-in Elixir test framework"
+
+[detect]
+files = ["test/"]
+ecosystems = ["elixir"]
+
+[commands]
+run = "mix test"
+alternatives = ["mix test --trace"]
+
+[config]
+files = ["test/test_helper.exs"]

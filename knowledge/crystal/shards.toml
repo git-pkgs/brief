@@ -1,0 +1,17 @@
+[tool]
+name = "Shards"
+category = "package_manager"
+homepage = "https://crystal-lang.org/reference/man/shards/"
+docs = "https://crystal-lang.org/reference/man/shards/"
+description = "Crystal dependency manager"
+
+[detect]
+files = ["shard.yml"]
+ecosystems = ["crystal"]
+
+[commands]
+run = "shards install"
+
+[config]
+files = ["shard.yml", "shard.lock"]
+lockfile = "shard.lock"

@@ -1,0 +1,19 @@
+[tool]
+name = "Gradle"
+category = "package_manager"
+homepage = "https://gradle.org"
+docs = "https://docs.gradle.org"
+repo = "https://github.com/gradle/gradle"
+description = "Build automation tool for Java and other JVM languages"
+
+[detect]
+files = ["build.gradle", "build.gradle.kts", "settings.gradle", "settings.gradle.kts"]
+ecosystems = ["java"]
+
+[commands]
+run = "gradle build"
+alternatives = ["./gradlew build"]
+
+[config]
+files = ["build.gradle", "build.gradle.kts", "settings.gradle", "settings.gradle.kts", "gradle.properties"]
+lockfile = "gradle.lockfile"

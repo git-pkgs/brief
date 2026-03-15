@@ -1,0 +1,16 @@
+[tool]
+name = "JUnit"
+category = "test"
+homepage = "https://junit.org"
+docs = "https://junit.org/junit5/docs/current/user-guide/"
+repo = "https://github.com/junit-team/junit5"
+description = "Testing framework for Java"
+
+[detect]
+files = ["src/test/"]
+dependencies = ["junit", "junit-jupiter", "junit-jupiter-api"]
+ecosystems = ["java"]
+
+[commands]
+run = "mvn test"
+alternatives = ["gradle test", "./gradlew test"]

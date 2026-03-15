@@ -1,0 +1,10 @@
+[tool]
+name = "C#"
+category = "language"
+homepage = "https://dotnet.microsoft.com/languages/csharp"
+docs = "https://learn.microsoft.com/en-us/dotnet/csharp/"
+description = "Modern, object-oriented programming language"
+
+[detect]
+files = ["*.csproj", "*.sln", "*.cs"]
+ecosystems = ["csharp"]

@@ -1,0 +1,14 @@
+[tool]
+name = "Dialyzer"
+category = "typecheck"
+homepage = "https://www.erlang.org/doc/apps/dialyzer"
+docs = "https://hexdocs.pm/dialyxir"
+repo = "https://github.com/jeremyjh/dialyxir"
+description = "Static analysis tool for Erlang/Elixir"
+
+[detect]
+dependencies = ["dialyxir"]
+ecosystems = ["elixir"]
+
+[commands]
+run = "mix dialyzer"

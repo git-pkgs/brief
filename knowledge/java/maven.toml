@@ -1,0 +1,19 @@
+[tool]
+name = "Maven"
+category = "package_manager"
+homepage = "https://maven.apache.org"
+docs = "https://maven.apache.org/guides/"
+repo = "https://github.com/apache/maven"
+description = "Java build and dependency management tool"
+
+[detect]
+files = ["pom.xml"]
+ecosystems = ["java"]
+
+[commands]
+run = "mvn install"
+alternatives = ["mvn package", "mvn verify"]
+
+[config]
+files = ["pom.xml", ".mvn/"]
+lockfile = "pom.xml"

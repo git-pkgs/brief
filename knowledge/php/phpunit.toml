@@ -1,0 +1,20 @@
+[tool]
+name = "PHPUnit"
+category = "test"
+homepage = "https://phpunit.de"
+docs = "https://docs.phpunit.de"
+repo = "https://github.com/sebastianbergmann/phpunit"
+description = "Testing framework for PHP"
+
+[detect]
+files = ["phpunit.xml", "phpunit.xml.dist"]
+dependencies = ["phpunit/phpunit"]
+dev_dependencies = ["phpunit/phpunit"]
+ecosystems = ["php"]
+
+[commands]
+run = "vendor/bin/phpunit"
+alternatives = ["phpunit"]
+
+[config]
+files = ["phpunit.xml", "phpunit.xml.dist"]

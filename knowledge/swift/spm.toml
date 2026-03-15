@@ -1,0 +1,18 @@
+[tool]
+name = "Swift Package Manager"
+category = "package_manager"
+homepage = "https://www.swift.org/documentation/package-manager/"
+docs = "https://www.swift.org/documentation/package-manager/"
+description = "Swift dependency manager"
+
+[detect]
+files = ["Package.swift"]
+ecosystems = ["swift"]
+
+[commands]
+run = "swift package resolve"
+alternatives = ["swift build"]
+
+[config]
+files = ["Package.swift", "Package.resolved"]
+lockfile = "Package.resolved"

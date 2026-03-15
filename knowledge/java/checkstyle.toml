@@ -1,0 +1,19 @@
+[tool]
+name = "Checkstyle"
+category = "lint"
+homepage = "https://checkstyle.org"
+docs = "https://checkstyle.org/checks.html"
+repo = "https://github.com/checkstyle/checkstyle"
+description = "Static analysis tool for Java code style"
+
+[detect]
+files = ["checkstyle.xml", "config/checkstyle/checkstyle.xml"]
+dependencies = ["checkstyle"]
+ecosystems = ["java"]
+
+[commands]
+run = "mvn checkstyle:check"
+alternatives = ["gradle checkstyleMain"]
+
+[config]
+files = ["checkstyle.xml", "config/checkstyle/checkstyle.xml"]

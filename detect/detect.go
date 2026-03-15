@@ -504,24 +504,31 @@ func (e *Engine) loadDeps() {
 			default:
 				e.runtimeDeps[dep.Name] = true
 			}
-			if dep.PURL != "" {
-				scope := "runtime"
-				switch dep.Scope {
-				case manifests.Development:
-					scope = "development"
-				case manifests.Test:
-					scope = "test"
-				case manifests.Build:
-					scope = "build"
-				}
-				e.parsedDeps = append(e.parsedDeps, brief.DepInfo{
-					Name:    dep.Name,
-					Version: dep.Version,
-					PURL:    dep.PURL,
-					Scope:   scope,
-					Direct:  dep.Direct,
-				})
+			// Only include transitive deps from lockfiles, not manifests.
+			// go.mod lists indirect deps in the manifest itself, but those
+			// should only count when parsed from a lockfile like go.graph.
+			if dep.PURL == "" {
+				continue
 			}
+			if !dep.Direct && result.Kind != manifests.Lockfile {
+				continue
+			}
+			scope := "runtime"
+			switch dep.Scope {
+			case manifests.Development:
+				scope = "development"
+			case manifests.Test:
+				scope = "test"
+			case manifests.Build:
+				scope = "build"
+			}
+			e.parsedDeps = append(e.parsedDeps, brief.DepInfo{
+				Name:    dep.Name,
+				Version: dep.Version,
+				PURL:    dep.PURL,
+				Scope:   scope,
+				Direct:  dep.Direct,
+			})
 		}
 	}
 }

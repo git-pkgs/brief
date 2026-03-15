@@ -1,6 +1,6 @@
 # brief
 
-A single-binary CLI tool that detects a software project's toolchain, configuration, and conventions, then outputs a structured report. Written in Go.
+A single-binary CLI tool that detects a software project's toolchain, configuration, and conventions, then outputs a structured report. Written in Go, 22 ecosystems, 67 tool definitions.
 
 brief answers the bootstrap questions every AI coding agent, new contributor, and CI pipeline faces: what language is this, how do I install dependencies, how do I run the tests, what linter is configured.
 
@@ -17,38 +17,46 @@ Or download a binary from [releases](https://github.com/git-pkgs/brief/releases)
 ## Usage
 
 ```
-brief .
+brief [flags] [path]              Detect project toolchain
+brief list tools                  All tools in the knowledge base
+brief list ecosystems             Supported ecosystems
+brief schema                      JSON output schema
 ```
 
-JSON when piped, human-readable on a TTY. Force either with `--json` or `--human`.
+JSON when piped, human-readable on a TTY. Force either with `--json` or `--human`. Use `--category test` to filter to a single category.
 
 ```
-brief dev — /home/user/24pullrequests
+brief dev — /home/user/forge
 
-Language:        Ruby
-Package Manager: Bundler (bundle install)
+Language:        Go
+Package Manager: Go Modules (go mod download)
+                 Lockfile: go.sum
 
-Test:        Minitest (bundle exec rake test)
-             RSpec (bundle exec rspec)  [.rspec, spec/spec_helper.rb, spec/rails_helper.rb]
-Lint:        RuboCop (bundle exec rubocop)  [.rubocop.yml]
+Test:        go test (go test ./...)
+Lint:        golangci-lint (golangci-lint run)  [.golangci.yml]
 Format:      —
 Typecheck:   —
 Docs:        —
 Build:       —
 Security:    —
 CI:          GitHub Actions  [.github/workflows/]
-Container:   Docker  [Dockerfile, docker-compose.yml]
+Container:   —
 Dep Updates: Dependabot  [.github/dependabot.yml]
 
-Layout:      lib/ app/  test/ spec/
+Style:       tabs (inferred)  LF
+Layout:      internal/ cmd/
 
-Runtime:     .ruby-version: 4.0.1
+             OS: ubuntu-latest, macos-latest, windows-latest (CI matrix)
 
-Resources:   Readme.md
-Resources:   CONTRIBUTING.md
-Resources:   LICENSE
+Resources:   README.md
+Resources:   LICENSE (MIT)
 
-2.3ms  107 files checked  8/30 tools matched
+Git:         branch add-commit-statuses (default: main)  58 commits
+             origin: git@github.com:git-pkgs/forge.git
+
+Lines:       22912 code  191 files (scc)
+
+450.8ms  181 files checked  6/67 tools matched
 ```
 
 Use `--verbose` to include homepage, docs, and repo links for each detected tool.
@@ -59,12 +67,24 @@ Detection rules are data, not code. Each tool is defined in a TOML file under `k
 
 ```
 knowledge/
-├── ruby/       language.toml, bundler.toml, rspec.toml, rubocop.toml, ...
-├── python/     language.toml, uv.toml, pytest.toml, ruff.toml, mypy.toml, ...
-├── go/         language.toml, gomod.toml, gotest.toml, golangci-lint.toml
-├── node/       language.toml, npm.toml, jest.toml, eslint.toml, ...
-├── rust/       language.toml, cargo.toml, clippy.toml, rustfmt.toml
-└── _shared/    github-actions.toml, docker.toml, dependabot.toml, ...
+├── ruby/       language, bundler, rspec, minitest, rubocop, sorbet
+├── python/     language, pip, uv, pytest, ruff, mypy
+├── go/         language, gomod, gotest, golangci-lint
+├── node/       language, typescript, npm, pnpm, jest, eslint
+├── rust/       language, cargo, clippy, rustfmt
+├── java/       language, maven, gradle, junit, checkstyle, spotbugs
+├── elixir/     language, mix, exunit, credo, dialyzer
+├── php/        language, composer, phpunit, phpstan, php-cs-fixer
+├── csharp/     language, nuget
+├── swift/      language, spm
+├── kotlin/     language
+├── haskell/    language, cabal
+├── scala/      language, sbt
+├── dart/       language, pub
+├── crystal/    language, shards
+├── julia/      language, pkg
+├── + clojure, r, lua, perl, zig, nim
+└── _shared/    github-actions, docker, dependabot, renovate
 ```
 
 A tool definition looks like this:

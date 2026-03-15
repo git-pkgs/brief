@@ -19,3 +19,4 @@ alternatives = ["uv pip install -r requirements.txt"]
 
 [config]
 files = ["pyproject.toml", "uv.lock"]
+lockfile = "uv.lock"

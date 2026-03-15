@@ -16,3 +16,4 @@ alternatives = ["bundle"]
 
 [config]
 files = ["Gemfile", "Gemfile.lock", ".bundle/config"]
+lockfile = "Gemfile.lock"

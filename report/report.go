@@ -38,6 +38,9 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 			line += " (" + pm.Command.Run + ")"
 		}
 		fmt.Fprintf(w, "Package Manager: %s\n", line)
+		if pm.Lockfile != "" {
+			fmt.Fprintf(w, "                 Lockfile: %s\n", pm.Lockfile)
+		}
 	}
 
 	// Scripts

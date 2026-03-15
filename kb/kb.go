@@ -47,7 +47,8 @@ type CommandInfo struct {
 
 // ConfigInfo holds paths to a tool's configuration files.
 type ConfigInfo struct {
-	Files []string `toml:"files"`
+	Files    []string `toml:"files"`
+	Lockfile string   `toml:"lockfile"`
 }
 
 // ScriptSourceDef defines how to extract scripts from a project file.

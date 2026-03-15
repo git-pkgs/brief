@@ -1,0 +1,12 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    rspec (3.12.0)
+    rubocop (1.50.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  rspec
+  rubocop

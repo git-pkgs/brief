@@ -42,6 +42,9 @@ func TestRubyProject(t *testing.T) {
 			if pm.Command == nil || pm.Command.Run != "bundle install" {
 				t.Errorf("expected 'bundle install' command for Bundler")
 			}
+			if pm.Lockfile != "Gemfile.lock" {
+				t.Errorf("expected lockfile Gemfile.lock, got %q", pm.Lockfile)
+			}
 		}
 	}
 	if !found {

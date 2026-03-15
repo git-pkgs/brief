@@ -149,6 +149,11 @@ func (e *Engine) detectCategory(category string) []brief.Detection {
 		}
 
 		d.ConfigFiles = e.findExisting(tool.Config.Files)
+
+		if tool.Config.Lockfile != "" && e.exists(tool.Config.Lockfile) {
+			d.Lockfile = tool.Config.Lockfile
+		}
+
 		detections = append(detections, d)
 	}
 

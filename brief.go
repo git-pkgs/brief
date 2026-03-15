@@ -40,6 +40,7 @@ type Detection struct {
 	Confidence  Confidence `json:"confidence"`
 	Command     *Command   `json:"command,omitempty"`
 	ConfigFiles []string   `json:"config_files,omitempty"`
+	Lockfile    string     `json:"lockfile,omitempty"`
 	Homepage    string     `json:"homepage,omitempty"`
 	Docs        string     `json:"docs,omitempty"`
 	Repo        string     `json:"repo,omitempty"`

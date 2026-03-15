@@ -16,3 +16,4 @@ alternatives = ["go mod tidy"]
 
 [config]
 files = ["go.mod", "go.sum"]
+lockfile = "go.sum"

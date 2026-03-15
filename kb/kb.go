@@ -145,17 +145,17 @@ type ManifestInfo struct {
 
 // KnowledgeBase holds all loaded definitions.
 type KnowledgeBase struct {
-	Tools          []ToolDef
-	ByName         map[string]*ToolDef
-	ByCategory     map[string][]*ToolDef
-	Ecosystems     map[string][]*ToolDef
-	ScriptSources  []ScriptSourceDef
-	Resources      []ResourceDef
-	Layouts        *LayoutDef
-	StyleConfig    *StyleConfigDef
-	Runtimes       []RuntimeVersionDef
-	ManifestFiles  []string
-	CIConfig       *CIConfigDef
+	Tools         []ToolDef
+	ByName        map[string]*ToolDef
+	ByCategory    map[string][]*ToolDef
+	Ecosystems    map[string][]*ToolDef
+	ScriptSources []ScriptSourceDef
+	Resources     []ResourceDef
+	Layouts       *LayoutDef
+	StyleConfig   *StyleConfigDef
+	Runtimes      []RuntimeVersionDef
+	ManifestFiles []string
+	CIConfig      *CIConfigDef
 }
 
 // Load reads all TOML files from the embedded filesystem and returns a KnowledgeBase.
@@ -182,20 +182,20 @@ func Load(fsys embed.FS) (*KnowledgeBase, error) {
 		name := filepath.Base(path)
 
 		// Route to the right parser based on filename convention
-		switch {
-		case name == "_scripts.toml":
+		switch name {
+		case "_scripts.toml":
 			return base.loadScriptSource(data, path)
-		case name == "_resources.toml":
+		case "_resources.toml":
 			return base.loadResources(data, path)
-		case name == "_layout.toml":
+		case "_layout.toml":
 			return base.loadLayout(data, path)
-		case name == "_style.toml":
+		case "_style.toml":
 			return base.loadStyle(data, path)
-		case name == "_runtimes.toml":
+		case "_runtimes.toml":
 			return base.loadRuntimes(data, path)
-		case name == "_manifests.toml":
+		case "_manifests.toml":
 			return base.loadManifests(data, path)
-		case name == "_ci.toml":
+		case "_ci.toml":
 			return base.loadCIConfig(data, path)
 		default:
 			return base.loadTool(data, path)

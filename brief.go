@@ -30,7 +30,7 @@ type Command struct {
 	Run          string   `json:"run"`
 	Alternatives []string `json:"alternatives,omitempty"`
 	Source       Source   `json:"source"`
-	InferredTool string  `json:"inferred_tool,omitempty"`
+	InferredTool string   `json:"inferred_tool,omitempty"`
 }
 
 // Detection is a single detected tool or feature.
@@ -56,9 +56,9 @@ type Script struct {
 
 // StyleInfo describes detected coding style conventions.
 type StyleInfo struct {
-	Indentation     string `json:"indentation,omitempty"`      // e.g. "2-space", "4-space", "tabs"
-	IndentSource    string `json:"indent_source,omitempty"`    // e.g. "editorconfig", "inferred"
-	LineEnding      string `json:"line_ending,omitempty"`      // "LF" or "CRLF"
+	Indentation     string `json:"indentation,omitempty"`   // e.g. "2-space", "4-space", "tabs"
+	IndentSource    string `json:"indent_source,omitempty"` // e.g. "editorconfig", "inferred"
+	LineEnding      string `json:"line_ending,omitempty"`   // "LF" or "CRLF"
 	TrailingNewline *bool  `json:"trailing_newline,omitempty"`
 }
 

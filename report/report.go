@@ -19,15 +19,15 @@ func JSON(w io.Writer, r *brief.Report) error {
 
 // Human writes the report in human-readable format.
 func Human(w io.Writer, r *brief.Report, verbose bool) {
-	fmt.Fprintf(w, "brief %s — %s\n\n", r.Version, r.Path)
+	_, _ = fmt.Fprintf(w, "brief %s — %s\n\n", r.Version, r.Path)
 
 	// Languages
 	if len(r.Languages) > 0 {
 		names := detectionNames(r.Languages)
 		if len(names) == 1 {
-			fmt.Fprintf(w, "Language:        %s\n", names[0])
+			_, _ = fmt.Fprintf(w, "Language:        %s\n", names[0])
 		} else {
-			fmt.Fprintf(w, "Language:        %s (also: %s)\n", names[0], strings.Join(names[1:], ", "))
+			_, _ = fmt.Fprintf(w, "Language:        %s (also: %s)\n", names[0], strings.Join(names[1:], ", "))
 		}
 	}
 
@@ -37,27 +37,27 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 		if pm.Command != nil {
 			line += " (" + pm.Command.Run + ")"
 		}
-		fmt.Fprintf(w, "Package Manager: %s\n", line)
+		_, _ = fmt.Fprintf(w, "Package Manager: %s\n", line)
 		if pm.Lockfile != "" {
-			fmt.Fprintf(w, "                 Lockfile: %s\n", pm.Lockfile)
+			_, _ = fmt.Fprintf(w, "                 Lockfile: %s\n", pm.Lockfile)
 		}
 	}
 
 	// Scripts
 	if len(r.Scripts) > 0 {
-		fmt.Fprintln(w)
+		_, _ = fmt.Fprintln(w)
 		source := r.Scripts[0].Source
-		fmt.Fprintf(w, "Scripts (%s):\n", source)
+		_, _ = fmt.Fprintf(w, "Scripts (%s):\n", source)
 		for _, s := range r.Scripts {
 			if s.Source != source {
-				fmt.Fprintf(w, "\nScripts (%s):\n", s.Source)
+				_, _ = fmt.Fprintf(w, "\nScripts (%s):\n", s.Source)
 				source = s.Source
 			}
-			fmt.Fprintf(w, "  %-8s %s\n", s.Name+":", s.Run)
+			_, _ = fmt.Fprintf(w, "  %-8s %s\n", s.Name+":", s.Run)
 		}
 	}
 
-	fmt.Fprintln(w)
+	_, _ = fmt.Fprintln(w)
 
 	// Tool categories in a stable order
 	categoryOrder := []string{"test", "lint", "format", "typecheck", "docs", "build", "security", "ci", "container", "dependency_bot"}
@@ -81,7 +81,7 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 		}
 		tools, ok := r.Tools[cat]
 		if !ok {
-			fmt.Fprintf(w, "%-13s—\n", label+":")
+			_, _ = fmt.Fprintf(w, "%-13s—\n", label+":")
 			continue
 		}
 		for i, t := range tools {
@@ -96,14 +96,14 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 			if len(t.ConfigFiles) > 0 {
 				line += "  [" + strings.Join(t.ConfigFiles, ", ") + "]"
 			}
-			fmt.Fprintf(w, "%-13s%s\n", prefix, line)
+			_, _ = fmt.Fprintf(w, "%-13s%s\n", prefix, line)
 
 			if verbose {
 				if t.Homepage != "" {
-					fmt.Fprintf(w, "              homepage: %s\n", t.Homepage)
+					_, _ = fmt.Fprintf(w, "              homepage: %s\n", t.Homepage)
 				}
 				if t.Docs != "" {
-					fmt.Fprintf(w, "              docs:     %s\n", t.Docs)
+					_, _ = fmt.Fprintf(w, "              docs:     %s\n", t.Docs)
 				}
 			}
 		}
@@ -114,19 +114,19 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 		if categoryLabels[cat] != "" {
 			continue
 		}
-		fmt.Fprintln(w)
+		_, _ = fmt.Fprintln(w)
 		for _, t := range tools {
 			line := t.Name
 			if t.Command != nil {
 				line += " (" + t.Command.Run + ")"
 			}
-			fmt.Fprintf(w, "%-13s%s\n", cat+":", line)
+			_, _ = fmt.Fprintf(w, "%-13s%s\n", cat+":", line)
 		}
 	}
 
 	// Style
 	if r.Style != nil {
-		fmt.Fprintln(w)
+		_, _ = fmt.Fprintln(w)
 		parts := []string{}
 		if r.Style.Indentation != "" {
 			s := r.Style.Indentation
@@ -146,7 +146,7 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 			}
 		}
 		if len(parts) > 0 {
-			fmt.Fprintf(w, "Style:       %s\n", strings.Join(parts, "  "))
+			_, _ = fmt.Fprintf(w, "Style:       %s\n", strings.Join(parts, "  "))
 		}
 	}
 
@@ -160,49 +160,49 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 			parts = append(parts, strings.Join(r.Layout.TestDirs, "/ ")+"/")
 		}
 		if len(parts) > 0 {
-			fmt.Fprintf(w, "Layout:      %s\n", strings.Join(parts, " "))
+			_, _ = fmt.Fprintf(w, "Layout:      %s\n", strings.Join(parts, " "))
 		}
 	}
 
 	// Platforms
 	if r.Platforms != nil {
-		fmt.Fprintln(w)
+		_, _ = fmt.Fprintln(w)
 		for name, versions := range r.Platforms.CIMatrixVersions {
-			fmt.Fprintf(w, "Platforms:   %s %s (CI matrix)\n", name, strings.Join(versions, ", "))
+			_, _ = fmt.Fprintf(w, "Platforms:   %s %s (CI matrix)\n", name, strings.Join(versions, ", "))
 		}
 		for file, version := range r.Platforms.RuntimeVersionFiles {
-			fmt.Fprintf(w, "             %s: %s\n", file, version)
+			_, _ = fmt.Fprintf(w, "             %s: %s\n", file, version)
 		}
 		if len(r.Platforms.CIMatrixOS) > 0 {
-			fmt.Fprintf(w, "             OS: %s (CI matrix)\n", strings.Join(r.Platforms.CIMatrixOS, ", "))
+			_, _ = fmt.Fprintf(w, "             OS: %s (CI matrix)\n", strings.Join(r.Platforms.CIMatrixOS, ", "))
 		}
 	}
 
 	// Resources
 	if r.Resources != nil {
-		fmt.Fprintln(w)
+		_, _ = fmt.Fprintln(w)
 		res := r.Resources
-		printResource(w, "README", res.Readme)
-		printResource(w, "CONTRIBUTING", res.Contributing)
-		printResource(w, "CHANGELOG", res.Changelog)
+		printResource(w, res.Readme)
+		printResource(w, res.Contributing)
+		printResource(w, res.Changelog)
 		if res.License != "" {
 			label := res.License
 			if res.LicenseType != "" {
 				label += " (" + res.LicenseType + ")"
 			}
-			fmt.Fprintf(w, "Resources:   %s\n", label)
+			_, _ = fmt.Fprintf(w, "Resources:   %s\n", label)
 		}
-		printResource(w, "SECURITY", res.Security)
+		printResource(w, res.Security)
 	}
 
 	// Stats
-	fmt.Fprintf(w, "\n%.1fms  %d files checked  %d/%d tools matched\n",
+	_, _ = fmt.Fprintf(w, "\n%.1fms  %d files checked  %d/%d tools matched\n",
 		r.Stats.DurationMS, r.Stats.FilesChecked, r.Stats.ToolsMatched, r.Stats.ToolsChecked)
 }
 
-func printResource(w io.Writer, label, value string) {
+func printResource(w io.Writer, value string) {
 	if value != "" {
-		fmt.Fprintf(w, "Resources:   %s\n", value)
+		_, _ = fmt.Fprintf(w, "Resources:   %s\n", value)
 	}
 }
 

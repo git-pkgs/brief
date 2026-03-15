@@ -4,8 +4,11 @@ go 1.25.6
 
 require (
 	github.com/BurntSushi/toml v1.6.0
+	github.com/git-pkgs/forge v0.2.0
 	github.com/git-pkgs/licensecheck v0.0.0-20260315085946-2ad32fec7a2f
 	github.com/git-pkgs/manifests v0.4.2
+	github.com/git-pkgs/purl v0.1.9
+	github.com/git-pkgs/registries v0.3.0
 	github.com/git-pkgs/spdx v0.1.1
 	golang.org/x/term v0.41.0
 	gopkg.in/yaml.v3 v3.0.1
@@ -73,7 +76,6 @@ require (
 	github.com/fzipp/gocyclo v0.6.0 // indirect
 	github.com/ghostiam/protogetter v0.3.20 // indirect
 	github.com/git-pkgs/packageurl-go v0.3.1 // indirect
-	github.com/git-pkgs/purl v0.1.9 // indirect
 	github.com/git-pkgs/vers v0.2.3 // indirect
 	github.com/github/go-spdx/v2 v2.4.0 // indirect
 	github.com/go-critic/go-critic v0.14.3 // indirect
@@ -217,7 +219,7 @@ require (
 	golang.org/x/sys v0.42.0 // indirect
 	golang.org/x/text v0.34.0 // indirect
 	golang.org/x/tools v0.42.0 // indirect
-	google.golang.org/protobuf v1.36.8 // indirect
+	google.golang.org/protobuf v1.36.11 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	honnef.co/go/tools v0.7.0 // indirect

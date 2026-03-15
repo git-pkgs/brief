@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -11,6 +12,7 @@ import (
 	"github.com/git-pkgs/brief"
 	"github.com/git-pkgs/brief/detect"
 	"github.com/git-pkgs/brief/kb"
+	"github.com/git-pkgs/brief/remote"
 	"github.com/git-pkgs/brief/report"
 
 	"golang.org/x/term"
@@ -39,6 +41,8 @@ func cmdScan(args []string) {
 	humanFlag := fs.Bool("human", false, "Force human-readable output")
 	verbose := fs.Bool("verbose", false, "Include breadcrumb/reference information")
 	category := fs.String("category", "", "Only report on specific category")
+	keep := fs.Bool("keep", false, "Keep downloaded remote source")
+	depth := fs.Int("depth", 1, "Git clone depth (0 = full clone)")
 	version := fs.Bool("version", false, "Print version and exit")
 	_ = fs.Parse(args)
 
@@ -52,13 +56,24 @@ func cmdScan(args []string) {
 		path = fs.Arg(0)
 	}
 
+	// Resolve remote sources
+	src, err := remote.Resolve(context.Background(), path, remote.Options{
+		Keep:  *keep,
+		Depth: *depth,
+	})
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
+	}
+	defer src.Cleanup()
+
 	knowledgeBase, err := kb.Load(brief.KnowledgeFS)
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "error loading knowledge base: %v\n", err)
 		os.Exit(1)
 	}
 
-	engine := detect.New(knowledgeBase, path)
+	engine := detect.New(knowledgeBase, src.Dir)
 	r, err := engine.Run()
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "error: %v\n", err)

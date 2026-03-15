@@ -1,0 +1,19 @@
+[tool]
+name = "Bun"
+category = "package_manager"
+homepage = "https://bun.sh"
+docs = "https://bun.sh/docs"
+repo = "https://github.com/oven-sh/bun"
+description = "All-in-one JavaScript runtime and package manager"
+
+[detect]
+files = ["bun.lock", "bun.lockb", "bunfig.toml"]
+ecosystems = ["node"]
+
+[commands]
+run = "bun install"
+alternatives = ["bun i"]
+
+[config]
+files = ["package.json", "bun.lock", "bun.lockb", "bunfig.toml"]
+lockfile = "bun.lock"

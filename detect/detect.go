@@ -15,9 +15,9 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/git-pkgs/brief"
 	"github.com/git-pkgs/brief/kb"
+	"github.com/git-pkgs/licensecheck"
 	"github.com/git-pkgs/manifests"
 	"github.com/git-pkgs/spdx"
-	"github.com/google/licensecheck"
 	"gopkg.in/yaml.v3"
 )
 

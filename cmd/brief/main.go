@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"runtime/debug"
 
 	"github.com/git-pkgs/brief"
 	"github.com/git-pkgs/brief/detect"
@@ -14,6 +15,7 @@ import (
 )
 
 func main() {
+	debug.SetGCPercent(-1)
 	jsonFlag := flag.Bool("json", false, "Force JSON output")
 	humanFlag := flag.Bool("human", false, "Force human-readable output")
 	verbose := flag.Bool("verbose", false, "Include breadcrumb/reference information")

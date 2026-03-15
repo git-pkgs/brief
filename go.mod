@@ -4,9 +4,9 @@ go 1.25.6
 
 require (
 	github.com/BurntSushi/toml v1.6.0
+	github.com/git-pkgs/licensecheck v0.0.0-20260315085946-2ad32fec7a2f
 	github.com/git-pkgs/manifests v0.4.2
 	github.com/git-pkgs/spdx v0.1.1
-	github.com/google/licensecheck v0.3.1
 	golang.org/x/term v0.41.0
 	gopkg.in/yaml.v3 v3.0.1
 )

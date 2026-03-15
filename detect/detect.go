@@ -11,6 +11,7 @@ import (
 
 	"github.com/git-pkgs/brief"
 	"github.com/git-pkgs/brief/kb"
+	"github.com/git-pkgs/manifests"
 )
 
 // Engine runs detection against a project directory.
@@ -20,6 +21,12 @@ type Engine struct {
 	filesChecked int
 	toolsChecked int
 	toolsMatched int
+
+	// Lazily populated caches
+	depsLoaded  bool
+	runtimeDeps map[string]bool // all runtime/unscoped dependency names
+	devDeps     map[string]bool // development/test/build dependency names
+	allDeps     map[string]bool // union of both
 }
 
 // New creates a detection engine for the given project root.
@@ -174,24 +181,54 @@ func (e *Engine) contains(file string, patterns []string) bool {
 	return false
 }
 
-// hasDependency checks if any declared dependency names appear in the project's manifest files.
-// Uses the manifest file list from the knowledge base config.
-func (e *Engine) hasDependency(tool *kb.ToolDef) bool {
+// loadDeps parses all manifest files in the project using the manifests library
+// and populates the dependency caches. Called lazily on first dependency check.
+func (e *Engine) loadDeps() {
+	if e.depsLoaded {
+		return
+	}
+	e.depsLoaded = true
+	e.runtimeDeps = make(map[string]bool)
+	e.devDeps = make(map[string]bool)
+	e.allDeps = make(map[string]bool)
+
 	for _, mf := range e.KB.ManifestFiles {
-		data, err := os.ReadFile(filepath.Join(e.Root, mf))
+		path := filepath.Join(e.Root, mf)
+		data, err := os.ReadFile(path)
 		if err != nil {
 			continue
 		}
-		content := string(data)
-		for _, dep := range tool.Detect.Dependencies {
-			if strings.Contains(content, dep) {
-				return true
+
+		result, err := manifests.Parse(mf, data)
+		if err != nil {
+			continue
+		}
+
+		for _, dep := range result.Dependencies {
+			e.allDeps[dep.Name] = true
+			switch dep.Scope {
+			case manifests.Development, manifests.Test, manifests.Build:
+				e.devDeps[dep.Name] = true
+			default:
+				e.runtimeDeps[dep.Name] = true
 			}
 		}
-		for _, dep := range tool.Detect.DevDependencies {
-			if strings.Contains(content, dep) {
-				return true
-			}
+	}
+}
+
+// hasDependency checks if any of the tool's declared dependencies exist
+// in the project's parsed manifests.
+func (e *Engine) hasDependency(tool *kb.ToolDef) bool {
+	e.loadDeps()
+
+	for _, dep := range tool.Detect.Dependencies {
+		if e.allDeps[dep] {
+			return true
+		}
+	}
+	for _, dep := range tool.Detect.DevDependencies {
+		if e.devDeps[dep] {
+			return true
 		}
 	}
 	return false

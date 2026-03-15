@@ -1,6 +1,6 @@
 # brief
 
-A single-binary CLI tool that detects a software project's toolchain, configuration, and conventions, then outputs a structured report. Written in Go, 22 ecosystems, 67 tool definitions.
+A single-binary CLI tool that detects a software project's toolchain, configuration, and conventions, then outputs a structured report. Written in Go, 30 ecosystems, 95 tool definitions.
 
 brief answers the bootstrap questions every AI coding agent, new contributor, and CI pipeline faces: what language is this, how do I install dependencies, how do I run the tests, what linter is configured.
 
@@ -37,7 +37,7 @@ brief pypi:requests
 
 Remote sources are shallow-cloned by default. Use `--depth 0` for a full clone, `--keep` to preserve the clone, or `--dir ./somewhere` to clone into a specific directory.
 
-JSON when piped, human-readable on a TTY. Force either with `--json` or `--human`. Use `--category test` to filter to a single category. Use `--keep` to preserve cloned repos and `--depth 0` for a full clone.
+JSON when piped, human-readable on a TTY. Force either with `--json` or `--human`. Use `--category test` to filter to a single category.
 
 ```
 brief dev — /home/user/forge
@@ -48,7 +48,7 @@ Package Manager: Go Modules (go mod download)
 
 Test:        go test (go test ./...)
 Lint:        golangci-lint (golangci-lint run)  [.golangci.yml]
-Format:      —
+Format:      gofmt (gofmt -w .)
 Typecheck:   —
 Docs:        —
 Build:       —
@@ -70,7 +70,7 @@ Git:         branch add-commit-statuses (default: main)  58 commits
 
 Lines:       22912 code  191 files (scc)
 
-450.8ms  181 files checked  6/67 tools matched
+164.0ms  184 files checked  7/95 tools matched
 ```
 
 Use `--verbose` to include homepage, docs, and repo links for each detected tool.
@@ -82,23 +82,19 @@ Detection rules are data, not code. Each tool is defined in a TOML file under `k
 ```
 knowledge/
 ├── ruby/       language, bundler, rspec, minitest, rubocop, sorbet
-├── python/     language, pip, uv, pytest, ruff, mypy
-├── go/         language, gomod, gotest, golangci-lint
-├── node/       language, typescript, npm, pnpm, jest, eslint
+├── python/     language, pip, uv, poetry, pipenv, pdm, pytest, ruff, mypy, black
+├── go/         language, gomod, gotest, golangci-lint, gofmt
+├── node/       language, typescript, npm, pnpm, yarn, bun, jest, vitest, eslint, prettier, biome
 ├── rust/       language, cargo, clippy, rustfmt
 ├── java/       language, maven, gradle, junit, checkstyle, spotbugs
 ├── elixir/     language, mix, exunit, credo, dialyzer
 ├── php/        language, composer, phpunit, phpstan, php-cs-fixer
-├── csharp/     language, nuget
-├── swift/      language, spm
-├── kotlin/     language
-├── haskell/    language, cabal
-├── scala/      language, sbt
-├── dart/       language, pub
-├── crystal/    language, shards
-├── julia/      language, pkg
-├── + clojure, r, lua, perl, zig, nim
-└── _shared/    github-actions, docker, dependabot, renovate
+├── deno/       language, deno
+├── gleam/      language, gleam
+├── nix/        language, flakes
+├── + csharp, swift, kotlin, haskell, scala, dart, crystal, julia
+├── + clojure, r, lua, perl, zig, nim, d, elm, haxe, conda, cocoapods
+└── _shared/    github-actions, gitlab-ci, docker, devcontainer, dependabot, renovate, pre-commit
 ```
 
 A tool definition looks like this:

@@ -250,30 +250,21 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 				_, _ = fmt.Fprintf(w, "Runtime:     %s\n", line)
 			}
 		}
-		if len(e.Dependencies) > 0 {
-			advCount := 0
-			for _, dep := range e.Dependencies {
-				advCount += len(dep.Advisories)
-			}
-			_, _ = fmt.Fprintf(w, "\nEnriched:    %d packages", len(e.Dependencies))
-			if advCount > 0 {
-				_, _ = fmt.Fprintf(w, "  %d advisories", advCount)
-			}
+		if len(e.Packages) > 0 {
 			_, _ = fmt.Fprintln(w)
-
-			if verbose {
-				for purl, dep := range e.Dependencies {
-					_, _ = fmt.Fprintf(w, "  %s\n", purl)
-					if dep.Downloads > 0 {
-						_, _ = fmt.Fprintf(w, "    downloads: %d (%s)\n", dep.Downloads, dep.DownloadsPeriod)
-					}
-					if dep.DependentReposCount > 0 {
-						_, _ = fmt.Fprintf(w, "    dependents: %d repos, %d packages\n", dep.DependentReposCount, dep.DependentPackagesCount)
-					}
-					for _, adv := range dep.Advisories {
-						ids := strings.Join(adv.Identifiers, ", ")
-						_, _ = fmt.Fprintf(w, "    advisory: %s [%s] %s\n", adv.Severity, ids, adv.Title)
-					}
+			for _, pkg := range e.Packages {
+				_, _ = fmt.Fprintf(w, "Published:   %s (%s)\n", pkg.Name, pkg.Ecosystem)
+				if pkg.LatestVersion != "" {
+					_, _ = fmt.Fprintf(w, "             latest: %s\n", pkg.LatestVersion)
+				}
+				if pkg.Downloads > 0 {
+					_, _ = fmt.Fprintf(w, "             downloads: %d (%s)\n", pkg.Downloads, pkg.DownloadsPeriod)
+				}
+				if pkg.DependentReposCount > 0 {
+					_, _ = fmt.Fprintf(w, "             dependents: %d repos, %d packages\n", pkg.DependentReposCount, pkg.DependentPackagesCount)
+				}
+				if pkg.RegistryURL != "" {
+					_, _ = fmt.Fprintf(w, "             registry: %s\n", pkg.RegistryURL)
 				}
 			}
 		}

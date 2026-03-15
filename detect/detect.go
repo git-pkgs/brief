@@ -40,7 +40,7 @@ type Engine struct {
 	runtimeDeps map[string]bool // all runtime/unscoped dependency names
 	devDeps     map[string]bool // development/test/build dependency names
 	allDeps     map[string]bool // union of both
-	parsedDeps  []brief.DepInfo // all parsed dependencies with PURLs
+	parsedDeps  []brief.DepInfo // direct dependencies with PURLs
 }
 
 // sortLanguagesByFileCount reorders detected languages so the one with

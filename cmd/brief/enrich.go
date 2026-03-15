@@ -2,12 +2,15 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 	"sync"
 
+	"github.com/BurntSushi/toml"
 	"github.com/git-pkgs/brief"
 	"github.com/git-pkgs/brief/detect"
 	"github.com/git-pkgs/brief/kb"
@@ -35,7 +38,6 @@ func cmdEnrich(args []string) {
 		path = fs.Arg(0)
 	}
 
-	// Resolve remote sources
 	src, err := remote.Resolve(context.Background(), path, remote.Options{
 		Keep:  *keep,
 		Depth: *depth,
@@ -64,9 +66,8 @@ func cmdEnrich(args []string) {
 		os.Exit(1)
 	}
 
-	// Enrich the report with external data
 	ctx := context.Background()
-	r.Enrichment = enrich(ctx, r)
+	r.Enrichment = enrich(ctx, r, src.Dir)
 
 	useJSON := *jsonFlag || (!*humanFlag && !isTTY())
 	if useJSON {
@@ -79,24 +80,23 @@ func cmdEnrich(args []string) {
 	}
 }
 
-func enrich(ctx context.Context, r *brief.Report) *brief.EnrichmentInfo {
-	info := &brief.EnrichmentInfo{
-		Dependencies: make(map[string]*brief.DepEnrichment),
-	}
+func enrich(ctx context.Context, r *brief.Report, root string) *brief.EnrichmentInfo {
+	info := &brief.EnrichmentInfo{}
 
 	var wg sync.WaitGroup
 	var mu sync.Mutex
 
-	// Enrich dependencies via ecosyste.ms
-	if len(r.Dependencies) > 0 {
+	// Published packages
+	purls := detectPublishedPURLs(root, r)
+	if len(purls) > 0 {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			enrichDeps(ctx, r, info, &mu)
+			enrichPublishedPackages(ctx, purls, info, &mu)
 		}()
 	}
 
-	// Enrich runtime EOL
+	// Runtime EOL
 	if r.Platforms != nil {
 		wg.Add(1)
 		go func() {
@@ -105,7 +105,7 @@ func enrich(ctx context.Context, r *brief.Report) *brief.EnrichmentInfo {
 		}()
 	}
 
-	// Enrich repo scorecard
+	// Repo scorecard
 	if r.Git != nil {
 		wg.Add(1)
 		go func() {
@@ -116,33 +116,154 @@ func enrich(ctx context.Context, r *brief.Report) *brief.EnrichmentInfo {
 
 	wg.Wait()
 
-	if info.Repo == nil && len(info.RuntimeEOL) == 0 && len(info.Dependencies) == 0 {
+	if info.Repo == nil && len(info.Packages) == 0 && len(info.RuntimeEOL) == 0 {
 		return nil
 	}
 	return info
 }
 
-func enrichDeps(ctx context.Context, r *brief.Report, info *brief.EnrichmentInfo, mu *sync.Mutex) {
-	// Deduplicate PURLs, strip versions for package-level lookup
-	seen := make(map[string]bool)
+// detectPublishedPURLs figures out what packages this repo publishes by
+// reading the project's own identity from manifest files.
+func detectPublishedPURLs(root string, r *brief.Report) []string {
 	var purls []string
-	for _, dep := range r.Dependencies {
-		// Strip version from PURL for package-level lookup
-		p := dep.PURL
-		if idx := strings.Index(p, "@"); idx > 0 {
-			p = p[:idx]
-		}
-		if seen[p] {
-			continue
-		}
-		seen[p] = true
+
+	// Go module
+	if p := goModulePURL(root); p != "" {
 		purls = append(purls, p)
 	}
 
-	if len(purls) == 0 {
-		return
+	// npm package
+	if p := npmPackagePURL(root); p != "" {
+		purls = append(purls, p)
 	}
 
+	// Python package
+	if p := pythonPackagePURL(root); p != "" {
+		purls = append(purls, p)
+	}
+
+	// Ruby gem
+	if p := gemPURL(root); p != "" {
+		purls = append(purls, p)
+	}
+
+	// Rust crate
+	if p := cratePURL(root); p != "" {
+		purls = append(purls, p)
+	}
+
+	return purls
+}
+
+func goModulePURL(root string) string {
+	data, err := os.ReadFile(filepath.Join(root, "go.mod"))
+	if err != nil {
+		return ""
+	}
+	for _, line := range strings.Split(string(data), "\n") {
+		line = strings.TrimSpace(line)
+		if strings.HasPrefix(line, "module ") {
+			mod := strings.TrimPrefix(line, "module ")
+			mod = strings.TrimSpace(mod)
+			return "pkg:golang/" + mod
+		}
+	}
+	return ""
+}
+
+func npmPackagePURL(root string) string {
+	data, err := os.ReadFile(filepath.Join(root, "package.json"))
+	if err != nil {
+		return ""
+	}
+	var pkg struct {
+		Name    string `json:"name"`
+		Private bool   `json:"private"`
+	}
+	if err := json.Unmarshal(data, &pkg); err != nil || pkg.Name == "" || pkg.Private {
+		return ""
+	}
+	name := strings.ReplaceAll(pkg.Name, "@", "%40")
+	return "pkg:npm/" + name
+}
+
+func pythonPackagePURL(root string) string {
+	// Try pyproject.toml [project] name
+	data, err := os.ReadFile(filepath.Join(root, "pyproject.toml"))
+	if err == nil {
+		var pyproject struct {
+			Project struct {
+				Name string `toml:"name"`
+			} `toml:"project"`
+		}
+		if _, err := toml.Decode(string(data), &pyproject); err == nil && pyproject.Project.Name != "" {
+			return "pkg:pypi/" + pyproject.Project.Name
+		}
+	}
+
+	// Try setup.cfg [metadata] name
+	data, err = os.ReadFile(filepath.Join(root, "setup.cfg"))
+	if err == nil {
+		for _, line := range strings.Split(string(data), "\n") {
+			line = strings.TrimSpace(line)
+			if strings.HasPrefix(line, "name") && strings.Contains(line, "=") {
+				parts := strings.SplitN(line, "=", 2)
+				name := strings.TrimSpace(parts[1])
+				if name != "" {
+					return "pkg:pypi/" + name
+				}
+			}
+		}
+	}
+	return ""
+}
+
+func gemPURL(root string) string {
+	// Look for *.gemspec
+	matches, _ := filepath.Glob(filepath.Join(root, "*.gemspec"))
+	if len(matches) > 0 {
+		data, err := os.ReadFile(matches[0])
+		if err == nil {
+			for _, line := range strings.Split(string(data), "\n") {
+				line = strings.TrimSpace(line)
+				// Match: spec.name = "foo" or s.name = "foo"
+				if (strings.Contains(line, ".name") && strings.Contains(line, "=")) {
+					for _, q := range []string{`"`, `'`} {
+						if idx := strings.Index(line, q); idx >= 0 {
+							end := strings.Index(line[idx+1:], q)
+							if end >= 0 {
+								return "pkg:gem/" + line[idx+1:idx+1+end]
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return ""
+}
+
+func cratePURL(root string) string {
+	data, err := os.ReadFile(filepath.Join(root, "Cargo.toml"))
+	if err != nil {
+		return ""
+	}
+	var cargo struct {
+		Package struct {
+			Name    string `toml:"name"`
+			Publish *bool  `toml:"publish"`
+		} `toml:"package"`
+	}
+	if _, err := toml.Decode(string(data), &cargo); err != nil || cargo.Package.Name == "" {
+		return ""
+	}
+	if cargo.Package.Publish != nil && !*cargo.Package.Publish {
+		return ""
+	}
+	return "pkg:cargo/" + cargo.Package.Name
+}
+
+func enrichPublishedPackages(ctx context.Context, purls []string, info *brief.EnrichmentInfo, mu *sync.Mutex) {
 	client, err := enrichment.NewClient(enrichment.WithUserAgent("brief/" + brief.Version))
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "warning: enrichment client: %v\n", err)
@@ -161,27 +282,19 @@ func enrichDeps(ctx context.Context, r *brief.Report, info *brief.EnrichmentInfo
 		if pkg == nil {
 			continue
 		}
-		dep := &brief.DepEnrichment{
+		info.Packages = append(info.Packages, brief.PublishedPackage{
+			Name:                   pkg.Name,
+			Ecosystem:              pkg.Ecosystem,
+			PURL:                   purl,
 			LatestVersion:          pkg.LatestVersion,
 			License:                pkg.License,
+			Description:            pkg.Description,
 			Downloads:              pkg.Downloads,
 			DownloadsPeriod:        pkg.DownloadsPeriod,
 			DependentPackagesCount: pkg.DependentPackagesCount,
 			DependentReposCount:    pkg.DependentReposCount,
-			Repository:             pkg.Repository,
 			RegistryURL:            pkg.RegistryURL,
-			Description:            pkg.Description,
-		}
-		for _, adv := range pkg.Advisories {
-			dep.Advisories = append(dep.Advisories, brief.AdvisoryInfo{
-				Title:       adv.Title,
-				Severity:    adv.Severity,
-				CVSSScore:   adv.CVSSScore,
-				URL:         adv.URL,
-				Identifiers: adv.Identifiers,
-			})
-		}
-		info.Dependencies[purl] = dep
+		})
 	}
 }
 
@@ -201,7 +314,6 @@ func enrichEOL(ctx context.Context, r *brief.Report, info *brief.EnrichmentInfo,
 	eolClient := endoflife.New("brief/" + brief.Version)
 	eolMap := make(map[string]*brief.RuntimeEOL)
 
-	// Check runtime version files (e.g. .ruby-version = "3.4.2")
 	for file, version := range r.Platforms.RuntimeVersionFiles {
 		product := productFromFile(file)
 		if product == "" {
@@ -226,11 +338,9 @@ func enrichEOL(ctx context.Context, r *brief.Report, info *brief.EnrichmentInfo,
 		}
 	}
 
-	// Check CI matrix versions
 	for name, versions := range r.Platforms.CIMatrixVersions {
 		product, ok := runtimeProducts[capitalize(name)]
 		if !ok {
-			// Try the name directly
 			product = name
 		}
 
@@ -271,7 +381,6 @@ func enrichScorecard(ctx context.Context, r *brief.Report, info *brief.Enrichmen
 		return
 	}
 
-	// Find a GitHub/GitLab remote URL for scorecard
 	var repoURL string
 	for _, url := range r.Git.Remotes {
 		if strings.Contains(url, "github.com") || strings.Contains(url, "gitlab.com") {
@@ -297,7 +406,6 @@ func enrichScorecard(ctx context.Context, r *brief.Report, info *brief.Enrichmen
 	mu.Unlock()
 }
 
-// productFromFile maps runtime version file names to endoflife.date product names.
 func productFromFile(file string) string {
 	switch file {
 	case ".ruby-version":
@@ -314,7 +422,6 @@ func productFromFile(file string) string {
 	return ""
 }
 
-// majorMinor extracts "3.4" from "3.4.2" or "3.4".
 func majorMinor(version string) string {
 	version = strings.TrimSpace(version)
 	parts := strings.SplitN(version, ".", 3)

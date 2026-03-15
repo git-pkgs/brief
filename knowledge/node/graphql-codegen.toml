@@ -1,0 +1,18 @@
+[tool]
+name = "GraphQL Code Generator"
+category = "codegen"
+homepage = "https://the-guild.dev/graphql/codegen"
+docs = "https://the-guild.dev/graphql/codegen/docs/getting-started"
+repo = "https://github.com/dotansimha/graphql-code-generator"
+description = "Generate code from GraphQL schemas and operations"
+
+[detect]
+files = ["codegen.ts", "codegen.yml", "codegen.yaml", "codegen.json"]
+dev_dependencies = ["@graphql-codegen/cli"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx graphql-codegen"
+
+[config]
+files = ["codegen.ts", "codegen.yml", "codegen.yaml", "codegen.json"]

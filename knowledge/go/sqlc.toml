@@ -1,0 +1,18 @@
+[tool]
+name = "sqlc"
+category = "codegen"
+homepage = "https://sqlc.dev"
+docs = "https://docs.sqlc.dev"
+repo = "https://github.com/sqlc-dev/sqlc"
+description = "Generate type-safe Go code from SQL"
+
+[detect]
+files = ["sqlc.yaml", "sqlc.yml", "sqlc.json"]
+ecosystems = ["go"]
+
+[commands]
+run = "sqlc generate"
+alternatives = ["sqlc compile"]
+
+[config]
+files = ["sqlc.yaml", "sqlc.yml", "sqlc.json"]

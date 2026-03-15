@@ -1,0 +1,17 @@
+[tool]
+name = "Buf"
+category = "codegen"
+homepage = "https://buf.build"
+docs = "https://buf.build/docs/"
+repo = "https://github.com/bufbuild/buf"
+description = "Protobuf tooling for linting, breaking change detection, and code generation"
+
+[detect]
+files = ["buf.yaml", "buf.gen.yaml", "buf.work.yaml"]
+
+[commands]
+run = "buf generate"
+alternatives = ["buf lint", "buf build"]
+
+[config]
+files = ["buf.yaml", "buf.gen.yaml", "buf.work.yaml"]

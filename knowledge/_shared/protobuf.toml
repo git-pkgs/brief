@@ -1,0 +1,16 @@
+[tool]
+name = "Protobuf"
+category = "codegen"
+homepage = "https://protobuf.dev"
+docs = "https://protobuf.dev/getting-started/"
+repo = "https://github.com/protocolbuffers/protobuf"
+description = "Protocol Buffers schema and code generation"
+
+[detect]
+files = ["**/*.proto", "buf.gen.yaml"]
+
+[commands]
+run = "protoc"
+
+[config]
+files = ["buf.gen.yaml"]

@@ -1,0 +1,12 @@
+[tool]
+name = "OpenAPI"
+category = "codegen"
+homepage = "https://www.openapis.org"
+docs = "https://swagger.io/specification/"
+description = "OpenAPI specification for REST APIs"
+
+[detect]
+files = ["openapi.yaml", "openapi.yml", "openapi.json", "swagger.yaml", "swagger.yml", "swagger.json"]
+
+[config]
+files = ["openapi.yaml", "openapi.yml", "openapi.json", "swagger.yaml", "swagger.yml", "swagger.json"]

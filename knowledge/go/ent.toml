@@ -1,0 +1,20 @@
+[tool]
+name = "ent"
+category = "codegen"
+homepage = "https://entgo.io"
+docs = "https://entgo.io/docs/getting-started/"
+repo = "https://github.com/ent/ent"
+description = "Entity framework for Go with code generation"
+
+[detect]
+files = ["ent/schema/", "ent/generate.go"]
+ecosystems = ["go"]
+
+[detect.file_contains]
+"go.mod" = ["entgo.io/ent"]
+
+[commands]
+run = "go generate ./ent"
+
+[config]
+files = ["ent/schema/"]

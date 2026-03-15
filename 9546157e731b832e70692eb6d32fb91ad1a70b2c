@@ -1,0 +1,43 @@
+knowledge/ruby/bundler.toml
+  51d7df78896ba018 19
+knowledge/go/gomod.toml
+  51d7df78896ba018 19
+report/report.go
+  51d7df78896ba018 41-43
+kb/kb.go
+  51d7df78896ba018 51
+knowledge/rust/cargo.toml
+  51d7df78896ba018 19
+knowledge/python/uv.toml
+  51d7df78896ba018 22
+brief.go
+  51d7df78896ba018 43
+knowledge/node/npm.toml
+  51d7df78896ba018 19
+detect/detect.go
+  51d7df78896ba018 152-156
+knowledge/node/pnpm.toml
+  51d7df78896ba018 19
+detect/detect_test.go
+  51d7df78896ba018 45-47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "9546157e731b832e70692eb6d32fb91ad1a70b2c",
+  "prompts": {
+    "51d7df78896ba018": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "960695c4-20c9-4fbd-9628-518a7602912e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 20,
+      "total_deletions": 1,
+      "accepted_lines": 19,
+      "overriden_lines": 0
+    }
+  }
+}

@@ -334,6 +334,8 @@ func filterCategory(r *brief.Report, category string) *brief.Report {
 		filtered.Languages = r.Languages
 	case "package_manager":
 		filtered.PackageManagers = r.PackageManagers
+	case "scripts":
+		filtered.Scripts = r.Scripts
 	default:
 		if tools, ok := r.Tools[category]; ok {
 			filtered.Tools[category] = tools

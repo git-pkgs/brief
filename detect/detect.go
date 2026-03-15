@@ -568,7 +568,8 @@ func (e *Engine) findExisting(paths []string) []string {
 }
 
 // detectScripts finds project-defined scripts using the script source definitions
-// from the knowledge base.
+// from the knowledge base. Results are grouped by source so the human report can
+// print section headers without interleaving.
 func (e *Engine) detectScripts() []brief.Script {
 	var scripts []brief.Script
 
@@ -601,6 +602,10 @@ func (e *Engine) detectScripts() []brief.Script {
 		}
 	}
 
+	sort.SliceStable(scripts, func(i, j int) bool {
+		return scripts[i].Source < scripts[j].Source
+	})
+
 	return scripts
 }
 
@@ -621,7 +626,7 @@ func (e *Engine) parseMakefileWithMake(file string, sourceName string) []brief.S
 	// stdout still contains the database dump we need.
 	cmd := exec.Command("make", "-qp", "-f", file)
 	cmd.Dir = e.Root
-	out, _ := cmd.CombinedOutput()
+	out, _ := cmd.Output()
 	if len(out) == 0 {
 		return nil
 	}
@@ -1133,8 +1138,7 @@ func (e *Engine) git(dir string, args ...string) ([]byte, error) {
 // detectLineCount gets line counts using scc or tokei if available.
 func (e *Engine) detectLineCount(absPath string) *brief.LineCount {
 	// Try scc first
-	if path, err := exec.LookPath("scc"); err == nil {
-		_ = path
+	if _, err := exec.LookPath("scc"); err == nil {
 		cmd := exec.Command("scc", "--format", "json", absPath)
 		if out, err := cmd.Output(); err == nil {
 			return parseSCCOutput(out)
@@ -1142,8 +1146,7 @@ func (e *Engine) detectLineCount(absPath string) *brief.LineCount {
 	}
 
 	// Try tokei
-	if path, err := exec.LookPath("tokei"); err == nil {
-		_ = path
+	if _, err := exec.LookPath("tokei"); err == nil {
 		cmd := exec.Command("tokei", "--output", "json", absPath)
 		if out, err := cmd.Output(); err == nil {
 			return parseTokeiOutput(out)

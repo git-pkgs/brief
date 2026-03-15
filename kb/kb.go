@@ -146,7 +146,7 @@ type ManifestInfo struct {
 
 // KnowledgeBase holds all loaded definitions.
 type KnowledgeBase struct {
-	Tools         []ToolDef
+	Tools         []*ToolDef
 	ByName        map[string]*ToolDef
 	ByCategory    map[string][]*ToolDef
 	Ecosystems    map[string][]*ToolDef
@@ -218,8 +218,8 @@ func (base *KnowledgeBase) loadTool(data []byte, path string) error {
 	dir := filepath.Dir(path)
 	ecosystem := filepath.Base(dir)
 
-	base.Tools = append(base.Tools, def)
-	ptr := &base.Tools[len(base.Tools)-1]
+	ptr := &def
+	base.Tools = append(base.Tools, ptr)
 	base.ByName[def.Tool.Name] = ptr
 	base.ByCategory[def.Tool.Category] = append(base.ByCategory[def.Tool.Category], ptr)
 

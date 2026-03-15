@@ -1,0 +1,37 @@
+knowledge/python/pyenv.toml
+  84f545bbad6fb7cb 1-14
+knowledge/node/turborepo.toml
+  84f545bbad6fb7cb 1-19
+knowledge/_shared/direnv.toml
+  84f545bbad6fb7cb 1-13
+knowledge/go/mage.toml
+  84f545bbad6fb7cb 1-18
+knowledge/_shared/dotenv.toml
+  84f545bbad6fb7cb 1-11
+knowledge/node/volta.toml
+  84f545bbad6fb7cb 1-16
+knowledge/ruby/rake.toml
+  84f545bbad6fb7cb 1-19
+report/report.go
+  84f545bbad6fb7cb 63,71-72,76-79
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "b9783feba110792372f75a812e2382a567853624",
+  "prompts": {
+    "84f545bbad6fb7cb": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "60673090-6a91-4d42-b2c4-cecb5a39f60b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 117,
+      "total_deletions": 1,
+      "accepted_lines": 117,
+      "overriden_lines": 0
+    }
+  }
+}

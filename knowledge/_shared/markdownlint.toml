@@ -1,0 +1,16 @@
+[tool]
+name = "markdownlint"
+category = "lint"
+homepage = "https://github.com/DavidAnson/markdownlint"
+docs = "https://github.com/DavidAnson/markdownlint#readme"
+repo = "https://github.com/DavidAnson/markdownlint"
+description = "Markdown linter"
+
+[detect]
+files = [".markdownlint.json", ".markdownlint.yaml", ".markdownlint.yml", ".markdownlintrc", ".markdownlint-cli2.jsonc", ".markdownlint-cli2.yaml"]
+
+[commands]
+run = "markdownlint '**/*.md'"
+
+[config]
+files = [".markdownlint.json", ".markdownlint.yaml", ".markdownlint.yml", ".markdownlintrc", ".markdownlint-cli2.jsonc", ".markdownlint-cli2.yaml", ".markdownlintignore"]

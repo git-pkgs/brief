@@ -1,0 +1,17 @@
+[tool]
+name = "Semgrep"
+category = "security"
+homepage = "https://semgrep.dev"
+docs = "https://semgrep.dev/docs/"
+repo = "https://github.com/semgrep/semgrep"
+description = "Static analysis for finding bugs and enforcing code standards"
+
+[detect]
+files = [".semgrep.yml", ".semgrep.yaml", ".semgrep/"]
+
+[commands]
+run = "semgrep scan"
+alternatives = ["semgrep ci"]
+
+[config]
+files = [".semgrep.yml", ".semgrep.yaml", ".semgrep/", ".semgrepignore"]

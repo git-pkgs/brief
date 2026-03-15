@@ -1,0 +1,16 @@
+[tool]
+name = "ShellCheck"
+category = "lint"
+homepage = "https://www.shellcheck.net"
+docs = "https://github.com/koalaman/shellcheck/wiki"
+repo = "https://github.com/koalaman/shellcheck"
+description = "Static analysis tool for shell scripts"
+
+[detect]
+files = [".shellcheckrc"]
+
+[commands]
+run = "shellcheck"
+
+[config]
+files = [".shellcheckrc"]

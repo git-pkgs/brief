@@ -1,0 +1,18 @@
+[tool]
+name = "Stylelint"
+category = "lint"
+homepage = "https://stylelint.io"
+docs = "https://stylelint.io/user-guide/get-started"
+repo = "https://github.com/stylelint/stylelint"
+description = "CSS linter"
+
+[detect]
+files = [".stylelintrc", ".stylelintrc.json", ".stylelintrc.yml", ".stylelintrc.yaml", ".stylelintrc.js", "stylelint.config.js", "stylelint.config.mjs", "stylelint.config.cjs"]
+dev_dependencies = ["stylelint"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx stylelint '**/*.css'"
+
+[config]
+files = [".stylelintrc", ".stylelintrc.json", ".stylelintrc.yml", ".stylelintrc.yaml", ".stylelintrc.js", "stylelint.config.js", "stylelint.config.mjs", ".stylelintignore"]

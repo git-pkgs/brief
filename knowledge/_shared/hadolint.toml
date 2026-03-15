@@ -1,0 +1,16 @@
+[tool]
+name = "hadolint"
+category = "lint"
+homepage = "https://github.com/hadolint/hadolint"
+docs = "https://github.com/hadolint/hadolint#readme"
+repo = "https://github.com/hadolint/hadolint"
+description = "Dockerfile linter"
+
+[detect]
+files = [".hadolint.yaml", ".hadolint.yml"]
+
+[commands]
+run = "hadolint Dockerfile"
+
+[config]
+files = [".hadolint.yaml", ".hadolint.yml"]

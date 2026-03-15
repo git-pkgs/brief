@@ -1,0 +1,18 @@
+[tool]
+name = "commitlint"
+category = "lint"
+homepage = "https://commitlint.js.org"
+docs = "https://commitlint.js.org/guides/getting-started"
+repo = "https://github.com/conventional-changelog/commitlint"
+description = "Lint commit messages against conventional commit format"
+
+[detect]
+files = ["commitlint.config.js", "commitlint.config.mjs", "commitlint.config.ts", ".commitlintrc", ".commitlintrc.json", ".commitlintrc.yml", ".commitlintrc.yaml"]
+dev_dependencies = ["@commitlint/cli"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx commitlint --from HEAD~1"
+
+[config]
+files = ["commitlint.config.js", "commitlint.config.mjs", "commitlint.config.ts", ".commitlintrc", ".commitlintrc.json", ".commitlintrc.yml"]

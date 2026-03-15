@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -34,11 +35,41 @@ type Engine struct {
 	detectedEcosystems map[string]bool // ecosystems whose language was detected
 
 	// Lazily populated caches
-	fileExts    map[string]bool // cached set of file extensions in the project
+	fileExts    map[string]int // cached file extension counts in the project
 	depsLoaded  bool
 	runtimeDeps map[string]bool // all runtime/unscoped dependency names
 	devDeps     map[string]bool // development/test/build dependency names
 	allDeps     map[string]bool // union of both
+}
+
+// sortLanguagesByFileCount reorders detected languages so the one with
+// the most source files appears first.
+func (e *Engine) sortLanguagesByFileCount(report *brief.Report) {
+	if len(report.Languages) <= 1 {
+		return
+	}
+
+	e.loadFileExts()
+
+	// Score each language by summing file counts for its extensions
+	scores := make(map[string]int)
+	for _, lang := range report.Languages {
+		tool := e.KB.ByName[lang.Name]
+		if tool == nil {
+			continue
+		}
+		for _, pattern := range tool.Detect.Files {
+			// Extract extension from patterns like "*.py" or "**/*.py"
+			if idx := strings.LastIndex(pattern, "*."); idx >= 0 {
+				ext := pattern[idx+1:] // ".py"
+				scores[lang.Name] += e.fileExts[ext]
+			}
+		}
+	}
+
+	sort.SliceStable(report.Languages, func(i, j int) bool {
+		return scores[report.Languages[i].Name] > scores[report.Languages[j].Name]
+	})
 }
 
 // skipDirs are directories that should never be walked during detection.
@@ -100,6 +131,7 @@ func (e *Engine) Run() (*brief.Report, error) {
 	}
 
 	report.Languages = e.detectCategory("language")
+	e.sortLanguagesByFileCount(report)
 
 	// Build set of detected ecosystems from language results to filter
 	// ecosystem-specific tools (prevents ExUnit matching in JS projects, etc.)
@@ -332,7 +364,7 @@ func (e *Engine) recursiveGlob(pattern string) bool {
 	if strings.HasPrefix(suffix, "*.") {
 		ext := suffix[1:] // ".py"
 		e.loadFileExts()
-		return e.fileExts[ext]
+		return e.fileExts[ext] > 0
 	}
 
 	// Fall back to walk for complex patterns
@@ -367,7 +399,7 @@ func (e *Engine) loadFileExts() {
 	if e.fileExts != nil {
 		return
 	}
-	e.fileExts = make(map[string]bool)
+	e.fileExts = make(map[string]int)
 	maxDepth := e.ScanDepth
 	if maxDepth == 0 {
 		maxDepth = 4
@@ -392,7 +424,7 @@ func (e *Engine) loadFileExts() {
 		}
 		ext := filepath.Ext(info.Name())
 		if ext != "" {
-			e.fileExts[ext] = true
+			e.fileExts[ext]++
 		}
 		return nil
 	})

@@ -1,0 +1,27 @@
+remote/remote.go
+  51d7df78896ba018 28-30,123-124,126-128,132,135-137,144,150-152,157-158,162
+cmd/brief/main.go
+  51d7df78896ba018 46,64
+README.md
+  51d7df78896ba018 29-32,38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "d6cfc105ae3e517b65053763ee394e4bb6eb4c4f",
+  "prompts": {
+    "51d7df78896ba018": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "960695c4-20c9-4fbd-9628-518a7602912e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 32,
+      "total_deletions": 25,
+      "accepted_lines": 27,
+      "overriden_lines": 0
+    }
+  }
+}

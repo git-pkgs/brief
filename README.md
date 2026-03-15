@@ -17,13 +17,24 @@ Or download a binary from [releases](https://github.com/git-pkgs/brief/releases)
 ## Usage
 
 ```
-brief [flags] [path]              Detect project toolchain
+brief [flags] [path | url]        Detect project toolchain
 brief list tools                  All tools in the knowledge base
 brief list ecosystems             Supported ecosystems
 brief schema                      JSON output schema
 ```
 
-JSON when piped, human-readable on a TTY. Force either with `--json` or `--human`. Use `--category test` to filter to a single category.
+Works on local paths, git URLs, and registry packages:
+
+```
+brief .
+brief https://github.com/expressjs/express
+brief npm:express
+brief gem:rails
+brief crate:serde
+brief pypi:requests
+```
+
+JSON when piped, human-readable on a TTY. Force either with `--json` or `--human`. Use `--category test` to filter to a single category. Use `--keep` to preserve cloned repos and `--depth 0` for a full clone.
 
 ```
 brief dev — /home/user/forge

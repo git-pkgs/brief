@@ -469,7 +469,22 @@ func (e *Engine) loadDeps() {
 	e.devDeps = make(map[string]bool)
 	e.allDeps = make(map[string]bool)
 
+	// Collect all manifest file paths, including workflow files
+	var manifestPaths []string
 	for _, mf := range e.KB.ManifestFiles {
+		manifestPaths = append(manifestPaths, mf)
+	}
+	// GitHub Actions workflow files
+	wfMatches, _ := filepath.Glob(filepath.Join(e.Root, ".github/workflows/*.yml"))
+	wfMatchesYAML, _ := filepath.Glob(filepath.Join(e.Root, ".github/workflows/*.yaml"))
+	for _, m := range append(wfMatches, wfMatchesYAML...) {
+		rel, err := filepath.Rel(e.Root, m)
+		if err == nil {
+			manifestPaths = append(manifestPaths, rel)
+		}
+	}
+
+	for _, mf := range manifestPaths {
 		path := filepath.Join(e.Root, mf)
 		data, err := os.ReadFile(path)
 		if err != nil {

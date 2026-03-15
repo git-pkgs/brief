@@ -1,0 +1,19 @@
+[tool]
+name = "Changesets"
+category = "release"
+homepage = "https://github.com/changesets/changesets"
+docs = "https://github.com/changesets/changesets/blob/main/docs/intro-to-using-changesets.md"
+repo = "https://github.com/changesets/changesets"
+description = "Versioning and changelog management for monorepos"
+
+[detect]
+files = [".changeset/config.json"]
+dev_dependencies = ["@changesets/cli"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx changeset"
+alternatives = ["npx changeset publish"]
+
+[config]
+files = [".changeset/config.json"]

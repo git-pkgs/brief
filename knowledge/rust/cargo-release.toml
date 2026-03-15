@@ -1,0 +1,20 @@
+[tool]
+name = "cargo-release"
+category = "release"
+homepage = "https://github.com/crate-ci/cargo-release"
+docs = "https://github.com/crate-ci/cargo-release/blob/master/docs/reference.md"
+repo = "https://github.com/crate-ci/cargo-release"
+description = "Cargo subcommand for release automation"
+
+[detect]
+files = ["release.toml"]
+ecosystems = ["rust"]
+
+[detect.key_exists]
+"Cargo.toml" = ["package.metadata.release"]
+
+[commands]
+run = "cargo release"
+
+[config]
+files = ["release.toml"]

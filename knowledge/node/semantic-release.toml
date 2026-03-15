@@ -1,0 +1,18 @@
+[tool]
+name = "semantic-release"
+category = "release"
+homepage = "https://semantic-release.gitbook.io"
+docs = "https://semantic-release.gitbook.io/semantic-release/"
+repo = "https://github.com/semantic-release/semantic-release"
+description = "Automated versioning and changelog generation"
+
+[detect]
+files = [".releaserc", ".releaserc.json", ".releaserc.yml", ".releaserc.yaml", ".releaserc.js"]
+dev_dependencies = ["semantic-release"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx semantic-release"
+
+[config]
+files = [".releaserc", ".releaserc.json", ".releaserc.yml", ".releaserc.yaml", ".releaserc.js"]

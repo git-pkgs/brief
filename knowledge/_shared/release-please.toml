@@ -1,0 +1,13 @@
+[tool]
+name = "release-please"
+category = "release"
+homepage = "https://github.com/googleapis/release-please"
+docs = "https://github.com/googleapis/release-please#readme"
+repo = "https://github.com/googleapis/release-please"
+description = "Automated release PRs and changelog generation"
+
+[detect]
+files = ["release-please-config.json", ".release-please-manifest.json"]
+
+[config]
+files = ["release-please-config.json", ".release-please-manifest.json"]

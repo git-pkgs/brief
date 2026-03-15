@@ -1,0 +1,33 @@
+detect/detect.go
+  51d7df78896ba018 7,19,619,623,640-647,654-733
+detect/detect_test.go
+  51d7df78896ba018 92-99
+kb/kb.go
+  51d7df78896ba018 119-135,158,198-199,296-304
+report/report.go
+  51d7df78896ba018 170-172,174-177
+knowledge/_shared/_ci.toml
+  51d7df78896ba018 1-15
+testdata/ruby-project/.github/workflows/ci.yml
+  51d7df78896ba018 1-19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "c24cb591e23d2490a8a5e28e32936703d3ac9cc3",
+  "prompts": {
+    "51d7df78896ba018": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "960695c4-20c9-4fbd-9628-518a7602912e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 172,
+      "total_deletions": 7,
+      "accepted_lines": 172,
+      "overriden_lines": 0
+    }
+  }
+}

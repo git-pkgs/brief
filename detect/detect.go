@@ -40,6 +40,7 @@ type Engine struct {
 	runtimeDeps map[string]bool // all runtime/unscoped dependency names
 	devDeps     map[string]bool // development/test/build dependency names
 	allDeps     map[string]bool // union of both
+	parsedDeps  []brief.DepInfo // all parsed dependencies with PURLs
 }
 
 // sortLanguagesByFileCount reorders detected languages so the one with
@@ -224,6 +225,10 @@ func (e *Engine) Run() (*brief.Report, error) {
 		report.Lines = e.detectLineCount(abs)
 	}()
 	wg.Wait()
+
+	// Expose parsed dependencies (loadDeps was called lazily during tool matching)
+	e.loadDeps()
+	report.Dependencies = e.parsedDeps
 
 	elapsed := time.Since(start)
 	report.Stats = brief.Stats{
@@ -483,6 +488,23 @@ func (e *Engine) loadDeps() {
 				e.devDeps[dep.Name] = true
 			default:
 				e.runtimeDeps[dep.Name] = true
+			}
+			if dep.PURL != "" {
+				scope := "runtime"
+				switch dep.Scope {
+				case manifests.Development:
+					scope = "development"
+				case manifests.Test:
+					scope = "test"
+				case manifests.Build:
+					scope = "build"
+				}
+				e.parsedDeps = append(e.parsedDeps, brief.DepInfo{
+					Name:    dep.Name,
+					Version: dep.Version,
+					PURL:    dep.PURL,
+					Scope:   scope,
+				})
 			}
 		}
 	}

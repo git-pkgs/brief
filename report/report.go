@@ -227,6 +227,58 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 			r.Lines.TotalLines, r.Lines.TotalFiles, r.Lines.Source)
 	}
 
+	// Enrichment
+	if r.Enrichment != nil {
+		e := r.Enrichment
+		if e.Repo != nil && e.Repo.Scorecard > 0 {
+			_, _ = fmt.Fprintf(w, "\nScorecard:   %.1f/10 (%s)\n", e.Repo.Scorecard, e.Repo.ScorecardDate)
+		}
+		if len(e.RuntimeEOL) > 0 {
+			_, _ = fmt.Fprintln(w)
+			for name, eol := range e.RuntimeEOL {
+				status := "supported"
+				if !eol.Supported {
+					status = "EOL"
+				}
+				if eol.LTS {
+					status += ", LTS"
+				}
+				line := name + ": " + status
+				if eol.Latest != "" {
+					line += " (latest: " + eol.Latest + ")"
+				}
+				_, _ = fmt.Fprintf(w, "Runtime:     %s\n", line)
+			}
+		}
+		if len(e.Dependencies) > 0 {
+			advCount := 0
+			for _, dep := range e.Dependencies {
+				advCount += len(dep.Advisories)
+			}
+			_, _ = fmt.Fprintf(w, "\nEnriched:    %d packages", len(e.Dependencies))
+			if advCount > 0 {
+				_, _ = fmt.Fprintf(w, "  %d advisories", advCount)
+			}
+			_, _ = fmt.Fprintln(w)
+
+			if verbose {
+				for purl, dep := range e.Dependencies {
+					_, _ = fmt.Fprintf(w, "  %s\n", purl)
+					if dep.Downloads > 0 {
+						_, _ = fmt.Fprintf(w, "    downloads: %d (%s)\n", dep.Downloads, dep.DownloadsPeriod)
+					}
+					if dep.DependentReposCount > 0 {
+						_, _ = fmt.Fprintf(w, "    dependents: %d repos, %d packages\n", dep.DependentReposCount, dep.DependentPackagesCount)
+					}
+					for _, adv := range dep.Advisories {
+						ids := strings.Join(adv.Identifiers, ", ")
+						_, _ = fmt.Fprintf(w, "    advisory: %s [%s] %s\n", adv.Severity, ids, adv.Title)
+					}
+				}
+			}
+		}
+	}
+
 	// Stats
 	_, _ = fmt.Fprintf(w, "\n%.1fms  %d files checked  %d/%d tools matched\n",
 		r.Stats.DurationMS, r.Stats.FilesChecked, r.Stats.ToolsMatched, r.Stats.ToolsChecked)

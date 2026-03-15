@@ -30,6 +30,9 @@ func main() {
 		case "schema":
 			cmdSchema()
 			return
+		case "enrich":
+			cmdEnrich(os.Args[2:])
+			return
 		}
 	}
 

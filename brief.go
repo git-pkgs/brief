@@ -111,6 +111,58 @@ type Stats struct {
 	ToolsChecked int           `json:"tools_checked"`
 }
 
+// DepInfo is a parsed dependency from a manifest or lockfile.
+type DepInfo struct {
+	Name    string `json:"name"`
+	Version string `json:"version,omitempty"`
+	PURL    string `json:"purl"`
+	Scope   string `json:"scope,omitempty"` // "runtime", "development", "test", "build"
+}
+
+// EnrichmentInfo holds metadata fetched from external sources.
+type EnrichmentInfo struct {
+	Repo         *RepoEnrichment            `json:"repo,omitempty"`
+	RuntimeEOL   map[string]*RuntimeEOL     `json:"runtime_eol,omitempty"`
+	Dependencies map[string]*DepEnrichment  `json:"dependencies,omitempty"`
+}
+
+// RepoEnrichment holds metadata about the project's own repository.
+type RepoEnrichment struct {
+	Scorecard      float64  `json:"scorecard,omitempty"`
+	ScorecardDate  string   `json:"scorecard_date,omitempty"`
+}
+
+// RuntimeEOL holds end-of-life status for a runtime version.
+type RuntimeEOL struct {
+	EOL       string `json:"eol,omitempty"`       // date string or "true"/"false"
+	Supported bool   `json:"supported"`
+	LTS       bool   `json:"lts,omitempty"`
+	Latest    string `json:"latest,omitempty"`    // latest patch version
+}
+
+// DepEnrichment holds enrichment data for a single dependency.
+type DepEnrichment struct {
+	LatestVersion          string           `json:"latest_version,omitempty"`
+	License                string           `json:"license,omitempty"`
+	Downloads              int              `json:"downloads,omitempty"`
+	DownloadsPeriod        string           `json:"downloads_period,omitempty"`
+	DependentPackagesCount int              `json:"dependent_packages_count,omitempty"`
+	DependentReposCount    int              `json:"dependent_repos_count,omitempty"`
+	Repository             string           `json:"repository,omitempty"`
+	RegistryURL            string           `json:"registry_url,omitempty"`
+	Description            string           `json:"description,omitempty"`
+	Advisories             []AdvisoryInfo   `json:"advisories,omitempty"`
+}
+
+// AdvisoryInfo is a security advisory affecting a dependency.
+type AdvisoryInfo struct {
+	Title       string   `json:"title"`
+	Severity    string   `json:"severity,omitempty"`
+	CVSSScore   float32  `json:"cvss_score,omitempty"`
+	URL         string   `json:"url,omitempty"`
+	Identifiers []string `json:"identifiers,omitempty"`
+}
+
 // Report is the complete output of a brief analysis.
 type Report struct {
 	Version         string                 `json:"version"`
@@ -125,5 +177,7 @@ type Report struct {
 	Resources       *ResourceInfo          `json:"resources,omitempty"`
 	Git             *GitInfo               `json:"git,omitempty"`
 	Lines           *LineCount             `json:"lines,omitempty"`
+	Dependencies    []DepInfo              `json:"dependencies,omitempty"`
+	Enrichment      *EnrichmentInfo        `json:"enrichment,omitempty"`
 	Stats           Stats                  `json:"stats"`
 }

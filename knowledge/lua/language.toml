@@ -6,5 +6,5 @@ docs = "https://www.lua.org/manual/"
 description = "Lightweight, embeddable scripting language"
 
 [detect]
-files = ["*.lua", ".luacheckrc"]
+files = ["*.lua", "**/*.lua", ".luacheckrc"]
 ecosystems = ["lua"]

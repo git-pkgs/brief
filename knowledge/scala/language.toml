@@ -7,5 +7,5 @@ repo = "https://github.com/scala/scala3"
 description = "Multi-paradigm language for the JVM"
 
 [detect]
-files = ["build.sbt", "*.scala", "project/build.properties"]
+files = ["build.sbt", "*.scala", "**/*.scala", "project/build.properties"]
 ecosystems = ["scala"]

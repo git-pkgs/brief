@@ -7,7 +7,7 @@ repo = "https://github.com/ziglang/zig"
 description = "Systems programming language"
 
 [detect]
-files = ["build.zig", "build.zig.zon", "*.zig"]
+files = ["build.zig", "build.zig.zon", "*.zig", "**/*.zig"]
 ecosystems = ["zig"]
 
 [commands]

@@ -7,5 +7,5 @@ repo = "https://github.com/dart-lang/sdk"
 description = "Client-optimized language for fast apps"
 
 [detect]
-files = ["pubspec.yaml", "*.dart"]
+files = ["pubspec.yaml", "*.dart", "**/*.dart"]
 ecosystems = ["dart"]

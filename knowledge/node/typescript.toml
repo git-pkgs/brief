@@ -7,7 +7,7 @@ repo = "https://github.com/microsoft/TypeScript"
 description = "Typed superset of JavaScript"
 
 [detect]
-files = ["tsconfig.json", "*.ts", "*.tsx"]
+files = ["tsconfig.json", "**/tsconfig.json", "*.ts", "**/*.ts", "*.tsx"]
 dependencies = ["typescript"]
 dev_dependencies = ["typescript"]
 ecosystems = ["node"]

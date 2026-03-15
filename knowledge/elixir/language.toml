@@ -7,5 +7,5 @@ repo = "https://github.com/elixir-lang/elixir"
 description = "Dynamic, functional language for building scalable applications"
 
 [detect]
-files = ["mix.exs", "*.ex", "*.exs"]
+files = ["mix.exs", "*.ex", "**/*.ex", "*.exs"]
 ecosystems = ["elixir"]

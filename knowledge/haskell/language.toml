@@ -6,5 +6,5 @@ docs = "https://www.haskell.org/documentation/"
 description = "Purely functional programming language"
 
 [detect]
-files = ["*.cabal", "stack.yaml", "cabal.project", "*.hs"]
+files = ["*.cabal", "stack.yaml", "cabal.project", "*.hs", "**/*.hs"]
 ecosystems = ["haskell"]

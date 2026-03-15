@@ -7,5 +7,5 @@ repo = "https://github.com/crystal-lang/crystal"
 description = "Compiled language with Ruby-like syntax"
 
 [detect]
-files = ["shard.yml", "*.cr"]
+files = ["shard.yml", "*.cr", "**/*.cr"]
 ecosystems = ["crystal"]

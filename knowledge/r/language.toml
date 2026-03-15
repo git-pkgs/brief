@@ -6,5 +6,5 @@ docs = "https://cran.r-project.org/manuals.html"
 description = "Statistical computing and graphics language"
 
 [detect]
-files = ["DESCRIPTION", "NAMESPACE", "*.R", "*.Rmd"]
+files = ["DESCRIPTION", "NAMESPACE", "*.R", "**/*.R", "*.Rmd"]
 ecosystems = ["r"]

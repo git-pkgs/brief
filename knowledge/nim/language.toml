@@ -7,5 +7,5 @@ repo = "https://github.com/nim-lang/Nim"
 description = "Statically typed compiled systems programming language"
 
 [detect]
-files = ["*.nimble", "*.nim"]
+files = ["*.nimble", "*.nim", "**/*.nim"]
 ecosystems = ["nim"]

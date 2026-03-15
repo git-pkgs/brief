@@ -6,5 +6,5 @@ docs = "https://learn.microsoft.com/en-us/dotnet/csharp/"
 description = "Modern, object-oriented programming language"
 
 [detect]
-files = ["*.csproj", "*.sln", "*.cs"]
+files = ["*.csproj", "*.sln", "*.cs", "**/*.cs"]
 ecosystems = ["csharp"]

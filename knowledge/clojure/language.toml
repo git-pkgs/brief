@@ -7,5 +7,5 @@ repo = "https://github.com/clojure/clojure"
 description = "Dynamic, functional Lisp dialect for the JVM"
 
 [detect]
-files = ["project.clj", "deps.edn", "*.clj", "*.cljs"]
+files = ["project.clj", "deps.edn", "*.clj", "**/*.clj", "*.cljs"]
 ecosystems = ["clojure"]

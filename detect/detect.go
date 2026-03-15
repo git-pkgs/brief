@@ -25,6 +25,7 @@ import (
 type Engine struct {
 	KB           *kb.KnowledgeBase
 	Root         string
+	ScanDepth    int // max directory depth for recursive detection (0 = default 4)
 	filesChecked int
 	toolsChecked int
 	toolsMatched int
@@ -32,6 +33,7 @@ type Engine struct {
 	detectedEcosystems map[string]bool // ecosystems whose language was detected
 
 	// Lazily populated caches
+	fileExts    map[string]bool // cached set of file extensions in the project
 	depsLoaded  bool
 	runtimeDeps map[string]bool // all runtime/unscoped dependency names
 	devDeps     map[string]bool // development/test/build dependency names
@@ -264,6 +266,11 @@ func (e *Engine) exists(pattern string) bool {
 		return err == nil && info.IsDir()
 	}
 
+	// Handle recursive glob patterns like "**/*.py"
+	if strings.Contains(pattern, "**") {
+		return e.recursiveGlob(pattern)
+	}
+
 	if kb.HasGlobPattern(pattern) {
 		matches, err := filepath.Glob(filepath.Join(e.Root, pattern))
 		return err == nil && len(matches) > 0
@@ -271,6 +278,85 @@ func (e *Engine) exists(pattern string) bool {
 
 	_, err := os.Stat(filepath.Join(e.Root, pattern))
 	return err == nil
+}
+
+// recursiveGlob handles ** patterns by checking against the cached file extension set.
+// Falls back to a bounded walk if the cache isn't populated.
+func (e *Engine) recursiveGlob(pattern string) bool {
+	parts := strings.SplitN(pattern, "**/", 2)
+	if len(parts) != 2 {
+		return false
+	}
+	suffix := parts[1] // e.g. "*.py"
+
+	// Use the cached extension set for simple "**/*.ext" patterns
+	if strings.HasPrefix(suffix, "*.") {
+		ext := suffix[1:] // ".py"
+		e.loadFileExts()
+		return e.fileExts[ext]
+	}
+
+	// Fall back to walk for complex patterns
+	root := filepath.Join(e.Root, parts[0])
+	found := false
+	errDone := errors.New("found")
+	_ = filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return nil
+		}
+		if info.IsDir() {
+			name := info.Name()
+			if name != "." && (strings.HasPrefix(name, ".") || name == "vendor" || name == "node_modules") {
+				return filepath.SkipDir
+			}
+			return nil
+		}
+		matched, _ := filepath.Match(suffix, info.Name())
+		if matched {
+			found = true
+			return errDone
+		}
+		return nil
+	})
+	return found
+}
+
+// loadFileExts walks the project to a bounded depth to collect file extensions.
+// Cached for the lifetime of the engine. Default depth of 4 covers most layouts
+// (src/main/java/*.java, lib/something/*.rb).
+func (e *Engine) loadFileExts() {
+	if e.fileExts != nil {
+		return
+	}
+	e.fileExts = make(map[string]bool)
+	maxDepth := e.ScanDepth
+	if maxDepth == 0 {
+		maxDepth = 4
+	}
+	rootLen := len(e.Root)
+	_ = filepath.Walk(e.Root, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return nil
+		}
+		if info.IsDir() {
+			name := info.Name()
+			if name != "." && (strings.HasPrefix(name, ".") || name == "vendor" || name == "node_modules") {
+				return filepath.SkipDir
+			}
+			// Check depth
+			rel := path[rootLen:]
+			depth := strings.Count(rel, string(filepath.Separator))
+			if depth > maxDepth {
+				return filepath.SkipDir
+			}
+			return nil
+		}
+		ext := filepath.Ext(info.Name())
+		if ext != "" {
+			e.fileExts[ext] = true
+		}
+		return nil
+	})
 }
 
 // contains checks if a file contains any of the given strings.

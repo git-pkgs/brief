@@ -7,5 +7,5 @@ repo = "https://github.com/rust-lang/rust"
 description = "Systems programming language focused on safety and performance"
 
 [detect]
-files = ["Cargo.toml", "*.rs"]
+files = ["Cargo.toml", "*.rs", "**/*.rs"]
 ecosystems = ["rust"]

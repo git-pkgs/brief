@@ -6,5 +6,5 @@ docs = "https://perldoc.perl.org"
 description = "General-purpose programming language"
 
 [detect]
-files = ["cpanfile", "Makefile.PL", "Build.PL", "META.json", "META.yml", "*.pl", "*.pm"]
+files = ["cpanfile", "Makefile.PL", "Build.PL", "META.json", "META.yml", "*.pl", "**/*.pl", "*.pm", "**/*.pm"]
 ecosystems = ["perl"]

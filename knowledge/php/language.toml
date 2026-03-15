@@ -7,5 +7,5 @@ repo = "https://github.com/php/php-src"
 description = "General-purpose scripting language for web development"
 
 [detect]
-files = ["composer.json", "*.php"]
+files = ["composer.json", "*.php", "**/*.php"]
 ecosystems = ["php"]

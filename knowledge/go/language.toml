@@ -7,5 +7,5 @@ repo = "https://github.com/golang/go"
 description = "Statically typed, compiled programming language"
 
 [detect]
-files = ["go.mod", "*.go"]
+files = ["go.mod", "*.go", "**/*.go"]
 ecosystems = ["go"]

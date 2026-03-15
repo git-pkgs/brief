@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/BurntSushi/toml"
 	"github.com/git-pkgs/brief"
 	"github.com/git-pkgs/brief/kb"
 	"github.com/git-pkgs/manifests"
@@ -145,6 +146,15 @@ func (e *Engine) matchTool(tool *kb.ToolDef) brief.Confidence {
 		}
 	}
 
+	for file, keys := range tool.Detect.KeyExists {
+		if e.hasKey(file, keys) {
+			conf := brief.ConfidenceMedium
+			if best == "" || rank(conf) > rank(best) {
+				best = conf
+			}
+		}
+	}
+
 	return best
 }
 
@@ -232,6 +242,56 @@ func (e *Engine) hasDependency(tool *kb.ToolDef) bool {
 		}
 	}
 	return false
+}
+
+// hasKey checks if a structured file (JSON, TOML) contains any of the given
+// dot-separated key paths (e.g. "scripts.test" in package.json).
+func (e *Engine) hasKey(file string, keys []string) bool {
+	data, err := os.ReadFile(filepath.Join(e.Root, file))
+	if err != nil {
+		return false
+	}
+
+	ext := filepath.Ext(file)
+	var parsed map[string]any
+
+	switch ext {
+	case ".json":
+		if err := json.Unmarshal(data, &parsed); err != nil {
+			return false
+		}
+	case ".toml":
+		if _, err := toml.Decode(string(data), &parsed); err != nil {
+			return false
+		}
+	default:
+		return false
+	}
+
+	for _, key := range keys {
+		if lookupKeyPath(parsed, key) {
+			return true
+		}
+	}
+	return false
+}
+
+// lookupKeyPath checks if a dot-separated key path exists in a nested map.
+func lookupKeyPath(m map[string]any, path string) bool {
+	parts := strings.Split(path, ".")
+	current := any(m)
+
+	for _, part := range parts {
+		obj, ok := current.(map[string]any)
+		if !ok {
+			return false
+		}
+		current, ok = obj[part]
+		if !ok {
+			return false
+		}
+	}
+	return true
 }
 
 // findExisting returns which of the given paths actually exist in the project.

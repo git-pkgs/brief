@@ -35,7 +35,7 @@ type DetectInfo struct {
 	Dependencies    []string            `toml:"dependencies"`
 	DevDependencies []string            `toml:"dev_dependencies"`
 	FileContains    map[string][]string `toml:"file_contains"`
-	ManifestKey     map[string][]string `toml:"manifest_key"`
+	KeyExists       map[string][]string `toml:"key_exists"`
 	Ecosystems      []string            `toml:"ecosystems"`
 }
 

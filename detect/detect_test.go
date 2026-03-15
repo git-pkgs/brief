@@ -243,6 +243,28 @@ func TestKnowledgeBaseLoads(t *testing.T) {
 	}
 }
 
+func TestKeyExists(t *testing.T) {
+	knowledgeBase := loadKB(t)
+	engine := New(knowledgeBase, "../testdata/node-project")
+
+	// package.json has a top-level "jest" key check via key_exists
+	// and also has devDependencies with jest, so it should be detected
+	matched := engine.hasKey("package.json", []string{"scripts.test"})
+	if !matched {
+		t.Error("expected key_exists to match scripts.test in package.json")
+	}
+
+	matched = engine.hasKey("package.json", []string{"scripts.nonexistent"})
+	if matched {
+		t.Error("expected key_exists to not match scripts.nonexistent")
+	}
+
+	matched = engine.hasKey("nonexistent.json", []string{"anything"})
+	if matched {
+		t.Error("expected key_exists to not match nonexistent file")
+	}
+}
+
 func assertToolDetected(t *testing.T, r *brief.Report, category, name string) {
 	t.Helper()
 	tools, ok := r.Tools[category]

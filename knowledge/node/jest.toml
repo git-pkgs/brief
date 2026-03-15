@@ -11,6 +11,8 @@ files = ["jest.config.js", "jest.config.ts", "jest.config.mjs", "jest.config.cjs
 dependencies = ["jest"]
 dev_dependencies = ["jest"]
 ecosystems = ["node"]
+[detect.key_exists]
+"package.json" = ["jest"]
 
 [commands]
 run = "npx jest"

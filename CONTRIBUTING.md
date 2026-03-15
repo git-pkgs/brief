@@ -1,0 +1,153 @@
+# Contributing to brief
+
+The easiest way to contribute is adding tool definitions. Each tool is a single TOML file in the `knowledge/` directory. No Go code changes required.
+
+## Adding a tool
+
+Create a TOML file in the appropriate ecosystem directory:
+
+```
+knowledge/ruby/my-tool.toml
+```
+
+Every tool definition has four sections:
+
+```toml
+[tool]
+name = "My Tool"
+category = "lint"                    # see categories below
+homepage = "https://example.com"
+docs = "https://example.com/docs"
+repo = "https://github.com/org/repo"
+description = "One line description"
+
+[detect]
+files = [".my-tool.yml"]            # file or directory presence
+dependencies = ["my-tool"]          # package name in manifest
+ecosystems = ["ruby"]               # which language ecosystems this belongs to
+
+[commands]
+run = "bundle exec my-tool"
+alternatives = ["my-tool"]
+
+[config]
+files = [".my-tool.yml"]
+```
+
+## Detection methods
+
+brief has five detection primitives. A tool matches when any of its primitives match. The more specific the primitive, the higher the confidence.
+
+### files (medium/low confidence)
+
+Checks if files or directories exist. Directories end with `/`. Supports glob patterns.
+
+```toml
+[detect]
+files = [".rspec", "spec/", "*.gemspec"]
+```
+
+A specific config file like `.rspec` gives medium confidence. A generic directory like `spec/` gives low confidence.
+
+### dependencies (high confidence)
+
+Checks if a package name appears in the project's parsed manifests. Uses the git-pkgs/manifests library for proper parsing with scope awareness.
+
+```toml
+[detect]
+dependencies = ["rspec", "rspec-core"]
+```
+
+Matches dependencies in any scope (runtime, dev, test). Use `dev_dependencies` to match only development/test/build scoped packages:
+
+```toml
+[detect]
+dev_dependencies = ["rubocop"]
+```
+
+### file_contains (high confidence)
+
+Checks if a file contains a specific string. Useful for tools configured inside shared config files like `pyproject.toml`.
+
+```toml
+[detect.file_contains]
+"pyproject.toml" = ["[tool.ruff]"]
+```
+
+### key_exists (medium confidence)
+
+Checks if a dot-separated key path exists in a JSON or TOML file. Useful for checking if a tool has configuration in a structured file.
+
+```toml
+[detect.key_exists]
+"package.json" = ["jest", "scripts.test"]
+```
+
+### ecosystems
+
+Declares which language ecosystems the tool belongs to. Tools with ecosystems are only matched when that language is detected in the project, preventing false positives like ExUnit matching `test/` in a JavaScript project.
+
+```toml
+[detect]
+ecosystems = ["ruby"]
+```
+
+Shared tools that work across languages (Docker, GitHub Actions, Dependabot) should not set ecosystems.
+
+## Categories
+
+| Category | What it means |
+| --- | --- |
+| `language` | Programming language |
+| `package_manager` | Dependency management |
+| `test` | Test framework or runner |
+| `lint` | Linter or static analysis |
+| `format` | Code formatter |
+| `typecheck` | Type checker |
+| `build` | Build tool |
+| `docs` | Documentation generator |
+| `security` | Security scanner |
+| `ci` | Continuous integration |
+| `container` | Container tooling |
+| `dependency_bot` | Automated dependency updates |
+
+## Adding an ecosystem
+
+Create a directory under `knowledge/` and add at least:
+
+1. `language.toml` with the language detection rules
+2. A package manager
+3. A test framework
+4. A linter
+
+## Lockfile reporting
+
+Package managers can declare their lockfile:
+
+```toml
+[config]
+files = ["Gemfile", "Gemfile.lock"]
+lockfile = "Gemfile.lock"
+```
+
+## Testing
+
+Add a minimal project fixture in `testdata/` and run:
+
+```
+go test ./...
+```
+
+The knowledge base is validated on every test run. Malformed TOML will fail the build.
+
+## Shared configuration
+
+Files prefixed with `_` in ecosystem directories are shared config, not tool definitions:
+
+- `_shared/_scripts.toml` - script source definitions (Makefile, package.json)
+- `_shared/_resources.toml` - project resource file patterns (README, LICENSE, etc.)
+- `_shared/_layout.toml` - source and test directory patterns
+- `_shared/_style.toml` - style config files and inference settings
+- `_shared/_runtimes.toml` - runtime version file patterns
+- `_shared/_manifests.toml` - manifest file list for dependency detection
+- `_shared/_ci.toml` - CI matrix parsing configuration

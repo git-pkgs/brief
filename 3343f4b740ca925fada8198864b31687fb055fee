@@ -1,0 +1,29 @@
+brief.go
+  84f545bbad6fb7cb 114,122,125-126,133-147
+cmd/brief/enrich.go
+  84f545bbad6fb7cb 5,9,13,70,83-84,89-91,95,99,108,119,125-127,129-168,170-197,199-200,204-255,257-264,266,285-288,291,297
+report/report.go
+  84f545bbad6fb7cb 253,255-261,263-264,266-267
+detect/detect.go
+  84f545bbad6fb7cb 43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "3343f4b740ca925fada8198864b31687fb055fee",
+  "prompts": {
+    "84f545bbad6fb7cb": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "60673090-6a91-4d42-b2c4-cecb5a39f60b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 201,
+      "total_deletions": 111,
+      "accepted_lines": 194,
+      "overriden_lines": 0
+    }
+  }
+}

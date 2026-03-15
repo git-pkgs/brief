@@ -243,6 +243,36 @@ func TestKnowledgeBaseLoads(t *testing.T) {
 	}
 }
 
+func TestScriptPriority(t *testing.T) {
+	engine := New(loadKB(t), "../testdata/ruby-project")
+	r, err := engine.Run()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	// Ruby project has Makefile with test: target and RSpec detected
+	// The test tool's command should come from the project script
+	tests, ok := r.Tools["test"]
+	if !ok || len(tests) == 0 {
+		t.Fatal("expected test tools")
+	}
+
+	// First test tool should have script-sourced command
+	first := tests[0]
+	if first.Command == nil {
+		t.Fatal("expected command on first test tool")
+	}
+	if first.Command.Source != brief.SourceProjectScript {
+		t.Errorf("expected source project_script, got %s", first.Command.Source)
+	}
+	if first.Command.Run != "make test" {
+		t.Errorf("expected 'make test', got %s", first.Command.Run)
+	}
+	if first.Command.InferredTool == "" {
+		t.Error("expected inferred_tool to be set")
+	}
+}
+
 func TestKeyExists(t *testing.T) {
 	knowledgeBase := loadKB(t)
 	engine := New(knowledgeBase, "../testdata/node-project")

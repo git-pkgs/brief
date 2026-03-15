@@ -54,13 +54,51 @@ func (e *Engine) Run() (*brief.Report, error) {
 	report.PackageManagers = e.detectCategory("package_manager")
 	report.Scripts = e.detectScripts()
 
+	// Build a map of script names to their commands for linking
+	scriptsByName := make(map[string]brief.Script)
+	for _, s := range report.Scripts {
+		scriptsByName[s.Name] = s
+	}
+
+	// Category names that map to common script names
+	categoryScriptNames := map[string][]string{
+		"test":      {"test", "spec"},
+		"lint":      {"lint", "check"},
+		"format":    {"format", "fmt"},
+		"typecheck": {"typecheck", "types", "type-check"},
+		"build":     {"build", "compile"},
+		"docs":      {"docs", "doc"},
+	}
+
 	for _, cat := range e.KB.Categories() {
 		if cat == "language" || cat == "package_manager" {
 			continue
 		}
-		if detections := e.detectCategory(cat); len(detections) > 0 {
-			report.Tools[cat] = detections
+		detections := e.detectCategory(cat)
+		if len(detections) == 0 {
+			continue
 		}
+
+		// Link project scripts to detected tools
+		if scriptNames, ok := categoryScriptNames[cat]; ok {
+			for _, sn := range scriptNames {
+				script, exists := scriptsByName[sn]
+				if !exists {
+					continue
+				}
+				// Override the first tool's command with the project script
+				if detections[0].Command != nil {
+					detections[0].Command = &brief.Command{
+						Run:          script.Run,
+						Source:       brief.SourceProjectScript,
+						InferredTool: detections[0].Name,
+					}
+				}
+				break
+			}
+		}
+
+		report.Tools[cat] = detections
 	}
 
 	report.Style = e.detectStyle()

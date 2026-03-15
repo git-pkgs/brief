@@ -1,0 +1,23 @@
+cmd/brief/main.go
+  51d7df78896ba018 4,9,22-43,46,51-52,57,64,68-71,76,84-120,122-319
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "01afacf189ce11f4934dd9691e873f1ecf3bf019",
+  "prompts": {
+    "51d7df78896ba018": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "960695c4-20c9-4fbd-9628-518a7602912e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 273,
+      "total_deletions": 11,
+      "accepted_lines": 273,
+      "overriden_lines": 0
+    }
+  }
+}

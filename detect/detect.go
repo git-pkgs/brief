@@ -13,6 +13,8 @@ import (
 	"github.com/git-pkgs/brief"
 	"github.com/git-pkgs/brief/kb"
 	"github.com/git-pkgs/manifests"
+	"github.com/git-pkgs/spdx"
+	"github.com/google/licensecheck"
 )
 
 // Engine runs detection against a project directory.
@@ -596,6 +598,7 @@ func (e *Engine) detectResources() *brief.ResourceInfo {
 					res.Changelog = match
 				case "license":
 					res.License = match
+					res.LicenseType = detectLicenseType(matches[0])
 				case "security":
 					res.Security = match
 				}
@@ -649,6 +652,27 @@ func (e *Engine) globMatch(pattern string) []string {
 		return nil
 	}
 	return matches
+}
+
+// detectLicenseType reads a license file and identifies its SPDX license type.
+func detectLicenseType(path string) string {
+	data, err := os.ReadFile(path)
+	if err != nil || len(data) == 0 {
+		return ""
+	}
+
+	cov := licensecheck.Scan(data)
+	if len(cov.Match) == 0 {
+		return ""
+	}
+
+	id := cov.Match[0].ID
+	// Normalize to a valid SPDX identifier
+	normalized, err := spdx.Normalize(id)
+	if err != nil {
+		return id // return raw ID if normalization fails
+	}
+	return normalized
 }
 
 func rank(c brief.Confidence) int {

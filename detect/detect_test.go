@@ -75,6 +75,12 @@ func TestRubyProject(t *testing.T) {
 	if r.Resources == nil || r.Resources.Readme == "" {
 		t.Error("expected README to be detected")
 	}
+	if r.Resources == nil || r.Resources.LicenseType == "" {
+		t.Error("expected license type to be detected")
+	}
+	if r.Resources != nil && r.Resources.LicenseType != "MIT" {
+		t.Errorf("expected MIT license, got %s", r.Resources.LicenseType)
+	}
 
 	// Platforms
 	if r.Platforms == nil {

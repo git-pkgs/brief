@@ -1,0 +1,18 @@
+[tool]
+name = "Cloudflare Workers"
+category = "ci"
+homepage = "https://workers.cloudflare.com"
+docs = "https://developers.cloudflare.com/workers/"
+description = "Serverless platform on Cloudflare's edge network"
+
+[detect]
+files = ["wrangler.toml", "wrangler.json", "wrangler.jsonc"]
+dependencies = ["wrangler"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx wrangler dev"
+alternatives = ["npx wrangler deploy"]
+
+[config]
+files = ["wrangler.toml", "wrangler.json"]

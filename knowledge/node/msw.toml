@@ -1,0 +1,17 @@
+[tool]
+name = "MSW"
+category = "test"
+homepage = "https://mswjs.io"
+docs = "https://mswjs.io/docs"
+repo = "https://github.com/mswjs/msw"
+description = "API mocking library for browser and Node.js"
+
+[detect]
+dependencies = ["msw"]
+ecosystems = ["node"]
+
+[detect.key_exists]
+"package.json" = ["msw"]
+
+[commands]
+run = "npx msw init"

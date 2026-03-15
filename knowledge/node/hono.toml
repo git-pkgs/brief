@@ -1,0 +1,11 @@
+[tool]
+name = "Hono"
+category = "build"
+homepage = "https://hono.dev"
+docs = "https://hono.dev/docs"
+repo = "https://github.com/honojs/hono"
+description = "Lightweight web framework for multiple runtimes"
+
+[detect]
+dependencies = ["hono"]
+ecosystems = ["node"]

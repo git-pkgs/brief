@@ -1,0 +1,15 @@
+[tool]
+name = "Less"
+category = "build"
+homepage = "https://lesscss.org"
+docs = "https://lesscss.org/usage/"
+repo = "https://github.com/less/less.js"
+description = "CSS preprocessor"
+
+[detect]
+files = ["*.less", "**/*.less"]
+dependencies = ["less"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx lessc"

@@ -1,0 +1,19 @@
+[tool]
+name = "AdonisJS"
+category = "build"
+homepage = "https://adonisjs.com"
+docs = "https://docs.adonisjs.com"
+repo = "https://github.com/adonisjs/core"
+description = "Full-stack Node.js framework"
+
+[detect]
+files = ["adonisrc.ts", "adonisrc.js", ".adonisrc.json"]
+dependencies = ["@adonisjs/core"]
+ecosystems = ["node"]
+
+[commands]
+run = "node ace serve --watch"
+alternatives = ["node ace build"]
+
+[config]
+files = ["adonisrc.ts", "adonisrc.js", ".adonisrc.json"]

@@ -1,0 +1,11 @@
+[tool]
+name = "Qwik"
+category = "build"
+homepage = "https://qwik.dev"
+docs = "https://qwik.dev/docs/"
+repo = "https://github.com/QwikDev/qwik"
+description = "Resumable web framework"
+
+[detect]
+dependencies = ["@builder.io/qwik"]
+ecosystems = ["node"]

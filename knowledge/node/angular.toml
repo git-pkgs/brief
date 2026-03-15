@@ -1,0 +1,19 @@
+[tool]
+name = "Angular"
+category = "build"
+homepage = "https://angular.dev"
+docs = "https://angular.dev/overview"
+repo = "https://github.com/angular/angular"
+description = "Web application framework"
+
+[detect]
+files = ["angular.json", ".angular/"]
+dependencies = ["@angular/core", "@angular/cli"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx ng serve"
+alternatives = ["npx ng build"]
+
+[config]
+files = ["angular.json"]

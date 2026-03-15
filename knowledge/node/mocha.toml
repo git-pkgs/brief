@@ -1,0 +1,18 @@
+[tool]
+name = "Mocha"
+category = "test"
+homepage = "https://mochajs.org"
+docs = "https://mochajs.org/#getting-started"
+repo = "https://github.com/mochajs/mocha"
+description = "JavaScript test framework"
+
+[detect]
+files = [".mocharc.js", ".mocharc.json", ".mocharc.yaml", ".mocharc.yml", ".mocharc.cjs"]
+dependencies = ["mocha"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx mocha"
+
+[config]
+files = [".mocharc.js", ".mocharc.json", ".mocharc.yaml"]

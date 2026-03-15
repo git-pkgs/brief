@@ -1,0 +1,21 @@
+[tool]
+name = "AVA"
+category = "test"
+homepage = "https://github.com/avajs/ava"
+docs = "https://github.com/avajs/ava/blob/main/docs/01-writing-tests.md"
+repo = "https://github.com/avajs/ava"
+description = "Concurrent test runner for Node.js"
+
+[detect]
+files = ["ava.config.js", "ava.config.cjs", "ava.config.mjs"]
+dependencies = ["ava"]
+ecosystems = ["node"]
+
+[detect.key_exists]
+"package.json" = ["ava"]
+
+[commands]
+run = "npx ava"
+
+[config]
+files = ["ava.config.js", "ava.config.cjs", "ava.config.mjs"]

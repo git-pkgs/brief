@@ -1,0 +1,19 @@
+[tool]
+name = "Rspack"
+category = "build"
+homepage = "https://rspack.dev"
+docs = "https://rspack.dev/guide/start/introduction"
+repo = "https://github.com/web-infra-dev/rspack"
+description = "Rust-based JavaScript bundler"
+
+[detect]
+files = ["rspack.config.js", "rspack.config.ts", "rspack.config.mjs"]
+dependencies = ["@rspack/core", "@rspack/cli"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx rspack build"
+alternatives = ["npx rspack serve"]
+
+[config]
+files = ["rspack.config.js", "rspack.config.ts"]

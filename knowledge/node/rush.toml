@@ -1,0 +1,18 @@
+[tool]
+name = "Rush"
+category = "monorepo"
+homepage = "https://rushjs.io"
+docs = "https://rushjs.io/pages/intro/welcome/"
+repo = "https://github.com/microsoft/rushstack"
+description = "Scalable monorepo manager for the web"
+
+[detect]
+files = ["rush.json"]
+ecosystems = ["node"]
+
+[commands]
+run = "rush install"
+alternatives = ["rush build", "rush update"]
+
+[config]
+files = ["rush.json"]

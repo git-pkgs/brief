@@ -1,0 +1,11 @@
+[tool]
+name = "SolidJS"
+category = "build"
+homepage = "https://www.solidjs.com"
+docs = "https://docs.solidjs.com"
+repo = "https://github.com/solidjs/solid"
+description = "Reactive JavaScript UI library"
+
+[detect]
+dependencies = ["solid-js"]
+ecosystems = ["node"]

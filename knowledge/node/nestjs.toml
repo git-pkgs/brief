@@ -1,0 +1,19 @@
+[tool]
+name = "NestJS"
+category = "build"
+homepage = "https://nestjs.com"
+docs = "https://docs.nestjs.com"
+repo = "https://github.com/nestjs/nest"
+description = "Progressive Node.js framework"
+
+[detect]
+files = ["nest-cli.json"]
+dependencies = ["@nestjs/core", "@nestjs/cli"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx nest start"
+alternatives = ["npx nest build"]
+
+[config]
+files = ["nest-cli.json"]

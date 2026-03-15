@@ -1,0 +1,19 @@
+[tool]
+name = "Remix"
+category = "build"
+homepage = "https://remix.run"
+docs = "https://remix.run/docs"
+repo = "https://github.com/remix-run/remix"
+description = "Full-stack React framework"
+
+[detect]
+files = ["remix.config.js", "remix.config.ts"]
+dependencies = ["@remix-run/react", "@remix-run/node", "@remix-run/dev"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx remix dev"
+alternatives = ["npx remix build"]
+
+[config]
+files = ["remix.config.js", "remix.config.ts"]

@@ -1,0 +1,11 @@
+[tool]
+name = "Koa"
+category = "build"
+homepage = "https://koajs.com"
+docs = "https://github.com/koajs/koa/wiki"
+repo = "https://github.com/koajs/koa"
+description = "Expressive HTTP middleware framework for Node.js"
+
+[detect]
+dependencies = ["koa"]
+ecosystems = ["node"]

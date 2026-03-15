@@ -1,0 +1,11 @@
+[tool]
+name = "Starlight"
+category = "docs"
+homepage = "https://starlight.astro.build"
+docs = "https://starlight.astro.build/getting-started/"
+repo = "https://github.com/withastro/starlight"
+description = "Documentation site framework built on Astro"
+
+[detect]
+dependencies = ["@astrojs/starlight"]
+ecosystems = ["node"]

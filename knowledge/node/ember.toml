@@ -1,0 +1,19 @@
+[tool]
+name = "Ember.js"
+category = "build"
+homepage = "https://emberjs.com"
+docs = "https://guides.emberjs.com"
+repo = "https://github.com/emberjs/ember.js"
+description = "Framework for ambitious web applications"
+
+[detect]
+files = [".ember-cli", "ember-cli-build.js"]
+dependencies = ["ember-cli", "ember-source"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx ember serve"
+alternatives = ["npx ember build"]
+
+[config]
+files = [".ember-cli", "ember-cli-build.js"]

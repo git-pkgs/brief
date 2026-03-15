@@ -29,6 +29,8 @@ type Engine struct {
 	toolsChecked int
 	toolsMatched int
 
+	detectedEcosystems map[string]bool // ecosystems whose language was detected
+
 	// Lazily populated caches
 	depsLoaded  bool
 	runtimeDeps map[string]bool // all runtime/unscoped dependency names
@@ -57,6 +59,20 @@ func (e *Engine) Run() (*brief.Report, error) {
 	}
 
 	report.Languages = e.detectCategory("language")
+
+	// Build set of detected ecosystems from language results to filter
+	// ecosystem-specific tools (prevents ExUnit matching in JS projects, etc.)
+	e.detectedEcosystems = make(map[string]bool)
+	for _, lang := range report.Languages {
+		for _, tool := range e.KB.Tools {
+			if tool.Tool.Name == lang.Name && tool.Tool.Category == "language" {
+				for _, eco := range tool.Detect.Ecosystems {
+					e.detectedEcosystems[eco] = true
+				}
+			}
+		}
+	}
+
 	report.PackageManagers = e.detectCategory("package_manager")
 	report.Scripts = e.detectScripts()
 
@@ -146,6 +162,22 @@ func (e *Engine) detectCategory(category string) []brief.Detection {
 
 	for _, tool := range e.KB.ToolsForCategory(category) {
 		e.toolsChecked++
+
+		// Skip ecosystem-specific tools when their language wasn't detected.
+		// Tools without ecosystems (shared tools like Docker, CI) always run.
+		if len(tool.Detect.Ecosystems) > 0 && e.detectedEcosystems != nil {
+			relevant := false
+			for _, eco := range tool.Detect.Ecosystems {
+				if e.detectedEcosystems[eco] {
+					relevant = true
+					break
+				}
+			}
+			if !relevant {
+				continue
+			}
+		}
+
 		confidence := e.matchTool(tool)
 		if confidence == "" {
 			continue

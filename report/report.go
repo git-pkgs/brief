@@ -43,6 +43,30 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 		}
 	}
 
+	// Dependencies (exclude CI actions from counts)
+	if len(r.Dependencies) > 0 {
+		runtime, dev := 0, 0
+		for _, d := range r.Dependencies {
+			if strings.HasPrefix(d.PURL, "pkg:githubactions/") || strings.HasPrefix(d.PURL, "pkg:docker/") {
+				continue
+			}
+			switch d.Scope {
+			case "development", "test", "build":
+				dev++
+			default:
+				runtime++
+			}
+		}
+		parts := []string{}
+		if runtime > 0 {
+			parts = append(parts, fmt.Sprintf("%d runtime", runtime))
+		}
+		if dev > 0 {
+			parts = append(parts, fmt.Sprintf("%d dev", dev))
+		}
+		_, _ = fmt.Fprintf(w, "                 %s\n", strings.Join(parts, ", "))
+	}
+
 	// Scripts
 	if len(r.Scripts) > 0 {
 		_, _ = fmt.Fprintln(w)

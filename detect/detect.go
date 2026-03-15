@@ -25,7 +25,8 @@ import (
 type Engine struct {
 	KB           *kb.KnowledgeBase
 	Root         string
-	ScanDepth    int // max directory depth for recursive detection (0 = default 4)
+	ScanDepth    int      // max directory depth for recursive detection (0 = default 4)
+	SkipDirs     []string // additional directories to skip during walks
 	filesChecked int
 	toolsChecked int
 	toolsMatched int
@@ -38,6 +39,44 @@ type Engine struct {
 	runtimeDeps map[string]bool // all runtime/unscoped dependency names
 	devDeps     map[string]bool // development/test/build dependency names
 	allDeps     map[string]bool // union of both
+}
+
+// skipDirs are directories that should never be walked during detection.
+var skipDirs = map[string]bool{
+	"vendor":       true,
+	"node_modules": true,
+	"__pycache__":  true,
+	".bundle":      true,
+	".venv":        true,
+	"venv":         true,
+	"target":       true, // Rust/Maven build output
+	"build":        true,
+	"dist":         true,
+	"_build":       true, // Elixir
+	"deps":         true, // Elixir
+	"Pods":         true, // iOS
+	"third_party":  true,
+	"thirdparty":   true,
+	"external":     true,
+	"tmp":          true,
+	"temp":         true,
+	"cache":        true,
+}
+
+// shouldSkipDir returns true if a directory should be skipped during walks.
+func (e *Engine) shouldSkipDir(name string) bool {
+	if strings.HasPrefix(name, ".") {
+		return true
+	}
+	if skipDirs[name] {
+		return true
+	}
+	for _, d := range e.SkipDirs {
+		if name == d {
+			return true
+		}
+	}
+	return false
 }
 
 // New creates a detection engine for the given project root.
@@ -306,7 +345,7 @@ func (e *Engine) recursiveGlob(pattern string) bool {
 		}
 		if info.IsDir() {
 			name := info.Name()
-			if name != "." && (strings.HasPrefix(name, ".") || name == "vendor" || name == "node_modules") {
+			if name != "." && e.shouldSkipDir(name) {
 				return filepath.SkipDir
 			}
 			return nil
@@ -340,7 +379,7 @@ func (e *Engine) loadFileExts() {
 		}
 		if info.IsDir() {
 			name := info.Name()
-			if name != "." && (strings.HasPrefix(name, ".") || name == "vendor" || name == "node_modules") {
+			if name != "." && e.shouldSkipDir(name) {
 				return filepath.SkipDir
 			}
 			// Check depth
@@ -670,7 +709,7 @@ func (e *Engine) inferStyle() *brief.StyleInfo {
 		if info.IsDir() {
 			// Skip hidden and vendor directories
 			name := info.Name()
-			if name != "." && (strings.HasPrefix(name, ".") || name == "vendor" || name == "node_modules") {
+			if name != "." && e.shouldSkipDir(name) {
 				return filepath.SkipDir
 			}
 			return nil

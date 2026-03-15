@@ -8,6 +8,7 @@ import (
 	"os"
 	"runtime/debug"
 	"sort"
+	"strings"
 
 	"github.com/git-pkgs/brief"
 	"github.com/git-pkgs/brief/detect"
@@ -45,6 +46,7 @@ func cmdScan(args []string) {
 	depth := fs.Int("depth", 1, "Git clone depth (0 = full clone)")
 	dir := fs.String("dir", "", "Directory to clone remote source into")
 	scanDepth := fs.Int("scan-depth", 0, "Max directory depth for language detection (default 4)")
+	skip := fs.String("skip", "", "Additional directories to skip, comma-separated")
 	version := fs.Bool("version", false, "Print version and exit")
 	_ = fs.Parse(args)
 
@@ -78,6 +80,9 @@ func cmdScan(args []string) {
 
 	engine := detect.New(knowledgeBase, src.Dir)
 	engine.ScanDepth = *scanDepth
+	if *skip != "" {
+		engine.SkipDirs = strings.Split(*skip, ",")
+	}
 	r, err := engine.Run()
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "error: %v\n", err)

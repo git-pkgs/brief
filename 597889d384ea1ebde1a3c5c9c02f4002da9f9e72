@@ -1,0 +1,27 @@
+detect/detect.go
+  51d7df78896ba018 127-134,741,751-754
+cmd/brief/main.go
+  51d7df78896ba018 46
+remote/remote.go
+  51d7df78896ba018 29,39,90-91,93-95,100
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "597889d384ea1ebde1a3c5c9c02f4002da9f9e72",
+  "prompts": {
+    "51d7df78896ba018": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "960695c4-20c9-4fbd-9628-518a7602912e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 22,
+      "total_deletions": 14,
+      "accepted_lines": 22,
+      "overriden_lines": 0
+    }
+  }
+}

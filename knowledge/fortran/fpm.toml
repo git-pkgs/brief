@@ -1,0 +1,18 @@
+[tool]
+name = "fpm"
+category = "package_manager"
+homepage = "https://fpm.fortran-lang.org"
+docs = "https://fpm.fortran-lang.org/spec/"
+repo = "https://github.com/fortran-lang/fpm"
+description = "Fortran Package Manager"
+
+[detect]
+files = ["fpm.toml"]
+ecosystems = ["fortran"]
+
+[commands]
+run = "fpm build"
+alternatives = ["fpm test", "fpm run"]
+
+[config]
+files = ["fpm.toml"]

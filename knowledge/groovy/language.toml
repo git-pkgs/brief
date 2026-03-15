@@ -1,0 +1,11 @@
+[tool]
+name = "Groovy"
+category = "language"
+homepage = "https://groovy-lang.org"
+docs = "https://groovy-lang.org/documentation.html"
+repo = "https://github.com/apache/groovy"
+description = "Dynamic language for the JVM"
+
+[detect]
+files = ["*.groovy", "**/*.groovy", "*.gvy", "**/*.gvy", "Jenkinsfile"]
+ecosystems = ["groovy"]

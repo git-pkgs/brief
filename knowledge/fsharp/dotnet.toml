@@ -1,0 +1,14 @@
+[tool]
+name = "dotnet CLI"
+category = "package_manager"
+homepage = "https://dotnet.microsoft.com"
+docs = "https://learn.microsoft.com/en-us/dotnet/core/tools/"
+description = ".NET CLI for building and managing F# projects"
+
+[detect]
+files = ["*.fsproj"]
+ecosystems = ["fsharp"]
+
+[commands]
+run = "dotnet restore"
+alternatives = ["dotnet build"]

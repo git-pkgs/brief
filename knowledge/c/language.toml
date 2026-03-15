@@ -1,0 +1,10 @@
+[tool]
+name = "C"
+category = "language"
+homepage = "https://en.cppreference.com/w/c"
+docs = "https://en.cppreference.com/w/c"
+description = "General-purpose systems programming language"
+
+[detect]
+files = ["*.c", "**/*.c", "*.h", "**/*.h"]
+ecosystems = ["c"]

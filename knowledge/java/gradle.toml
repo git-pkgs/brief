@@ -8,7 +8,7 @@ description = "Build automation tool for Java and other JVM languages"
 
 [detect]
 files = ["build.gradle", "build.gradle.kts", "settings.gradle", "settings.gradle.kts"]
-ecosystems = ["java"]
+ecosystems = ["java", "groovy", "kotlin"]
 
 [commands]
 run = "gradle build"

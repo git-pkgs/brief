@@ -1,0 +1,18 @@
+[tool]
+name = "Catch2"
+category = "test"
+homepage = "https://github.com/catchorg/Catch2"
+docs = "https://github.com/catchorg/Catch2/blob/devel/docs/Readme.md"
+repo = "https://github.com/catchorg/Catch2"
+description = "C++ testing framework"
+
+[detect]
+ecosystems = ["cpp"]
+
+[detect.file_contains]
+"CMakeLists.txt" = ["Catch2"]
+"conanfile.txt" = ["catch2"]
+"vcpkg.json" = ["catch2"]
+
+[commands]
+run = "ctest --test-dir build"

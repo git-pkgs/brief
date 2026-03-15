@@ -1,0 +1,10 @@
+[tool]
+name = "Ada"
+category = "language"
+homepage = "https://ada-lang.io"
+docs = "https://learn.adacore.com"
+description = "Strongly typed language for safety-critical systems"
+
+[detect]
+files = ["*.adb", "**/*.adb", "*.ads", "**/*.ads", "*.gpr"]
+ecosystems = ["ada"]

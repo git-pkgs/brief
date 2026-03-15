@@ -1,0 +1,18 @@
+[tool]
+name = "ocamlformat"
+category = "format"
+homepage = "https://github.com/ocaml-ppx/ocamlformat"
+docs = "https://github.com/ocaml-ppx/ocamlformat#readme"
+repo = "https://github.com/ocaml-ppx/ocamlformat"
+description = "OCaml code formatter"
+
+[detect]
+files = [".ocamlformat"]
+ecosystems = ["ocaml"]
+
+[commands]
+run = "dune fmt"
+alternatives = ["ocamlformat --inplace"]
+
+[config]
+files = [".ocamlformat"]

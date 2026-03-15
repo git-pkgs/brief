@@ -1,0 +1,18 @@
+[tool]
+name = "opam"
+category = "package_manager"
+homepage = "https://opam.ocaml.org"
+docs = "https://opam.ocaml.org/doc/"
+repo = "https://github.com/ocaml/opam"
+description = "OCaml package manager"
+
+[detect]
+files = ["*.opam", "**/*.opam", "opam"]
+ecosystems = ["ocaml"]
+
+[commands]
+run = "opam install . --deps-only"
+
+[config]
+files = ["*.opam"]
+lockfile = "opam.locked"

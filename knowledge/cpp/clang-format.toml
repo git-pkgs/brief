@@ -1,0 +1,16 @@
+[tool]
+name = "clang-format"
+category = "format"
+homepage = "https://clang.llvm.org/docs/ClangFormat.html"
+docs = "https://clang.llvm.org/docs/ClangFormatStyleOptions.html"
+description = "C/C++ code formatter"
+
+[detect]
+files = [".clang-format", "_clang-format"]
+ecosystems = ["c", "cpp"]
+
+[commands]
+run = "clang-format -i **/*.cpp **/*.h"
+
+[config]
+files = [".clang-format"]

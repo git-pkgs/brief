@@ -1,0 +1,19 @@
+[tool]
+name = "Conan"
+category = "package_manager"
+homepage = "https://conan.io"
+docs = "https://docs.conan.io"
+repo = "https://github.com/conan-io/conan"
+description = "C/C++ package manager"
+
+[detect]
+files = ["conanfile.txt", "conanfile.py", "conan.lock"]
+ecosystems = ["c", "cpp"]
+
+[commands]
+run = "conan install ."
+alternatives = ["conan create ."]
+
+[config]
+files = ["conanfile.txt", "conanfile.py"]
+lockfile = "conan.lock"

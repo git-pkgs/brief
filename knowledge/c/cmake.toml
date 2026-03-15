@@ -1,0 +1,18 @@
+[tool]
+name = "CMake"
+category = "build"
+homepage = "https://cmake.org"
+docs = "https://cmake.org/documentation/"
+repo = "https://github.com/Kitware/CMake"
+description = "Cross-platform build system generator"
+
+[detect]
+files = ["CMakeLists.txt", "**/*.cmake"]
+ecosystems = ["c", "cpp"]
+
+[commands]
+run = "cmake --build build"
+alternatives = ["cmake -B build && cmake --build build"]
+
+[config]
+files = ["CMakeLists.txt", "CMakePresets.json"]

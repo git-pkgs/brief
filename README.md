@@ -1,6 +1,6 @@
 # brief
 
-A single-binary CLI tool that detects a software project's toolchain, configuration, and conventions, then outputs a structured report. Written in Go, 30 ecosystems, 231 tool definitions.
+A single-binary CLI tool that detects a software project's toolchain, configuration, and conventions, then outputs a structured report. Written in Go, 54 ecosystems, 277 tool definitions.
 
 brief answers the bootstrap questions every AI coding agent, new contributor, and CI pipeline faces: what language is this, how do I install dependencies, how do I run the tests, what linter is configured.
 
@@ -108,17 +108,17 @@ Data sources: [ecosyste.ms](https://ecosyste.ms) for published package metadata,
 
 ## What it detects
 
-30 language ecosystems with 231 tool definitions across 18 categories.
+54 language ecosystems with 277 tool definitions across 20 categories.
 
-**Languages (30):** Go, Ruby, Python, JavaScript, TypeScript, Rust, Java, Kotlin, Scala, Elixir, PHP, Swift, C#, Dart, Haskell, Clojure, Crystal, Julia, Nim, Zig, Lua, Perl, R, D, Elm, Gleam, Haxe, Nix, Deno, plus CocoaPods and Conda ecosystems.
+**Languages (54):** Go, Ruby, Python, JavaScript, TypeScript, Rust, Java, Kotlin, Scala, Elixir, PHP, Swift, C#, Dart, Haskell, Clojure, Crystal, Julia, Nim, Zig, Lua, Perl, R, D, Elm, Gleam, Haxe, Nix, Deno, C, C++, Objective-C, Erlang, OCaml, F#, Groovy, Solidity, GDScript, Fortran, COBOL, Ada, VHDL, Verilog, Mojo, Roc, V, Odin, Scheme, Racket, Prolog, Tcl, Common Lisp, Emacs Lisp, plus CocoaPods and Conda ecosystems.
 
-**Test (27):** go test, Jest, Vitest, RSpec, Minitest, pytest, JUnit, PHPUnit, ExUnit, cargo test, Playwright, Cypress, Cucumber, Selenium, k6, Locust, Artillery, criterion, axe-core, Lighthouse CI, and more.
+**Test (30):** go test, Jest, Vitest, RSpec, Minitest, pytest, JUnit, PHPUnit, ExUnit, EUnit, cargo test, Google Test, Catch2, Playwright, Cypress, Cucumber, Selenium, k6, Locust, Artillery, criterion, axe-core, Lighthouse CI, and more.
 
-**Lint (19):** golangci-lint, ESLint, RuboCop, Ruff, Clippy, Biome, Stylelint, commitlint, hadolint, ShellCheck, markdownlint, Semgrep, pre-commit, Lefthook, Husky, and more.
+**Lint (20):** golangci-lint, ESLint, RuboCop, Ruff, Clippy, clang-tidy, Biome, Stylelint, commitlint, hadolint, ShellCheck, markdownlint, Semgrep, pre-commit, Lefthook, Husky, and more.
 
-**Format (11):** gofmt, Prettier, Black, rustfmt, isort, dprint, scalafmt, ktlint, SwiftFormat, StandardRB, PHP CS Fixer.
+**Format (13):** gofmt, Prettier, Black, rustfmt, isort, clang-format, ocamlformat, dprint, scalafmt, ktlint, SwiftFormat, StandardRB, PHP CS Fixer.
 
-**Build (29):** Webpack, Vite, esbuild, Rollup, Parcel, tsup, GoReleaser, Mage, Rake, Tailwind CSS, PostCSS, Sass, plus framework detection for Rails, Django, FastAPI, Express, Fastify, Gin, Phoenix, Spring Boot, Actix, Next.js, Nuxt, Astro, Gatsby, SvelteKit, Eleventy.
+**Build (36):** Webpack, Vite, esbuild, Rollup, Parcel, tsup, GoReleaser, Mage, Rake, CMake, Make, Meson, Autotools, Hardhat, Foundry, Tailwind CSS, PostCSS, Sass, plus framework detection for Rails, Django, FastAPI, Express, Fastify, Gin, Phoenix, Spring Boot, Actix, Next.js, Nuxt, Astro, Gatsby, SvelteKit, Eleventy.
 
 **Database (15):** ActiveRecord, Prisma, Alembic, Diesel, Ecto, Flyway, Liquibase, Goose, Dbmate, Drizzle, TypeORM, Sequelize, SQLAlchemy, GORM, SQLite.
 
@@ -136,7 +136,7 @@ Data sources: [ecosyste.ms](https://ecosyste.ms) for published package metadata,
 
 **i18n (5):** i18next, gettext, Rails i18n, Crowdin, Transifex.
 
-**Also:** package managers (31), type checkers (4), docs generators (8), security tools (3), coverage services (3), dependency update bots (3), environment tools (9).
+**Also:** package managers (39), type checkers (5), docs generators (8), security tools (3), coverage services (3), dependency update bots (3), environment tools (9).
 
 Run `brief list tools` for the full list.
 

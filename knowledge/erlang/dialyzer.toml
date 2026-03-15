@@ -1,0 +1,15 @@
+[tool]
+name = "Dialyzer"
+category = "typecheck"
+homepage = "https://www.erlang.org/doc/apps/dialyzer/"
+docs = "https://www.erlang.org/doc/apps/dialyzer/"
+description = "Static analysis tool for Erlang"
+
+[detect]
+ecosystems = ["erlang"]
+
+[detect.file_contains]
+"rebar.config" = ["dialyzer"]
+
+[commands]
+run = "rebar3 dialyzer"

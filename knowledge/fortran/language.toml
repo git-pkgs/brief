@@ -1,0 +1,10 @@
+[tool]
+name = "Fortran"
+category = "language"
+homepage = "https://fortran-lang.org"
+docs = "https://fortran-lang.org/learn/"
+description = "Numeric and scientific computing language"
+
+[detect]
+files = ["*.f90", "**/*.f90", "*.f95", "**/*.f95", "*.f03", "**/*.f03", "*.f", "**/*.f", "*.for", "**/*.for"]
+ecosystems = ["fortran"]

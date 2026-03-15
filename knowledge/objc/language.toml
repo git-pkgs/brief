@@ -1,0 +1,10 @@
+[tool]
+name = "Objective-C"
+category = "language"
+homepage = "https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/"
+docs = "https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/"
+description = "Object-oriented superset of C for Apple platforms"
+
+[detect]
+files = ["*.m", "**/*.m", "*.mm", "**/*.mm", "*.xcodeproj", "*.xcworkspace"]
+ecosystems = ["objc"]

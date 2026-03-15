@@ -1,0 +1,16 @@
+[tool]
+name = "clang-tidy"
+category = "lint"
+homepage = "https://clang.llvm.org/extra/clang-tidy/"
+docs = "https://clang.llvm.org/extra/clang-tidy/"
+description = "C/C++ linter and static analysis tool"
+
+[detect]
+files = [".clang-tidy"]
+ecosystems = ["c", "cpp"]
+
+[commands]
+run = "clang-tidy"
+
+[config]
+files = [".clang-tidy"]

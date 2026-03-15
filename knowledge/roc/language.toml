@@ -1,0 +1,11 @@
+[tool]
+name = "Roc"
+category = "language"
+homepage = "https://www.roc-lang.org"
+docs = "https://www.roc-lang.org/tutorial"
+repo = "https://github.com/roc-lang/roc"
+description = "Fast, friendly, functional language"
+
+[detect]
+files = ["*.roc", "**/*.roc"]
+ecosystems = ["roc"]

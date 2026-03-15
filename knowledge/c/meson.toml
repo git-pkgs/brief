@@ -1,0 +1,18 @@
+[tool]
+name = "Meson"
+category = "build"
+homepage = "https://mesonbuild.com"
+docs = "https://mesonbuild.com/Manual.html"
+repo = "https://github.com/mesonbuild/meson"
+description = "Fast build system"
+
+[detect]
+files = ["meson.build", "meson_options.txt"]
+ecosystems = ["c", "cpp"]
+
+[commands]
+run = "meson compile -C build"
+alternatives = ["meson setup build && meson compile -C build"]
+
+[config]
+files = ["meson.build", "meson_options.txt"]

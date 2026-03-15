@@ -1,0 +1,10 @@
+[tool]
+name = "Mojo"
+category = "language"
+homepage = "https://www.modular.com/mojo"
+docs = "https://docs.modular.com/mojo/"
+description = "Python-superset language for AI and systems programming"
+
+[detect]
+files = ["*.mojo", "**/*.mojo", "mojoproject.toml"]
+ecosystems = ["mojo"]

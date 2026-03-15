@@ -1,0 +1,18 @@
+[tool]
+name = "Dune"
+category = "build"
+homepage = "https://dune.build"
+docs = "https://dune.readthedocs.io"
+repo = "https://github.com/ocaml/dune"
+description = "OCaml build system"
+
+[detect]
+files = ["dune-project", "dune", "**/dune"]
+ecosystems = ["ocaml"]
+
+[commands]
+run = "dune build"
+alternatives = ["dune clean", "dune exec"]
+
+[config]
+files = ["dune-project", "dune"]

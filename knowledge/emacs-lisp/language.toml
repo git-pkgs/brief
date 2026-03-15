@@ -1,0 +1,10 @@
+[tool]
+name = "Emacs Lisp"
+category = "language"
+homepage = "https://www.gnu.org/software/emacs/"
+docs = "https://www.gnu.org/software/emacs/manual/html_node/elisp/"
+description = "Lisp dialect for extending Emacs"
+
+[detect]
+files = ["*.el", "**/*.el", "Cask"]
+ecosystems = ["emacs-lisp"]

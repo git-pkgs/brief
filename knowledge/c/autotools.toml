@@ -1,0 +1,17 @@
+[tool]
+name = "Autotools"
+category = "build"
+homepage = "https://www.gnu.org/software/automake/"
+docs = "https://www.gnu.org/software/automake/manual/"
+description = "GNU build system (autoconf/automake)"
+
+[detect]
+files = ["configure.ac", "configure.in", "Makefile.am", "Makefile.in"]
+ecosystems = ["c", "cpp"]
+
+[commands]
+run = "./configure && make"
+alternatives = ["autoreconf -i && ./configure && make"]
+
+[config]
+files = ["configure.ac", "Makefile.am"]

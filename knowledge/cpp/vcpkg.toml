@@ -1,0 +1,17 @@
+[tool]
+name = "vcpkg"
+category = "package_manager"
+homepage = "https://vcpkg.io"
+docs = "https://learn.microsoft.com/en-us/vcpkg/"
+repo = "https://github.com/microsoft/vcpkg"
+description = "C/C++ package manager from Microsoft"
+
+[detect]
+files = ["vcpkg.json", "vcpkg-configuration.json"]
+ecosystems = ["c", "cpp"]
+
+[commands]
+run = "vcpkg install"
+
+[config]
+files = ["vcpkg.json", "vcpkg-configuration.json"]

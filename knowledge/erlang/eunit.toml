@@ -1,0 +1,13 @@
+[tool]
+name = "EUnit"
+category = "test"
+homepage = "https://www.erlang.org/doc/apps/eunit/"
+docs = "https://www.erlang.org/doc/apps/eunit/"
+description = "Erlang unit testing framework"
+
+[detect]
+files = ["test/", "**/*_tests.erl"]
+ecosystems = ["erlang"]
+
+[commands]
+run = "rebar3 eunit"

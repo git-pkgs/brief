@@ -1,0 +1,10 @@
+[tool]
+name = "Common Lisp"
+category = "language"
+homepage = "https://common-lisp.net"
+docs = "https://www.lispworks.com/documentation/HyperSpec/Front/"
+description = "Multi-paradigm dialect of Lisp"
+
+[detect]
+files = ["*.lisp", "**/*.lisp", "*.cl", "**/*.cl", "*.asd", "**/*.asd"]
+ecosystems = ["common-lisp"]

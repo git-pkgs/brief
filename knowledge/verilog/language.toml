@@ -1,0 +1,10 @@
+[tool]
+name = "Verilog"
+category = "language"
+homepage = "https://www.verilog.com"
+docs = "https://www.chipverify.com/verilog/verilog-tutorial"
+description = "Hardware description language for digital circuits"
+
+[detect]
+files = ["*.sv", "**/*.sv", "*.svh", "**/*.svh", "*.v", "**/*.v"]
+ecosystems = ["verilog"]

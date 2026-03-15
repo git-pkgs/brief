@@ -1,0 +1,19 @@
+[tool]
+name = "Hardhat"
+category = "build"
+homepage = "https://hardhat.org"
+docs = "https://hardhat.org/docs"
+repo = "https://github.com/NomicFoundation/hardhat"
+description = "Ethereum development environment"
+
+[detect]
+files = ["hardhat.config.js", "hardhat.config.ts"]
+dependencies = ["hardhat"]
+ecosystems = ["solidity"]
+
+[commands]
+run = "npx hardhat compile"
+alternatives = ["npx hardhat test"]
+
+[config]
+files = ["hardhat.config.js", "hardhat.config.ts"]

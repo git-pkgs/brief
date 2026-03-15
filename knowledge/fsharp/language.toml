@@ -1,0 +1,11 @@
+[tool]
+name = "F#"
+category = "language"
+homepage = "https://fsharp.org"
+docs = "https://learn.microsoft.com/en-us/dotnet/fsharp/"
+repo = "https://github.com/dotnet/fsharp"
+description = "Functional-first language for the .NET platform"
+
+[detect]
+files = ["*.fsproj", "*.fs", "**/*.fs", "*.fsx", "**/*.fsx"]
+ecosystems = ["fsharp"]

@@ -1,0 +1,11 @@
+[tool]
+name = "OCaml"
+category = "language"
+homepage = "https://ocaml.org"
+docs = "https://ocaml.org/docs"
+repo = "https://github.com/ocaml/ocaml"
+description = "Functional programming language with type inference"
+
+[detect]
+files = ["*.ml", "**/*.ml", "*.mli", "**/*.mli", "dune-project"]
+ecosystems = ["ocaml"]

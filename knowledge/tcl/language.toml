@@ -1,0 +1,10 @@
+[tool]
+name = "Tcl"
+category = "language"
+homepage = "https://www.tcl-lang.org"
+docs = "https://www.tcl-lang.org/man/tcl/"
+description = "Dynamic scripting language"
+
+[detect]
+files = ["*.tcl", "**/*.tcl"]
+ecosystems = ["tcl"]

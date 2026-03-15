@@ -1,0 +1,10 @@
+[tool]
+name = "VHDL"
+category = "language"
+homepage = "https://ieee-sa.imeetcentral.com/vhdl/"
+docs = "https://www.ics.uci.edu/~jmoorkan/vhdlref/"
+description = "Hardware description language for digital circuits"
+
+[detect]
+files = ["*.vhdl", "**/*.vhdl", "*.vhd", "**/*.vhd"]
+ecosystems = ["vhdl"]

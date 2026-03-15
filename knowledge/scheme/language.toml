@@ -1,0 +1,10 @@
+[tool]
+name = "Scheme"
+category = "language"
+homepage = "https://www.scheme.org"
+docs = "https://www.scheme.org/tspl4/"
+description = "Minimalist dialect of Lisp"
+
+[detect]
+files = ["*.scm", "**/*.scm", "*.ss", "**/*.ss", "*.sld", "**/*.sld"]
+ecosystems = ["scheme"]

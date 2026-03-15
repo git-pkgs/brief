@@ -1,0 +1,18 @@
+[tool]
+name = "Google Test"
+category = "test"
+homepage = "https://google.github.io/googletest/"
+docs = "https://google.github.io/googletest/"
+repo = "https://github.com/google/googletest"
+description = "C++ testing framework"
+
+[detect]
+ecosystems = ["cpp"]
+
+[detect.file_contains]
+"CMakeLists.txt" = ["GTest", "gtest", "googletest"]
+"conanfile.txt" = ["gtest"]
+"vcpkg.json" = ["gtest"]
+
+[commands]
+run = "ctest --test-dir build"

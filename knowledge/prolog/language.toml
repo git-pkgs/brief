@@ -1,0 +1,11 @@
+[tool]
+name = "Prolog"
+category = "language"
+homepage = "https://www.swi-prolog.org"
+docs = "https://www.swi-prolog.org/pldoc/"
+repo = "https://github.com/SWI-Prolog/swipl-devel"
+description = "Logic programming language"
+
+[detect]
+files = ["*.pro", "**/*.pro", "*.prolog", "**/*.prolog"]
+ecosystems = ["prolog"]

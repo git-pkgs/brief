@@ -1,0 +1,11 @@
+[tool]
+name = "Racket"
+category = "language"
+homepage = "https://racket-lang.org"
+docs = "https://docs.racket-lang.org"
+repo = "https://github.com/racket/racket"
+description = "Language-oriented programming language"
+
+[detect]
+files = ["*.rkt", "**/*.rkt", "info.rkt"]
+ecosystems = ["racket"]

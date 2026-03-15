@@ -1,0 +1,11 @@
+[tool]
+name = "Erlang"
+category = "language"
+homepage = "https://www.erlang.org"
+docs = "https://www.erlang.org/docs"
+repo = "https://github.com/erlang/otp"
+description = "Concurrent functional programming language for distributed systems"
+
+[detect]
+files = ["rebar.config", "*.erl", "**/*.erl", "*.hrl", "**/*.hrl"]
+ecosystems = ["erlang"]

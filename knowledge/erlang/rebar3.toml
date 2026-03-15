@@ -1,0 +1,19 @@
+[tool]
+name = "rebar3"
+category = "package_manager"
+homepage = "https://rebar3.org"
+docs = "https://rebar3.readme.io"
+repo = "https://github.com/erlang/rebar3"
+description = "Erlang build tool and package manager"
+
+[detect]
+files = ["rebar.config", "rebar.lock"]
+ecosystems = ["erlang"]
+
+[commands]
+run = "rebar3 compile"
+alternatives = ["rebar3 deps"]
+
+[config]
+files = ["rebar.config"]
+lockfile = "rebar.lock"

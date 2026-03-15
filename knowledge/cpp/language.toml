@@ -1,0 +1,10 @@
+[tool]
+name = "C++"
+category = "language"
+homepage = "https://isocpp.org"
+docs = "https://en.cppreference.com/w/cpp"
+description = "General-purpose systems programming language"
+
+[detect]
+files = ["*.cpp", "**/*.cpp", "*.hpp", "**/*.hpp", "*.cc", "**/*.cc", "*.cxx", "**/*.cxx"]
+ecosystems = ["cpp"]

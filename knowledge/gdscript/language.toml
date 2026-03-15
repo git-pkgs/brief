@@ -1,0 +1,11 @@
+[tool]
+name = "GDScript"
+category = "language"
+homepage = "https://godotengine.org"
+docs = "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/"
+repo = "https://github.com/godotengine/godot"
+description = "Scripting language for the Godot game engine"
+
+[detect]
+files = ["*.gd", "**/*.gd", "project.godot"]
+ecosystems = ["gdscript"]

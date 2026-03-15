@@ -1,0 +1,18 @@
+[tool]
+name = "Foundry"
+category = "build"
+homepage = "https://book.getfoundry.sh"
+docs = "https://book.getfoundry.sh"
+repo = "https://github.com/foundry-rs/foundry"
+description = "Ethereum development toolkit"
+
+[detect]
+files = ["foundry.toml"]
+ecosystems = ["solidity"]
+
+[commands]
+run = "forge build"
+alternatives = ["forge test"]
+
+[config]
+files = ["foundry.toml"]

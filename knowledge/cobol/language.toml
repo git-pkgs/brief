@@ -1,0 +1,10 @@
+[tool]
+name = "COBOL"
+category = "language"
+homepage = "https://www.ibm.com/topics/cobol"
+docs = "https://www.ibm.com/docs/en/cobol-zos"
+description = "Business-oriented programming language"
+
+[detect]
+files = ["*.cob", "**/*.cob", "*.cbl", "**/*.cbl", "*.cobol", "**/*.cobol"]
+ecosystems = ["cobol"]

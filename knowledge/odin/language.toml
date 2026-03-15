@@ -1,0 +1,11 @@
+[tool]
+name = "Odin"
+category = "language"
+homepage = "https://odin-lang.org"
+docs = "https://odin-lang.org/docs/"
+repo = "https://github.com/odin-lang/Odin"
+description = "Systems programming language for reliable software"
+
+[detect]
+files = ["*.odin", "**/*.odin"]
+ecosystems = ["odin"]

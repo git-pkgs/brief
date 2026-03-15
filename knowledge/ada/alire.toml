@@ -1,0 +1,18 @@
+[tool]
+name = "Alire"
+category = "package_manager"
+homepage = "https://alire.ada.dev"
+docs = "https://alire.ada.dev/docs/"
+repo = "https://github.com/alire-project/alire"
+description = "Ada package manager"
+
+[detect]
+files = ["alire.toml"]
+ecosystems = ["ada"]
+
+[commands]
+run = "alr build"
+alternatives = ["alr get"]
+
+[config]
+files = ["alire.toml"]

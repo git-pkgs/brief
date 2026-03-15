@@ -1,0 +1,5 @@
+[source]
+name = "Taskfile"
+file = "Taskfile.yml"
+format = "yaml_tasks"
+command = "task"

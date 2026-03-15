@@ -571,11 +571,25 @@ func (e *Engine) detectScripts() []brief.Script {
 			continue
 		}
 
+		cmd := src.Source.Command
 		switch src.Source.Format {
 		case "makefile":
-			scripts = append(scripts, e.parseMakefile(data, src.Source.File, src.Source.Name)...)
+			if cmd == "" {
+				cmd = "make"
+			}
+			scripts = append(scripts, e.parseMakefile(data, src.Source.File, src.Source.Name, cmd)...)
+		case "targets":
+			if cmd == "" {
+				cmd = src.Source.Name
+			}
+			scripts = append(scripts, parseTargets(data, src.Source.Name, cmd)...)
 		case "json_scripts":
 			scripts = append(scripts, parseJSONScripts(data, src.Source.Name)...)
+		case "yaml_tasks":
+			if cmd == "" {
+				cmd = "task"
+			}
+			scripts = append(scripts, parseYAMLTasks(data, src.Source.Name, cmd)...)
 		}
 	}
 
@@ -584,13 +598,13 @@ func (e *Engine) detectScripts() []brief.Script {
 
 // parseMakefile extracts targets from a Makefile. Tries make -qp for accurate
 // parsing (handles includes, generated targets), falls back to regex.
-func (e *Engine) parseMakefile(data []byte, file string, sourceName string) []brief.Script {
+func (e *Engine) parseMakefile(data []byte, file string, sourceName string, cmd string) []brief.Script {
 	if _, err := exec.LookPath("make"); err == nil {
 		if scripts := e.parseMakefileWithMake(file, sourceName); len(scripts) > 0 {
 			return scripts
 		}
 	}
-	return parseMakefileRegex(data, sourceName)
+	return parseTargets(data, sourceName, cmd)
 }
 
 // parseMakefileWithMake uses make -qp to get an accurate list of targets.
@@ -637,8 +651,28 @@ func (e *Engine) parseMakefileWithMake(file string, sourceName string) []brief.S
 	return scripts
 }
 
-// parseMakefileRegex is the fallback parser using simple regex matching.
-func parseMakefileRegex(data []byte, sourceName string) []brief.Script {
+// parseYAMLTasks extracts task names from Taskfile.yml format.
+func parseYAMLTasks(data []byte, sourceName string, cmd string) []brief.Script {
+	var taskfile struct {
+		Tasks map[string]any `yaml:"tasks"`
+	}
+	if err := yaml.Unmarshal(data, &taskfile); err != nil {
+		return nil
+	}
+
+	var scripts []brief.Script
+	for name := range taskfile.Tasks {
+		scripts = append(scripts, brief.Script{
+			Name:   name,
+			Run:    cmd + " " + name,
+			Source: sourceName,
+		})
+	}
+	return scripts
+}
+
+// parseTargets extracts targets from files with "target:" syntax (Makefile, Justfile).
+func parseTargets(data []byte, sourceName string, cmd string) []brief.Script {
 	var scripts []brief.Script
 	lines := strings.Split(string(data), "\n")
 
@@ -654,7 +688,7 @@ func parseMakefileRegex(data []byte, sourceName string) []brief.Script {
 			}
 			scripts = append(scripts, brief.Script{
 				Name:   target,
-				Run:    "make " + target,
+				Run:    cmd + " " + target,
 				Source: sourceName,
 			})
 		}

@@ -1,0 +1,5 @@
+[source]
+name = "Justfile"
+file = "justfile"
+format = "targets"
+command = "just"

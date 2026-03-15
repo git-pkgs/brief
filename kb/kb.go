@@ -58,9 +58,10 @@ type ScriptSourceDef struct {
 
 // SourceInfo holds metadata about a script source.
 type SourceInfo struct {
-	Name   string `toml:"name"`
-	File   string `toml:"file"`
-	Format string `toml:"format"` // "makefile", "json_scripts", "toml_scripts", "justfile"
+	Name    string `toml:"name"`
+	File    string `toml:"file"`
+	Format  string `toml:"format"`  // "makefile", "json_scripts", "targets"
+	Command string `toml:"command"` // prefix for run commands (e.g. "make", "just")
 }
 
 // ResourceDef defines a project resource to look for.

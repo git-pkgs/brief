@@ -1,0 +1,19 @@
+[tool]
+name = "Phoenix"
+category = "build"
+homepage = "https://www.phoenixframework.org"
+docs = "https://hexdocs.pm/phoenix"
+repo = "https://github.com/phoenixframework/phoenix"
+description = "Web framework for Elixir"
+
+[detect]
+ecosystems = ["elixir"]
+
+[detect.file_contains]
+"mix.exs" = [":phoenix"]
+
+[commands]
+run = "mix phx.server"
+
+[config]
+files = ["config/config.exs"]

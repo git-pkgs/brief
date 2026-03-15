@@ -1,0 +1,11 @@
+[tool]
+name = "Express"
+category = "build"
+homepage = "https://expressjs.com"
+docs = "https://expressjs.com/en/guide/routing.html"
+repo = "https://github.com/expressjs/express"
+description = "Web framework for Node.js"
+
+[detect]
+dependencies = ["express"]
+ecosystems = ["node"]

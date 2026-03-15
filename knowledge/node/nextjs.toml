@@ -1,0 +1,19 @@
+[tool]
+name = "Next.js"
+category = "build"
+homepage = "https://nextjs.org"
+docs = "https://nextjs.org/docs"
+repo = "https://github.com/vercel/next.js"
+description = "React framework for full-stack web applications"
+
+[detect]
+files = ["next.config.js", "next.config.mjs", "next.config.ts"]
+dependencies = ["next"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx next dev"
+alternatives = ["npx next build"]
+
+[config]
+files = ["next.config.js", "next.config.mjs", "next.config.ts"]

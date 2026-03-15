@@ -1,0 +1,19 @@
+[tool]
+name = "Rails"
+category = "build"
+homepage = "https://rubyonrails.org"
+docs = "https://guides.rubyonrails.org"
+repo = "https://github.com/rails/rails"
+description = "Full-stack Ruby web framework"
+
+[detect]
+files = ["config/routes.rb", "bin/rails"]
+dependencies = ["rails"]
+ecosystems = ["ruby"]
+
+[commands]
+run = "bundle exec rails server"
+alternatives = ["bin/rails server"]
+
+[config]
+files = ["config/routes.rb", "config/application.rb", "config/environments/"]

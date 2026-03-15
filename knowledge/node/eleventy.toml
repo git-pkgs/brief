@@ -1,0 +1,20 @@
+[tool]
+name = "Eleventy"
+category = "build"
+homepage = "https://www.11ty.dev"
+docs = "https://www.11ty.dev/docs/"
+repo = "https://github.com/11ty/eleventy"
+description = "Simple static site generator"
+
+[detect]
+files = [".eleventy.js", "eleventy.config.js", "eleventy.config.mjs", "eleventy.config.cjs"]
+dependencies = ["@11ty/eleventy"]
+dev_dependencies = ["@11ty/eleventy"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx eleventy --serve"
+alternatives = ["npx eleventy"]
+
+[config]
+files = [".eleventy.js", "eleventy.config.js", "eleventy.config.mjs", "eleventy.config.cjs"]

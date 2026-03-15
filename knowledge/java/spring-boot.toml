@@ -1,0 +1,14 @@
+[tool]
+name = "Spring Boot"
+category = "build"
+homepage = "https://spring.io/projects/spring-boot"
+docs = "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+repo = "https://github.com/spring-projects/spring-boot"
+description = "Java application framework"
+
+[detect]
+files = ["src/main/resources/application.properties", "src/main/resources/application.yml", "src/main/resources/application.yaml"]
+ecosystems = ["java", "kotlin"]
+
+[config]
+files = ["src/main/resources/application.properties", "src/main/resources/application.yml"]

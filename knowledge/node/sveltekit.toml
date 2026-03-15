@@ -1,0 +1,19 @@
+[tool]
+name = "SvelteKit"
+category = "build"
+homepage = "https://svelte.dev/docs/kit"
+docs = "https://svelte.dev/docs/kit/introduction"
+repo = "https://github.com/sveltejs/kit"
+description = "Web application framework for Svelte"
+
+[detect]
+files = ["svelte.config.js", "svelte.config.ts"]
+dependencies = ["@sveltejs/kit"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx vite dev"
+alternatives = ["npx vite build"]
+
+[config]
+files = ["svelte.config.js", "svelte.config.ts"]

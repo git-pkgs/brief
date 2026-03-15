@@ -1,0 +1,19 @@
+[tool]
+name = "Gatsby"
+category = "build"
+homepage = "https://www.gatsbyjs.com"
+docs = "https://www.gatsbyjs.com/docs/"
+repo = "https://github.com/gatsbyjs/gatsby"
+description = "React-based static site generator"
+
+[detect]
+files = ["gatsby-config.js", "gatsby-config.ts", "gatsby-config.mjs"]
+dependencies = ["gatsby"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx gatsby develop"
+alternatives = ["npx gatsby build"]
+
+[config]
+files = ["gatsby-config.js", "gatsby-config.ts", "gatsby-node.js"]

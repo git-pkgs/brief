@@ -1,0 +1,11 @@
+[tool]
+name = "Actix Web"
+category = "build"
+homepage = "https://actix.rs"
+docs = "https://actix.rs/docs"
+repo = "https://github.com/actix/actix-web"
+description = "Web framework for Rust"
+
+[detect]
+dependencies = ["actix-web"]
+ecosystems = ["rust"]

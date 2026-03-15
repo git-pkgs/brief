@@ -1,0 +1,14 @@
+[tool]
+name = "FastAPI"
+category = "build"
+homepage = "https://fastapi.tiangolo.com"
+docs = "https://fastapi.tiangolo.com"
+repo = "https://github.com/fastapi/fastapi"
+description = "Modern Python web framework for APIs"
+
+[detect]
+dependencies = ["fastapi"]
+ecosystems = ["python"]
+
+[commands]
+run = "uvicorn main:app --reload"

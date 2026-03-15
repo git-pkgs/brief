@@ -1,0 +1,13 @@
+[tool]
+name = "Gin"
+category = "build"
+homepage = "https://gin-gonic.com"
+docs = "https://gin-gonic.com/docs/"
+repo = "https://github.com/gin-gonic/gin"
+description = "HTTP web framework for Go"
+
+[detect]
+ecosystems = ["go"]
+
+[detect.file_contains]
+"go.mod" = ["github.com/gin-gonic/gin"]

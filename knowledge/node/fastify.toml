@@ -1,0 +1,11 @@
+[tool]
+name = "Fastify"
+category = "build"
+homepage = "https://fastify.dev"
+docs = "https://fastify.dev/docs/latest/"
+repo = "https://github.com/fastify/fastify"
+description = "Fast web framework for Node.js"
+
+[detect]
+dependencies = ["fastify"]
+ecosystems = ["node"]

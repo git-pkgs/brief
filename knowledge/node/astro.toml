@@ -1,0 +1,19 @@
+[tool]
+name = "Astro"
+category = "build"
+homepage = "https://astro.build"
+docs = "https://docs.astro.build"
+repo = "https://github.com/withastro/astro"
+description = "Content-driven web framework"
+
+[detect]
+files = ["astro.config.mjs", "astro.config.ts", "astro.config.js"]
+dependencies = ["astro"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx astro dev"
+alternatives = ["npx astro build"]
+
+[config]
+files = ["astro.config.mjs", "astro.config.ts", "astro.config.js"]

@@ -1,0 +1,18 @@
+[tool]
+name = "Django"
+category = "build"
+homepage = "https://www.djangoproject.com"
+docs = "https://docs.djangoproject.com"
+repo = "https://github.com/django/django"
+description = "Python web framework"
+
+[detect]
+files = ["manage.py"]
+dependencies = ["django", "Django"]
+ecosystems = ["python"]
+
+[commands]
+run = "python manage.py runserver"
+
+[config]
+files = ["manage.py"]

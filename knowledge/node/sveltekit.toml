@@ -11,6 +11,9 @@ files = ["svelte.config.js", "svelte.config.ts"]
 dependencies = ["@sveltejs/kit"]
 ecosystems = ["node"]
 
+[detect.file_contains]
+".gitignore" = [".svelte-kit/"]
+
 [commands]
 run = "npx vite dev"
 alternatives = ["npx vite build"]

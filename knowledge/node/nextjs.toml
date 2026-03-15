@@ -11,6 +11,9 @@ files = ["next.config.js", "next.config.mjs", "next.config.ts"]
 dependencies = ["next"]
 ecosystems = ["node"]
 
+[detect.file_contains]
+".gitignore" = [".next/"]
+
 [commands]
 run = "npx next dev"
 alternatives = ["npx next build"]

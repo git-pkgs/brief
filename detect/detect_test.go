@@ -129,6 +129,16 @@ func TestGoProject(t *testing.T) {
 	assertToolDetected(t, r, "lint", "golangci-lint")
 }
 
+func TestSQLiteDetection(t *testing.T) {
+	engine := New(loadKB(t), "../testdata/sqlite-go-project")
+	r, err := engine.Run()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	assertToolDetected(t, r, "database", "SQLite")
+}
+
 func TestNodeProject(t *testing.T) {
 	engine := New(loadKB(t), "../testdata/node-project")
 	r, err := engine.Run()

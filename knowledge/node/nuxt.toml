@@ -11,6 +11,9 @@ files = ["nuxt.config.ts", "nuxt.config.js"]
 dependencies = ["nuxt"]
 ecosystems = ["node"]
 
+[detect.file_contains]
+".gitignore" = [".nuxt/"]
+
 [commands]
 run = "npx nuxt dev"
 alternatives = ["npx nuxt build"]

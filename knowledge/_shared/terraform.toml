@@ -9,6 +9,9 @@ description = "Infrastructure as code provisioning tool"
 [detect]
 files = ["**/*.tf", "terraform.tfvars", ".terraform.lock.hcl"]
 
+[detect.file_contains]
+".gitignore" = [".terraform/"]
+
 [commands]
 run = "terraform plan"
 alternatives = ["terraform apply", "terraform init"]

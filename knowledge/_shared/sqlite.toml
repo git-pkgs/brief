@@ -1,0 +1,27 @@
+[tool]
+name = "SQLite"
+category = "database"
+homepage = "https://www.sqlite.org"
+docs = "https://www.sqlite.org/docs.html"
+repo = "https://github.com/sqlite/sqlite"
+description = "Embedded relational database engine"
+
+[detect]
+files = ["*.sqlite", "*.sqlite3"]
+dependencies = [
+    "sqlite3",
+    "better-sqlite3",
+    "sql.js",
+    "rusqlite",
+    "aiosqlite",
+    "pysqlite3",
+]
+
+[detect.file_contains]
+"go.mod" = [
+    "github.com/mattn/go-sqlite3",
+    "modernc.org/sqlite",
+    "zombiezen.com/go/sqlite",
+    "github.com/glebarez/sqlite",
+]
+".gitignore" = ["*.sqlite", "*.sqlite3"]

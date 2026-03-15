@@ -11,6 +11,9 @@ files = ["turbo.json"]
 dev_dependencies = ["turbo"]
 ecosystems = ["node"]
 
+[detect.file_contains]
+".gitignore" = [".turbo/"]
+
 [commands]
 run = "npx turbo run build"
 alternatives = ["turbo run build"]

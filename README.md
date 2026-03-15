@@ -1,6 +1,6 @@
 # brief
 
-A single-binary CLI tool that detects a software project's toolchain, configuration, and conventions, then outputs a structured report. Written in Go, 30 ecosystems, 95 tool definitions.
+A single-binary CLI tool that detects a software project's toolchain, configuration, and conventions, then outputs a structured report. Written in Go, 30 ecosystems, 230 tool definitions.
 
 brief answers the bootstrap questions every AI coding agent, new contributor, and CI pipeline faces: what language is this, how do I install dependencies, how do I run the tests, what linter is configured.
 
@@ -18,6 +18,7 @@ Or download a binary from [releases](https://github.com/git-pkgs/brief/releases)
 
 ```
 brief [flags] [path | url]        Detect project toolchain
+brief enrich [flags] [path]       Detect and enrich with external data
 brief list tools                  All tools in the knowledge base
 brief list ecosystems             Supported ecosystems
 brief schema                      JSON output schema
@@ -70,10 +71,22 @@ Git:         branch add-commit-statuses (default: main)  58 commits
 
 Lines:       22912 code  191 files (scc)
 
-164.0ms  184 files checked  7/95 tools matched
+164.0ms  184 files checked  7/230 tools matched
 ```
 
 Use `--verbose` to include homepage, docs, and repo links for each detected tool.
+
+## Enrichment
+
+`brief enrich` runs the same scan, then fetches metadata from external APIs for each direct dependency. The output gains an `enrichment` section with downloads, dependents, security advisories, runtime end-of-life status, and OpenSSF Scorecard.
+
+```
+brief enrich .
+brief enrich --json .
+brief enrich --verbose .
+```
+
+Data sources: [ecosyste.ms](https://ecosyste.ms) for package metadata, [endoflife.date](https://endoflife.date) for runtime lifecycle, [OpenSSF Scorecard](https://securityscorecards.dev) for repo security.
 
 ## How it works
 

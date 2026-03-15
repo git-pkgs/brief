@@ -489,7 +489,7 @@ func (e *Engine) loadDeps() {
 			default:
 				e.runtimeDeps[dep.Name] = true
 			}
-			if dep.PURL != "" {
+			if dep.PURL != "" && dep.Direct {
 				scope := "runtime"
 				switch dep.Scope {
 				case manifests.Development:

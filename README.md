@@ -46,16 +46,13 @@ brief dev — /home/user/forge
 Language:        Go
 Package Manager: Go Modules (go mod download)
                  Lockfile: go.sum
+                 7 runtime (222 total)
 
 Test:        go test (go test ./...)
 Lint:        golangci-lint (golangci-lint run)  [.golangci.yml]
 Format:      gofmt (gofmt -w .)
-Typecheck:   —
-Docs:        —
-Build:       —
-Security:    —
+Build:       GoReleaser (goreleaser release --clean)  [.goreleaser.yml]
 CI:          GitHub Actions  [.github/workflows/]
-Container:   —
 Dep Updates: Dependabot  [.github/dependabot.yml]
 
 Style:       tabs (inferred)  LF
@@ -66,19 +63,19 @@ Layout:      internal/ cmd/
 Resources:   README.md
 Resources:   LICENSE (MIT)
 
-Git:         branch add-commit-statuses (default: main)  58 commits
+Git:         branch main  58 commits
              origin: git@github.com:git-pkgs/forge.git
 
 Lines:       22912 code  191 files (scc)
 
-164.0ms  184 files checked  7/230 tools matched
+112.0ms  311 files checked  8/230 tools matched
 ```
 
 Use `--verbose` to include homepage, docs, and repo links for each detected tool.
 
 ## Enrichment
 
-`brief enrich` runs the same scan, then fetches metadata from external APIs for each direct dependency. The output gains an `enrichment` section with downloads, dependents, security advisories, runtime end-of-life status, and OpenSSF Scorecard.
+`brief enrich` runs the same scan, then fetches metadata from external APIs about the project itself: what packages it publishes, their download counts and dependents, runtime end-of-life status, and OpenSSF Scorecard.
 
 ```
 brief enrich .
@@ -86,31 +83,45 @@ brief enrich --json .
 brief enrich --verbose .
 ```
 
-Data sources: [ecosyste.ms](https://ecosyste.ms) for package metadata, [endoflife.date](https://endoflife.date) for runtime lifecycle, [OpenSSF Scorecard](https://securityscorecards.dev) for repo security.
+Data sources: [ecosyste.ms](https://ecosyste.ms) for published package metadata, [endoflife.date](https://endoflife.date) for runtime lifecycle, [OpenSSF Scorecard](https://securityscorecards.dev) for repo security.
+
+## What it detects
+
+30 language ecosystems with 230 tool definitions across 18 categories.
+
+**Languages (30):** Go, Ruby, Python, JavaScript, TypeScript, Rust, Java, Kotlin, Scala, Elixir, PHP, Swift, C#, Dart, Haskell, Clojure, Crystal, Julia, Nim, Zig, Lua, Perl, R, D, Elm, Gleam, Haxe, Nix, Deno, plus CocoaPods and Conda ecosystems.
+
+**Test (27):** go test, Jest, Vitest, RSpec, Minitest, pytest, JUnit, PHPUnit, ExUnit, cargo test, Playwright, Cypress, Cucumber, Selenium, k6, Locust, Artillery, criterion, axe-core, Lighthouse CI, and more.
+
+**Lint (19):** golangci-lint, ESLint, RuboCop, Ruff, Clippy, Biome, Stylelint, commitlint, hadolint, ShellCheck, markdownlint, Semgrep, pre-commit, Lefthook, Husky, and more.
+
+**Format (11):** gofmt, Prettier, Black, rustfmt, isort, dprint, scalafmt, ktlint, SwiftFormat, StandardRB, PHP CS Fixer.
+
+**Build (29):** Webpack, Vite, esbuild, Rollup, Parcel, tsup, GoReleaser, Mage, Rake, Tailwind CSS, PostCSS, Sass, plus framework detection for Rails, Django, FastAPI, Express, Fastify, Gin, Phoenix, Spring Boot, Actix, Next.js, Nuxt, Astro, Gatsby, SvelteKit, Eleventy.
+
+**Database (14):** ActiveRecord, Prisma, Alembic, Diesel, Ecto, Flyway, Liquibase, Goose, Dbmate, Drizzle, TypeORM, Sequelize, SQLAlchemy, GORM.
+
+**Codegen (6):** Protobuf, Buf, OpenAPI, GraphQL Code Generator, ent, sqlc.
+
+**Infrastructure (7):** Terraform, Pulumi, Ansible, Kubernetes, Helm, AWS CDK, Serverless Framework.
+
+**CI/Deployment (6):** GitHub Actions, GitLab CI, Earthly, Dagger, Vercel, Netlify.
+
+**Container (3):** Docker, Docker Compose, Dev Container.
+
+**Monorepo (7):** Nx, Turborepo, Bazel, Pants, Lerna, pnpm workspaces, Go workspaces.
+
+**Release (6):** semantic-release, release-please, cargo-release, Changesets, git-cliff, conventional-changelog.
+
+**i18n (5):** i18next, gettext, Rails i18n, Crowdin, Transifex.
+
+**Also:** package managers (31), type checkers (4), docs generators (8), security tools (3), coverage services (3), dependency update bots (3), environment tools (9).
+
+Run `brief list tools` for the full list.
 
 ## How it works
 
-Detection rules are data, not code. Each tool is defined in a TOML file under `knowledge/`, organized by ecosystem:
-
-```
-knowledge/
-├── ruby/       language, bundler, rspec, minitest, rubocop, sorbet
-├── python/     language, pip, uv, poetry, pipenv, pdm, pytest, ruff, mypy, black
-├── go/         language, gomod, gotest, golangci-lint, gofmt
-├── node/       language, typescript, npm, pnpm, yarn, bun, jest, vitest, eslint, prettier, biome
-├── rust/       language, cargo, clippy, rustfmt
-├── java/       language, maven, gradle, junit, checkstyle, spotbugs
-├── elixir/     language, mix, exunit, credo, dialyzer
-├── php/        language, composer, phpunit, phpstan, php-cs-fixer
-├── deno/       language, deno
-├── gleam/      language, gleam
-├── nix/        language, flakes
-├── + csharp, swift, kotlin, haskell, scala, dart, crystal, julia
-├── + clojure, r, lua, perl, zig, nim, d, elm, haxe, conda, cocoapods
-└── _shared/    github-actions, gitlab-ci, docker, devcontainer, dependabot, renovate, pre-commit
-```
-
-A tool definition looks like this:
+Detection rules are data, not code. Each tool is defined in a TOML file under `knowledge/`, organized by ecosystem. Adding a new tool is a single TOML file with no Go code changes.
 
 ```toml
 [tool]
@@ -131,7 +142,7 @@ alternatives = ["rake spec", "rspec"]
 files = [".rspec", "spec/spec_helper.rb"]
 ```
 
-Adding support for a new tool is a single TOML file. No Go code changes needed.
+Detection uses five primitives: file/directory presence, dependency names from parsed manifests, file content matching, structured key existence (JSON/TOML), and ecosystem filtering to prevent cross-language false positives.
 
 ## Library usage
 
@@ -156,6 +167,8 @@ report.JSON(os.Stdout, r)
 Adding a new tool: create a TOML file in the appropriate ecosystem directory under `knowledge/`, add test fixtures in `testdata/`, run `go test ./...`.
 
 Adding a new ecosystem: create a directory under `knowledge/`, add `language.toml` plus at least a package manager, test framework, and linter.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detection primitives and category definitions.
 
 ## License
 

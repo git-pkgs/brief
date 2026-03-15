@@ -1,0 +1,17 @@
+[tool]
+name = "git-cliff"
+category = "release"
+homepage = "https://git-cliff.org"
+docs = "https://git-cliff.org/docs/"
+repo = "https://github.com/orhun/git-cliff"
+description = "Changelog generator from conventional commits"
+
+[detect]
+files = ["cliff.toml"]
+
+[commands]
+run = "git-cliff"
+alternatives = ["git-cliff --bump"]
+
+[config]
+files = ["cliff.toml"]

@@ -1,0 +1,16 @@
+[tool]
+name = "SOPS"
+category = "security"
+homepage = "https://getsops.io"
+docs = "https://getsops.io/docs/"
+repo = "https://github.com/getsops/sops"
+description = "Encrypted file editor for secrets management"
+
+[detect]
+files = [".sops.yaml", ".sops.yml"]
+
+[commands]
+run = "sops"
+
+[config]
+files = [".sops.yaml", ".sops.yml"]

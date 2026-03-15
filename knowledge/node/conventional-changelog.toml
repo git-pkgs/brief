@@ -1,0 +1,15 @@
+[tool]
+name = "conventional-changelog"
+category = "release"
+homepage = "https://github.com/conventional-changelog/conventional-changelog"
+docs = "https://github.com/conventional-changelog/conventional-changelog#readme"
+repo = "https://github.com/conventional-changelog/conventional-changelog"
+description = "Generate changelogs from conventional commits"
+
+[detect]
+files = [".changelogrc", ".changelogrc.json"]
+dev_dependencies = ["conventional-changelog-cli", "standard-version"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx conventional-changelog -p angular -i CHANGELOG.md -s"

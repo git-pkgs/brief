@@ -1,0 +1,16 @@
+[tool]
+name = "Earthly"
+category = "ci"
+homepage = "https://earthly.dev"
+docs = "https://docs.earthly.dev"
+repo = "https://github.com/earthly/earthly"
+description = "Repeatable build automation tool"
+
+[detect]
+files = ["Earthfile"]
+
+[commands]
+run = "earthly +build"
+
+[config]
+files = ["Earthfile"]

@@ -1,0 +1,18 @@
+[tool]
+name = "Lighthouse CI"
+category = "test"
+homepage = "https://github.com/GoogleChrome/lighthouse-ci"
+docs = "https://github.com/GoogleChrome/lighthouse-ci/blob/main/docs/getting-started.md"
+repo = "https://github.com/GoogleChrome/lighthouse-ci"
+description = "Automated Lighthouse auditing in CI"
+
+[detect]
+files = ["lighthouserc.js", ".lighthouserc.js", "lighthouserc.json", ".lighthouserc.json", "lighthouserc.yml", ".lighthouserc.yml"]
+dev_dependencies = ["@lhci/cli"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx lhci autorun"
+
+[config]
+files = ["lighthouserc.js", ".lighthouserc.js", "lighthouserc.json", ".lighthouserc.json"]

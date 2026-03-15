@@ -1,0 +1,13 @@
+[tool]
+name = "pnpm workspaces"
+category = "monorepo"
+homepage = "https://pnpm.io/workspaces"
+docs = "https://pnpm.io/workspaces"
+description = "pnpm workspace configuration"
+
+[detect]
+files = ["pnpm-workspace.yaml"]
+ecosystems = ["node"]
+
+[config]
+files = ["pnpm-workspace.yaml"]

@@ -1,0 +1,13 @@
+[tool]
+name = "Go workspace"
+category = "monorepo"
+homepage = "https://go.dev/doc/tutorial/workspaces"
+docs = "https://go.dev/ref/mod#workspaces"
+description = "Go multi-module workspace"
+
+[detect]
+files = ["go.work"]
+ecosystems = ["go"]
+
+[config]
+files = ["go.work", "go.work.sum"]

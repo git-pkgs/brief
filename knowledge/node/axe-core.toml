@@ -1,0 +1,12 @@
+[tool]
+name = "axe-core"
+category = "test"
+homepage = "https://www.deque.com/axe/"
+docs = "https://github.com/dequelabs/axe-core#readme"
+repo = "https://github.com/dequelabs/axe-core"
+description = "Accessibility testing engine"
+
+[detect]
+dependencies = ["axe-core", "@axe-core/react", "@axe-core/playwright"]
+dev_dependencies = ["axe-core", "@axe-core/react", "@axe-core/playwright"]
+ecosystems = ["node"]

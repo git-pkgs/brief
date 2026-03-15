@@ -1,0 +1,13 @@
+[tool]
+name = "Dagger"
+category = "ci"
+homepage = "https://dagger.io"
+docs = "https://docs.dagger.io"
+repo = "https://github.com/dagger/dagger"
+description = "Programmable CI/CD engine"
+
+[detect]
+files = ["dagger.json", "dagger/"]
+
+[config]
+files = ["dagger.json"]

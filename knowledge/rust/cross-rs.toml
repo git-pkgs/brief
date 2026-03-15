@@ -1,0 +1,17 @@
+[tool]
+name = "cross"
+category = "build"
+homepage = "https://github.com/cross-rs/cross"
+docs = "https://github.com/cross-rs/cross/wiki"
+repo = "https://github.com/cross-rs/cross"
+description = "Cross-compilation tool for Rust"
+
+[detect]
+files = ["Cross.toml"]
+ecosystems = ["rust"]
+
+[commands]
+run = "cross build --target"
+
+[config]
+files = ["Cross.toml"]

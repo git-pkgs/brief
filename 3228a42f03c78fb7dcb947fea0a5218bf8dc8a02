@@ -1,0 +1,75 @@
+knowledge/deno/deno.toml
+  51d7df78896ba018 1-19
+knowledge/node/prettier.toml
+  51d7df78896ba018 1-20
+knowledge/_shared/gitsubmodules.toml
+  51d7df78896ba018 1-12
+knowledge/haxe/haxelib.toml
+  51d7df78896ba018 1-16
+knowledge/python/pdm.toml
+  51d7df78896ba018 1-22
+knowledge/gleam/gleam.toml
+  51d7df78896ba018 1-19
+knowledge/_shared/pre-commit.toml
+  51d7df78896ba018 1-17
+knowledge/python/poetry.toml
+  51d7df78896ba018 1-22
+knowledge/nix/flake.toml
+  51d7df78896ba018 1-18
+knowledge/conda/conda.toml
+  51d7df78896ba018 1-17
+knowledge/node/vitest.toml
+  51d7df78896ba018 1-20
+knowledge/node/biome.toml
+  51d7df78896ba018 1-20
+knowledge/gleam/language.toml
+  51d7df78896ba018 1-11
+knowledge/haxe/language.toml
+  51d7df78896ba018 1-11
+knowledge/go/gofmt.toml
+  51d7df78896ba018 1-14
+knowledge/cocoapods/cocoapods.toml
+  51d7df78896ba018 1-18
+knowledge/elm/elm.toml
+  51d7df78896ba018 1-17
+knowledge/python/pipenv.toml
+  51d7df78896ba018 1-19
+knowledge/_shared/gitlab-ci.toml
+  51d7df78896ba018 1-12
+knowledge/elm/language.toml
+  51d7df78896ba018 1-11
+knowledge/nix/language.toml
+  51d7df78896ba018 1-11
+knowledge/_shared/devcontainer.toml
+  51d7df78896ba018 1-12
+knowledge/python/black.toml
+  51d7df78896ba018 1-21
+knowledge/d/language.toml
+  51d7df78896ba018 1-11
+knowledge/d/dub.toml
+  51d7df78896ba018 1-18
+knowledge/node/yarn.toml
+  51d7df78896ba018 1-19
+knowledge/deno/language.toml
+  51d7df78896ba018 1-11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "3228a42f03c78fb7dcb947fea0a5218bf8dc8a02",
+  "prompts": {
+    "51d7df78896ba018": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "960695c4-20c9-4fbd-9628-518a7602912e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 438,
+      "total_deletions": 0,
+      "accepted_lines": 438,
+      "overriden_lines": 0
+    }
+  }
+}

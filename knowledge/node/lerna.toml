@@ -1,0 +1,19 @@
+[tool]
+name = "Lerna"
+category = "monorepo"
+homepage = "https://lerna.js.org"
+docs = "https://lerna.js.org/docs/getting-started"
+repo = "https://github.com/lerna/lerna"
+description = "Monorepo management for JavaScript projects"
+
+[detect]
+files = ["lerna.json"]
+dev_dependencies = ["lerna"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx lerna run build"
+alternatives = ["npx lerna publish"]
+
+[config]
+files = ["lerna.json"]

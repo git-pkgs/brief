@@ -1,0 +1,12 @@
+[tool]
+name = "Coveralls"
+category = "coverage"
+homepage = "https://coveralls.io"
+docs = "https://docs.coveralls.io"
+description = "Code coverage tracking service"
+
+[detect]
+files = [".coveralls.yml"]
+
+[config]
+files = [".coveralls.yml"]

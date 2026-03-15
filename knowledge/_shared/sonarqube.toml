@@ -1,0 +1,12 @@
+[tool]
+name = "SonarQube"
+category = "security"
+homepage = "https://www.sonarsource.com/products/sonarqube/"
+docs = "https://docs.sonarsource.com/sonarqube/"
+description = "Code quality and security analysis"
+
+[detect]
+files = ["sonar-project.properties", ".sonarcloud.properties"]
+
+[config]
+files = ["sonar-project.properties", ".sonarcloud.properties"]

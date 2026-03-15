@@ -1,0 +1,11 @@
+[tool]
+name = "JetBrains IDE"
+category = "environment"
+homepage = "https://www.jetbrains.com"
+description = "JetBrains IDE shared configuration"
+
+[detect]
+files = [".idea/"]
+
+[config]
+files = [".idea/"]

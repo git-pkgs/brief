@@ -1,0 +1,12 @@
+[tool]
+name = "Codecov"
+category = "coverage"
+homepage = "https://codecov.io"
+docs = "https://docs.codecov.com"
+description = "Code coverage reporting and tracking"
+
+[detect]
+files = ["codecov.yml", ".codecov.yml", "codecov.yaml", ".codecov.yaml"]
+
+[config]
+files = ["codecov.yml", ".codecov.yml", "codecov.yaml", ".codecov.yaml"]

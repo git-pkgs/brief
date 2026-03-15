@@ -1,0 +1,18 @@
+[tool]
+name = "Pants"
+category = "monorepo"
+homepage = "https://www.pantsbuild.org"
+docs = "https://www.pantsbuild.org/docs"
+repo = "https://github.com/pantsbuild/pants"
+description = "Build system for Python and polyglot monorepos"
+
+[detect]
+files = ["pants.toml", "BUILD"]
+ecosystems = ["python"]
+
+[commands]
+run = "pants test ::"
+alternatives = ["pants lint ::", "pants fmt ::"]
+
+[config]
+files = ["pants.toml"]

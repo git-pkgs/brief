@@ -1,0 +1,19 @@
+[tool]
+name = "Nx"
+category = "monorepo"
+homepage = "https://nx.dev"
+docs = "https://nx.dev/getting-started/intro"
+repo = "https://github.com/nrwl/nx"
+description = "Build system for monorepos"
+
+[detect]
+files = ["nx.json"]
+dev_dependencies = ["nx"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx nx run-many"
+alternatives = ["npx nx graph"]
+
+[config]
+files = ["nx.json"]

@@ -1,0 +1,19 @@
+[tool]
+name = "Overcommit"
+category = "lint"
+homepage = "https://github.com/sds/overcommit"
+docs = "https://github.com/sds/overcommit#readme"
+repo = "https://github.com/sds/overcommit"
+description = "Configurable git hook manager for Ruby projects"
+
+[detect]
+files = [".overcommit.yml"]
+dependencies = ["overcommit"]
+ecosystems = ["ruby"]
+
+[commands]
+run = "bundle exec overcommit --run"
+alternatives = ["overcommit --install"]
+
+[config]
+files = [".overcommit.yml"]

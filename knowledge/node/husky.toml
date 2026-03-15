@@ -1,0 +1,18 @@
+[tool]
+name = "Husky"
+category = "lint"
+homepage = "https://typicode.github.io/husky/"
+docs = "https://typicode.github.io/husky/get-started.html"
+repo = "https://github.com/typicode/husky"
+description = "Git hooks made easy"
+
+[detect]
+files = [".husky/", ".huskyrc", ".huskyrc.json", ".huskyrc.js"]
+dev_dependencies = ["husky"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx husky install"
+
+[config]
+files = [".husky/"]

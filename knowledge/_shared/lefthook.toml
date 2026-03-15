@@ -1,0 +1,17 @@
+[tool]
+name = "Lefthook"
+category = "lint"
+homepage = "https://github.com/evilmartians/lefthook"
+docs = "https://github.com/evilmartians/lefthook/blob/master/docs/usage.md"
+repo = "https://github.com/evilmartians/lefthook"
+description = "Fast git hooks manager"
+
+[detect]
+files = ["lefthook.yml", "lefthook.yaml", ".lefthook.yml", ".lefthook.yaml"]
+
+[commands]
+run = "lefthook run pre-commit"
+alternatives = ["lefthook install"]
+
+[config]
+files = ["lefthook.yml", "lefthook.yaml", ".lefthook.yml", ".lefthook.yaml"]

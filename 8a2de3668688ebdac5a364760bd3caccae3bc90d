@@ -1,0 +1,37 @@
+knowledge/ruby/activerecord.toml
+  84f545bbad6fb7cb 1-19
+knowledge/java/liquibase.toml
+  84f545bbad6fb7cb 1-17
+knowledge/java/flyway.toml
+  84f545bbad6fb7cb 1-17
+knowledge/python/alembic.toml
+  84f545bbad6fb7cb 1-19
+knowledge/_shared/dbmate.toml
+  84f545bbad6fb7cb 1-17
+knowledge/node/prisma.toml
+  84f545bbad6fb7cb 1-20
+knowledge/rust/diesel.toml
+  84f545bbad6fb7cb 1-19
+knowledge/go/goose.toml
+  84f545bbad6fb7cb 1-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "8a2de3668688ebdac5a364760bd3caccae3bc90d",
+  "prompts": {
+    "84f545bbad6fb7cb": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "60673090-6a91-4d42-b2c4-cecb5a39f60b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 149,
+      "total_deletions": 0,
+      "accepted_lines": 149,
+      "overriden_lines": 0
+    }
+  }
+}

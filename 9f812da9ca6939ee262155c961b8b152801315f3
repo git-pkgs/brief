@@ -1,0 +1,117 @@
+knowledge/solidity/foundry.toml
+  ed93d8c49b9022a4 1-18
+knowledge/c/meson.toml
+  ed93d8c49b9022a4 1-18
+knowledge/c/make.toml
+  ed93d8c49b9022a4 1-14
+knowledge/cpp/clang-tidy.toml
+  ed93d8c49b9022a4 1-16
+knowledge/ada/language.toml
+  ed93d8c49b9022a4 1-10
+knowledge/solidity/hardhat.toml
+  ed93d8c49b9022a4 1-19
+knowledge/emacs-lisp/language.toml
+  ed93d8c49b9022a4 1-10
+knowledge/roc/language.toml
+  ed93d8c49b9022a4 1-11
+knowledge/vhdl/language.toml
+  ed93d8c49b9022a4 1-10
+knowledge/java/gradle.toml
+  ed93d8c49b9022a4 11
+knowledge/mojo/language.toml
+  ed93d8c49b9022a4 1-10
+knowledge/verilog/language.toml
+  ed93d8c49b9022a4 1-10
+knowledge/v/language.toml
+  ed93d8c49b9022a4 1-11
+knowledge/c/autotools.toml
+  ed93d8c49b9022a4 1-17
+knowledge/prolog/language.toml
+  ed93d8c49b9022a4 1-11
+knowledge/cpp/gtest.toml
+  ed93d8c49b9022a4 1-18
+knowledge/fsharp/language.toml
+  ed93d8c49b9022a4 1-11
+knowledge/ocaml/opam.toml
+  ed93d8c49b9022a4 1-18
+knowledge/cpp/vcpkg.toml
+  ed93d8c49b9022a4 1-17
+README.md
+  ed93d8c49b9022a4 3,111,113,115,117,119,121,139
+knowledge/erlang/dialyzer.toml
+  ed93d8c49b9022a4 1-15
+knowledge/racket/language.toml
+  ed93d8c49b9022a4 1-11
+knowledge/tcl/language.toml
+  ed93d8c49b9022a4 1-10
+knowledge/ocaml/language.toml
+  ed93d8c49b9022a4 1-11
+knowledge/cpp/catch2.toml
+  ed93d8c49b9022a4 1-18
+knowledge/cpp/language.toml
+  ed93d8c49b9022a4 1-10
+knowledge/gdscript/language.toml
+  ed93d8c49b9022a4 1-11
+knowledge/c/language.toml
+  ed93d8c49b9022a4 1-10
+knowledge/objc/language.toml
+  ed93d8c49b9022a4 1-10
+knowledge/erlang/rebar3.toml
+  ed93d8c49b9022a4 1-19
+knowledge/groovy/language.toml
+  ed93d8c49b9022a4 1-11
+knowledge/solidity/language.toml
+  ed93d8c49b9022a4 1-11
+knowledge/common-lisp/language.toml
+  ed93d8c49b9022a4 1-10
+knowledge/scheme/language.toml
+  ed93d8c49b9022a4 1-10
+knowledge/cpp/conan.toml
+  ed93d8c49b9022a4 1-19
+knowledge/ocaml/dune.toml
+  ed93d8c49b9022a4 1-18
+knowledge/odin/language.toml
+  ed93d8c49b9022a4 1-11
+knowledge/fortran/fpm.toml
+  ed93d8c49b9022a4 1-18
+knowledge/ada/alire.toml
+  ed93d8c49b9022a4 1-18
+knowledge/common-lisp/quicklisp.toml
+  ed93d8c49b9022a4 1-13
+knowledge/fortran/language.toml
+  ed93d8c49b9022a4 1-10
+knowledge/cpp/clang-format.toml
+  ed93d8c49b9022a4 1-16
+knowledge/erlang/language.toml
+  ed93d8c49b9022a4 1-11
+knowledge/cobol/language.toml
+  ed93d8c49b9022a4 1-10
+knowledge/c/cmake.toml
+  ed93d8c49b9022a4 1-18
+knowledge/fsharp/dotnet.toml
+  ed93d8c49b9022a4 1-14
+knowledge/erlang/eunit.toml
+  ed93d8c49b9022a4 1-13
+knowledge/ocaml/ocamlformat.toml
+  ed93d8c49b9022a4 1-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "9f812da9ca6939ee262155c961b8b152801315f3",
+  "prompts": {
+    "ed93d8c49b9022a4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4fea1a55-436e-4c55-a6ce-e6545dc1c9d7",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 653,
+      "total_deletions": 12,
+      "accepted_lines": 650,
+      "overriden_lines": 0
+    }
+  }
+}

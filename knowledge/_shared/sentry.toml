@@ -1,0 +1,11 @@
+[tool]
+name = "Sentry"
+category = "coverage"
+homepage = "https://sentry.io"
+docs = "https://docs.sentry.io"
+repo = "https://github.com/getsentry/sentry"
+description = "Error tracking and performance monitoring"
+
+[detect]
+files = [".sentryclirc", "sentry.properties"]
+dependencies = ["@sentry/node", "@sentry/browser", "@sentry/react", "sentry-sdk", "sentry_sdk"]

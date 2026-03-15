@@ -1,0 +1,16 @@
+[tool]
+name = "Tailwind CSS"
+category = "build"
+homepage = "https://tailwindcss.com"
+docs = "https://tailwindcss.com/docs"
+repo = "https://github.com/tailwindlabs/tailwindcss"
+description = "Utility-first CSS framework"
+
+[detect]
+files = ["tailwind.config.js", "tailwind.config.ts", "tailwind.config.mjs", "tailwind.config.cjs"]
+dev_dependencies = ["tailwindcss"]
+dependencies = ["tailwindcss"]
+ecosystems = ["node"]
+
+[config]
+files = ["tailwind.config.js", "tailwind.config.ts", "tailwind.config.mjs", "tailwind.config.cjs"]

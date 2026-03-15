@@ -1,0 +1,12 @@
+[tool]
+name = "Sass"
+category = "build"
+homepage = "https://sass-lang.com"
+docs = "https://sass-lang.com/documentation/"
+repo = "https://github.com/sass/sass"
+description = "CSS preprocessor"
+
+[detect]
+files = ["**/*.scss", "**/*.sass"]
+dependencies = ["sass", "sass-rails"]
+dev_dependencies = ["sass"]

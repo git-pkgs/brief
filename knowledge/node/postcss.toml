@@ -1,0 +1,15 @@
+[tool]
+name = "PostCSS"
+category = "build"
+homepage = "https://postcss.org"
+docs = "https://postcss.org/docs/"
+repo = "https://github.com/postcss/postcss"
+description = "CSS transformation tool"
+
+[detect]
+files = ["postcss.config.js", "postcss.config.mjs", "postcss.config.cjs", "postcss.config.ts", ".postcssrc", ".postcssrc.json", ".postcssrc.yml"]
+dev_dependencies = ["postcss"]
+ecosystems = ["node"]
+
+[config]
+files = ["postcss.config.js", "postcss.config.mjs", "postcss.config.cjs", "postcss.config.ts", ".postcssrc", ".postcssrc.json"]

@@ -1,0 +1,35 @@
+knowledge/_shared/shellcheck.toml
+  84f545bbad6fb7cb 1-16
+knowledge/_shared/actionlint.toml
+  84f545bbad6fb7cb 1-13
+knowledge/node/stylelint.toml
+  84f545bbad6fb7cb 1-18
+knowledge/_shared/markdownlint.toml
+  84f545bbad6fb7cb 1-16
+knowledge/node/commitlint.toml
+  84f545bbad6fb7cb 1-18
+knowledge/_shared/hadolint.toml
+  84f545bbad6fb7cb 1-16
+knowledge/_shared/semgrep.toml
+  84f545bbad6fb7cb 1-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "b1b1c573db5fe7e6da475ee18fb60bee38dcade8",
+  "prompts": {
+    "84f545bbad6fb7cb": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "60673090-6a91-4d42-b2c4-cecb5a39f60b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 114,
+      "total_deletions": 0,
+      "accepted_lines": 114,
+      "overriden_lines": 0
+    }
+  }
+}

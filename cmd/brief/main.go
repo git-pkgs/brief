@@ -43,6 +43,7 @@ func cmdScan(args []string) {
 	category := fs.String("category", "", "Only report on specific category")
 	keep := fs.Bool("keep", false, "Keep downloaded remote source")
 	depth := fs.Int("depth", 1, "Git clone depth (0 = full clone)")
+	dir := fs.String("dir", "", "Directory to clone remote source into")
 	version := fs.Bool("version", false, "Print version and exit")
 	_ = fs.Parse(args)
 
@@ -60,6 +61,7 @@ func cmdScan(args []string) {
 	src, err := remote.Resolve(context.Background(), path, remote.Options{
 		Keep:  *keep,
 		Depth: *depth,
+		Dir:   *dir,
 	})
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "error: %v\n", err)

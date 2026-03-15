@@ -26,13 +26,16 @@ brief schema                      JSON output schema
 Works on local paths, git URLs, and registry packages:
 
 ```
-brief .
-brief https://github.com/expressjs/express
-brief npm:express
+brief .                                       Local directory
+brief /path/to/project                        Any local path
+brief https://github.com/expressjs/express    Git URL (cloned to temp dir)
+brief npm:express                             Registry package (resolved to source repo)
 brief gem:rails
 brief crate:serde
 brief pypi:requests
 ```
+
+Remote sources are shallow-cloned by default. Use `--depth 0` for a full clone, `--keep` to preserve the clone, or `--dir ./somewhere` to clone into a specific directory.
 
 JSON when piped, human-readable on a TTY. Force either with `--json` or `--human`. Use `--category test` to filter to a single category. Use `--keep` to preserve cloned repos and `--depth 0` for a full clone.
 

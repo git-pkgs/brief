@@ -25,8 +25,9 @@ type Source struct {
 
 // Options configures remote source resolution.
 type Options struct {
-	Keep  bool // don't delete temp dir after scanning
-	Depth int  // git clone depth (0 = full, default 1 = shallow)
+	Keep  bool   // don't delete temp dir after scanning
+	Depth int    // git clone depth (0 = full, default 1 = shallow)
+	Dir   string // directory to clone into (empty = temp dir)
 }
 
 // Resolve takes a source string and returns a local directory to scan.
@@ -119,45 +120,46 @@ func clone(ctx context.Context, url, name string, opts Options) (*Source, error)
 }
 
 func cloneURL(ctx context.Context, url, name string, opts Options) (*Source, error) {
-	if name == "" {
-		name = "brief-remote"
-	}
+	var dir string
+	var managed bool
 
-	tmpDir, err := os.MkdirTemp("", "brief-"+name+"-*")
-	if err != nil {
-		return nil, fmt.Errorf("creating temp dir: %w", err)
+	if opts.Dir != "" {
+		dir = opts.Dir
+	} else {
+		if name == "" {
+			name = "brief-remote"
+		}
+		tmp, err := os.MkdirTemp("", "brief-"+name+"-*")
+		if err != nil {
+			return nil, fmt.Errorf("creating temp dir: %w", err)
+		}
+		dir = tmp
+		managed = true
 	}
 
 	args := []string{"clone"}
 	if opts.Depth > 0 {
 		args = append(args, "--depth", fmt.Sprintf("%d", opts.Depth))
 	}
-	args = append(args, url, tmpDir)
+	args = append(args, url, dir)
 
 	cmd := exec.CommandContext(ctx, "git", args...)
 	cmd.Stdout = os.Stderr
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
-		_ = os.RemoveAll(tmpDir)
+		if managed {
+			_ = os.RemoveAll(dir)
+		}
 		return nil, fmt.Errorf("cloning %s: %w", url, err)
 	}
 
 	cleanup := func() {
-		if !opts.Keep {
-			_ = os.RemoveAll(tmpDir)
-		} else {
-			_, _ = fmt.Fprintf(os.Stderr, "kept: %s\n", tmpDir)
+		if managed && !opts.Keep {
+			_ = os.RemoveAll(dir)
 		}
 	}
 
-	// Resolve to the actual clone dir (git clone into tmpDir directly)
-	entries, err := os.ReadDir(tmpDir)
-	if err != nil || len(entries) == 0 {
-		// Direct clone into tmpDir
-		return &Source{Dir: tmpDir, Cleanup: cleanup, Origin: url}, nil
-	}
-
-	return &Source{Dir: tmpDir, Cleanup: cleanup, Origin: url}, nil
+	return &Source{Dir: dir, Cleanup: cleanup, Origin: url}, nil
 }
 
 // TempDir returns the path to the temporary directory, useful for --keep output.

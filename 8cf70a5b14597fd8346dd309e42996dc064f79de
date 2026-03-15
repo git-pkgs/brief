@@ -1,0 +1,33 @@
+knowledge/swift/swiftformat.toml
+  84f545bbad6fb7cb 1-17
+knowledge/scala/scalafmt.toml
+  84f545bbad6fb7cb 1-17
+knowledge/ruby/standardrb.toml
+  84f545bbad6fb7cb 1-20
+knowledge/python/isort.toml
+  84f545bbad6fb7cb 1-23
+knowledge/_shared/dprint.toml
+  84f545bbad6fb7cb 1-17
+knowledge/kotlin/ktlint.toml
+  84f545bbad6fb7cb 1-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "8cf70a5b14597fd8346dd309e42996dc064f79de",
+  "prompts": {
+    "84f545bbad6fb7cb": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "60673090-6a91-4d42-b2c4-cecb5a39f60b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 115,
+      "total_deletions": 0,
+      "accepted_lines": 115,
+      "overriden_lines": 0
+    }
+  }
+}

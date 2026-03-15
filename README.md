@@ -1,10 +1,31 @@
 # brief
 
-A single-binary CLI tool that detects a software project's toolchain, configuration, and conventions, then outputs a structured report. Written in Go, 30 ecosystems, 230 tool definitions.
+A single-binary CLI tool that detects a software project's toolchain, configuration, and conventions, then outputs a structured report. Written in Go, 30 ecosystems, 231 tool definitions.
 
 brief answers the bootstrap questions every AI coding agent, new contributor, and CI pipeline faces: what language is this, how do I install dependencies, how do I run the tests, what linter is configured.
 
 It does not score, grade, or judge. It reports facts.
+
+## Use with AI coding agents
+
+Add this to your `CLAUDE.md`, `agents.md`, or equivalent agent instructions file:
+
+```
+Before starting work on this project, run `brief .` to understand the toolchain,
+test commands, linters, and project conventions.
+```
+
+The agent will get back structured information about the project's language, package manager, test runner, linter, formatter, build tools, and more, so it doesn't have to guess or ask you.
+
+To let Claude Code run `brief` without prompting for approval each time, add this to `~/.claude/settings.json`:
+
+```json
+{
+  "permissions": {
+    "allow": ["Bash(brief *)"]
+  }
+}
+```
 
 ## Install
 
@@ -87,7 +108,7 @@ Data sources: [ecosyste.ms](https://ecosyste.ms) for published package metadata,
 
 ## What it detects
 
-30 language ecosystems with 230 tool definitions across 18 categories.
+30 language ecosystems with 231 tool definitions across 18 categories.
 
 **Languages (30):** Go, Ruby, Python, JavaScript, TypeScript, Rust, Java, Kotlin, Scala, Elixir, PHP, Swift, C#, Dart, Haskell, Clojure, Crystal, Julia, Nim, Zig, Lua, Perl, R, D, Elm, Gleam, Haxe, Nix, Deno, plus CocoaPods and Conda ecosystems.
 
@@ -99,7 +120,7 @@ Data sources: [ecosyste.ms](https://ecosyste.ms) for published package metadata,
 
 **Build (29):** Webpack, Vite, esbuild, Rollup, Parcel, tsup, GoReleaser, Mage, Rake, Tailwind CSS, PostCSS, Sass, plus framework detection for Rails, Django, FastAPI, Express, Fastify, Gin, Phoenix, Spring Boot, Actix, Next.js, Nuxt, Astro, Gatsby, SvelteKit, Eleventy.
 
-**Database (14):** ActiveRecord, Prisma, Alembic, Diesel, Ecto, Flyway, Liquibase, Goose, Dbmate, Drizzle, TypeORM, Sequelize, SQLAlchemy, GORM.
+**Database (15):** ActiveRecord, Prisma, Alembic, Diesel, Ecto, Flyway, Liquibase, Goose, Dbmate, Drizzle, TypeORM, Sequelize, SQLAlchemy, GORM, SQLite.
 
 **Codegen (6):** Protobuf, Buf, OpenAPI, GraphQL Code Generator, ent, sqlc.
 

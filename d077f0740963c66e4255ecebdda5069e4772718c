@@ -1,0 +1,39 @@
+knowledge/_shared/coveralls.toml
+  84f545bbad6fb7cb 1-12
+knowledge/python/pants.toml
+  84f545bbad6fb7cb 1-18
+knowledge/_shared/bazel.toml
+  84f545bbad6fb7cb 1-17
+knowledge/_shared/jetbrains.toml
+  84f545bbad6fb7cb 1-11
+knowledge/_shared/vscode.toml
+  84f545bbad6fb7cb 1-12
+knowledge/node/lerna.toml
+  84f545bbad6fb7cb 1-19
+knowledge/_shared/codecov.toml
+  84f545bbad6fb7cb 1-12
+knowledge/node/nx.toml
+  84f545bbad6fb7cb 1-19
+knowledge/_shared/sonarqube.toml
+  84f545bbad6fb7cb 1-12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "d077f0740963c66e4255ecebdda5069e4772718c",
+  "prompts": {
+    "84f545bbad6fb7cb": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "60673090-6a91-4d42-b2c4-cecb5a39f60b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 132,
+      "overriden_lines": 0
+    }
+  }
+}

@@ -89,7 +89,6 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 		}
 		tools, ok := r.Tools[cat]
 		if !ok {
-			_, _ = fmt.Fprintf(w, "%-13s—\n", label+":")
 			continue
 		}
 		for i, t := range tools {

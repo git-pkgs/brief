@@ -1,0 +1,37 @@
+detect/detect_test.go
+  ed93d8c49b9022a4 132-141
+knowledge/_shared/sqlite.toml
+  ed93d8c49b9022a4 1-27
+testdata/sqlite-go-project/go.mod
+  ed93d8c49b9022a4 1-5
+knowledge/node/turborepo.toml
+  ed93d8c49b9022a4 14-16
+knowledge/node/sveltekit.toml
+  ed93d8c49b9022a4 14-16
+knowledge/_shared/terraform.toml
+  ed93d8c49b9022a4 12-14
+knowledge/node/nuxt.toml
+  ed93d8c49b9022a4 14-16
+knowledge/node/nextjs.toml
+  ed93d8c49b9022a4 14-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "61162ba96f789040ec87b285ef3d6abf1541fcd1",
+  "prompts": {
+    "ed93d8c49b9022a4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4fea1a55-436e-4c55-a6ce-e6545dc1c9d7",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 57,
+      "overriden_lines": 0
+    }
+  }
+}

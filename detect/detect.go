@@ -504,13 +504,14 @@ func (e *Engine) loadDeps() {
 			default:
 				e.runtimeDeps[dep.Name] = true
 			}
-			// Only include transitive deps from lockfiles, not manifests.
-			// go.mod lists indirect deps in the manifest itself, but those
-			// should only count when parsed from a lockfile like go.graph.
+			// Include transitive deps from lockfiles and Go manifests.
+			// Go is special: go.mod acts as both manifest and lockfile,
+			// so indirect deps there are real pinned transitive deps.
 			if dep.PURL == "" {
 				continue
 			}
-			if !dep.Direct && result.Kind != manifests.Lockfile {
+			isResolved := result.Kind == manifests.Lockfile || result.Ecosystem == "golang"
+			if !dep.Direct && !isResolved {
 				continue
 			}
 			scope := "runtime"

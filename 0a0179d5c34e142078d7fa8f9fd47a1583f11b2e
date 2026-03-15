@@ -1,0 +1,35 @@
+knowledge/ruby/jekyll.toml
+  84f545bbad6fb7cb 1-19
+knowledge/_shared/hugo.toml
+  84f545bbad6fb7cb 1-20
+knowledge/node/docusaurus.toml
+  84f545bbad6fb7cb 1-19
+knowledge/python/sphinx.toml
+  84f545bbad6fb7cb 1-19
+knowledge/python/mkdocs.toml
+  84f545bbad6fb7cb 1-19
+knowledge/node/vitepress.toml
+  84f545bbad6fb7cb 1-20
+knowledge/node/docsify.toml
+  84f545bbad6fb7cb 1-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "0a0179d5c34e142078d7fa8f9fd47a1583f11b2e",
+  "prompts": {
+    "84f545bbad6fb7cb": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "60673090-6a91-4d42-b2c4-cecb5a39f60b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 138,
+      "total_deletions": 0,
+      "accepted_lines": 138,
+      "overriden_lines": 0
+    }
+  }
+}

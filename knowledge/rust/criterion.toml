@@ -1,0 +1,18 @@
+[tool]
+name = "criterion"
+category = "test"
+homepage = "https://bheisler.github.io/criterion.rs/book/"
+docs = "https://bheisler.github.io/criterion.rs/book/getting_started.html"
+repo = "https://github.com/bheisler/criterion.rs"
+description = "Statistics-driven benchmarking for Rust"
+
+[detect]
+files = ["benches/"]
+dependencies = ["criterion"]
+ecosystems = ["rust"]
+
+[commands]
+run = "cargo bench"
+
+[config]
+files = ["benches/"]

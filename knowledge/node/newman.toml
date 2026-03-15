@@ -1,0 +1,15 @@
+[tool]
+name = "Newman"
+category = "test"
+homepage = "https://learning.postman.com/docs/collections/using-newman-cli/command-line-integration-with-newman/"
+docs = "https://learning.postman.com/docs/collections/using-newman-cli/command-line-integration-with-newman/"
+repo = "https://github.com/postmanlabs/newman"
+description = "Postman collection runner for CLI"
+
+[detect]
+files = ["**/*.postman_collection.json"]
+dev_dependencies = ["newman"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx newman run"

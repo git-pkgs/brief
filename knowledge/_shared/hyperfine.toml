@@ -1,0 +1,16 @@
+[tool]
+name = "hyperfine"
+category = "test"
+homepage = "https://github.com/sharkdp/hyperfine"
+docs = "https://github.com/sharkdp/hyperfine#readme"
+repo = "https://github.com/sharkdp/hyperfine"
+description = "Command-line benchmarking tool"
+
+[detect]
+files = [".hyperfine.toml"]
+
+[commands]
+run = "hyperfine"
+
+[config]
+files = [".hyperfine.toml"]

@@ -1,0 +1,18 @@
+[tool]
+name = "pytest-benchmark"
+category = "test"
+homepage = "https://pytest-benchmark.readthedocs.io"
+docs = "https://pytest-benchmark.readthedocs.io/en/latest/"
+repo = "https://github.com/ionelmc/pytest-benchmark"
+description = "Benchmarking plugin for pytest"
+
+[detect]
+dependencies = ["pytest-benchmark"]
+dev_dependencies = ["pytest-benchmark"]
+ecosystems = ["python"]
+
+[detect.file_contains]
+"pyproject.toml" = ["pytest-benchmark"]
+
+[commands]
+run = "pytest --benchmark-only"

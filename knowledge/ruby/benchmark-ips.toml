@@ -1,0 +1,15 @@
+[tool]
+name = "benchmark-ips"
+category = "test"
+homepage = "https://github.com/evanphx/benchmark-ips"
+docs = "https://github.com/evanphx/benchmark-ips#readme"
+repo = "https://github.com/evanphx/benchmark-ips"
+description = "Iterations per second benchmarking for Ruby"
+
+[detect]
+dependencies = ["benchmark-ips"]
+dev_dependencies = ["benchmark-ips"]
+ecosystems = ["ruby"]
+
+[commands]
+run = "bundle exec ruby"

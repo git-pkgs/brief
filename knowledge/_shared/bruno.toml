@@ -1,0 +1,13 @@
+[tool]
+name = "Bruno"
+category = "test"
+homepage = "https://www.usebruno.com"
+docs = "https://docs.usebruno.com"
+repo = "https://github.com/usebruno/bruno"
+description = "API client and testing tool"
+
+[detect]
+files = ["bruno.json", "**/*.bru"]
+
+[config]
+files = ["bruno.json"]

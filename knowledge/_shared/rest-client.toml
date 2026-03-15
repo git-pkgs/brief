@@ -1,0 +1,8 @@
+[tool]
+name = "REST Client"
+category = "test"
+homepage = "https://marketplace.visualstudio.com/items?itemName=humao.rest-client"
+description = "HTTP request files for API testing"
+
+[detect]
+files = ["**/*.http", "**/*.rest"]

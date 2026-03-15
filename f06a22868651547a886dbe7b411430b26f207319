@@ -1,0 +1,25 @@
+report/report.go
+  84f545bbad6fb7cb 9,14-26,37,111,156,159,236,264,266,274
+detect/detect.go
+  84f545bbad6fb7cb 446-466,469,509,578,643,677-680,955,991-995,1236-1240
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "f06a22868651547a886dbe7b411430b26f207319",
+  "prompts": {
+    "84f545bbad6fb7cb": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "60673090-6a91-4d42-b2c4-cecb5a39f60b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 64,
+      "total_deletions": 70,
+      "accepted_lines": 63,
+      "overriden_lines": 0
+    }
+  }
+}

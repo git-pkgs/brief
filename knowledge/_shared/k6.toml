@@ -1,0 +1,19 @@
+[tool]
+name = "k6"
+category = "test"
+homepage = "https://k6.io"
+docs = "https://grafana.com/docs/k6/latest/"
+repo = "https://github.com/grafana/k6"
+description = "Load testing tool"
+
+[detect]
+files = ["k6.config.js", "k6.config.ts"]
+
+[detect.file_contains]
+"package.json" = ["@grafana/k6"]
+
+[commands]
+run = "k6 run"
+
+[config]
+files = ["k6.config.js", "k6.config.ts"]

@@ -1,0 +1,18 @@
+[tool]
+name = "Artillery"
+category = "test"
+homepage = "https://www.artillery.io"
+docs = "https://www.artillery.io/docs"
+repo = "https://github.com/artilleryio/artillery"
+description = "Load testing and performance toolkit"
+
+[detect]
+files = ["artillery.yml", "artillery.yaml"]
+dev_dependencies = ["artillery"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx artillery run"
+
+[config]
+files = ["artillery.yml", "artillery.yaml"]

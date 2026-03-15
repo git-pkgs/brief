@@ -1,0 +1,19 @@
+[tool]
+name = "Storybook"
+category = "docs"
+homepage = "https://storybook.js.org"
+docs = "https://storybook.js.org/docs"
+repo = "https://github.com/storybookjs/storybook"
+description = "UI component development and documentation"
+
+[detect]
+files = [".storybook/"]
+dev_dependencies = ["@storybook/react", "@storybook/vue3", "@storybook/angular", "@storybook/svelte", "@storybook/web-components"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx storybook dev"
+alternatives = ["npx storybook build"]
+
+[config]
+files = [".storybook/main.js", ".storybook/main.ts", ".storybook/preview.js", ".storybook/preview.ts"]

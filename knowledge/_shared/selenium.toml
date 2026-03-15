@@ -1,0 +1,11 @@
+[tool]
+name = "Selenium"
+category = "test"
+homepage = "https://www.selenium.dev"
+docs = "https://www.selenium.dev/documentation/"
+repo = "https://github.com/SeleniumHQ/selenium"
+description = "Browser automation and testing framework"
+
+[detect]
+dependencies = ["selenium-webdriver", "selenium"]
+dev_dependencies = ["selenium-webdriver", "selenium"]

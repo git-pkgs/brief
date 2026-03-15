@@ -1,0 +1,19 @@
+[tool]
+name = "Cypress"
+category = "test"
+homepage = "https://www.cypress.io"
+docs = "https://docs.cypress.io"
+repo = "https://github.com/cypress-io/cypress"
+description = "End-to-end testing framework for web applications"
+
+[detect]
+files = ["cypress.config.ts", "cypress.config.js", "cypress.config.mjs", "cypress.json", "cypress/"]
+dev_dependencies = ["cypress"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx cypress run"
+alternatives = ["npx cypress open"]
+
+[config]
+files = ["cypress.config.ts", "cypress.config.js", "cypress.config.mjs", "cypress.json"]

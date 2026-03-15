@@ -1,0 +1,12 @@
+[tool]
+name = "Cucumber"
+category = "test"
+homepage = "https://cucumber.io"
+docs = "https://cucumber.io/docs"
+repo = "https://github.com/cucumber/cucumber"
+description = "BDD testing with Gherkin syntax"
+
+[detect]
+files = ["**/*.feature", "cucumber.yml", "cucumber.js"]
+dependencies = ["cucumber", "@cucumber/cucumber"]
+dev_dependencies = ["cucumber", "@cucumber/cucumber"]

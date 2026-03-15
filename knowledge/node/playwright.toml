@@ -1,0 +1,19 @@
+[tool]
+name = "Playwright"
+category = "test"
+homepage = "https://playwright.dev"
+docs = "https://playwright.dev/docs/intro"
+repo = "https://github.com/microsoft/playwright"
+description = "End-to-end browser testing framework"
+
+[detect]
+files = ["playwright.config.ts", "playwright.config.js", "playwright.config.mjs"]
+dev_dependencies = ["@playwright/test", "playwright"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx playwright test"
+alternatives = ["npx playwright test --ui"]
+
+[config]
+files = ["playwright.config.ts", "playwright.config.js", "playwright.config.mjs"]

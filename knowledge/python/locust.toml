@@ -1,0 +1,18 @@
+[tool]
+name = "Locust"
+category = "test"
+homepage = "https://locust.io"
+docs = "https://docs.locust.io"
+repo = "https://github.com/locustio/locust"
+description = "Python load testing framework"
+
+[detect]
+files = ["locustfile.py"]
+dependencies = ["locust"]
+ecosystems = ["python"]
+
+[commands]
+run = "locust"
+
+[config]
+files = ["locustfile.py", "locust.conf"]

@@ -1,0 +1,95 @@
+knowledge/java/spotbugs.toml
+  51d7df78896ba018 1-15
+knowledge/php/language.toml
+  51d7df78896ba018 1-11
+knowledge/julia/pkg.toml
+  51d7df78896ba018 1-17
+knowledge/swift/spm.toml
+  51d7df78896ba018 1-18
+knowledge/haskell/language.toml
+  51d7df78896ba018 1-10
+knowledge/java/maven.toml
+  51d7df78896ba018 1-19
+knowledge/zig/language.toml
+  51d7df78896ba018 1-14
+knowledge/php/php-cs-fixer.toml
+  51d7df78896ba018 1-20
+knowledge/elixir/credo.toml
+  51d7df78896ba018 1-19
+knowledge/haskell/cabal.toml
+  51d7df78896ba018 1-18
+knowledge/dart/pub.toml
+  51d7df78896ba018 1-18
+knowledge/kotlin/language.toml
+  51d7df78896ba018 1-11
+knowledge/lua/language.toml
+  51d7df78896ba018 1-10
+knowledge/java/language.toml
+  51d7df78896ba018 1-10
+knowledge/nim/language.toml
+  51d7df78896ba018 1-11
+knowledge/csharp/nuget.toml
+  51d7df78896ba018 1-18
+knowledge/elixir/exunit.toml
+  51d7df78896ba018 1-17
+knowledge/swift/language.toml
+  51d7df78896ba018 1-11
+knowledge/crystal/shards.toml
+  51d7df78896ba018 1-17
+knowledge/scala/language.toml
+  51d7df78896ba018 1-11
+knowledge/julia/language.toml
+  51d7df78896ba018 1-11
+knowledge/dart/language.toml
+  51d7df78896ba018 1-11
+knowledge/php/phpunit.toml
+  51d7df78896ba018 1-20
+knowledge/java/gradle.toml
+  51d7df78896ba018 1-19
+knowledge/elixir/language.toml
+  51d7df78896ba018 1-11
+knowledge/java/checkstyle.toml
+  51d7df78896ba018 1-19
+knowledge/r/language.toml
+  51d7df78896ba018 1-10
+knowledge/clojure/language.toml
+  51d7df78896ba018 1-11
+knowledge/elixir/mix.toml
+  51d7df78896ba018 1-18
+knowledge/perl/language.toml
+  51d7df78896ba018 1-10
+knowledge/php/phpstan.toml
+  51d7df78896ba018 1-20
+knowledge/csharp/language.toml
+  51d7df78896ba018 1-10
+knowledge/java/junit.toml
+  51d7df78896ba018 1-16
+knowledge/scala/sbt.toml
+  51d7df78896ba018 1-18
+knowledge/crystal/language.toml
+  51d7df78896ba018 1-11
+knowledge/elixir/dialyzer.toml
+  51d7df78896ba018 1-14
+knowledge/php/composer.toml
+  51d7df78896ba018 1-19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "f1654509211d870b884f1f95caac7b1f93844872",
+  "prompts": {
+    "51d7df78896ba018": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "960695c4-20c9-4fbd-9628-518a7602912e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 543,
+      "total_deletions": 0,
+      "accepted_lines": 543,
+      "overriden_lines": 0
+    }
+  }
+}

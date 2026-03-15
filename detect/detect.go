@@ -384,7 +384,7 @@ func (e *Engine) detectScripts() []brief.Script {
 
 		switch src.Source.Format {
 		case "makefile":
-			scripts = append(scripts, parseMakefile(data, src.Source.Name)...)
+			scripts = append(scripts, e.parseMakefile(data, src.Source.File, src.Source.Name)...)
 		case "json_scripts":
 			scripts = append(scripts, parseJSONScripts(data, src.Source.Name)...)
 		}
@@ -393,20 +393,73 @@ func (e *Engine) detectScripts() []brief.Script {
 	return scripts
 }
 
-// parseMakefile extracts phony targets from a Makefile.
-func parseMakefile(data []byte, sourceName string) []brief.Script {
+// parseMakefile extracts targets from a Makefile. Tries make -qp for accurate
+// parsing (handles includes, generated targets), falls back to regex.
+func (e *Engine) parseMakefile(data []byte, file string, sourceName string) []brief.Script {
+	if _, err := exec.LookPath("make"); err == nil {
+		if scripts := e.parseMakefileWithMake(file, sourceName); len(scripts) > 0 {
+			return scripts
+		}
+	}
+	return parseMakefileRegex(data, sourceName)
+}
+
+// parseMakefileWithMake uses make -qp to get an accurate list of targets.
+func (e *Engine) parseMakefileWithMake(file string, sourceName string) []brief.Script {
+	// make -qp exits non-zero when targets are not up to date, but
+	// stdout still contains the database dump we need.
+	cmd := exec.Command("make", "-qp", "-f", file)
+	cmd.Dir = e.Root
+	out, _ := cmd.CombinedOutput()
+	if len(out) == 0 {
+		return nil
+	}
+
+	var scripts []brief.Script
+	seen := make(map[string]bool)
+	inTargets := false
+
+	for _, line := range strings.Split(string(out), "\n") {
+		// Targets appear after "# Files" section
+		if strings.HasPrefix(line, "# Files") {
+			inTargets = true
+			continue
+		}
+		if !inTargets {
+			continue
+		}
+		// Skip comments and non-target lines
+		if strings.HasPrefix(line, "#") || strings.HasPrefix(line, "\t") || strings.HasPrefix(line, ".") {
+			continue
+		}
+		if idx := strings.Index(line, ":"); idx > 0 {
+			target := strings.TrimSpace(line[:idx])
+			if strings.ContainsAny(target, " \t$%/") || seen[target] || target == "Makefile" || target == "makefile" || target == "GNUmakefile" {
+				continue
+			}
+			seen[target] = true
+			scripts = append(scripts, brief.Script{
+				Name:   target,
+				Run:    "make " + target,
+				Source: sourceName,
+			})
+		}
+	}
+	return scripts
+}
+
+// parseMakefileRegex is the fallback parser using simple regex matching.
+func parseMakefileRegex(data []byte, sourceName string) []brief.Script {
 	var scripts []brief.Script
 	lines := strings.Split(string(data), "\n")
 
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
-		// Match lines like "target:" that aren't comments or variable assignments
 		if strings.HasPrefix(line, "#") || strings.HasPrefix(line, ".") {
 			continue
 		}
 		if idx := strings.Index(line, ":"); idx > 0 {
 			target := strings.TrimSpace(line[:idx])
-			// Skip targets with variables or spaces
 			if strings.ContainsAny(target, " \t$%") {
 				continue
 			}

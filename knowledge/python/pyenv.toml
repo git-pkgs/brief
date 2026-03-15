@@ -1,0 +1,14 @@
+[tool]
+name = "pyenv"
+category = "environment"
+homepage = "https://github.com/pyenv/pyenv"
+docs = "https://github.com/pyenv/pyenv#readme"
+repo = "https://github.com/pyenv/pyenv"
+description = "Python version management"
+
+[detect]
+files = [".python-version"]
+ecosystems = ["python"]
+
+[config]
+files = [".python-version"]

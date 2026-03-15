@@ -1,0 +1,11 @@
+[tool]
+name = "dotenv"
+category = "environment"
+homepage = "https://dotenv.org"
+description = "Environment variable loading from .env files"
+
+[detect]
+files = [".env", ".env.example", ".env.sample", ".env.template"]
+
+[config]
+files = [".env", ".env.example", ".env.sample", ".env.template"]

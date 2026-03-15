@@ -1,0 +1,19 @@
+[tool]
+name = "Turborepo"
+category = "monorepo"
+homepage = "https://turbo.build"
+docs = "https://turbo.build/repo/docs"
+repo = "https://github.com/vercel/turborepo"
+description = "High-performance build system for JavaScript and TypeScript monorepos"
+
+[detect]
+files = ["turbo.json"]
+dev_dependencies = ["turbo"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx turbo run build"
+alternatives = ["turbo run build"]
+
+[config]
+files = ["turbo.json"]

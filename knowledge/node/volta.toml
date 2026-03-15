@@ -1,0 +1,16 @@
+[tool]
+name = "Volta"
+category = "environment"
+homepage = "https://volta.sh"
+docs = "https://docs.volta.sh"
+repo = "https://github.com/volta-cli/volta"
+description = "JavaScript tool manager"
+
+[detect]
+ecosystems = ["node"]
+
+[detect.key_exists]
+"package.json" = ["volta"]
+
+[config]
+files = ["package.json"]

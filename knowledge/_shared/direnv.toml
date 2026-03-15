@@ -1,0 +1,13 @@
+[tool]
+name = "direnv"
+category = "environment"
+homepage = "https://direnv.net"
+docs = "https://direnv.net/#getting-started"
+repo = "https://github.com/direnv/direnv"
+description = "Environment variable manager for your shell"
+
+[detect]
+files = [".envrc"]
+
+[config]
+files = [".envrc"]

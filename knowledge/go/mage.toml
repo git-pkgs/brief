@@ -1,0 +1,18 @@
+[tool]
+name = "Mage"
+category = "build"
+homepage = "https://magefile.org"
+docs = "https://magefile.org/#usage"
+repo = "https://github.com/magefile/mage"
+description = "Make-like build tool using Go"
+
+[detect]
+files = ["magefile.go", "magefiles/"]
+ecosystems = ["go"]
+
+[commands]
+run = "mage"
+alternatives = ["go run mage.go"]
+
+[config]
+files = ["magefile.go", "magefiles/"]

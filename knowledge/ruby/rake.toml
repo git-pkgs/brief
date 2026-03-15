@@ -1,0 +1,19 @@
+[tool]
+name = "Rake"
+category = "build"
+homepage = "https://ruby.github.io/rake/"
+docs = "https://ruby.github.io/rake/"
+repo = "https://github.com/ruby/rake"
+description = "Ruby build program with capabilities similar to make"
+
+[detect]
+files = ["Rakefile", "rakefile", "Rakefile.rb", "rakefile.rb"]
+dependencies = ["rake"]
+ecosystems = ["ruby"]
+
+[commands]
+run = "bundle exec rake"
+alternatives = ["rake"]
+
+[config]
+files = ["Rakefile", "rakefile", "Rakefile.rb", "rakefile.rb"]

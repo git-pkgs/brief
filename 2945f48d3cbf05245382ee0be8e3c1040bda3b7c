@@ -1,0 +1,27 @@
+.golangci.yml
+  51d7df78896ba018 1-5
+report/report.go
+  51d7df78896ba018 22,28,30,40,42,48,50,53,56,60,84,99,103,106,117,123,129,149,163,169,171,174,177,183,185-187,193,195,199,203,205
+kb/kb.go
+  51d7df78896ba018 185
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "2945f48d3cbf05245382ee0be8e3c1040bda3b7c",
+  "prompts": {
+    "51d7df78896ba018": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "960695c4-20c9-4fbd-9628-518a7602912e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 59,
+      "total_deletions": 54,
+      "accepted_lines": 38,
+      "overriden_lines": 0
+    }
+  }
+}

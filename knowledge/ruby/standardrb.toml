@@ -1,0 +1,20 @@
+[tool]
+name = "StandardRB"
+category = "format"
+homepage = "https://github.com/standardrb/standard"
+docs = "https://github.com/standardrb/standard#readme"
+repo = "https://github.com/standardrb/standard"
+description = "Ruby style guide, linter, and formatter"
+
+[detect]
+files = [".standard.yml"]
+dependencies = ["standard"]
+dev_dependencies = ["standard"]
+ecosystems = ["ruby"]
+
+[commands]
+run = "bundle exec standardrb"
+alternatives = ["standardrb --fix"]
+
+[config]
+files = [".standard.yml"]

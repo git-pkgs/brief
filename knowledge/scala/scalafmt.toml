@@ -1,0 +1,17 @@
+[tool]
+name = "scalafmt"
+category = "format"
+homepage = "https://scalameta.org/scalafmt/"
+docs = "https://scalameta.org/scalafmt/docs/installation.html"
+repo = "https://github.com/scalameta/scalafmt"
+description = "Code formatter for Scala"
+
+[detect]
+files = [".scalafmt.conf"]
+ecosystems = ["scala"]
+
+[commands]
+run = "scalafmt"
+
+[config]
+files = [".scalafmt.conf"]

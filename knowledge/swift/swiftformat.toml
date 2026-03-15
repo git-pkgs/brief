@@ -1,0 +1,17 @@
+[tool]
+name = "SwiftFormat"
+category = "format"
+homepage = "https://github.com/nicklockwood/SwiftFormat"
+docs = "https://github.com/nicklockwood/SwiftFormat#readme"
+repo = "https://github.com/nicklockwood/SwiftFormat"
+description = "Code formatter for Swift"
+
+[detect]
+files = [".swiftformat"]
+ecosystems = ["swift"]
+
+[commands]
+run = "swiftformat ."
+
+[config]
+files = [".swiftformat"]

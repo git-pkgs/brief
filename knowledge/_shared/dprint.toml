@@ -1,0 +1,17 @@
+[tool]
+name = "dprint"
+category = "format"
+homepage = "https://dprint.dev"
+docs = "https://dprint.dev/overview/"
+repo = "https://github.com/dprint/dprint"
+description = "Pluggable code formatting platform"
+
+[detect]
+files = ["dprint.json", ".dprint.json", "dprint.jsonc", ".dprint.jsonc"]
+
+[commands]
+run = "dprint fmt"
+alternatives = ["dprint check"]
+
+[config]
+files = ["dprint.json", ".dprint.json", "dprint.jsonc", ".dprint.jsonc"]

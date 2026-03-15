@@ -1,0 +1,21 @@
+[tool]
+name = "ktlint"
+category = "format"
+homepage = "https://pinterest.github.io/ktlint/"
+docs = "https://pinterest.github.io/ktlint/latest/"
+repo = "https://github.com/pinterest/ktlint"
+description = "Kotlin linter and formatter"
+
+[detect]
+files = [".editorconfig"]
+ecosystems = ["kotlin"]
+
+[detect.file_contains]
+".editorconfig" = ["ktlint"]
+
+[commands]
+run = "ktlint"
+alternatives = ["ktlint --format"]
+
+[config]
+files = [".editorconfig"]

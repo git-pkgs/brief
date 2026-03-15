@@ -1,0 +1,23 @@
+[tool]
+name = "isort"
+category = "format"
+homepage = "https://pycqa.github.io/isort/"
+docs = "https://pycqa.github.io/isort/docs/configuration/config_files.html"
+repo = "https://github.com/PyCQA/isort"
+description = "Python import sorting"
+
+[detect]
+files = [".isort.cfg"]
+dependencies = ["isort"]
+dev_dependencies = ["isort"]
+ecosystems = ["python"]
+
+[detect.file_contains]
+"pyproject.toml" = ["[tool.isort]"]
+"setup.cfg" = ["[isort]"]
+
+[commands]
+run = "isort ."
+
+[config]
+files = [".isort.cfg"]

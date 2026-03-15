@@ -1,0 +1,27 @@
+report/report.go
+  51d7df78896ba018 198-215
+detect/detect.go
+  51d7df78896ba018 9,114-126,760-842
+brief.go
+  51d7df78896ba018 89-96,118
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "3fec3f38f623bd9e43f3d551a68dd178562a951a",
+  "prompts": {
+    "51d7df78896ba018": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "960695c4-20c9-4fbd-9628-518a7602912e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 223,
+      "total_deletions": 98,
+      "accepted_lines": 125,
+      "overriden_lines": 0
+    }
+  }
+}

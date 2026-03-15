@@ -1,0 +1,23 @@
+detect/detect.go
+  51d7df78896ba018 14,24-29,184-194,196-197,201-204,206-213,217-231
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "505fd20f0752d0a85f1e609224763eae1f0395f3",
+  "prompts": {
+    "51d7df78896ba018": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "960695c4-20c9-4fbd-9628-518a7602912e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 98,
+      "total_deletions": 12,
+      "accepted_lines": 98,
+      "overriden_lines": 0
+    }
+  }
+}

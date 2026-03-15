@@ -1,0 +1,27 @@
+knowledge/node/typescript.toml
+  51d7df78896ba018 10
+cmd/brief/main.go
+  51d7df78896ba018 47,80
+detect/detect.go
+  51d7df78896ba018 28,36,269-273,283-361
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "3dc6faffce0e652d1d9ddd1050833f4082d3fe6f",
+  "prompts": {
+    "51d7df78896ba018": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "960695c4-20c9-4fbd-9628-518a7602912e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 101,
+      "total_deletions": 13,
+      "accepted_lines": 89,
+      "overriden_lines": 0
+    }
+  }
+}

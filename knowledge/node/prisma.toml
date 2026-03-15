@@ -1,0 +1,20 @@
+[tool]
+name = "Prisma"
+category = "database"
+homepage = "https://www.prisma.io"
+docs = "https://www.prisma.io/docs"
+repo = "https://github.com/prisma/prisma"
+description = "TypeScript ORM with declarative schema and migrations"
+
+[detect]
+files = ["prisma/schema.prisma"]
+dev_dependencies = ["prisma"]
+dependencies = ["@prisma/client"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx prisma migrate dev"
+alternatives = ["npx prisma db push", "npx prisma generate"]
+
+[config]
+files = ["prisma/schema.prisma"]

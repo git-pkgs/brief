@@ -1,0 +1,19 @@
+[tool]
+name = "Alembic"
+category = "database"
+homepage = "https://alembic.sqlalchemy.org"
+docs = "https://alembic.sqlalchemy.org/en/latest/tutorial.html"
+repo = "https://github.com/sqlalchemy/alembic"
+description = "Database migration tool for SQLAlchemy"
+
+[detect]
+files = ["alembic.ini", "alembic/"]
+dependencies = ["alembic"]
+ecosystems = ["python"]
+
+[commands]
+run = "alembic upgrade head"
+alternatives = ["alembic revision --autogenerate"]
+
+[config]
+files = ["alembic.ini", "alembic/env.py"]

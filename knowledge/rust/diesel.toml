@@ -1,0 +1,19 @@
+[tool]
+name = "Diesel"
+category = "database"
+homepage = "https://diesel.rs"
+docs = "https://diesel.rs/guides/"
+repo = "https://github.com/diesel-rs/diesel"
+description = "ORM and query builder with migrations for Rust"
+
+[detect]
+files = ["diesel.toml", "migrations/"]
+dependencies = ["diesel"]
+ecosystems = ["rust"]
+
+[commands]
+run = "diesel migration run"
+alternatives = ["diesel migration generate"]
+
+[config]
+files = ["diesel.toml"]

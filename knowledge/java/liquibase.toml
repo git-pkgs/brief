@@ -1,0 +1,17 @@
+[tool]
+name = "Liquibase"
+category = "database"
+homepage = "https://www.liquibase.com"
+docs = "https://docs.liquibase.com"
+repo = "https://github.com/liquibase/liquibase"
+description = "Database schema change management"
+
+[detect]
+files = ["liquibase.properties", "liquibase.yml", "liquibase.yaml", "src/main/resources/db/changelog/"]
+ecosystems = ["java", "kotlin"]
+
+[commands]
+run = "liquibase update"
+
+[config]
+files = ["liquibase.properties", "liquibase.yml", "liquibase.yaml"]

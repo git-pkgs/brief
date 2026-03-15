@@ -1,0 +1,19 @@
+[tool]
+name = "ActiveRecord"
+category = "database"
+homepage = "https://guides.rubyonrails.org/active_record_migrations.html"
+docs = "https://guides.rubyonrails.org/active_record_migrations.html"
+repo = "https://github.com/rails/rails"
+description = "Database migrations and ORM for Ruby on Rails"
+
+[detect]
+files = ["db/migrate/", "db/schema.rb", "db/structure.sql"]
+dependencies = ["activerecord", "rails"]
+ecosystems = ["ruby"]
+
+[commands]
+run = "bundle exec rails db:migrate"
+alternatives = ["rake db:migrate"]
+
+[config]
+files = ["db/migrate/", "db/schema.rb", "config/database.yml"]

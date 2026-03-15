@@ -1,0 +1,21 @@
+[tool]
+name = "Goose"
+category = "database"
+homepage = "https://pressly.github.io/goose/"
+docs = "https://pressly.github.io/goose/"
+repo = "https://github.com/pressly/goose"
+description = "Database migration tool for Go"
+
+[detect]
+files = ["migrations/*.sql"]
+ecosystems = ["go"]
+
+[detect.file_contains]
+"go.mod" = ["github.com/pressly/goose"]
+
+[commands]
+run = "goose up"
+alternatives = ["goose create"]
+
+[config]
+files = ["migrations/"]

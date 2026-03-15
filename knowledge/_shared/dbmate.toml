@@ -1,0 +1,17 @@
+[tool]
+name = "Dbmate"
+category = "database"
+homepage = "https://github.com/amacneil/dbmate"
+docs = "https://github.com/amacneil/dbmate#readme"
+repo = "https://github.com/amacneil/dbmate"
+description = "Lightweight, framework-agnostic database migration tool"
+
+[detect]
+files = ["db/migrations/", ".dbmate.yml"]
+
+[commands]
+run = "dbmate up"
+alternatives = ["dbmate new"]
+
+[config]
+files = [".dbmate.yml"]

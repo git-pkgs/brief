@@ -1,0 +1,17 @@
+[tool]
+name = "Flyway"
+category = "database"
+homepage = "https://flywaydb.org"
+docs = "https://documentation.red-gate.com/flyway"
+repo = "https://github.com/flyway/flyway"
+description = "Database migration tool for Java"
+
+[detect]
+files = ["flyway.conf", "flyway.toml", "src/main/resources/db/migration/"]
+ecosystems = ["java", "kotlin"]
+
+[commands]
+run = "flyway migrate"
+
+[config]
+files = ["flyway.conf", "flyway.toml"]

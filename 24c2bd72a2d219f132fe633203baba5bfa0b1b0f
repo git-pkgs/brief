@@ -1,0 +1,33 @@
+knowledge/_shared/openapi.toml
+  84f545bbad6fb7cb 1-12
+knowledge/node/graphql-codegen.toml
+  84f545bbad6fb7cb 1-18
+knowledge/go/sqlc.toml
+  84f545bbad6fb7cb 1-18
+knowledge/_shared/buf.toml
+  84f545bbad6fb7cb 1-17
+knowledge/go/ent.toml
+  84f545bbad6fb7cb 1-20
+knowledge/_shared/protobuf.toml
+  84f545bbad6fb7cb 1-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "24c2bd72a2d219f132fe633203baba5bfa0b1b0f",
+  "prompts": {
+    "84f545bbad6fb7cb": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "60673090-6a91-4d42-b2c4-cecb5a39f60b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 101,
+      "total_deletions": 0,
+      "accepted_lines": 101,
+      "overriden_lines": 0
+    }
+  }
+}

@@ -1,0 +1,19 @@
+[tool]
+name = "MkDocs"
+category = "docs"
+homepage = "https://www.mkdocs.org"
+docs = "https://www.mkdocs.org/getting-started/"
+repo = "https://github.com/mkdocs/mkdocs"
+description = "Project documentation with Markdown"
+
+[detect]
+files = ["mkdocs.yml", "mkdocs.yaml"]
+dependencies = ["mkdocs"]
+ecosystems = ["python"]
+
+[commands]
+run = "mkdocs serve"
+alternatives = ["mkdocs build"]
+
+[config]
+files = ["mkdocs.yml", "mkdocs.yaml"]

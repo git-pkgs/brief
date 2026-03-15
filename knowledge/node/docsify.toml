@@ -1,0 +1,22 @@
+[tool]
+name = "Docsify"
+category = "docs"
+homepage = "https://docsify.js.org"
+docs = "https://docsify.js.org/#/quickstart"
+repo = "https://github.com/docsifyjs/docsify"
+description = "Documentation site generator with no build step"
+
+[detect]
+files = ["docs/index.html"]
+dependencies = ["docsify-cli"]
+dev_dependencies = ["docsify-cli"]
+ecosystems = ["node"]
+
+[detect.file_contains]
+"docs/index.html" = ["docsify"]
+
+[commands]
+run = "npx docsify serve docs"
+
+[config]
+files = ["docs/index.html"]

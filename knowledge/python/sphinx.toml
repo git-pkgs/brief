@@ -1,0 +1,19 @@
+[tool]
+name = "Sphinx"
+category = "docs"
+homepage = "https://www.sphinx-doc.org"
+docs = "https://www.sphinx-doc.org/en/master/usage/quickstart.html"
+repo = "https://github.com/sphinx-doc/sphinx"
+description = "Documentation generator for Python projects"
+
+[detect]
+files = ["docs/conf.py", "doc/conf.py"]
+dependencies = ["sphinx"]
+ecosystems = ["python"]
+
+[commands]
+run = "sphinx-build docs docs/_build"
+alternatives = ["make -C docs html"]
+
+[config]
+files = ["docs/conf.py", "doc/conf.py"]

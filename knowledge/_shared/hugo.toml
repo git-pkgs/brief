@@ -1,0 +1,20 @@
+[tool]
+name = "Hugo"
+category = "docs"
+homepage = "https://gohugo.io"
+docs = "https://gohugo.io/documentation/"
+repo = "https://github.com/gohugoio/hugo"
+description = "Static site generator"
+
+[detect]
+files = ["hugo.toml", "hugo.yaml", "hugo.yml", "config.toml"]
+
+[detect.file_contains]
+"config.toml" = ["baseURL"]
+
+[commands]
+run = "hugo server"
+alternatives = ["hugo"]
+
+[config]
+files = ["hugo.toml", "hugo.yaml", "hugo.yml", "config.toml"]

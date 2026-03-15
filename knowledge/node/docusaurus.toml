@@ -1,0 +1,19 @@
+[tool]
+name = "Docusaurus"
+category = "docs"
+homepage = "https://docusaurus.io"
+docs = "https://docusaurus.io/docs"
+repo = "https://github.com/facebook/docusaurus"
+description = "Documentation website generator"
+
+[detect]
+files = ["docusaurus.config.js", "docusaurus.config.ts"]
+dependencies = ["@docusaurus/core"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx docusaurus start"
+alternatives = ["npx docusaurus build"]
+
+[config]
+files = ["docusaurus.config.js", "docusaurus.config.ts", "sidebars.js"]

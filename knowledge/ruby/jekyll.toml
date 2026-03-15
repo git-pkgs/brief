@@ -1,0 +1,19 @@
+[tool]
+name = "Jekyll"
+category = "docs"
+homepage = "https://jekyllrb.com"
+docs = "https://jekyllrb.com/docs/"
+repo = "https://github.com/jekyll/jekyll"
+description = "Static site generator for Ruby"
+
+[detect]
+files = ["_config.yml", "_config.yaml"]
+dependencies = ["jekyll"]
+ecosystems = ["ruby"]
+
+[commands]
+run = "bundle exec jekyll serve"
+alternatives = ["jekyll build"]
+
+[config]
+files = ["_config.yml", "_config.yaml"]

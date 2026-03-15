@@ -1,0 +1,20 @@
+[tool]
+name = "VitePress"
+category = "docs"
+homepage = "https://vitepress.dev"
+docs = "https://vitepress.dev/guide/getting-started"
+repo = "https://github.com/vuejs/vitepress"
+description = "Static site generator powered by Vite"
+
+[detect]
+files = [".vitepress/config.js", ".vitepress/config.ts", ".vitepress/config.mts"]
+dependencies = ["vitepress"]
+dev_dependencies = ["vitepress"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx vitepress dev"
+alternatives = ["npx vitepress build"]
+
+[config]
+files = [".vitepress/config.js", ".vitepress/config.ts", ".vitepress/config.mts"]

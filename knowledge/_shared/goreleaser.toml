@@ -1,0 +1,17 @@
+[tool]
+name = "GoReleaser"
+category = "build"
+homepage = "https://goreleaser.com"
+docs = "https://goreleaser.com/intro/"
+repo = "https://github.com/goreleaser/goreleaser"
+description = "Release automation for Go projects"
+
+[detect]
+files = [".goreleaser.yaml", ".goreleaser.yml", "goreleaser.yaml", "goreleaser.yml"]
+
+[commands]
+run = "goreleaser release --clean"
+alternatives = ["goreleaser build --snapshot"]
+
+[config]
+files = [".goreleaser.yaml", ".goreleaser.yml", "goreleaser.yaml", "goreleaser.yml"]

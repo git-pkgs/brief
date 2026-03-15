@@ -1,0 +1,59 @@
+knowledge/node/nestjs.toml
+  ed93d8c49b9022a4 1-19
+knowledge/node/rspack.toml
+  ed93d8c49b9022a4 1-19
+knowledge/node/qwik.toml
+  ed93d8c49b9022a4 1-11
+knowledge/node/ava.toml
+  ed93d8c49b9022a4 1-21
+knowledge/node/solidjs.toml
+  ed93d8c49b9022a4 1-11
+README.md
+  ed93d8c49b9022a4 3,111,115,121,129,133,139
+knowledge/node/wrangler.toml
+  ed93d8c49b9022a4 1-18
+knowledge/node/unocss.toml
+  ed93d8c49b9022a4 1-18
+knowledge/node/koa.toml
+  ed93d8c49b9022a4 1-11
+knowledge/node/remix.toml
+  ed93d8c49b9022a4 1-19
+knowledge/node/starlight.toml
+  ed93d8c49b9022a4 1-11
+knowledge/node/hono.toml
+  ed93d8c49b9022a4 1-11
+knowledge/node/msw.toml
+  ed93d8c49b9022a4 1-17
+knowledge/node/angular.toml
+  ed93d8c49b9022a4 1-19
+knowledge/node/rush.toml
+  ed93d8c49b9022a4 1-18
+knowledge/node/less.toml
+  ed93d8c49b9022a4 1-15
+knowledge/node/adonisjs.toml
+  ed93d8c49b9022a4 1-19
+knowledge/node/ember.toml
+  ed93d8c49b9022a4 1-19
+knowledge/node/mocha.toml
+  ed93d8c49b9022a4 1-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "a619fb8dda058294518cd53c2b1a9af61b6cb5ec",
+  "prompts": {
+    "ed93d8c49b9022a4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4fea1a55-436e-4c55-a6ce-e6545dc1c9d7",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 301,
+      "total_deletions": 7,
+      "accepted_lines": 301,
+      "overriden_lines": 0
+    }
+  }
+}

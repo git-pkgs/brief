@@ -26,7 +26,7 @@ type Source struct {
 // Options configures remote source resolution.
 type Options struct {
 	Keep  bool   // don't delete temp dir after scanning
-	Depth int    // git clone depth (0 = full, default 1 = shallow)
+	Depth int    // git clone depth (0 = full clone, -1 or unset = default shallow)
 	Dir   string // directory to clone into (empty = temp dir)
 }
 
@@ -36,7 +36,7 @@ type Options struct {
 //   - Git URLs (https://github.com/owner/repo)
 //   - Registry shorthands (npm:lodash, gem:rails, pypi:requests, crate:serde)
 func Resolve(ctx context.Context, source string, opts Options) (*Source, error) {
-	if opts.Depth == 0 {
+	if opts.Depth < 0 {
 		opts.Depth = 1
 	}
 
@@ -87,16 +87,17 @@ func isURL(s string) bool {
 }
 
 // resolveGitURL clones a git URL to a temp directory.
+// Preserves the original URL for cloning (SSH, HTTPS, etc.) to respect
+// the user's auth configuration.
 func resolveGitURL(ctx context.Context, url string, opts Options) (*Source, error) {
-	// Use forge to parse and normalize the URL
-	domain, owner, repo, err := forges.ParseRepoURL(url)
+	// Parse to extract the repo name for the temp dir, but clone with the
+	// original URL to preserve transport (SSH vs HTTPS) and credentials.
+	_, _, repo, err := forges.ParseRepoURL(url)
 	if err != nil {
-		// Fall back to using the URL directly if it's not a recognized forge URL
 		return cloneURL(ctx, url, "", opts)
 	}
 
-	cloneURL := fmt.Sprintf("https://%s/%s/%s.git", domain, owner, repo)
-	return clone(ctx, cloneURL, repo, opts)
+	return cloneURL(ctx, url, repo, opts)
 }
 
 // resolveRegistryPackage looks up a package in its registry to find the source repo.
@@ -113,10 +114,6 @@ func resolveRegistryPackage(ctx context.Context, ecosystem, name string, opts Op
 	}
 
 	return resolveGitURL(ctx, pkg.Repository, opts)
-}
-
-func clone(ctx context.Context, url, name string, opts Options) (*Source, error) {
-	return cloneURL(ctx, url, name, opts)
 }
 
 func cloneURL(ctx context.Context, url, name string, opts Options) (*Source, error) {

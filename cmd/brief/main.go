@@ -43,7 +43,7 @@ func cmdScan(args []string) {
 	verbose := fs.Bool("verbose", false, "Include breadcrumb/reference information")
 	category := fs.String("category", "", "Only report on specific category")
 	keep := fs.Bool("keep", false, "Keep downloaded remote source")
-	depth := fs.Int("depth", 1, "Git clone depth (0 = full clone)")
+	depth := fs.Int("depth", -1, "Git clone depth (0 = full clone, default shallow)")
 	dir := fs.String("dir", "", "Directory to clone remote source into")
 	scanDepth := fs.Int("scan-depth", 0, "Max directory depth for language detection (default 4)")
 	skip := fs.String("skip", "", "Additional directories to skip, comma-separated")

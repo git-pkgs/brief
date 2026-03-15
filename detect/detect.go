@@ -124,6 +124,14 @@ func (e *Engine) Run() (*brief.Report, error) {
 		return nil, err
 	}
 
+	info, err := os.Stat(abs)
+	if err != nil {
+		return nil, fmt.Errorf("path does not exist: %s", abs)
+	}
+	if !info.IsDir() {
+		return nil, fmt.Errorf("path is not a directory: %s", abs)
+	}
+
 	report := &brief.Report{
 		Version: brief.Version,
 		Path:    abs,
@@ -730,17 +738,20 @@ func (e *Engine) detectStyle() *brief.StyleInfo {
 		if e.exists(cf.File) {
 			found = true
 			if cf.Provides == "indentation" || cf.Provides == "all" {
+				style.Indentation = "configured"
 				style.IndentSource = cf.SourceName
 			}
 		}
 	}
 
 	if !found {
-		// Infer from source files
 		style = e.inferStyle()
 	}
 
-	if style != nil && style.Indentation == "" && style.IndentSource == "" {
+	if style == nil {
+		return nil
+	}
+	if style.Indentation == "" && style.LineEnding == "" && style.TrailingNewline == nil {
 		return nil
 	}
 

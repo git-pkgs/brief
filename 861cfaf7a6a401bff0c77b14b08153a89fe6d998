@@ -1,0 +1,31 @@
+detect/detect.go
+  51d7df78896ba018 6,10,20-22,32-33,63-70,80,85,146-147,327,329,332-333,336-341,343-347,349-352,354-357,359-361,363-365,379-381
+report/report.go
+  51d7df78896ba018 188-191
+detect/bench_test.go
+  51d7df78896ba018 1-98
+brief.go
+  51d7df78896ba018 5-6,88-96,109
+README.md
+  51d7df78896ba018 26,28,31-33,35-43,45,47-49,51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "861cfaf7a6a401bff0c77b14b08153a89fe6d998",
+  "prompts": {
+    "51d7df78896ba018": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "960695c4-20c9-4fbd-9628-518a7602912e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 207,
+      "total_deletions": 53,
+      "accepted_lines": 188,
+      "overriden_lines": 0
+    }
+  }
+}

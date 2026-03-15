@@ -117,6 +117,7 @@ type DepInfo struct {
 	Version string `json:"version,omitempty"`
 	PURL    string `json:"purl"`
 	Scope   string `json:"scope,omitempty"` // "runtime", "development", "test", "build"
+	Direct  bool   `json:"direct"`
 }
 
 // EnrichmentInfo holds metadata fetched from external sources about the project itself.

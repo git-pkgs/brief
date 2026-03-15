@@ -1,0 +1,37 @@
+knowledge/_shared/hyperfine.toml
+  84f545bbad6fb7cb 1-16
+knowledge/_shared/bruno.toml
+  84f545bbad6fb7cb 1-13
+knowledge/_shared/rest-client.toml
+  84f545bbad6fb7cb 1-8
+knowledge/node/newman.toml
+  84f545bbad6fb7cb 1-15
+knowledge/ruby/benchmark-ips.toml
+  84f545bbad6fb7cb 1-15
+knowledge/_shared/hurl.toml
+  84f545bbad6fb7cb 1-13
+knowledge/rust/criterion.toml
+  84f545bbad6fb7cb 1-18
+knowledge/python/pytest-benchmark.toml
+  84f545bbad6fb7cb 1-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "202f8d8e2b21bcc1b5c3e041d0a8d763322fa80e",
+  "prompts": {
+    "84f545bbad6fb7cb": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "60673090-6a91-4d42-b2c4-cecb5a39f60b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 116,
+      "total_deletions": 0,
+      "accepted_lines": 116,
+      "overriden_lines": 0
+    }
+  }
+}

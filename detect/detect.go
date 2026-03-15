@@ -111,10 +111,9 @@ func (e *Engine) Run() (*brief.Report, error) {
 	report.Layout = e.detectLayout()
 	report.Platforms = e.detectPlatforms()
 
-	// Run resource detection (includes license scanning) and git detection
-	// concurrently since they're independent and both can be slow.
+	// Run slow detections concurrently.
 	var wg sync.WaitGroup
-	wg.Add(2)
+	wg.Add(3)
 	go func() {
 		defer wg.Done()
 		report.Resources = e.detectResources()
@@ -122,6 +121,10 @@ func (e *Engine) Run() (*brief.Report, error) {
 	go func() {
 		defer wg.Done()
 		report.Git = e.detectGit(abs)
+	}()
+	go func() {
+		defer wg.Done()
+		report.Lines = e.detectLineCount(abs)
 	}()
 	wg.Wait()
 
@@ -838,6 +841,84 @@ func (e *Engine) git(dir string, args ...string) ([]byte, error) {
 	cmd := exec.Command("git", args...)
 	cmd.Dir = dir
 	return cmd.Output()
+}
+
+// detectLineCount gets line counts using scc or tokei if available.
+func (e *Engine) detectLineCount(absPath string) *brief.LineCount {
+	// Try scc first
+	if path, err := exec.LookPath("scc"); err == nil {
+		_ = path
+		cmd := exec.Command("scc", "--format", "json", absPath)
+		if out, err := cmd.Output(); err == nil {
+			return parseSCCOutput(out)
+		}
+	}
+
+	// Try tokei
+	if path, err := exec.LookPath("tokei"); err == nil {
+		_ = path
+		cmd := exec.Command("tokei", "--output", "json", absPath)
+		if out, err := cmd.Output(); err == nil {
+			return parseTokeiOutput(out)
+		}
+	}
+
+	return nil
+}
+
+// parseSCCOutput parses scc --format json output.
+func parseSCCOutput(data []byte) *brief.LineCount {
+	var results []struct {
+		Name  string `json:"Name"`
+		Lines int    `json:"Lines"`
+		Code  int    `json:"Code"`
+		Count int    `json:"Count"`
+	}
+	if err := json.Unmarshal(data, &results); err != nil {
+		return nil
+	}
+
+	lc := &brief.LineCount{
+		ByLanguage: make(map[string]int),
+		Source:     "scc",
+	}
+	for _, r := range results {
+		lc.TotalFiles += r.Count
+		lc.TotalLines += r.Code
+		if r.Code > 0 {
+			lc.ByLanguage[r.Name] = r.Code
+		}
+	}
+	return lc
+}
+
+// parseTokeiOutput parses tokei --output json output.
+func parseTokeiOutput(data []byte) *brief.LineCount {
+	var results map[string]struct {
+		Code    int `json:"code"`
+		Blanks  int `json:"blanks"`
+		Reports []struct {
+			Stats struct {
+				Code int `json:"code"`
+			} `json:"stats"`
+		} `json:"reports"`
+	}
+	if err := json.Unmarshal(data, &results); err != nil {
+		return nil
+	}
+
+	lc := &brief.LineCount{
+		ByLanguage: make(map[string]int),
+		Source:     "tokei",
+	}
+	for lang, info := range results {
+		lc.TotalFiles += len(info.Reports)
+		lc.TotalLines += info.Code
+		if info.Code > 0 {
+			lc.ByLanguage[lang] = info.Code
+		}
+	}
+	return lc
 }
 
 // detectLicenseType reads a license file and identifies its SPDX license type.

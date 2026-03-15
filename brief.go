@@ -94,6 +94,14 @@ type GitInfo struct {
 	CommitCount   int               `json:"commit_count,omitempty"`
 }
 
+// LineCount holds line count information.
+type LineCount struct {
+	TotalFiles int            `json:"total_files"`
+	TotalLines int            `json:"total_lines"`
+	ByLanguage map[string]int `json:"by_language,omitempty"`
+	Source     string         `json:"source"` // "scc", "tokei", or "fallback"
+}
+
 // Stats holds performance and coverage metrics from the detection run.
 type Stats struct {
 	Duration     time.Duration `json:"-"`
@@ -116,5 +124,6 @@ type Report struct {
 	Platforms       *PlatformInfo          `json:"platforms,omitempty"`
 	Resources       *ResourceInfo          `json:"resources,omitempty"`
 	Git             *GitInfo               `json:"git,omitempty"`
+	Lines           *LineCount             `json:"lines,omitempty"`
 	Stats           Stats                  `json:"stats"`
 }

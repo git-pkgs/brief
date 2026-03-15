@@ -213,6 +213,12 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 		}
 	}
 
+	// Lines
+	if r.Lines != nil {
+		_, _ = fmt.Fprintf(w, "\nLines:       %d code  %d files (%s)\n",
+			r.Lines.TotalLines, r.Lines.TotalFiles, r.Lines.Source)
+	}
+
 	// Stats
 	_, _ = fmt.Fprintf(w, "\n%.1fms  %d files checked  %d/%d tools matched\n",
 		r.Stats.DurationMS, r.Stats.FilesChecked, r.Stats.ToolsMatched, r.Stats.ToolsChecked)

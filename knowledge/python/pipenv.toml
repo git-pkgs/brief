@@ -1,0 +1,19 @@
+[tool]
+name = "Pipenv"
+category = "package_manager"
+homepage = "https://pipenv.pypa.io"
+docs = "https://pipenv.pypa.io/en/latest/"
+repo = "https://github.com/pypa/pipenv"
+description = "Python packaging tool combining pip and virtualenv"
+
+[detect]
+files = ["Pipfile", "Pipfile.lock"]
+ecosystems = ["python"]
+
+[commands]
+run = "pipenv install"
+alternatives = ["pipenv sync"]
+
+[config]
+files = ["Pipfile", "Pipfile.lock"]
+lockfile = "Pipfile.lock"

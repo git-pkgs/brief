@@ -1,0 +1,18 @@
+[tool]
+name = "Nix Flakes"
+category = "package_manager"
+homepage = "https://nixos.org"
+docs = "https://nix.dev/concepts/flakes"
+description = "Nix flake-based dependency management"
+
+[detect]
+files = ["flake.nix"]
+ecosystems = ["nix"]
+
+[commands]
+run = "nix develop"
+alternatives = ["nix build"]
+
+[config]
+files = ["flake.nix", "flake.lock"]
+lockfile = "flake.lock"

@@ -1,0 +1,17 @@
+[tool]
+name = "Conda"
+category = "package_manager"
+homepage = "https://conda.io"
+docs = "https://docs.conda.io"
+repo = "https://github.com/conda/conda"
+description = "Package manager for data science and scientific computing"
+
+[detect]
+files = ["environment.yml", "environment.yaml", "conda.yaml"]
+
+[commands]
+run = "conda env create"
+alternatives = ["conda install", "mamba env create"]
+
+[config]
+files = ["environment.yml", "environment.yaml"]

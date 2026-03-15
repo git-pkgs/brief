@@ -1,0 +1,22 @@
+[tool]
+name = "PDM"
+category = "package_manager"
+homepage = "https://pdm-project.org"
+docs = "https://pdm-project.org/en/latest/"
+repo = "https://github.com/pdm-project/pdm"
+description = "Modern Python package and dependency manager"
+
+[detect]
+files = ["pdm.lock"]
+[detect.file_contains]
+"pyproject.toml" = ["[tool.pdm]"]
+
+ecosystems = ["python"]
+
+[commands]
+run = "pdm install"
+alternatives = ["pdm sync"]
+
+[config]
+files = ["pyproject.toml", "pdm.lock"]
+lockfile = "pdm.lock"

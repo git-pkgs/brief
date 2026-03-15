@@ -1,0 +1,19 @@
+[tool]
+name = "Yarn"
+category = "package_manager"
+homepage = "https://yarnpkg.com"
+docs = "https://yarnpkg.com/getting-started"
+repo = "https://github.com/yarnpkg/berry"
+description = "Node.js package manager"
+
+[detect]
+files = ["yarn.lock", ".yarnrc.yml", ".yarnrc"]
+ecosystems = ["node"]
+
+[commands]
+run = "yarn install"
+alternatives = ["yarn"]
+
+[config]
+files = ["package.json", "yarn.lock", ".yarnrc.yml", ".yarnrc"]
+lockfile = "yarn.lock"

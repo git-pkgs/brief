@@ -1,0 +1,18 @@
+[tool]
+name = "CocoaPods"
+category = "package_manager"
+homepage = "https://cocoapods.org"
+docs = "https://guides.cocoapods.org"
+repo = "https://github.com/CocoaPods/CocoaPods"
+description = "Dependency manager for Swift and Objective-C projects"
+
+[detect]
+files = ["Podfile", "*.podspec"]
+
+[commands]
+run = "pod install"
+alternatives = ["pod update"]
+
+[config]
+files = ["Podfile", "Podfile.lock"]
+lockfile = "Podfile.lock"

@@ -1,0 +1,20 @@
+[tool]
+name = "Biome"
+category = "lint"
+homepage = "https://biomejs.dev"
+docs = "https://biomejs.dev/guides/getting-started/"
+repo = "https://github.com/biomejs/biome"
+description = "Formatter and linter for JavaScript, TypeScript, JSON, CSS"
+
+[detect]
+files = ["biome.json", "biome.jsonc"]
+dependencies = ["@biomejs/biome"]
+dev_dependencies = ["@biomejs/biome"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx biome check ."
+alternatives = ["npx biome lint ."]
+
+[config]
+files = ["biome.json", "biome.jsonc"]

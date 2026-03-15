@@ -1,0 +1,11 @@
+[tool]
+name = "Gleam"
+category = "language"
+homepage = "https://gleam.run"
+docs = "https://gleam.run/documentation/"
+repo = "https://github.com/gleam-lang/gleam"
+description = "Type-safe language for the BEAM and JavaScript"
+
+[detect]
+files = ["gleam.toml", "*.gleam", "**/*.gleam"]
+ecosystems = ["gleam"]

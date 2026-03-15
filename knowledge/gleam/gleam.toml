@@ -1,0 +1,19 @@
+[tool]
+name = "Gleam"
+category = "package_manager"
+homepage = "https://gleam.run"
+docs = "https://gleam.run/documentation/"
+repo = "https://github.com/gleam-lang/gleam"
+description = "Built-in Gleam package manager via Hex"
+
+[detect]
+files = ["gleam.toml"]
+ecosystems = ["gleam"]
+
+[commands]
+run = "gleam deps download"
+alternatives = ["gleam build"]
+
+[config]
+files = ["gleam.toml", "manifest.toml"]
+lockfile = "manifest.toml"

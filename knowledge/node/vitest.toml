@@ -1,0 +1,20 @@
+[tool]
+name = "Vitest"
+category = "test"
+homepage = "https://vitest.dev"
+docs = "https://vitest.dev/guide/"
+repo = "https://github.com/vitest-dev/vitest"
+description = "Vite-native testing framework"
+
+[detect]
+files = ["vitest.config.ts", "vitest.config.js", "vitest.config.mts", "vitest.config.mjs"]
+dependencies = ["vitest"]
+dev_dependencies = ["vitest"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx vitest"
+alternatives = ["npx vitest run"]
+
+[config]
+files = ["vitest.config.ts", "vitest.config.js", "vitest.config.mts", "vitest.config.mjs"]

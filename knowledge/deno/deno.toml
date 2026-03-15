@@ -1,0 +1,19 @@
+[tool]
+name = "Deno"
+category = "package_manager"
+homepage = "https://deno.com"
+docs = "https://docs.deno.com/runtime/fundamentals/modules/"
+repo = "https://github.com/denoland/deno"
+description = "Built-in Deno module management"
+
+[detect]
+files = ["deno.json", "deno.jsonc"]
+ecosystems = ["deno"]
+
+[commands]
+run = "deno install"
+alternatives = ["deno cache"]
+
+[config]
+files = ["deno.json", "deno.jsonc", "deno.lock"]
+lockfile = "deno.lock"

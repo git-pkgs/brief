@@ -1,0 +1,14 @@
+[tool]
+name = "gofmt"
+category = "format"
+homepage = "https://pkg.go.dev/cmd/gofmt"
+docs = "https://pkg.go.dev/cmd/gofmt"
+description = "Built-in Go code formatter"
+
+[detect]
+files = ["go.mod"]
+ecosystems = ["go"]
+
+[commands]
+run = "gofmt -w ."
+alternatives = ["gofmt -l ."]

@@ -1,0 +1,12 @@
+[tool]
+name = "GitLab CI"
+category = "ci"
+homepage = "https://docs.gitlab.com/ci/"
+docs = "https://docs.gitlab.com/ci/"
+description = "GitLab's built-in CI/CD"
+
+[detect]
+files = [".gitlab-ci.yml"]
+
+[config]
+files = [".gitlab-ci.yml"]

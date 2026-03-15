@@ -1,0 +1,21 @@
+[tool]
+name = "Black"
+category = "format"
+homepage = "https://black.readthedocs.io"
+docs = "https://black.readthedocs.io/en/stable/"
+repo = "https://github.com/psf/black"
+description = "Uncompromising Python code formatter"
+
+[detect]
+dev_dependencies = ["black"]
+[detect.file_contains]
+"pyproject.toml" = ["[tool.black]"]
+
+ecosystems = ["python"]
+
+[commands]
+run = "black ."
+alternatives = ["black --check ."]
+
+[config]
+files = ["pyproject.toml"]

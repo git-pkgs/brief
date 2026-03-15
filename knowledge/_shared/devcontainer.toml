@@ -1,0 +1,12 @@
+[tool]
+name = "Dev Container"
+category = "container"
+homepage = "https://containers.dev"
+docs = "https://containers.dev/implementors/spec/"
+description = "Development container specification"
+
+[detect]
+files = [".devcontainer/devcontainer.json", ".devcontainer.json"]
+
+[config]
+files = [".devcontainer/devcontainer.json", ".devcontainer.json"]

@@ -1,0 +1,11 @@
+[tool]
+name = "Haxe"
+category = "language"
+homepage = "https://haxe.org"
+docs = "https://haxe.org/documentation/"
+repo = "https://github.com/HaxeFoundation/haxe"
+description = "Cross-platform multi-paradigm language"
+
+[detect]
+files = ["haxelib.json", "*.hx", "**/*.hx"]
+ecosystems = ["haxe"]

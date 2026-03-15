@@ -1,0 +1,16 @@
+[tool]
+name = "Haxelib"
+category = "package_manager"
+homepage = "https://lib.haxe.org"
+docs = "https://haxe.org/documentation/introduction/"
+description = "Haxe package manager"
+
+[detect]
+files = ["haxelib.json"]
+ecosystems = ["haxe"]
+
+[commands]
+run = "haxelib install"
+
+[config]
+files = ["haxelib.json"]

@@ -1,0 +1,12 @@
+[tool]
+name = "Git Submodules"
+category = "dependency_bot"
+homepage = "https://git-scm.com/book/en/v2/Git-Tools-Submodules"
+docs = "https://git-scm.com/docs/gitsubmodules"
+description = "Git submodule dependencies"
+
+[detect]
+files = [".gitmodules"]
+
+[config]
+files = [".gitmodules"]

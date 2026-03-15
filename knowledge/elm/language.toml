@@ -1,0 +1,11 @@
+[tool]
+name = "Elm"
+category = "language"
+homepage = "https://elm-lang.org"
+docs = "https://guide.elm-lang.org"
+repo = "https://github.com/elm/compiler"
+description = "Functional language for reliable web apps"
+
+[detect]
+files = ["elm.json", "elm-package.json", "*.elm", "**/*.elm"]
+ecosystems = ["elm"]

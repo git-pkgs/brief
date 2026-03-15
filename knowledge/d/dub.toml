@@ -1,0 +1,18 @@
+[tool]
+name = "DUB"
+category = "package_manager"
+homepage = "https://code.dlang.org"
+docs = "https://dub.pm/dub-guide/getting-started"
+description = "D language package and build manager"
+
+[detect]
+files = ["dub.json", "dub.sdl"]
+ecosystems = ["d"]
+
+[commands]
+run = "dub fetch"
+alternatives = ["dub build"]
+
+[config]
+files = ["dub.json", "dub.sdl", "dub.selections.json"]
+lockfile = "dub.selections.json"

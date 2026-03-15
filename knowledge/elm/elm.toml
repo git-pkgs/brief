@@ -1,0 +1,17 @@
+[tool]
+name = "elm"
+category = "package_manager"
+homepage = "https://package.elm-lang.org"
+docs = "https://guide.elm-lang.org/install/elm.html"
+description = "Built-in Elm package manager"
+
+[detect]
+files = ["elm.json"]
+ecosystems = ["elm"]
+
+[commands]
+run = "elm install"
+alternatives = ["elm make"]
+
+[config]
+files = ["elm.json"]

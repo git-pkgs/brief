@@ -1,0 +1,11 @@
+[tool]
+name = "Deno"
+category = "language"
+homepage = "https://deno.com"
+docs = "https://docs.deno.com"
+repo = "https://github.com/denoland/deno"
+description = "Secure runtime for JavaScript and TypeScript"
+
+[detect]
+files = ["deno.json", "deno.jsonc", "deno.lock"]
+ecosystems = ["deno"]

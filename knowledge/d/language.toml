@@ -1,0 +1,11 @@
+[tool]
+name = "D"
+category = "language"
+homepage = "https://dlang.org"
+docs = "https://dlang.org/spec/spec.html"
+repo = "https://github.com/dlang/dmd"
+description = "Systems programming language with C-like syntax"
+
+[detect]
+files = ["dub.json", "dub.sdl", "*.d", "**/*.d"]
+ecosystems = ["d"]

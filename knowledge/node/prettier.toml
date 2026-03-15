@@ -1,0 +1,20 @@
+[tool]
+name = "Prettier"
+category = "format"
+homepage = "https://prettier.io"
+docs = "https://prettier.io/docs/en/"
+repo = "https://github.com/prettier/prettier"
+description = "Opinionated code formatter"
+
+[detect]
+files = [".prettierrc", ".prettierrc.json", ".prettierrc.yml", ".prettierrc.yaml", ".prettierrc.js", ".prettierrc.cjs", "prettier.config.js", "prettier.config.cjs"]
+dependencies = ["prettier"]
+dev_dependencies = ["prettier"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx prettier --check ."
+alternatives = ["npx prettier --write ."]
+
+[config]
+files = [".prettierrc", ".prettierrc.json", ".prettierrc.yml", ".prettierrc.yaml", ".prettierrc.js", "prettier.config.js", ".prettierignore"]

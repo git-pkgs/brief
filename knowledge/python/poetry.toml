@@ -1,0 +1,22 @@
+[tool]
+name = "Poetry"
+category = "package_manager"
+homepage = "https://python-poetry.org"
+docs = "https://python-poetry.org/docs/"
+repo = "https://github.com/python-poetry/poetry"
+description = "Python dependency management and packaging"
+
+[detect]
+files = ["poetry.lock"]
+[detect.file_contains]
+"pyproject.toml" = ["[tool.poetry]"]
+
+ecosystems = ["python"]
+
+[commands]
+run = "poetry install"
+alternatives = ["poetry update"]
+
+[config]
+files = ["pyproject.toml", "poetry.lock"]
+lockfile = "poetry.lock"

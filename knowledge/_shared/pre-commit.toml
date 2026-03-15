@@ -1,0 +1,17 @@
+[tool]
+name = "pre-commit"
+category = "lint"
+homepage = "https://pre-commit.com"
+docs = "https://pre-commit.com/#usage"
+repo = "https://github.com/pre-commit/pre-commit"
+description = "Framework for managing git pre-commit hooks"
+
+[detect]
+files = [".pre-commit-config.yaml"]
+
+[commands]
+run = "pre-commit run --all-files"
+alternatives = ["pre-commit install"]
+
+[config]
+files = [".pre-commit-config.yaml"]

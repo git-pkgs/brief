@@ -1,0 +1,11 @@
+[tool]
+name = "Nix"
+category = "language"
+homepage = "https://nixos.org"
+docs = "https://nix.dev"
+repo = "https://github.com/NixOS/nix"
+description = "Purely functional package manager and build system"
+
+[detect]
+files = ["flake.nix", "default.nix", "shell.nix", "*.nix", "**/*.nix"]
+ecosystems = ["nix"]

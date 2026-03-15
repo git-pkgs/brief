@@ -1,0 +1,18 @@
+[tool]
+name = "Rollup"
+category = "build"
+homepage = "https://rollupjs.org"
+docs = "https://rollupjs.org/introduction/"
+repo = "https://github.com/rollup/rollup"
+description = "JavaScript module bundler"
+
+[detect]
+files = ["rollup.config.js", "rollup.config.ts", "rollup.config.mjs"]
+dev_dependencies = ["rollup"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx rollup -c"
+
+[config]
+files = ["rollup.config.js", "rollup.config.ts", "rollup.config.mjs"]

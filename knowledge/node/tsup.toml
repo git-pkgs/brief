@@ -1,0 +1,18 @@
+[tool]
+name = "tsup"
+category = "build"
+homepage = "https://tsup.egoist.dev"
+docs = "https://tsup.egoist.dev/#usage"
+repo = "https://github.com/egoist/tsup"
+description = "TypeScript library bundler powered by esbuild"
+
+[detect]
+files = ["tsup.config.ts", "tsup.config.js", "tsup.config.mjs", "tsup.config.cjs"]
+dev_dependencies = ["tsup"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx tsup"
+
+[config]
+files = ["tsup.config.ts", "tsup.config.js", "tsup.config.mjs", "tsup.config.cjs"]

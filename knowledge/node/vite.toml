@@ -1,0 +1,19 @@
+[tool]
+name = "Vite"
+category = "build"
+homepage = "https://vite.dev"
+docs = "https://vite.dev/guide/"
+repo = "https://github.com/vitejs/vite"
+description = "Frontend build tool and dev server"
+
+[detect]
+files = ["vite.config.js", "vite.config.ts", "vite.config.mjs", "vite.config.mts"]
+dev_dependencies = ["vite"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx vite"
+alternatives = ["npx vite build", "npx vite preview"]
+
+[config]
+files = ["vite.config.js", "vite.config.ts", "vite.config.mjs", "vite.config.mts"]

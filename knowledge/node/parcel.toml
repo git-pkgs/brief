@@ -1,0 +1,19 @@
+[tool]
+name = "Parcel"
+category = "build"
+homepage = "https://parceljs.org"
+docs = "https://parceljs.org/docs/"
+repo = "https://github.com/parcel-bundler/parcel"
+description = "Zero-configuration web application bundler"
+
+[detect]
+files = [".parcelrc"]
+dev_dependencies = ["parcel"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx parcel"
+alternatives = ["npx parcel build"]
+
+[config]
+files = [".parcelrc", ".parcelrc.json"]

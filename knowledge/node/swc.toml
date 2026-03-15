@@ -1,0 +1,18 @@
+[tool]
+name = "SWC"
+category = "build"
+homepage = "https://swc.rs"
+docs = "https://swc.rs/docs/getting-started"
+repo = "https://github.com/swc-project/swc"
+description = "Fast TypeScript/JavaScript compiler"
+
+[detect]
+files = [".swcrc"]
+dev_dependencies = ["@swc/core", "@swc/cli"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx swc"
+
+[config]
+files = [".swcrc"]

@@ -1,0 +1,19 @@
+[tool]
+name = "Webpack"
+category = "build"
+homepage = "https://webpack.js.org"
+docs = "https://webpack.js.org/concepts/"
+repo = "https://github.com/webpack/webpack"
+description = "JavaScript module bundler"
+
+[detect]
+files = ["webpack.config.js", "webpack.config.ts", "webpack.config.mjs", "webpack.config.cjs"]
+dev_dependencies = ["webpack"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx webpack"
+alternatives = ["npx webpack serve"]
+
+[config]
+files = ["webpack.config.js", "webpack.config.ts", "webpack.config.mjs", "webpack.config.cjs"]

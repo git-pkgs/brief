@@ -1,0 +1,17 @@
+[tool]
+name = "esbuild"
+category = "build"
+homepage = "https://esbuild.github.io"
+docs = "https://esbuild.github.io/api/"
+repo = "https://github.com/evanw/esbuild"
+description = "Fast JavaScript and TypeScript bundler"
+
+[detect]
+dev_dependencies = ["esbuild"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx esbuild"
+
+[config]
+files = []

@@ -1,0 +1,11 @@
+[tool]
+name = "Rust"
+category = "language"
+homepage = "https://www.rust-lang.org"
+docs = "https://doc.rust-lang.org"
+repo = "https://github.com/rust-lang/rust"
+description = "Systems programming language focused on safety and performance"
+
+[detect]
+files = ["Cargo.toml", "*.rs"]
+ecosystems = ["rust"]

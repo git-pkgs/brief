@@ -1,0 +1,11 @@
+[tool]
+name = "Python"
+category = "language"
+homepage = "https://www.python.org"
+docs = "https://docs.python.org"
+repo = "https://github.com/python/cpython"
+description = "High-level, general-purpose programming language"
+
+[detect]
+files = ["pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "*.py"]
+ecosystems = ["python"]

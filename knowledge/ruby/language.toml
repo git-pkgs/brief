@@ -1,0 +1,11 @@
+[tool]
+name = "Ruby"
+category = "language"
+homepage = "https://www.ruby-lang.org"
+docs = "https://docs.ruby-lang.org"
+repo = "https://github.com/ruby/ruby"
+description = "Dynamic, object-oriented programming language"
+
+[detect]
+files = ["Gemfile", "Rakefile", "*.rb", "*.gemspec"]
+ecosystems = ["ruby"]

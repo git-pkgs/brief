@@ -1,0 +1,19 @@
+[tool]
+name = "Minitest"
+category = "test"
+homepage = "https://github.com/minitest/minitest"
+docs = "https://docs.seattlerb.org/minitest/"
+repo = "https://github.com/minitest/minitest"
+description = "Complete suite of testing utilities for Ruby"
+
+[detect]
+files = ["test/"]
+dependencies = ["minitest"]
+ecosystems = ["ruby"]
+
+[commands]
+run = "bundle exec rake test"
+alternatives = ["rake test", "ruby -Itest"]
+
+[config]
+files = ["test/test_helper.rb"]

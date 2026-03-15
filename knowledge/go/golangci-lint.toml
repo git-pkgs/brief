@@ -1,0 +1,18 @@
+[tool]
+name = "golangci-lint"
+category = "lint"
+homepage = "https://golangci-lint.run"
+docs = "https://golangci-lint.run/usage/quick-start/"
+repo = "https://github.com/golangci/golangci-lint"
+description = "Fast Go linters runner"
+
+[detect]
+files = [".golangci.yml", ".golangci.yaml", ".golangci.toml", ".golangci.json"]
+ecosystems = ["go"]
+
+[commands]
+run = "golangci-lint run"
+alternatives = ["golangci-lint run ./..."]
+
+[config]
+files = [".golangci.yml", ".golangci.yaml", ".golangci.toml", ".golangci.json"]

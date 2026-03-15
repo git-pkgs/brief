@@ -1,0 +1,13 @@
+[tool]
+name = "Docker"
+category = "container"
+homepage = "https://www.docker.com"
+docs = "https://docs.docker.com"
+repo = "https://github.com/moby/moby"
+description = "Container platform"
+
+[detect]
+files = ["Dockerfile", "docker-compose.yml", "docker-compose.yaml", "compose.yml", "compose.yaml"]
+
+[config]
+files = ["Dockerfile", ".dockerignore", "docker-compose.yml", "docker-compose.yaml", "compose.yml", "compose.yaml"]

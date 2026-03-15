@@ -1,0 +1,24 @@
+[tool]
+name = "mypy"
+category = "typecheck"
+homepage = "https://mypy-lang.org"
+docs = "https://mypy.readthedocs.io"
+repo = "https://github.com/python/mypy"
+description = "Static type checker for Python"
+
+[detect]
+files = ["mypy.ini", ".mypy.ini"]
+dependencies = ["mypy"]
+dev_dependencies = ["mypy"]
+[detect.file_contains]
+"pyproject.toml" = ["[tool.mypy]"]
+"setup.cfg" = ["[mypy]"]
+
+ecosystems = ["python"]
+
+[commands]
+run = "mypy ."
+alternatives = ["python -m mypy ."]
+
+[config]
+files = ["mypy.ini", ".mypy.ini", "pyproject.toml", "setup.cfg"]

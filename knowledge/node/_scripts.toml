@@ -1,0 +1,4 @@
+[source]
+name = "package.json"
+file = "package.json"
+format = "json_scripts"

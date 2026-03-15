@@ -1,0 +1,21 @@
+[tool]
+name = "uv"
+category = "package_manager"
+homepage = "https://docs.astral.sh/uv/"
+docs = "https://docs.astral.sh/uv/"
+repo = "https://github.com/astral-sh/uv"
+description = "Fast Python package installer and resolver"
+
+[detect]
+files = ["uv.lock"]
+[detect.file_contains]
+"pyproject.toml" = ["[tool.uv]"]
+
+ecosystems = ["python"]
+
+[commands]
+run = "uv sync"
+alternatives = ["uv pip install -r requirements.txt"]
+
+[config]
+files = ["pyproject.toml", "uv.lock"]

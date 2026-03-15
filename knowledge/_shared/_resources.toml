@@ -1,0 +1,29 @@
+[[resources]]
+[resources.resource]
+name = "README"
+field = "readme"
+patterns = ["README*", "readme*", "Readme*"]
+
+[[resources]]
+[resources.resource]
+name = "Contributing"
+field = "contributing"
+patterns = ["CONTRIBUTING*", "contributing*"]
+
+[[resources]]
+[resources.resource]
+name = "Changelog"
+field = "changelog"
+patterns = ["CHANGELOG*", "changelog*", "CHANGES*", "HISTORY*"]
+
+[[resources]]
+[resources.resource]
+name = "License"
+field = "license"
+patterns = ["LICENSE*", "LICENCE*", "license*", "licence*"]
+
+[[resources]]
+[resources.resource]
+name = "Security"
+field = "security"
+patterns = ["SECURITY*", "security*"]

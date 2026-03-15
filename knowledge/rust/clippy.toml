@@ -1,0 +1,18 @@
+[tool]
+name = "Clippy"
+category = "lint"
+homepage = "https://github.com/rust-lang/rust-clippy"
+docs = "https://doc.rust-lang.org/clippy/"
+repo = "https://github.com/rust-lang/rust-clippy"
+description = "Rust linter"
+
+[detect]
+files = ["clippy.toml", ".clippy.toml"]
+ecosystems = ["rust"]
+
+[commands]
+run = "cargo clippy"
+alternatives = ["cargo clippy -- -D warnings"]
+
+[config]
+files = ["clippy.toml", ".clippy.toml"]

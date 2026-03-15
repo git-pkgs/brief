@@ -1,0 +1,18 @@
+[tool]
+name = "Go Modules"
+category = "package_manager"
+homepage = "https://go.dev/ref/mod"
+docs = "https://go.dev/doc/modules/"
+repo = "https://github.com/golang/go"
+description = "Go dependency management"
+
+[detect]
+files = ["go.mod"]
+ecosystems = ["go"]
+
+[commands]
+run = "go mod download"
+alternatives = ["go mod tidy"]
+
+[config]
+files = ["go.mod", "go.sum"]

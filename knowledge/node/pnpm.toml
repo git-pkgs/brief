@@ -1,0 +1,18 @@
+[tool]
+name = "pnpm"
+category = "package_manager"
+homepage = "https://pnpm.io"
+docs = "https://pnpm.io/motivation"
+repo = "https://github.com/pnpm/pnpm"
+description = "Fast, disk space efficient package manager"
+
+[detect]
+files = ["pnpm-lock.yaml"]
+ecosystems = ["node"]
+
+[commands]
+run = "pnpm install"
+alternatives = ["pnpm i"]
+
+[config]
+files = ["package.json", "pnpm-lock.yaml", ".npmrc", "pnpm-workspace.yaml"]

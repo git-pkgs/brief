@@ -1,0 +1,11 @@
+[tool]
+name = "Go"
+category = "language"
+homepage = "https://go.dev"
+docs = "https://go.dev/doc/"
+repo = "https://github.com/golang/go"
+description = "Statically typed, compiled programming language"
+
+[detect]
+files = ["go.mod", "*.go"]
+ecosystems = ["go"]

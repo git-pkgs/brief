@@ -1,0 +1,18 @@
+[tool]
+name = "pip"
+category = "package_manager"
+homepage = "https://pip.pypa.io"
+docs = "https://pip.pypa.io/en/stable/"
+repo = "https://github.com/pypa/pip"
+description = "Python package installer"
+
+[detect]
+files = ["requirements.txt", "requirements/*.txt"]
+ecosystems = ["python"]
+
+[commands]
+run = "pip install -r requirements.txt"
+alternatives = ["pip install -e ."]
+
+[config]
+files = ["requirements.txt"]

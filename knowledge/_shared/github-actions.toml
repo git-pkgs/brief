@@ -1,0 +1,12 @@
+[tool]
+name = "GitHub Actions"
+category = "ci"
+homepage = "https://github.com/features/actions"
+docs = "https://docs.github.com/en/actions"
+description = "CI/CD platform built into GitHub"
+
+[detect]
+files = [".github/workflows/"]
+
+[config]
+files = [".github/workflows/"]

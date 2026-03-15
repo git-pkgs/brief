@@ -1,0 +1,10 @@
+[tool]
+name = "JavaScript"
+category = "language"
+homepage = "https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+docs = "https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+description = "Dynamic programming language for the web"
+
+[detect]
+files = ["package.json", "*.js", "*.mjs"]
+ecosystems = ["node"]

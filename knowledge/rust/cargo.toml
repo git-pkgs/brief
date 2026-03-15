@@ -1,0 +1,18 @@
+[tool]
+name = "Cargo"
+category = "package_manager"
+homepage = "https://doc.rust-lang.org/cargo/"
+docs = "https://doc.rust-lang.org/cargo/"
+repo = "https://github.com/rust-lang/cargo"
+description = "Rust package manager and build system"
+
+[detect]
+files = ["Cargo.toml"]
+ecosystems = ["rust"]
+
+[commands]
+run = "cargo build"
+alternatives = ["cargo build --release"]
+
+[config]
+files = ["Cargo.toml", "Cargo.lock", ".cargo/config.toml"]

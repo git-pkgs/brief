@@ -1,0 +1,13 @@
+[tool]
+name = "Renovate"
+category = "dependency_bot"
+homepage = "https://www.mend.io/renovate/"
+docs = "https://docs.renovatebot.com"
+repo = "https://github.com/renovatebot/renovate"
+description = "Automated dependency updates"
+
+[detect]
+files = ["renovate.json", "renovate.json5", ".renovaterc", ".renovaterc.json"]
+
+[config]
+files = ["renovate.json", "renovate.json5", ".renovaterc", ".renovaterc.json"]

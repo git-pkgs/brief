@@ -1,0 +1,18 @@
+[tool]
+name = "Bundler"
+category = "package_manager"
+homepage = "https://bundler.io"
+docs = "https://bundler.io/docs.html"
+repo = "https://github.com/rubygems/rubygems"
+description = "Ruby dependency manager"
+
+[detect]
+files = ["Gemfile"]
+ecosystems = ["ruby"]
+
+[commands]
+run = "bundle install"
+alternatives = ["bundle"]
+
+[config]
+files = ["Gemfile", "Gemfile.lock", ".bundle/config"]

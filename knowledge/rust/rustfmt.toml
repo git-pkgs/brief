@@ -1,0 +1,18 @@
+[tool]
+name = "rustfmt"
+category = "format"
+homepage = "https://github.com/rust-lang/rustfmt"
+docs = "https://rust-lang.github.io/rustfmt/"
+repo = "https://github.com/rust-lang/rustfmt"
+description = "Rust code formatter"
+
+[detect]
+files = ["rustfmt.toml", ".rustfmt.toml"]
+ecosystems = ["rust"]
+
+[commands]
+run = "cargo fmt"
+alternatives = ["cargo fmt --check"]
+
+[config]
+files = ["rustfmt.toml", ".rustfmt.toml"]

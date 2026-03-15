@@ -1,0 +1,15 @@
+[tool]
+name = "go test"
+category = "test"
+homepage = "https://go.dev/doc/tutorial/add-a-test"
+docs = "https://pkg.go.dev/testing"
+repo = "https://github.com/golang/go"
+description = "Built-in Go test runner"
+
+[detect]
+files = ["*_test.go"]
+ecosystems = ["go"]
+
+[commands]
+run = "go test ./..."
+alternatives = ["go test -v ./..."]

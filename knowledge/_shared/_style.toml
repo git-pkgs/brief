@@ -1,0 +1,33 @@
+[style]
+sample_limit = 10
+sample_extensions = [".rb", ".py", ".js", ".ts", ".go", ".rs", ".java", ".ex", ".exs", ".php", ".c", ".cpp", ".h"]
+
+[[style.config_files]]
+file = ".editorconfig"
+provides = "all"
+source_name = "editorconfig"
+
+[[style.config_files]]
+file = ".prettierrc"
+provides = "indentation"
+source_name = "prettier"
+
+[[style.config_files]]
+file = ".prettierrc.json"
+provides = "indentation"
+source_name = "prettier"
+
+[[style.config_files]]
+file = ".prettierrc.yml"
+provides = "indentation"
+source_name = "prettier"
+
+[[style.config_files]]
+file = "rustfmt.toml"
+provides = "indentation"
+source_name = "rustfmt"
+
+[[style.config_files]]
+file = ".clang-format"
+provides = "indentation"
+source_name = "clang-format"

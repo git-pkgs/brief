@@ -1,0 +1,24 @@
+[tool]
+name = "pytest"
+category = "test"
+homepage = "https://pytest.org"
+docs = "https://docs.pytest.org"
+repo = "https://github.com/pytest-dev/pytest"
+description = "Python testing framework"
+
+[detect]
+files = ["pytest.ini", "conftest.py", "tests/conftest.py"]
+dependencies = ["pytest"]
+dev_dependencies = ["pytest"]
+[detect.file_contains]
+"pyproject.toml" = ["[tool.pytest"]
+"setup.cfg" = ["[tool:pytest]"]
+
+ecosystems = ["python"]
+
+[commands]
+run = "pytest"
+alternatives = ["python -m pytest"]
+
+[config]
+files = ["pytest.ini", "conftest.py", "pyproject.toml", "setup.cfg"]

@@ -1,0 +1,20 @@
+[tool]
+name = "ESLint"
+category = "lint"
+homepage = "https://eslint.org"
+docs = "https://eslint.org/docs/latest/"
+repo = "https://github.com/eslint/eslint"
+description = "JavaScript and TypeScript linter"
+
+[detect]
+files = [".eslintrc", ".eslintrc.js", ".eslintrc.json", ".eslintrc.yml", ".eslintrc.yaml", "eslint.config.js", "eslint.config.mjs", "eslint.config.cjs"]
+dependencies = ["eslint"]
+dev_dependencies = ["eslint"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx eslint ."
+alternatives = ["npm run lint"]
+
+[config]
+files = [".eslintrc", ".eslintrc.js", ".eslintrc.json", ".eslintrc.yml", ".eslintrc.yaml", "eslint.config.js", "eslint.config.mjs", "eslint.config.cjs", ".eslintignore"]

@@ -1,0 +1,22 @@
+[tool]
+name = "Ruff"
+category = "lint"
+homepage = "https://docs.astral.sh/ruff/"
+docs = "https://docs.astral.sh/ruff/"
+repo = "https://github.com/astral-sh/ruff"
+description = "Fast Python linter and formatter"
+
+[detect]
+files = ["ruff.toml", ".ruff.toml"]
+dev_dependencies = ["ruff"]
+[detect.file_contains]
+"pyproject.toml" = ["[tool.ruff]"]
+
+ecosystems = ["python"]
+
+[commands]
+run = "ruff check ."
+alternatives = ["ruff check --fix ."]
+
+[config]
+files = ["ruff.toml", ".ruff.toml", "pyproject.toml"]

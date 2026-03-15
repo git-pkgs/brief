@@ -1,0 +1,19 @@
+[tool]
+name = "RSpec"
+category = "test"
+homepage = "https://rspec.info"
+docs = "https://rspec.info/documentation"
+repo = "https://github.com/rspec/rspec"
+description = "BDD testing framework for Ruby"
+
+[detect]
+files = ["spec/", ".rspec"]
+dependencies = ["rspec", "rspec-core"]
+ecosystems = ["ruby"]
+
+[commands]
+run = "bundle exec rspec"
+alternatives = ["rake spec", "rspec"]
+
+[config]
+files = [".rspec", "spec/spec_helper.rb", "spec/rails_helper.rb"]

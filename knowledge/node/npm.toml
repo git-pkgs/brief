@@ -1,0 +1,18 @@
+[tool]
+name = "npm"
+category = "package_manager"
+homepage = "https://www.npmjs.com"
+docs = "https://docs.npmjs.com"
+repo = "https://github.com/npm/cli"
+description = "Node.js package manager"
+
+[detect]
+files = ["package-lock.json"]
+ecosystems = ["node"]
+
+[commands]
+run = "npm install"
+alternatives = ["npm ci"]
+
+[config]
+files = ["package.json", "package-lock.json", ".npmrc"]

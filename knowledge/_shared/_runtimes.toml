@@ -1,0 +1,29 @@
+[[runtimes]]
+[runtimes.runtime]
+name = "Ruby"
+files = [".ruby-version"]
+
+[[runtimes]]
+[runtimes.runtime]
+name = "Node"
+files = [".node-version", ".nvmrc"]
+
+[[runtimes]]
+[runtimes.runtime]
+name = "Python"
+files = [".python-version"]
+
+[[runtimes]]
+[runtimes.runtime]
+name = "Go"
+files = [".go-version"]
+
+[[runtimes]]
+[runtimes.runtime]
+name = "Rust"
+files = ["rust-toolchain.toml", "rust-toolchain"]
+
+[[runtimes]]
+[runtimes.runtime]
+name = "Multi"
+files = [".tool-versions", "mise.toml", ".mise.toml"]

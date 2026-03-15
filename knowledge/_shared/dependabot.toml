@@ -1,0 +1,12 @@
+[tool]
+name = "Dependabot"
+category = "dependency_bot"
+homepage = "https://github.com/dependabot"
+docs = "https://docs.github.com/en/code-security/dependabot"
+description = "Automated dependency updates from GitHub"
+
+[detect]
+files = [".github/dependabot.yml", ".github/dependabot.yaml"]
+
+[config]
+files = [".github/dependabot.yml", ".github/dependabot.yaml"]

@@ -1,0 +1,20 @@
+[tool]
+name = "RuboCop"
+category = "lint"
+homepage = "https://rubocop.org"
+docs = "https://docs.rubocop.org"
+repo = "https://github.com/rubocop/rubocop"
+description = "Ruby static code analyzer and formatter"
+
+[detect]
+files = [".rubocop.yml"]
+dependencies = ["rubocop"]
+dev_dependencies = ["rubocop"]
+ecosystems = ["ruby"]
+
+[commands]
+run = "bundle exec rubocop"
+alternatives = ["rubocop"]
+
+[config]
+files = [".rubocop.yml", ".rubocop_todo.yml"]

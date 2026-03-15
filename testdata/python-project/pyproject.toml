@@ -1,0 +1,15 @@
+[project]
+name = "test-project"
+version = "0.1.0"
+
+[tool.ruff]
+line-length = 88
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.mypy]
+strict = true
+
+[tool.uv]
+dev-dependencies = ["pytest", "ruff", "mypy"]

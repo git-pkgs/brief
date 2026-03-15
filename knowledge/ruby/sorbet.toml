@@ -1,0 +1,19 @@
+[tool]
+name = "Sorbet"
+category = "typecheck"
+homepage = "https://sorbet.org"
+docs = "https://sorbet.org/docs/overview"
+repo = "https://github.com/sorbet/sorbet"
+description = "Fast, powerful type checker for Ruby"
+
+[detect]
+files = ["sorbet/config"]
+dependencies = ["sorbet", "sorbet-runtime"]
+ecosystems = ["ruby"]
+
+[commands]
+run = "bundle exec srb tc"
+alternatives = ["srb tc"]
+
+[config]
+files = ["sorbet/config"]

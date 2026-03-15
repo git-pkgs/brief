@@ -1,0 +1,16 @@
+[tool]
+name = "TypeScript"
+category = "language"
+homepage = "https://www.typescriptlang.org"
+docs = "https://www.typescriptlang.org/docs/"
+repo = "https://github.com/microsoft/TypeScript"
+description = "Typed superset of JavaScript"
+
+[detect]
+files = ["tsconfig.json", "*.ts", "*.tsx"]
+dependencies = ["typescript"]
+dev_dependencies = ["typescript"]
+ecosystems = ["node"]
+
+[config]
+files = ["tsconfig.json"]

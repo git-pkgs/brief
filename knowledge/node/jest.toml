@@ -1,0 +1,20 @@
+[tool]
+name = "Jest"
+category = "test"
+homepage = "https://jestjs.io"
+docs = "https://jestjs.io/docs/getting-started"
+repo = "https://github.com/jestjs/jest"
+description = "JavaScript testing framework"
+
+[detect]
+files = ["jest.config.js", "jest.config.ts", "jest.config.mjs", "jest.config.cjs"]
+dependencies = ["jest"]
+dev_dependencies = ["jest"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx jest"
+alternatives = ["npm test"]
+
+[config]
+files = ["jest.config.js", "jest.config.ts", "jest.config.mjs", "jest.config.cjs"]

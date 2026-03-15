@@ -1,0 +1,51 @@
+knowledge/node/fastify.toml
+  84f545bbad6fb7cb 1-11
+knowledge/python/fastapi.toml
+  84f545bbad6fb7cb 1-14
+knowledge/node/astro.toml
+  84f545bbad6fb7cb 1-19
+knowledge/ruby/rails.toml
+  84f545bbad6fb7cb 1-19
+knowledge/node/express.toml
+  84f545bbad6fb7cb 1-11
+knowledge/elixir/phoenix.toml
+  84f545bbad6fb7cb 1-19
+knowledge/rust/actix.toml
+  84f545bbad6fb7cb 1-11
+knowledge/node/gatsby.toml
+  84f545bbad6fb7cb 1-19
+knowledge/node/nextjs.toml
+  84f545bbad6fb7cb 1-19
+knowledge/node/nuxt.toml
+  84f545bbad6fb7cb 1-19
+knowledge/java/spring-boot.toml
+  84f545bbad6fb7cb 1-14
+knowledge/go/gin.toml
+  84f545bbad6fb7cb 1-13
+knowledge/node/eleventy.toml
+  84f545bbad6fb7cb 1-20
+knowledge/python/django.toml
+  84f545bbad6fb7cb 1-18
+knowledge/node/sveltekit.toml
+  84f545bbad6fb7cb 1-19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "8f4145c16971e459bbbaa6db2d75f53a0a031cfe",
+  "prompts": {
+    "84f545bbad6fb7cb": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "60673090-6a91-4d42-b2c4-cecb5a39f60b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 245,
+      "total_deletions": 0,
+      "accepted_lines": 245,
+      "overriden_lines": 0
+    }
+  }
+}

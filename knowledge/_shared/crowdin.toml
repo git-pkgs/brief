@@ -1,0 +1,12 @@
+[tool]
+name = "Crowdin"
+category = "i18n"
+homepage = "https://crowdin.com"
+docs = "https://support.crowdin.com"
+description = "Localization management platform"
+
+[detect]
+files = ["crowdin.yml", ".crowdin.yml", "crowdin.yaml"]
+
+[config]
+files = ["crowdin.yml", ".crowdin.yml", "crowdin.yaml"]

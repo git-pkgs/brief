@@ -1,0 +1,12 @@
+[tool]
+name = "Transifex"
+category = "i18n"
+homepage = "https://www.transifex.com"
+docs = "https://help.transifex.com"
+description = "Translation management platform"
+
+[detect]
+files = [".tx/config"]
+
+[config]
+files = [".tx/config"]

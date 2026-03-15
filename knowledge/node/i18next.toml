@@ -1,0 +1,14 @@
+[tool]
+name = "i18next"
+category = "i18n"
+homepage = "https://www.i18next.com"
+docs = "https://www.i18next.com/overview/getting-started"
+repo = "https://github.com/i18next/i18next"
+description = "Internationalization framework for JavaScript"
+
+[detect]
+dependencies = ["i18next"]
+ecosystems = ["node"]
+
+[config]
+files = ["i18next.config.js", "i18next.config.ts"]

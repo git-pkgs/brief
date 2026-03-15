@@ -1,0 +1,11 @@
+[tool]
+name = "Flipper"
+category = "environment"
+homepage = "https://www.flippercloud.io"
+docs = "https://www.flippercloud.io/docs"
+repo = "https://github.com/flippercloud/flipper"
+description = "Feature flag library for Ruby"
+
+[detect]
+dependencies = ["flipper"]
+ecosystems = ["ruby"]

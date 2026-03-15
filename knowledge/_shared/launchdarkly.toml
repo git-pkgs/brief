@@ -1,0 +1,9 @@
+[tool]
+name = "LaunchDarkly"
+category = "environment"
+homepage = "https://launchdarkly.com"
+docs = "https://docs.launchdarkly.com"
+description = "Feature flag management platform"
+
+[detect]
+dependencies = ["launchdarkly-server-sdk", "launchdarkly-node-server-sdk", "@launchdarkly/node-server-sdk", "launchdarkly-react-client-sdk"]

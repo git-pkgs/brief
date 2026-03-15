@@ -1,0 +1,10 @@
+[tool]
+name = "Rails i18n"
+category = "i18n"
+homepage = "https://guides.rubyonrails.org/i18n.html"
+docs = "https://guides.rubyonrails.org/i18n.html"
+description = "Rails internationalization framework"
+
+[detect]
+files = ["config/locales/"]
+ecosystems = ["ruby"]

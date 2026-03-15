@@ -1,0 +1,18 @@
+[tool]
+name = "Sequelize"
+category = "database"
+homepage = "https://sequelize.org"
+docs = "https://sequelize.org/docs/v6/"
+repo = "https://github.com/sequelize/sequelize"
+description = "Promise-based ORM for Node.js"
+
+[detect]
+files = [".sequelizerc"]
+dependencies = ["sequelize"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx sequelize-cli db:migrate"
+
+[config]
+files = [".sequelizerc"]

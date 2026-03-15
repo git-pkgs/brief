@@ -1,0 +1,11 @@
+[tool]
+name = "SQLAlchemy"
+category = "database"
+homepage = "https://www.sqlalchemy.org"
+docs = "https://docs.sqlalchemy.org"
+repo = "https://github.com/sqlalchemy/sqlalchemy"
+description = "Python SQL toolkit and ORM"
+
+[detect]
+dependencies = ["sqlalchemy", "SQLAlchemy"]
+ecosystems = ["python"]

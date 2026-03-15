@@ -1,0 +1,18 @@
+[tool]
+name = "TypeORM"
+category = "database"
+homepage = "https://typeorm.io"
+docs = "https://typeorm.io"
+repo = "https://github.com/typeorm/typeorm"
+description = "ORM for TypeScript and JavaScript"
+
+[detect]
+files = ["ormconfig.json", "ormconfig.yml", "ormconfig.yaml", "ormconfig.js", "ormconfig.ts"]
+dependencies = ["typeorm"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx typeorm migration:run"
+
+[config]
+files = ["ormconfig.json", "ormconfig.yml", "ormconfig.yaml", "ormconfig.js", "ormconfig.ts"]

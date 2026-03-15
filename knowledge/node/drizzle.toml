@@ -1,0 +1,20 @@
+[tool]
+name = "Drizzle"
+category = "database"
+homepage = "https://orm.drizzle.team"
+docs = "https://orm.drizzle.team/docs/overview"
+repo = "https://github.com/drizzle-team/drizzle-orm"
+description = "TypeScript ORM with SQL-like query builder"
+
+[detect]
+files = ["drizzle.config.ts", "drizzle.config.js"]
+dependencies = ["drizzle-orm"]
+dev_dependencies = ["drizzle-kit"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx drizzle-kit push"
+alternatives = ["npx drizzle-kit generate", "npx drizzle-kit migrate"]
+
+[config]
+files = ["drizzle.config.ts", "drizzle.config.js"]

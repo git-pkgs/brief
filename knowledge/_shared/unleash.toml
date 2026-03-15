@@ -1,0 +1,10 @@
+[tool]
+name = "Unleash"
+category = "environment"
+homepage = "https://www.getunleash.io"
+docs = "https://docs.getunleash.io"
+repo = "https://github.com/Unleash/unleash"
+description = "Open-source feature flag management"
+
+[detect]
+dependencies = ["unleash-client", "@unleash/proxy-client-react"]

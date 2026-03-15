@@ -60,7 +60,7 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 	_, _ = fmt.Fprintln(w)
 
 	// Tool categories in a stable order
-	categoryOrder := []string{"test", "lint", "format", "typecheck", "docs", "build", "codegen", "database", "security", "ci", "container", "infrastructure", "monorepo", "environment", "release", "coverage", "dependency_bot"}
+	categoryOrder := []string{"test", "lint", "format", "typecheck", "docs", "build", "codegen", "database", "security", "ci", "container", "infrastructure", "monorepo", "environment", "i18n", "release", "coverage", "dependency_bot"}
 	categoryLabels := map[string]string{
 		"test":           "Test",
 		"lint":           "Lint",
@@ -76,6 +76,7 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 		"infrastructure": "Infra",
 		"monorepo":       "Monorepo",
 		"environment":    "Environment",
+		"i18n":           "i18n",
 		"release":        "Release",
 		"coverage":       "Coverage",
 		"dependency_bot": "Dep Updates",

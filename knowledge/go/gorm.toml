@@ -1,0 +1,13 @@
+[tool]
+name = "GORM"
+category = "database"
+homepage = "https://gorm.io"
+docs = "https://gorm.io/docs/"
+repo = "https://github.com/go-gorm/gorm"
+description = "ORM library for Go"
+
+[detect]
+ecosystems = ["go"]
+
+[detect.file_contains]
+"go.mod" = ["gorm.io/gorm"]

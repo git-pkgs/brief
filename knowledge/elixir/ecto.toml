@@ -1,0 +1,17 @@
+[tool]
+name = "Ecto"
+category = "database"
+homepage = "https://hexdocs.pm/ecto"
+docs = "https://hexdocs.pm/ecto/Ecto.html"
+repo = "https://github.com/elixir-ecto/ecto"
+description = "Database wrapper and query generator for Elixir"
+
+[detect]
+files = ["priv/repo/migrations/"]
+ecosystems = ["elixir"]
+
+[detect.file_contains]
+"mix.exs" = [":ecto"]
+
+[commands]
+run = "mix ecto.migrate"

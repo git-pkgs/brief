@@ -185,6 +185,10 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 		}
 		printResource(w, "SECURITY", res.Security)
 	}
+
+	// Stats
+	fmt.Fprintf(w, "\n%.1fms  %d files checked  %d/%d tools matched\n",
+		r.Stats.DurationMS, r.Stats.FilesChecked, r.Stats.ToolsMatched, r.Stats.ToolsChecked)
 }
 
 func printResource(w io.Writer, label, value string) {

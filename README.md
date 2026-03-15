@@ -23,26 +23,32 @@ brief .
 JSON when piped, human-readable on a TTY. Force either with `--json` or `--human`.
 
 ```
-brief v0.1.0 — /home/user/my-project
+brief dev — /home/user/24pullrequests
 
-Language:        Ruby (also: JavaScript)
+Language:        Ruby
 Package Manager: Bundler (bundle install)
 
-Scripts (Makefile):
-  test:    make test
-  lint:    make lint
-
-Test:        RSpec (bundle exec rspec)
-Lint:        RuboCop (bundle exec rubocop)
+Test:        Minitest (bundle exec rake test)
+             RSpec (bundle exec rspec)  [.rspec, spec/spec_helper.rb, spec/rails_helper.rb]
+Lint:        RuboCop (bundle exec rubocop)  [.rubocop.yml]
 Format:      —
-Typecheck:   Sorbet (bundle exec srb tc)
+Typecheck:   —
+Docs:        —
+Build:       —
+Security:    —
+CI:          GitHub Actions  [.github/workflows/]
+Container:   Docker  [Dockerfile, docker-compose.yml]
+Dep Updates: Dependabot  [.github/dependabot.yml]
 
-Style:       2-space indent (editorconfig)  LF  trailing newline
-Layout:      app/  lib/  spec/
+Layout:      lib/ app/  test/ spec/
 
-Runtime:     .ruby-version: 3.4.2
+Runtime:     .ruby-version: 4.0.1
 
-Resources:   README.md
+Resources:   Readme.md
+Resources:   CONTRIBUTING.md
+Resources:   LICENSE
+
+2.3ms  107 files checked  8/30 tools matched
 ```
 
 Use `--verbose` to include homepage, docs, and repo links for each detected tool.

@@ -2,6 +2,8 @@
 // and conventions, then outputs a structured report.
 package brief
 
+import "time"
+
 // Version is set at build time via ldflags.
 var Version = "dev"
 
@@ -83,6 +85,15 @@ type ResourceInfo struct {
 	Security     string `json:"security,omitempty"`
 }
 
+// Stats holds performance and coverage metrics from the detection run.
+type Stats struct {
+	Duration     time.Duration `json:"-"`
+	DurationMS   float64       `json:"duration_ms"`
+	FilesChecked int           `json:"files_checked"`
+	ToolsMatched int           `json:"tools_matched"`
+	ToolsChecked int           `json:"tools_checked"`
+}
+
 // Report is the complete output of a brief analysis.
 type Report struct {
 	Version         string                 `json:"version"`
@@ -95,4 +106,5 @@ type Report struct {
 	Layout          *LayoutInfo            `json:"layout,omitempty"`
 	Platforms       *PlatformInfo          `json:"platforms,omitempty"`
 	Resources       *ResourceInfo          `json:"resources,omitempty"`
+	Stats           Stats                  `json:"stats"`
 }

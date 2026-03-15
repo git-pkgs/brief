@@ -3,9 +3,11 @@ package detect
 
 import (
 	"encoding/json"
+	"errors"
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/git-pkgs/brief"
 	"github.com/git-pkgs/brief/kb"
@@ -13,8 +15,11 @@ import (
 
 // Engine runs detection against a project directory.
 type Engine struct {
-	KB   *kb.KnowledgeBase
-	Root string
+	KB           *kb.KnowledgeBase
+	Root         string
+	filesChecked int
+	toolsChecked int
+	toolsMatched int
 }
 
 // New creates a detection engine for the given project root.
@@ -24,6 +29,8 @@ func New(knowledgeBase *kb.KnowledgeBase, root string) *Engine {
 
 // Run performs full detection and returns a Report.
 func (e *Engine) Run() (*brief.Report, error) {
+	start := time.Now()
+
 	abs, err := filepath.Abs(e.Root)
 	if err != nil {
 		return nil, err
@@ -53,6 +60,15 @@ func (e *Engine) Run() (*brief.Report, error) {
 	report.Resources = e.detectResources()
 	report.Platforms = e.detectPlatforms()
 
+	elapsed := time.Since(start)
+	report.Stats = brief.Stats{
+		Duration:     elapsed,
+		DurationMS:   float64(elapsed.Microseconds()) / 1000.0,
+		FilesChecked: e.filesChecked,
+		ToolsMatched: e.toolsMatched,
+		ToolsChecked: e.toolsChecked,
+	}
+
 	return report, nil
 }
 
@@ -61,10 +77,12 @@ func (e *Engine) detectCategory(category string) []brief.Detection {
 	var detections []brief.Detection
 
 	for _, tool := range e.KB.ToolsForCategory(category) {
+		e.toolsChecked++
 		confidence := e.matchTool(tool)
 		if confidence == "" {
 			continue
 		}
+		e.toolsMatched++
 
 		d := brief.Detection{
 			Name:        tool.Tool.Name,
@@ -125,6 +143,8 @@ func (e *Engine) matchTool(tool *kb.ToolDef) brief.Confidence {
 
 // exists checks if a file, directory, or glob pattern matches something at the project root.
 func (e *Engine) exists(pattern string) bool {
+	e.filesChecked++
+
 	if strings.HasSuffix(pattern, "/") {
 		info, err := os.Stat(filepath.Join(e.Root, pattern))
 		return err == nil && info.IsDir()
@@ -304,49 +324,63 @@ func (e *Engine) inferStyle() *brief.StyleInfo {
 	lf, crlf := 0, 0
 	sampled := 0
 
+	exts := make(map[string]bool, len(e.KB.StyleConfig.Style.SampleExts))
 	for _, ext := range e.KB.StyleConfig.Style.SampleExts {
-		pattern := filepath.Join(e.Root, "**", "*"+ext)
-		// Use a simple directory walk instead of doublestar glob
-		_ = filepath.Walk(e.Root, func(path string, info os.FileInfo, err error) error {
-			if err != nil || info.IsDir() || sampled >= limit {
-				return err
-			}
-			if !strings.HasSuffix(path, ext) {
-				return nil
-			}
-
-			data, err := os.ReadFile(path)
-			if err != nil {
-				return nil
-			}
-
-			sampled++
-			content := string(data)
-			lines := strings.Split(content, "\n")
-
-			for _, line := range lines {
-				if len(line) == 0 {
-					continue
-				}
-				if line[0] == '\t' {
-					tabs++
-				} else if strings.HasPrefix(line, "    ") {
-					spaces4++
-				} else if strings.HasPrefix(line, "  ") && !strings.HasPrefix(line, "   ") {
-					spaces2++
-				}
-			}
-
-			if strings.Contains(content, "\r\n") {
-				crlf++
-			} else {
-				lf++
-			}
-
-			return nil
-		})
-		_ = pattern // suppress unused warning
+		exts[ext] = true
 	}
+
+	errDone := errors.New("done")
+	_ = filepath.Walk(e.Root, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return nil
+		}
+		if info.IsDir() {
+			// Skip hidden and vendor directories
+			name := info.Name()
+			if name != "." && (strings.HasPrefix(name, ".") || name == "vendor" || name == "node_modules") {
+				return filepath.SkipDir
+			}
+			return nil
+		}
+		if sampled >= limit {
+			return errDone
+		}
+
+		ext := filepath.Ext(path)
+		if !exts[ext] {
+			return nil
+		}
+
+		data, err := os.ReadFile(path)
+		if err != nil {
+			return nil
+		}
+
+		sampled++
+		content := string(data)
+		lines := strings.Split(content, "\n")
+
+		for _, line := range lines {
+			if len(line) == 0 {
+				continue
+			}
+			if line[0] == '\t' {
+				tabs++
+			} else if strings.HasPrefix(line, "    ") {
+				spaces4++
+			} else if strings.HasPrefix(line, "  ") && !strings.HasPrefix(line, "   ") {
+				spaces2++
+			}
+		}
+
+		if strings.Contains(content, "\r\n") {
+			crlf++
+		} else {
+			lf++
+		}
+
+		return nil
+	})
 
 	if sampled == 0 {
 		return nil

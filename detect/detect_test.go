@@ -322,6 +322,29 @@ func TestKeyExists(t *testing.T) {
 	}
 }
 
+func TestShouldSkipDir(t *testing.T) {
+	engine := New(loadKB(t), "../testdata/empty-project")
+
+	tests := []struct {
+		name string
+		skip bool
+	}{
+		{"node_modules", true},
+		{"vendor", true},
+		{".git", true},
+		{"coverage", true},
+		{"src", false},
+		{"lib", false},
+		{"app", false},
+	}
+
+	for _, tt := range tests {
+		if got := engine.shouldSkipDir(tt.name); got != tt.skip {
+			t.Errorf("shouldSkipDir(%q) = %v, want %v", tt.name, got, tt.skip)
+		}
+	}
+}
+
 func assertToolDetected(t *testing.T, r *brief.Report, category, name string) {
 	t.Helper()
 	tools, ok := r.Tools[category]

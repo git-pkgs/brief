@@ -93,6 +93,7 @@ var skipDirs = map[string]bool{
 	"tmp":          true,
 	"temp":         true,
 	"cache":        true,
+	"coverage":     true,
 }
 
 // shouldSkipDir returns true if a directory should be skipped during walks.

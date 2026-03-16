@@ -227,7 +227,7 @@ func gemPURL(root string) string {
 			for _, line := range strings.Split(string(data), "\n") {
 				line = strings.TrimSpace(line)
 				// Match: spec.name = "foo" or s.name = "foo"
-				if (strings.Contains(line, ".name") && strings.Contains(line, "=")) {
+				if strings.Contains(line, ".name") && strings.Contains(line, "=") {
 					for _, q := range []string{`"`, `'`} {
 						if idx := strings.Index(line, q); idx >= 0 {
 							end := strings.Index(line[idx+1:], q)
@@ -445,8 +445,8 @@ func formatDateOrBool(d endoflife.DateOrBool) string {
 		}
 		return "false"
 	}
-	if !d.Date.Time.IsZero() {
-		return d.Date.Time.Format("2006-01-02")
+	if !d.Date.IsZero() {
+		return d.Date.Format("2006-01-02")
 	}
 	return ""
 }

@@ -493,9 +493,7 @@ func (e *Engine) loadDeps() {
 
 	// Collect all manifest file paths, including workflow files
 	var manifestPaths []string
-	for _, mf := range e.KB.ManifestFiles {
-		manifestPaths = append(manifestPaths, mf)
-	}
+	manifestPaths = append(manifestPaths, e.KB.ManifestFiles...)
 	// GitHub Actions workflow files
 	wfMatches, _ := filepath.Glob(filepath.Join(e.Root, ".github/workflows/*.yml"))
 	wfMatchesYAML, _ := filepath.Glob(filepath.Join(e.Root, ".github/workflows/*.yaml"))

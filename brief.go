@@ -122,7 +122,7 @@ type DepInfo struct {
 
 // EnrichmentInfo holds metadata fetched from external sources about the project itself.
 type EnrichmentInfo struct {
-	Repo       *RepoEnrichment       `json:"repo,omitempty"`
+	Repo       *RepoEnrichment        `json:"repo,omitempty"`
 	Packages   []PublishedPackage     `json:"packages,omitempty"`
 	RuntimeEOL map[string]*RuntimeEOL `json:"runtime_eol,omitempty"`
 }
@@ -150,7 +150,7 @@ type PublishedPackage struct {
 
 // RuntimeEOL holds end-of-life status for a runtime version.
 type RuntimeEOL struct {
-	EOL       string `json:"eol,omitempty"`    // date string or "true"/"false"
+	EOL       string `json:"eol,omitempty"` // date string or "true"/"false"
 	Supported bool   `json:"supported"`
 	LTS       bool   `json:"lts,omitempty"`
 	Latest    string `json:"latest,omitempty"` // latest patch version

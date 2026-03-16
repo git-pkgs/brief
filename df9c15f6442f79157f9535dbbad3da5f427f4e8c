@@ -1,0 +1,25 @@
+detect/detect.go
+  9422573785c43b10 496
+cmd/brief/enrich.go
+  9422573785c43b10 448-449
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "df9c15f6442f79157f9535dbbad3da5f427f4e8c",
+  "prompts": {
+    "9422573785c43b10": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0508814d-3e46-444b-8399-3d1a78abb892",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 3,
+      "total_deletions": 5,
+      "accepted_lines": 3,
+      "overriden_lines": 0
+    }
+  }
+}

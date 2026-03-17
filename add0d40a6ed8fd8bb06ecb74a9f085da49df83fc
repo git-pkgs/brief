@@ -1,0 +1,225 @@
+knowledge/rust/rustfmt.toml
+  576c30450b8b1853 4
+knowledge/java/google-java-format.toml
+  576c30450b8b1853 1-18
+knowledge/elixir/dialyzer.toml
+  576c30450b8b1853 4
+knowledge/php/phpunit.toml
+  576c30450b8b1853 4
+knowledge/elixir/mix-format.toml
+  576c30450b8b1853 1-18
+knowledge/cpp/gtest.toml
+  576c30450b8b1853 4
+kb/kb.go
+  576c30450b8b1853 30
+knowledge/kotlin/kotlin-test.toml
+  576c30450b8b1853 1-18
+knowledge/cpp/doxygen.toml
+  576c30450b8b1853 1-18
+knowledge/node/prettier.toml
+  576c30450b8b1853 4
+knowledge/crystal/ameba.toml
+  576c30450b8b1853 1-20
+knowledge/csharp/dotnet-test.toml
+  576c30450b8b1853 1-15
+knowledge/nim/nim-test.toml
+  576c30450b8b1853 1-15
+knowledge/ocaml/ocamlformat.toml
+  576c30450b8b1853 4
+knowledge/crystal/crystal-spec.toml
+  576c30450b8b1853 1-14
+knowledge/erlang/dialyzer.toml
+  576c30450b8b1853 4
+knowledge/ruby/standardrb.toml
+  576c30450b8b1853 4
+knowledge/ruby/jekyll.toml
+  576c30450b8b1853 4
+knowledge/ruby/simplecov.toml
+  576c30450b8b1853 1-16
+knowledge/kotlin/dokka.toml
+  576c30450b8b1853 1-18
+knowledge/zig/zig-fmt.toml
+  576c30450b8b1853 1-15
+knowledge/scala/scalafmt.toml
+  576c30450b8b1853 4
+knowledge/haskell/hlint.toml
+  576c30450b8b1853 1-18
+knowledge/php/phpcs.toml
+  576c30450b8b1853 1-21
+knowledge/deno/deno-lint.toml
+  576c30450b8b1853 1-14
+knowledge/rust/cargotest.toml
+  576c30450b8b1853 4
+knowledge/ruby/rspec.toml
+  576c30450b8b1853 4
+knowledge/rust/cargodoc.toml
+  576c30450b8b1853 1-15
+knowledge/csharp/roslyn-analyzers.toml
+  576c30450b8b1853 1-15
+knowledge/node/tsc-typecheck.toml
+  576c30450b8b1853 1-21
+knowledge/node/eslint.toml
+  576c30450b8b1853 4
+knowledge/node/docusaurus.toml
+  576c30450b8b1853 4
+knowledge/java/checkstyle.toml
+  576c30450b8b1853 4
+knowledge/scala/scalatest.toml
+  576c30450b8b1853 1-17
+knowledge/python/sphinx.toml
+  576c30450b8b1853 4
+knowledge/python/ruff.toml
+  576c30450b8b1853 4
+knowledge/go/govulncheck.toml
+  576c30450b8b1853 1-15
+knowledge/ruby/sorbet.toml
+  576c30450b8b1853 4
+knowledge/rust/tarpaulin.toml
+  576c30450b8b1853 1-19
+knowledge/java/owasp-dependency-check.toml
+  576c30450b8b1853 1-19
+knowledge/rust/cargo-audit.toml
+  576c30450b8b1853 1-15
+knowledge/swift/swiftformat.toml
+  576c30450b8b1853 4
+knowledge/dart/dart-test.toml
+  576c30450b8b1853 1-15
+knowledge/dart/dart-doc.toml
+  576c30450b8b1853 1-14
+knowledge/cpp/clang-tidy.toml
+  576c30450b8b1853 4
+knowledge/deno/deno-fmt.toml
+  576c30450b8b1853 1-15
+knowledge/deno/deno-doc.toml
+  576c30450b8b1853 1-14
+knowledge/clojure/clj-kondo.toml
+  576c30450b8b1853 1-18
+cmd/brief/main.go
+  576c30450b8b1853 39-41
+knowledge/python/pip-audit.toml
+  576c30450b8b1853 1-17
+cmd/brief/missing.go
+  576c30450b8b1853 1-57
+brief.go
+  576c30450b8b1853 159-178
+knowledge/python/pytest.toml
+  576c30450b8b1853 4
+detect/missing_test.go
+  576c30450b8b1853 1-148
+knowledge/swift/xctest.toml
+  576c30450b8b1853 1-15
+knowledge/dart/dart-format.toml
+  576c30450b8b1853 1-15
+knowledge/zig/zig-test.toml
+  576c30450b8b1853 1-14
+knowledge/go/gotest.toml
+  576c30450b8b1853 4,11
+knowledge/python/black.toml
+  576c30450b8b1853 4
+knowledge/rust/clippy.toml
+  576c30450b8b1853 4
+knowledge/scala/wartremover.toml
+  576c30450b8b1853 1-17
+knowledge/elixir/exunit.toml
+  576c30450b8b1853 4
+knowledge/erlang/eunit.toml
+  576c30450b8b1853 4
+knowledge/ruby/rubocop.toml
+  576c30450b8b1853 4
+knowledge/java/jacoco.toml
+  576c30450b8b1853 1-19
+knowledge/java/junit.toml
+  576c30450b8b1853 4
+knowledge/go/gofmt.toml
+  576c30450b8b1853 4
+knowledge/kotlin/ktlint.toml
+  576c30450b8b1853 4
+knowledge/crystal/crystal-format.toml
+  576c30450b8b1853 1-15
+knowledge/erlang/erlfmt.toml
+  576c30450b8b1853 1-20
+knowledge/php/php-cs-fixer.toml
+  576c30450b8b1853 4
+knowledge/erlang/elvis.toml
+  576c30450b8b1853 1-20
+knowledge/go/golangci-lint.toml
+  576c30450b8b1853 4
+knowledge/haskell/hspec.toml
+  576c30450b8b1853 1-18
+knowledge/node/npm-audit.toml
+  576c30450b8b1853 1-15
+knowledge/python/mypy.toml
+  576c30450b8b1853 4
+knowledge/elixir/ex-doc.toml
+  576c30450b8b1853 1-15
+knowledge/gleam/gleam-format.toml
+  576c30450b8b1853 1-15
+knowledge/cpp/clang-format.toml
+  576c30450b8b1853 4
+knowledge/ruby/bundler-audit.toml
+  576c30450b8b1853 1-17
+knowledge/clojure/cljfmt.toml
+  576c30450b8b1853 1-18
+knowledge/gleam/gleam-test.toml
+  576c30450b8b1853 1-14
+knowledge/deno/deno-test.toml
+  576c30450b8b1853 1-15
+knowledge/dart/dart-analyze.toml
+  576c30450b8b1853 1-18
+knowledge/haskell/ormolu.toml
+  576c30450b8b1853 1-18
+knowledge/node/istanbul.toml
+  576c30450b8b1853 1-17
+knowledge/php/phpdoc.toml
+  576c30450b8b1853 1-19
+knowledge/clojure/clojure-test.toml
+  576c30450b8b1853 1-15
+report/report.go
+  576c30450b8b1853 364-396
+knowledge/python/coveragepy.toml
+  576c30450b8b1853 1-25
+knowledge/swift/swiftlint.toml
+  576c30450b8b1853 1-19
+knowledge/nim/nimpretty.toml
+  576c30450b8b1853 1-14
+knowledge/go/godoc.toml
+  576c30450b8b1853 1-15
+knowledge/java/javadoc.toml
+  576c30450b8b1853 1-15
+knowledge/go/gocover.toml
+  576c30450b8b1853 1-15
+knowledge/php/phpstan.toml
+  576c30450b8b1853 4
+knowledge/elixir/credo.toml
+  576c30450b8b1853 4
+detect/detect.go
+  576c30450b8b1853 1259-1337
+knowledge/kotlin/detekt.toml
+  576c30450b8b1853 1-22
+knowledge/node/jest.toml
+  576c30450b8b1853 4
+knowledge/csharp/dotnet-format.toml
+  576c30450b8b1853 1-18
+knowledge/ocaml/alcotest.toml
+  576c30450b8b1853 1-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "add0d40a6ed8fd8bb06ecb74a9f085da49df83fc",
+  "prompts": {
+    "576c30450b8b1853": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3f621bf2-d036-493e-a1fd-887cc14ee6c2",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 1401,
+      "total_deletions": 47,
+      "accepted_lines": 1355,
+      "overriden_lines": 0
+    }
+  }
+}

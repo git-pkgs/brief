@@ -1,0 +1,22 @@
+[tool]
+name = "detekt"
+category = "lint"
+default = true
+homepage = "https://detekt.dev"
+docs = "https://detekt.dev/docs/intro"
+repo = "https://github.com/detekt/detekt"
+description = "Static code analysis for Kotlin"
+
+[detect]
+files = ["detekt.yml", "config/detekt/detekt.yml"]
+ecosystems = ["kotlin"]
+[detect.file_contains]
+"build.gradle.kts" = ["detekt"]
+"build.gradle" = ["detekt"]
+
+[commands]
+run = "gradle detekt"
+alternatives = ["./gradlew detekt"]
+
+[config]
+files = ["detekt.yml", "config/detekt/detekt.yml"]

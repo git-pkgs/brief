@@ -1,6 +1,7 @@
 [tool]
 name = "rustfmt"
 category = "format"
+default = true
 homepage = "https://github.com/rust-lang/rustfmt"
 docs = "https://rust-lang.github.io/rustfmt/"
 repo = "https://github.com/rust-lang/rustfmt"

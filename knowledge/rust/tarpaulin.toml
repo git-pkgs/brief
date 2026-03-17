@@ -1,0 +1,19 @@
+[tool]
+name = "cargo-tarpaulin"
+category = "coverage"
+default = true
+homepage = "https://github.com/xd009642/tarpaulin"
+docs = "https://github.com/xd009642/tarpaulin#readme"
+repo = "https://github.com/xd009642/tarpaulin"
+description = "Rust code coverage tool"
+
+[detect]
+ecosystems = ["rust"]
+[detect.file_contains]
+".github/workflows/ci.yml" = ["tarpaulin"]
+".github/workflows/ci.yaml" = ["tarpaulin"]
+"Cargo.toml" = ["cargo-tarpaulin"]
+
+[commands]
+run = "cargo tarpaulin"
+alternatives = ["cargo tarpaulin --out html"]

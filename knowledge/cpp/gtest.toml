@@ -1,6 +1,7 @@
 [tool]
 name = "Google Test"
 category = "test"
+default = true
 homepage = "https://google.github.io/googletest/"
 docs = "https://google.github.io/googletest/"
 repo = "https://github.com/google/googletest"

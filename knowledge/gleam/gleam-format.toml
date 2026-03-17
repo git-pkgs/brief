@@ -1,0 +1,15 @@
+[tool]
+name = "gleam format"
+category = "format"
+default = true
+homepage = "https://gleam.run/writing-gleam/command-line-reference/#gleam-format"
+docs = "https://gleam.run/writing-gleam/command-line-reference/#gleam-format"
+description = "Built-in Gleam code formatter"
+
+[detect]
+files = ["gleam.toml"]
+ecosystems = ["gleam"]
+
+[commands]
+run = "gleam format"
+alternatives = ["gleam format --check"]

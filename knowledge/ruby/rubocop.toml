@@ -1,6 +1,7 @@
 [tool]
 name = "RuboCop"
 category = "lint"
+default = true
 homepage = "https://rubocop.org"
 docs = "https://docs.rubocop.org"
 repo = "https://github.com/rubocop/rubocop"

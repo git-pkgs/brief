@@ -1,0 +1,15 @@
+[tool]
+name = "govulncheck"
+category = "security"
+default = true
+homepage = "https://pkg.go.dev/golang.org/x/vuln/cmd/govulncheck"
+docs = "https://go.dev/doc/security/vuln/"
+repo = "https://github.com/golang/vuln"
+description = "Go vulnerability scanner"
+
+[detect]
+files = ["go.mod"]
+ecosystems = ["go"]
+
+[commands]
+run = "govulncheck ./..."

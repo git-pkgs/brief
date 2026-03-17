@@ -1,0 +1,17 @@
+[tool]
+name = "WartRemover"
+category = "lint"
+default = true
+homepage = "https://www.wartremover.org"
+docs = "https://www.wartremover.org"
+repo = "https://github.com/wartremover/wartremover"
+description = "Flexible Scala linter"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["wartremover", "WartRemover"]
+"project/plugins.sbt" = ["wartremover"]
+
+[commands]
+run = "sbt compile"

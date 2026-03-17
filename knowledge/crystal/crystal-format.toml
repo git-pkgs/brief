@@ -1,0 +1,15 @@
+[tool]
+name = "crystal tool format"
+category = "format"
+default = true
+homepage = "https://crystal-lang.org/reference/man/crystal/#crystal-tool-format"
+docs = "https://crystal-lang.org/reference/man/crystal/#crystal-tool-format"
+description = "Built-in Crystal code formatter"
+
+[detect]
+files = ["shard.yml"]
+ecosystems = ["crystal"]
+
+[commands]
+run = "crystal tool format"
+alternatives = ["crystal tool format --check"]

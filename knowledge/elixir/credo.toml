@@ -1,6 +1,7 @@
 [tool]
 name = "Credo"
 category = "lint"
+default = true
 homepage = "https://hexdocs.pm/credo"
 docs = "https://hexdocs.pm/credo/overview.html"
 repo = "https://github.com/rrrene/credo"

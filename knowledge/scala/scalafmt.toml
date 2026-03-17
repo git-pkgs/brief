@@ -1,6 +1,7 @@
 [tool]
 name = "scalafmt"
 category = "format"
+default = true
 homepage = "https://scalameta.org/scalafmt/"
 docs = "https://scalameta.org/scalafmt/docs/installation.html"
 repo = "https://github.com/scalameta/scalafmt"

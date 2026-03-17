@@ -1,6 +1,7 @@
 [tool]
 name = "Dialyzer"
 category = "typecheck"
+default = true
 homepage = "https://www.erlang.org/doc/apps/dialyzer/"
 docs = "https://www.erlang.org/doc/apps/dialyzer/"
 description = "Static analysis tool for Erlang"

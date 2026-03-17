@@ -1,0 +1,18 @@
+[tool]
+name = "dotnet format"
+category = "format"
+default = true
+homepage = "https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-format"
+docs = "https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-format"
+description = "Built-in .NET code formatter"
+
+[detect]
+files = ["*.sln", "**/*.csproj"]
+ecosystems = ["csharp"]
+
+[commands]
+run = "dotnet format"
+alternatives = ["dotnet format --verify-no-changes"]
+
+[config]
+files = [".editorconfig"]

@@ -1,0 +1,15 @@
+[tool]
+name = "cargo-audit"
+category = "security"
+default = true
+homepage = "https://github.com/rustsec/rustsec"
+docs = "https://github.com/rustsec/rustsec/tree/main/cargo-audit#readme"
+repo = "https://github.com/rustsec/rustsec"
+description = "Rust dependency vulnerability scanner"
+
+[detect]
+files = ["Cargo.toml"]
+ecosystems = ["rust"]
+
+[commands]
+run = "cargo audit"

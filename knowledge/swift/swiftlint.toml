@@ -1,0 +1,19 @@
+[tool]
+name = "SwiftLint"
+category = "lint"
+default = true
+homepage = "https://realm.github.io/SwiftLint/"
+docs = "https://realm.github.io/SwiftLint/"
+repo = "https://github.com/realm/SwiftLint"
+description = "Linter for Swift code"
+
+[detect]
+files = [".swiftlint.yml", ".swiftlint.yaml"]
+ecosystems = ["swift"]
+
+[commands]
+run = "swiftlint"
+alternatives = ["swiftlint lint", "swiftlint --strict"]
+
+[config]
+files = [".swiftlint.yml", ".swiftlint.yaml"]

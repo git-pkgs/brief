@@ -1,0 +1,15 @@
+[tool]
+name = "cargo doc"
+category = "docs"
+default = true
+homepage = "https://doc.rust-lang.org/cargo/commands/cargo-doc.html"
+docs = "https://doc.rust-lang.org/rustdoc/"
+description = "Built-in Rust documentation generator"
+
+[detect]
+files = ["Cargo.toml"]
+ecosystems = ["rust"]
+
+[commands]
+run = "cargo doc"
+alternatives = ["cargo doc --open", "cargo doc --no-deps"]

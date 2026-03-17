@@ -1,0 +1,15 @@
+[tool]
+name = "dotnet test"
+category = "test"
+default = true
+homepage = "https://learn.microsoft.com/en-us/dotnet/core/testing/"
+docs = "https://learn.microsoft.com/en-us/dotnet/core/testing/"
+description = "Built-in .NET test runner"
+
+[detect]
+files = ["*.sln", "**/*.csproj"]
+ecosystems = ["csharp"]
+
+[commands]
+run = "dotnet test"
+alternatives = ["dotnet test --verbosity normal"]

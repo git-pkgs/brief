@@ -1,6 +1,7 @@
 [tool]
 name = "golangci-lint"
 category = "lint"
+default = true
 homepage = "https://golangci-lint.run"
 docs = "https://golangci-lint.run/usage/quick-start/"
 repo = "https://github.com/golangci/golangci-lint"

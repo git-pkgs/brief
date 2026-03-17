@@ -1,0 +1,14 @@
+[tool]
+name = "gleam test"
+category = "test"
+default = true
+homepage = "https://gleam.run/writing-gleam/command-line-reference/#gleam-test"
+docs = "https://gleam.run/writing-gleam/command-line-reference/#gleam-test"
+description = "Built-in Gleam test runner"
+
+[detect]
+files = ["gleam.toml"]
+ecosystems = ["gleam"]
+
+[commands]
+run = "gleam test"

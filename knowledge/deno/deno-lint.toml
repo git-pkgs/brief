@@ -1,0 +1,14 @@
+[tool]
+name = "deno lint"
+category = "lint"
+default = true
+homepage = "https://docs.deno.com/runtime/reference/cli/lint/"
+docs = "https://docs.deno.com/runtime/reference/cli/lint/"
+description = "Built-in Deno linter"
+
+[detect]
+files = ["deno.json", "deno.jsonc"]
+ecosystems = ["deno"]
+
+[commands]
+run = "deno lint"

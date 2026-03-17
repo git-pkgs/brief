@@ -1,0 +1,21 @@
+[tool]
+name = "tsc"
+category = "typecheck"
+default = true
+homepage = "https://www.typescriptlang.org"
+docs = "https://www.typescriptlang.org/docs/handbook/compiler-options.html"
+repo = "https://github.com/microsoft/TypeScript"
+description = "TypeScript type checker"
+
+[detect]
+files = ["tsconfig.json"]
+dependencies = ["typescript"]
+dev_dependencies = ["typescript"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx tsc --noEmit"
+alternatives = ["tsc --noEmit"]
+
+[config]
+files = ["tsconfig.json"]

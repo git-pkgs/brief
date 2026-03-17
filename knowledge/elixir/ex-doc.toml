@@ -1,0 +1,15 @@
+[tool]
+name = "ExDoc"
+category = "docs"
+default = true
+homepage = "https://hexdocs.pm/ex_doc"
+docs = "https://hexdocs.pm/ex_doc/readme.html"
+repo = "https://github.com/elixir-lang/ex_doc"
+description = "Documentation generator for Elixir"
+
+[detect]
+dependencies = ["ex_doc"]
+ecosystems = ["elixir"]
+
+[commands]
+run = "mix docs"

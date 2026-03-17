@@ -1,0 +1,18 @@
+[tool]
+name = "Doxygen"
+category = "docs"
+default = true
+homepage = "https://www.doxygen.nl"
+docs = "https://www.doxygen.nl/manual/"
+repo = "https://github.com/doxygen/doxygen"
+description = "Documentation generator for C/C++"
+
+[detect]
+files = ["Doxyfile", "Doxyfile.in", "docs/Doxyfile"]
+ecosystems = ["c", "cpp"]
+
+[commands]
+run = "doxygen"
+
+[config]
+files = ["Doxyfile", "Doxyfile.in"]

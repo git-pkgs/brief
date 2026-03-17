@@ -1,0 +1,14 @@
+[tool]
+name = "deno doc"
+category = "docs"
+default = true
+homepage = "https://docs.deno.com/runtime/reference/cli/doc/"
+docs = "https://docs.deno.com/runtime/reference/cli/doc/"
+description = "Built-in Deno documentation generator"
+
+[detect]
+files = ["deno.json", "deno.jsonc"]
+ecosystems = ["deno"]
+
+[commands]
+run = "deno doc"

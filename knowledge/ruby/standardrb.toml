@@ -1,6 +1,7 @@
 [tool]
 name = "StandardRB"
 category = "format"
+default = true
 homepage = "https://github.com/standardrb/standard"
 docs = "https://github.com/standardrb/standard#readme"
 repo = "https://github.com/standardrb/standard"

@@ -1,0 +1,16 @@
+[tool]
+name = "SimpleCov"
+category = "coverage"
+default = true
+homepage = "https://github.com/simplecov-ruby/simplecov"
+docs = "https://github.com/simplecov-ruby/simplecov#readme"
+repo = "https://github.com/simplecov-ruby/simplecov"
+description = "Code coverage for Ruby"
+
+[detect]
+dependencies = ["simplecov"]
+dev_dependencies = ["simplecov"]
+ecosystems = ["ruby"]
+
+[commands]
+run = "bundle exec rake spec"

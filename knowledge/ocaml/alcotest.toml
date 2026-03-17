@@ -1,0 +1,17 @@
+[tool]
+name = "Alcotest"
+category = "test"
+default = true
+homepage = "https://github.com/mirage/alcotest"
+docs = "https://mirage.github.io/alcotest/"
+repo = "https://github.com/mirage/alcotest"
+description = "Lightweight OCaml test framework"
+
+[detect]
+ecosystems = ["ocaml"]
+[detect.file_contains]
+"dune-project" = ["alcotest"]
+
+[commands]
+run = "dune test"
+alternatives = ["dune runtest"]

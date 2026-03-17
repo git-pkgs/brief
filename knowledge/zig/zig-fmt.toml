@@ -1,0 +1,15 @@
+[tool]
+name = "zig fmt"
+category = "format"
+default = true
+homepage = "https://ziglang.org/documentation/master/#zig-fmt"
+docs = "https://ziglang.org/documentation/master/#zig-fmt"
+description = "Built-in Zig code formatter"
+
+[detect]
+files = ["build.zig"]
+ecosystems = ["zig"]
+
+[commands]
+run = "zig fmt ."
+alternatives = ["zig fmt --check ."]

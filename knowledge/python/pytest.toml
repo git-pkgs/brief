@@ -1,6 +1,7 @@
 [tool]
 name = "pytest"
 category = "test"
+default = true
 homepage = "https://pytest.org"
 docs = "https://docs.pytest.org"
 repo = "https://github.com/pytest-dev/pytest"

@@ -1,0 +1,18 @@
+[tool]
+name = "Hspec"
+category = "test"
+default = true
+homepage = "https://hspec.github.io"
+docs = "https://hspec.github.io"
+repo = "https://github.com/hspec/hspec"
+description = "Testing framework for Haskell"
+
+[detect]
+files = ["test/"]
+ecosystems = ["haskell"]
+[detect.file_contains]
+"package.yaml" = ["hspec"]
+
+[commands]
+run = "cabal test"
+alternatives = ["stack test"]

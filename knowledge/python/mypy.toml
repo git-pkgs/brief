@@ -1,6 +1,7 @@
 [tool]
 name = "mypy"
 category = "typecheck"
+default = true
 homepage = "https://mypy-lang.org"
 docs = "https://mypy.readthedocs.io"
 repo = "https://github.com/python/mypy"

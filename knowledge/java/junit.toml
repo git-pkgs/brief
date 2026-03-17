@@ -1,6 +1,7 @@
 [tool]
 name = "JUnit"
 category = "test"
+default = true
 homepage = "https://junit.org"
 docs = "https://junit.org/junit5/docs/current/user-guide/"
 repo = "https://github.com/junit-team/junit5"

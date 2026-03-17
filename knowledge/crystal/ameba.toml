@@ -1,0 +1,20 @@
+[tool]
+name = "Ameba"
+category = "lint"
+default = true
+homepage = "https://github.com/crystal-ameba/ameba"
+docs = "https://github.com/crystal-ameba/ameba#readme"
+repo = "https://github.com/crystal-ameba/ameba"
+description = "Static code analysis for Crystal"
+
+[detect]
+files = [".ameba.yml"]
+ecosystems = ["crystal"]
+[detect.file_contains]
+"shard.yml" = ["ameba"]
+
+[commands]
+run = "bin/ameba"
+
+[config]
+files = [".ameba.yml"]

@@ -1,0 +1,15 @@
+[tool]
+name = "go test -cover"
+category = "coverage"
+default = true
+homepage = "https://go.dev/blog/cover"
+docs = "https://go.dev/doc/build-cover"
+description = "Built-in Go coverage profiling"
+
+[detect]
+files = ["go.mod"]
+ecosystems = ["go"]
+
+[commands]
+run = "go test -coverprofile=coverage.out ./..."
+alternatives = ["go tool cover -html=coverage.out"]

@@ -1,0 +1,25 @@
+[tool]
+name = "coverage.py"
+category = "coverage"
+default = true
+homepage = "https://coverage.readthedocs.io"
+docs = "https://coverage.readthedocs.io/en/latest/"
+repo = "https://github.com/nedbat/coveragepy"
+description = "Code coverage measurement for Python"
+
+[detect]
+files = [".coveragerc"]
+dependencies = ["coverage", "pytest-cov"]
+dev_dependencies = ["coverage", "pytest-cov"]
+[detect.file_contains]
+"pyproject.toml" = ["[tool.coverage"]
+"setup.cfg" = ["[coverage:"]
+
+ecosystems = ["python"]
+
+[commands]
+run = "coverage run -m pytest"
+alternatives = ["pytest --cov"]
+
+[config]
+files = [".coveragerc", "pyproject.toml", "setup.cfg"]

@@ -1,0 +1,18 @@
+[tool]
+name = "kotlin.test"
+category = "test"
+default = true
+homepage = "https://kotlinlang.org/api/latest/kotlin.test/"
+docs = "https://kotlinlang.org/docs/jvm-test-using-junit.html"
+description = "Kotlin test framework"
+
+[detect]
+files = ["src/test/"]
+ecosystems = ["kotlin"]
+[detect.file_contains]
+"build.gradle.kts" = ["kotlin(\"test\")", "kotlin-test"]
+"build.gradle" = ["kotlin-test"]
+
+[commands]
+run = "gradle test"
+alternatives = ["./gradlew test"]

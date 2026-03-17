@@ -27,6 +27,7 @@ type ToolInfo struct {
 	Docs        string `toml:"docs"`
 	Repo        string `toml:"repo"`
 	Description string `toml:"description"`
+	Default     bool   `toml:"default"` // preferred suggestion for this category in the ecosystem
 }
 
 // DetectInfo holds the detection primitives for a tool.

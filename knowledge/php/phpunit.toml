@@ -1,6 +1,7 @@
 [tool]
 name = "PHPUnit"
 category = "test"
+default = true
 homepage = "https://phpunit.de"
 docs = "https://docs.phpunit.de"
 repo = "https://github.com/sebastianbergmann/phpunit"

@@ -1,0 +1,19 @@
+[tool]
+name = "JaCoCo"
+category = "coverage"
+default = true
+homepage = "https://www.jacoco.org/jacoco/"
+docs = "https://www.jacoco.org/jacoco/trunk/doc/"
+repo = "https://github.com/jacoco/jacoco"
+description = "Java code coverage library"
+
+[detect]
+ecosystems = ["java"]
+[detect.file_contains]
+"pom.xml" = ["jacoco-maven-plugin"]
+"build.gradle" = ["jacoco"]
+"build.gradle.kts" = ["jacoco"]
+
+[commands]
+run = "mvn verify"
+alternatives = ["gradle jacocoTestReport"]

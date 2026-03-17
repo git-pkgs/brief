@@ -1,6 +1,7 @@
 [tool]
 name = "Prettier"
 category = "format"
+default = true
 homepage = "https://prettier.io"
 docs = "https://prettier.io/docs/en/"
 repo = "https://github.com/prettier/prettier"

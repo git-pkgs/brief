@@ -1,0 +1,17 @@
+[tool]
+name = "c8"
+category = "coverage"
+default = true
+homepage = "https://github.com/bcoe/c8"
+docs = "https://github.com/bcoe/c8#readme"
+repo = "https://github.com/bcoe/c8"
+description = "Native V8 code coverage"
+
+[detect]
+dependencies = ["c8"]
+dev_dependencies = ["c8", "nyc", "@istanbuljs/nyc-config-typescript"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx c8 npm test"
+alternatives = ["npx nyc npm test"]

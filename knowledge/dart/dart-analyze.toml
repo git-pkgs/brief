@@ -1,0 +1,18 @@
+[tool]
+name = "dart analyze"
+category = "lint"
+default = true
+homepage = "https://dart.dev/tools/dart-analyze"
+docs = "https://dart.dev/tools/analysis"
+description = "Built-in Dart static analyzer"
+
+[detect]
+files = ["pubspec.yaml"]
+ecosystems = ["dart"]
+
+[commands]
+run = "dart analyze"
+alternatives = ["flutter analyze"]
+
+[config]
+files = ["analysis_options.yaml"]

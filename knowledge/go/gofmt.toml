@@ -1,6 +1,7 @@
 [tool]
 name = "gofmt"
 category = "format"
+default = true
 homepage = "https://pkg.go.dev/cmd/gofmt"
 docs = "https://pkg.go.dev/cmd/gofmt"
 description = "Built-in Go code formatter"

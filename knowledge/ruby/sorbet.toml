@@ -1,6 +1,7 @@
 [tool]
 name = "Sorbet"
 category = "typecheck"
+default = true
 homepage = "https://sorbet.org"
 docs = "https://sorbet.org/docs/overview"
 repo = "https://github.com/sorbet/sorbet"

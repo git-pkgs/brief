@@ -1,6 +1,7 @@
 [tool]
 name = "Jekyll"
 category = "docs"
+default = true
 homepage = "https://jekyllrb.com"
 docs = "https://jekyllrb.com/docs/"
 repo = "https://github.com/jekyll/jekyll"

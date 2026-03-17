@@ -1,13 +1,14 @@
 [tool]
 name = "go test"
 category = "test"
+default = true
 homepage = "https://go.dev/doc/tutorial/add-a-test"
 docs = "https://pkg.go.dev/testing"
 repo = "https://github.com/golang/go"
 description = "Built-in Go test runner"
 
 [detect]
-files = ["*_test.go"]
+files = ["*_test.go", "**/*_test.go", "go.mod"]
 ecosystems = ["go"]
 
 [commands]

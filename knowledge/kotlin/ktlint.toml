@@ -1,6 +1,7 @@
 [tool]
 name = "ktlint"
 category = "format"
+default = true
 homepage = "https://pinterest.github.io/ktlint/"
 docs = "https://pinterest.github.io/ktlint/latest/"
 repo = "https://github.com/pinterest/ktlint"

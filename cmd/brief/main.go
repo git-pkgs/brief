@@ -36,6 +36,9 @@ func main() {
 		case "diff":
 			cmdDiff(os.Args[2:])
 			return
+		case "missing":
+			cmdMissing(os.Args[2:])
+			return
 		}
 	}
 

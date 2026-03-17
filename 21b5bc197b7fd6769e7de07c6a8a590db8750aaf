@@ -1,0 +1,35 @@
+cmd/brief/main.go
+  b581ed368b24a8dc 36-38
+brief.go
+  b581ed368b24a8dc 163-164
+README.md
+  b581ed368b24a8dc 15-16,19,43,99-112
+cmd/brief/diff.go
+  b581ed368b24a8dc 1-218
+detect/filter.go
+  b581ed368b24a8dc 1-254
+report/report.go
+  b581ed368b24a8dc 37-56
+detect/filter_test.go
+  b581ed368b24a8dc 1-160
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "21b5bc197b7fd6769e7de07c6a8a590db8750aaf",
+  "prompts": {
+    "b581ed368b24a8dc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "90dab1ee-bab8-47de-a2a5-cf1bb82f9886",
+        "model": "<synthetic>"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 686,
+      "total_deletions": 14,
+      "accepted_lines": 675,
+      "overriden_lines": 0
+    }
+  }
+}

@@ -34,7 +34,26 @@ func JSON(w io.Writer, r *brief.Report) error {
 
 // Human writes the report in human-readable format.
 func Human(w io.Writer, r *brief.Report, verbose bool) {
-	_, _ = fmt.Fprintf(w, "brief %s — %s\n\n", r.Version, sanitize(r.Path))
+	_, _ = fmt.Fprintf(w, "brief %s — %s\n", r.Version, sanitize(r.Path))
+
+	if r.DiffRef != "" {
+		_, _ = fmt.Fprintf(w, "diff %s  (%d files changed)\n", r.DiffRef, len(r.ChangedFiles))
+	}
+
+	_, _ = fmt.Fprintln(w)
+
+	// Changed files (in diff mode only)
+	if len(r.ChangedFiles) > 0 {
+		_, _ = fmt.Fprintf(w, "Changed:\n")
+		limit := min(len(r.ChangedFiles), 20)
+		for _, f := range r.ChangedFiles[:limit] {
+			_, _ = fmt.Fprintf(w, "  %s\n", sanitize(f))
+		}
+		if len(r.ChangedFiles) > 20 {
+			_, _ = fmt.Fprintf(w, "  ... and %d more\n", len(r.ChangedFiles)-20)
+		}
+		_, _ = fmt.Fprintln(w)
+	}
 
 	// Languages
 	if len(r.Languages) > 0 {

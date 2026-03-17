@@ -12,10 +12,11 @@ Add this to your `CLAUDE.md`, `agents.md`, or equivalent agent instructions file
 
 ```
 Before starting work on this project, run `brief .` to understand the toolchain,
-test commands, linters, and project conventions.
+test commands, linters, and project conventions. If on a branch, also run
+`brief diff` to see which parts of the toolchain are affected by your changes.
 ```
 
-The agent will get back structured information about the project's language, package manager, test runner, linter, formatter, build tools, and more, so it doesn't have to guess or ask you.
+The agent will get back structured information about the project's language, package manager, test runner, linter, formatter, build tools, and more, so it doesn't have to guess or ask you. On a feature branch, `brief diff` narrows that down to just the tools relevant to what's been changed, so the agent knows which linters to run, which test frameworks matter, and which config files are in play.
 
 To let Claude Code run `brief` without prompting for approval each time, add this to `~/.claude/settings.json`:
 
@@ -39,6 +40,7 @@ Or download a binary from [releases](https://github.com/git-pkgs/brief/releases)
 
 ```
 brief [flags] [path | url]        Detect project toolchain
+brief diff [flags] [ref1] [ref2]  Detect only what changed between refs
 brief enrich [flags] [path]       Detect and enrich with external data
 brief list tools                  All tools in the knowledge base
 brief list ecosystems             Supported ecosystems
@@ -93,6 +95,20 @@ Lines:       22912 code  191 files (scc)
 ```
 
 Use `--verbose` to include homepage, docs, and repo links for each detected tool.
+
+## Diff
+
+`brief diff` runs the same detection but filters the report to only show tools, languages, and configuration relevant to files that changed. Useful for understanding what a branch or PR touches in terms of toolchain.
+
+```
+brief diff                        Compare against default branch + uncommitted
+brief diff main                   Compare main to HEAD + uncommitted
+brief diff v1.0.0 v2.0.0         Compare between two refs
+```
+
+With no arguments it auto-detects the default branch from `origin/HEAD`, falling back to `main` or `master`. The output lists changed files and only the toolchain entries those files relate to: if you changed a `.go` file, you'll see Go and its tools but not Python. If you changed `.golangci.yml`, you'll see golangci-lint. If you changed `go.mod`, you'll see dependency information.
+
+Same output format as `brief` -- JSON when piped, human-readable on a TTY.
 
 ## Enrichment
 

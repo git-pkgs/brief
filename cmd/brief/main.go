@@ -33,6 +33,9 @@ func main() {
 		case "enrich":
 			cmdEnrich(os.Args[2:])
 			return
+		case "diff":
+			cmdDiff(os.Args[2:])
+			return
 		}
 	}
 

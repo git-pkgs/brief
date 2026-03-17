@@ -40,6 +40,7 @@ func FilterByChangedFiles(r *brief.Report, knowledgeBase *kb.KnowledgeBase, chan
 		Version:      r.Version,
 		Path:         r.Path,
 		DiffRef:      r.DiffRef,
+		DiffCommits:  r.DiffCommits,
 		ChangedFiles: r.ChangedFiles,
 		Tools:        make(map[string][]brief.Detection),
 		Git:          r.Git,

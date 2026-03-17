@@ -161,6 +161,7 @@ type Report struct {
 	Version         string                 `json:"version"`
 	Path            string                 `json:"path"`
 	DiffRef         string                 `json:"diff_ref,omitempty"`
+	DiffCommits     []string               `json:"diff_commits,omitempty"`
 	ChangedFiles    []string               `json:"changed_files,omitempty"`
 	Languages       []Detection            `json:"languages"`
 	PackageManagers []Detection            `json:"package_managers"`

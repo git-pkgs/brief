@@ -42,6 +42,19 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 
 	_, _ = fmt.Fprintln(w)
 
+	// Commits (in diff mode only)
+	if len(r.DiffCommits) > 0 {
+		_, _ = fmt.Fprintf(w, "Commits:\n")
+		limit := min(len(r.DiffCommits), 20)
+		for _, c := range r.DiffCommits[:limit] {
+			_, _ = fmt.Fprintf(w, "  %s\n", sanitize(c))
+		}
+		if len(r.DiffCommits) > 20 {
+			_, _ = fmt.Fprintf(w, "  ... and %d more\n", len(r.DiffCommits)-20)
+		}
+		_, _ = fmt.Fprintln(w)
+	}
+
 	// Changed files (in diff mode only)
 	if len(r.ChangedFiles) > 0 {
 		_, _ = fmt.Fprintf(w, "Changed:\n")

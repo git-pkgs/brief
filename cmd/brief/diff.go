@@ -74,6 +74,14 @@ func cmdDiff(args []string) {
 		os.Exit(1)
 	}
 
+	// Run detection and git log concurrently.
+	var commits []string
+	done := make(chan struct{})
+	go func() {
+		commits = gitCommitLog(root, ref1, ref2)
+		close(done)
+	}()
+
 	engine := detect.New(knowledgeBase, root)
 	r, err := engine.Run()
 	if err != nil {
@@ -81,7 +89,9 @@ func cmdDiff(args []string) {
 		os.Exit(1)
 	}
 
+	<-done
 	r.DiffRef = diffRef
+	r.DiffCommits = commits
 	r.ChangedFiles = changedFiles
 
 	r = detect.FilterByChangedFiles(r, knowledgeBase, changedFiles)
@@ -142,7 +152,7 @@ func gitChangedFiles(ctx context.Context, root, ref1, ref2 string, includeUncomm
 	var files []string
 
 	addFiles := func(output string) {
-		for _, f := range strings.Split(strings.TrimSpace(output), "\n") {
+		for f := range strings.SplitSeq(strings.TrimSpace(output), "\n") {
 			f = strings.TrimSpace(f)
 			if f != "" && !seen[f] {
 				seen[f] = true
@@ -215,4 +225,29 @@ func gitChangedFiles(ctx context.Context, root, ref1, ref2 string, includeUncomm
 	}
 
 	return files, nil
+}
+
+// gitCommitLog returns oneline commit summaries between two refs.
+func gitCommitLog(root, ref1, ref2 string) []string {
+	var args []string
+	if ref2 != "" {
+		args = []string{"log", "--oneline", ref1 + ".." + ref2}
+	} else {
+		args = []string{"log", "--oneline", ref1 + "..HEAD"}
+	}
+
+	cmd := exec.Command("git", args...)
+	cmd.Dir = root
+	out, err := cmd.Output()
+	if err != nil {
+		return nil
+	}
+
+	var commits []string
+	for line := range strings.SplitSeq(strings.TrimSpace(string(out)), "\n") {
+		if line != "" {
+			commits = append(commits, line)
+		}
+	}
+	return commits
 }

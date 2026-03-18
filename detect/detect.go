@@ -22,6 +22,16 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+const (
+	defaultScanDepth = 4      // max directory depth for language detection
+	microsPerMS      = 1000.0 // microseconds per millisecond
+	globSplitParts   = 2      // expected parts when splitting "**/" patterns
+
+	rankHigh   = 3
+	rankMedium = 2
+	rankLow    = 1
+)
+
 // Engine runs detection against a project directory.
 type Engine struct {
 	KB           *kb.KnowledgeBase
@@ -142,69 +152,11 @@ func (e *Engine) Run() (*brief.Report, error) {
 
 	report.Languages = e.detectCategory("language")
 	e.sortLanguagesByFileCount(report)
-
-	// Build set of detected ecosystems from language results to filter
-	// ecosystem-specific tools (prevents ExUnit matching in JS projects, etc.)
-	e.detectedEcosystems = make(map[string]bool)
-	for _, lang := range report.Languages {
-		for _, tool := range e.KB.Tools {
-			if tool.Tool.Name == lang.Name && tool.Tool.Category == "language" {
-				for _, eco := range tool.Detect.Ecosystems {
-					e.detectedEcosystems[eco] = true
-				}
-			}
-		}
-	}
+	e.buildEcosystemSet(report)
 
 	report.PackageManagers = e.detectCategory("package_manager")
 	report.Scripts = e.detectScripts()
-
-	// Build a map of script names to their commands for linking
-	scriptsByName := make(map[string]brief.Script)
-	for _, s := range report.Scripts {
-		scriptsByName[s.Name] = s
-	}
-
-	// Category names that map to common script names
-	categoryScriptNames := map[string][]string{
-		"test":      {"test", "spec"},
-		"lint":      {"lint", "check"},
-		"format":    {"format", "fmt"},
-		"typecheck": {"typecheck", "types", "type-check"},
-		"build":     {"build", "compile"},
-		"docs":      {"docs", "doc"},
-	}
-
-	for _, cat := range e.KB.Categories() {
-		if cat == "language" || cat == "package_manager" {
-			continue
-		}
-		detections := e.detectCategory(cat)
-		if len(detections) == 0 {
-			continue
-		}
-
-		// Link project scripts to detected tools
-		if scriptNames, ok := categoryScriptNames[cat]; ok {
-			for _, sn := range scriptNames {
-				script, exists := scriptsByName[sn]
-				if !exists {
-					continue
-				}
-				// Override the first tool's command with the project script
-				if detections[0].Command != nil {
-					detections[0].Command = &brief.Command{
-						Run:          script.Run,
-						Source:       brief.SourceProjectScript,
-						InferredTool: detections[0].Name,
-					}
-				}
-				break
-			}
-		}
-
-		report.Tools[cat] = detections
-	}
+	e.detectTools(report)
 
 	report.Style = e.detectStyle()
 	report.Layout = e.detectLayout()
@@ -212,15 +164,17 @@ func (e *Engine) Run() (*brief.Report, error) {
 
 	// Run slow detections concurrently.
 	var wg sync.WaitGroup
-	wg.Add(3)
+	wg.Add(1)
 	go func() {
 		defer wg.Done()
 		report.Resources = e.detectResources()
 	}()
+	wg.Add(1)
 	go func() {
 		defer wg.Done()
 		report.Git = e.detectGit(abs)
 	}()
+	wg.Add(1)
 	go func() {
 		defer wg.Done()
 		report.Lines = e.detectLineCount(abs)
@@ -234,13 +188,80 @@ func (e *Engine) Run() (*brief.Report, error) {
 	elapsed := time.Since(start)
 	report.Stats = brief.Stats{
 		Duration:     elapsed,
-		DurationMS:   float64(elapsed.Microseconds()) / 1000.0,
+		DurationMS:   float64(elapsed.Microseconds()) / microsPerMS,
 		FilesChecked: e.filesChecked,
 		ToolsMatched: e.toolsMatched,
 		ToolsChecked: e.toolsChecked,
 	}
 
 	return report, nil
+}
+
+// buildEcosystemSet populates detectedEcosystems from language results to filter
+// ecosystem-specific tools (prevents ExUnit matching in JS projects, etc.)
+func (e *Engine) buildEcosystemSet(report *brief.Report) {
+	e.detectedEcosystems = make(map[string]bool)
+	for _, lang := range report.Languages {
+		for _, tool := range e.KB.Tools {
+			if tool.Tool.Name == lang.Name && tool.Tool.Category == "language" {
+				for _, eco := range tool.Detect.Ecosystems {
+					e.detectedEcosystems[eco] = true
+				}
+			}
+		}
+	}
+}
+
+// categoryScriptNames maps tool categories to common script names.
+var categoryScriptNames = map[string][]string{
+	"test":      {"test", "spec"},
+	"lint":      {"lint", "check"},
+	"format":    {"format", "fmt"},
+	"typecheck": {"typecheck", "types", "type-check"},
+	"build":     {"build", "compile"},
+	"docs":      {"docs", "doc"},
+}
+
+// detectTools detects all tool categories and links project scripts.
+func (e *Engine) detectTools(report *brief.Report) {
+	scriptsByName := make(map[string]brief.Script)
+	for _, s := range report.Scripts {
+		scriptsByName[s.Name] = s
+	}
+
+	for _, cat := range e.KB.Categories() {
+		if cat == "language" || cat == "package_manager" {
+			continue
+		}
+		detections := e.detectCategory(cat)
+		if len(detections) == 0 {
+			continue
+		}
+		linkScriptToTool(detections, cat, scriptsByName)
+		report.Tools[cat] = detections
+	}
+}
+
+// linkScriptToTool overrides a tool's command with a matching project script.
+func linkScriptToTool(detections []brief.Detection, cat string, scriptsByName map[string]brief.Script) {
+	scriptNames, ok := categoryScriptNames[cat]
+	if !ok {
+		return
+	}
+	for _, sn := range scriptNames {
+		script, exists := scriptsByName[sn]
+		if !exists {
+			continue
+		}
+		if detections[0].Command != nil {
+			detections[0].Command = &brief.Command{
+				Run:          script.Run,
+				Source:       brief.SourceProjectScript,
+				InferredTool: detections[0].Name,
+			}
+		}
+		break
+	}
 }
 
 // detectCategory finds all tools in a given category that match the project.
@@ -368,8 +389,8 @@ func (e *Engine) exists(pattern string) bool {
 // recursiveGlob handles ** patterns by checking against the cached file extension set.
 // Falls back to a bounded walk if the cache isn't populated.
 func (e *Engine) recursiveGlob(pattern string) bool {
-	parts := strings.SplitN(pattern, "**/", 2)
-	if len(parts) != 2 {
+	parts := strings.SplitN(pattern, "**/", globSplitParts)
+	if len(parts) != globSplitParts {
 		return false
 	}
 	suffix := parts[1] // e.g. "*.py"
@@ -416,7 +437,7 @@ func (e *Engine) loadFileExts() {
 	e.fileExts = make(map[string]int)
 	maxDepth := e.ScanDepth
 	if maxDepth == 0 {
-		maxDepth = 4
+		maxDepth = defaultScanDepth
 	}
 	rootLen := len(e.Root)
 	_ = filepath.Walk(e.Root, func(path string, info os.FileInfo, err error) error {
@@ -533,14 +554,14 @@ func (e *Engine) loadDeps() {
 			if !dep.Direct && !isResolved {
 				continue
 			}
-			scope := "runtime"
+			scope := brief.ScopeRuntime
 			switch dep.Scope {
 			case manifests.Development:
-				scope = "development"
+				scope = brief.ScopeDevelopment
 			case manifests.Test:
-				scope = "test"
+				scope = brief.ScopeTest
 			case manifests.Build:
-				scope = "build"
+				scope = brief.ScopeBuild
 			}
 			e.parsedDeps = append(e.parsedDeps, brief.DepInfo{
 				Name:    dep.Name,
@@ -779,6 +800,57 @@ func (e *Engine) detectStyle() *brief.StyleInfo {
 	return style
 }
 
+// styleCounts tracks indentation and line ending counts during sampling.
+type styleCounts struct {
+	tabs, spaces2, spaces4 int
+	lf, crlf               int
+	sampled                int
+}
+
+func (sc *styleCounts) addFile(data []byte) {
+	sc.sampled++
+	content := string(data)
+	for _, line := range strings.Split(content, "\n") {
+		if len(line) == 0 {
+			continue
+		}
+		switch {
+		case line[0] == '\t':
+			sc.tabs++
+		case strings.HasPrefix(line, "    "):
+			sc.spaces4++
+		case strings.HasPrefix(line, "  ") && !strings.HasPrefix(line, "   "):
+			sc.spaces2++
+		}
+	}
+	if strings.Contains(content, "\r\n") {
+		sc.crlf++
+	} else {
+		sc.lf++
+	}
+}
+
+func (sc *styleCounts) toStyleInfo() *brief.StyleInfo {
+	if sc.sampled == 0 {
+		return nil
+	}
+	style := &brief.StyleInfo{IndentSource: "inferred"}
+	switch {
+	case sc.tabs > sc.spaces2 && sc.tabs > sc.spaces4:
+		style.Indentation = "tabs"
+	case sc.spaces2 > sc.spaces4:
+		style.Indentation = "2-space"
+	case sc.spaces4 > 0:
+		style.Indentation = "4-space"
+	}
+	if sc.crlf > sc.lf {
+		style.LineEnding = "CRLF"
+	} else if sc.lf > 0 {
+		style.LineEnding = "LF"
+	}
+	return style
+}
+
 // inferStyle samples source files to detect indentation style.
 func (e *Engine) inferStyle() *brief.StyleInfo {
 	if e.KB.StyleConfig == nil {
@@ -790,90 +862,39 @@ func (e *Engine) inferStyle() *brief.StyleInfo {
 		limit = 10
 	}
 
-	tabs, spaces2, spaces4 := 0, 0, 0
-	lf, crlf := 0, 0
-	sampled := 0
-
 	exts := make(map[string]bool, len(e.KB.StyleConfig.Style.SampleExts))
 	for _, ext := range e.KB.StyleConfig.Style.SampleExts {
 		exts[ext] = true
 	}
 
+	var sc styleCounts
 	errDone := errors.New("done")
 	_ = filepath.Walk(e.Root, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return nil
 		}
 		if info.IsDir() {
-			// Skip hidden and vendor directories
 			name := info.Name()
 			if name != "." && e.shouldSkipDir(name) {
 				return filepath.SkipDir
 			}
 			return nil
 		}
-		if sampled >= limit {
+		if sc.sampled >= limit {
 			return errDone
 		}
-
-		ext := filepath.Ext(path)
-		if !exts[ext] {
+		if !exts[filepath.Ext(path)] {
 			return nil
 		}
-
 		data, err := os.ReadFile(path)
 		if err != nil {
 			return nil
 		}
-
-		sampled++
-		content := string(data)
-		lines := strings.Split(content, "\n")
-
-		for _, line := range lines {
-			if len(line) == 0 {
-				continue
-			}
-			if line[0] == '\t' {
-				tabs++
-			} else if strings.HasPrefix(line, "    ") {
-				spaces4++
-			} else if strings.HasPrefix(line, "  ") && !strings.HasPrefix(line, "   ") {
-				spaces2++
-			}
-		}
-
-		if strings.Contains(content, "\r\n") {
-			crlf++
-		} else {
-			lf++
-		}
-
+		sc.addFile(data)
 		return nil
 	})
 
-	if sampled == 0 {
-		return nil
-	}
-
-	style := &brief.StyleInfo{IndentSource: "inferred"}
-
-	switch {
-	case tabs > spaces2 && tabs > spaces4:
-		style.Indentation = "tabs"
-	case spaces2 > spaces4:
-		style.Indentation = "2-space"
-	case spaces4 > 0:
-		style.Indentation = "4-space"
-	}
-
-	if crlf > lf {
-		style.LineEnding = "CRLF"
-	} else if lf > 0 {
-		style.LineEnding = "LF"
-	}
-
-	return style
+	return sc.toStyleInfo()
 }
 
 // detectLayout checks for source and test directory patterns from the knowledge base.
@@ -985,65 +1006,72 @@ func (e *Engine) parseCIMatrices(platforms *brief.PlatformInfo) {
 		if err != nil {
 			continue
 		}
-
 		for _, path := range matches {
-			rel, err := filepath.Rel(e.Root, path)
-			if err != nil {
-				continue
-			}
-			data, err := e.safeReadFile(rel)
-			if err != nil {
-				continue
-			}
+			e.parseCIWorkflow(path, ci.MatrixKeys, platforms)
+		}
+	}
+}
 
-			var workflow map[string]any
-			if err := yaml.Unmarshal(data, &workflow); err != nil {
-				continue
-			}
+func (e *Engine) parseCIWorkflow(path string, matrixKeys map[string]string, platforms *brief.PlatformInfo) {
+	rel, err := filepath.Rel(e.Root, path)
+	if err != nil {
+		return
+	}
+	data, err := e.safeReadFile(rel)
+	if err != nil {
+		return
+	}
 
-			jobs, ok := workflow["jobs"].(map[string]any)
+	var workflow map[string]any
+	if err := yaml.Unmarshal(data, &workflow); err != nil {
+		return
+	}
+
+	jobs, ok := workflow["jobs"].(map[string]any)
+	if !ok {
+		return
+	}
+
+	for _, job := range jobs {
+		matrix := extractJobMatrix(job)
+		if matrix == nil {
+			continue
+		}
+		for ourKey, ciKey := range matrixKeys {
+			values, ok := matrix[ciKey]
 			if !ok {
 				continue
 			}
-
-			for _, job := range jobs {
-				jobMap, ok := job.(map[string]any)
-				if !ok {
-					continue
-				}
-
-				strategy, ok := jobMap["strategy"].(map[string]any)
-				if !ok {
-					continue
-				}
-
-				matrix, ok := strategy["matrix"].(map[string]any)
-				if !ok {
-					continue
-				}
-
-				for ourKey, ciKey := range ci.MatrixKeys {
-					values, ok := matrix[ciKey]
-					if !ok {
-						continue
-					}
-
-					versions := toStringSlice(values)
-					if len(versions) == 0 {
-						continue
-					}
-
-					if ourKey == "os" {
-						platforms.CIMatrixOS = append(platforms.CIMatrixOS, versions...)
-					} else {
-						platforms.CIMatrixVersions[ourKey] = append(
-							platforms.CIMatrixVersions[ourKey], versions...,
-						)
-					}
-				}
+			versions := toStringSlice(values)
+			if len(versions) == 0 {
+				continue
+			}
+			if ourKey == "os" {
+				platforms.CIMatrixOS = append(platforms.CIMatrixOS, versions...)
+			} else {
+				platforms.CIMatrixVersions[ourKey] = append(
+					platforms.CIMatrixVersions[ourKey], versions...,
+				)
 			}
 		}
 	}
+}
+
+// extractJobMatrix pulls the strategy.matrix map from a job definition.
+func extractJobMatrix(job any) map[string]any {
+	jobMap, ok := job.(map[string]any)
+	if !ok {
+		return nil
+	}
+	strategy, ok := jobMap["strategy"].(map[string]any)
+	if !ok {
+		return nil
+	}
+	matrix, ok := strategy["matrix"].(map[string]any)
+	if !ok {
+		return nil
+	}
+	return matrix
 }
 
 // toStringSlice converts a YAML value (string or []any) to []string.
@@ -1090,8 +1118,7 @@ func (e *Engine) detectGit(absPath string) *brief.GitInfo {
 	var wg sync.WaitGroup
 	var mu sync.Mutex
 
-	wg.Add(4)
-
+	wg.Add(1)
 	go func() {
 		defer wg.Done()
 		if out, err := e.git(absPath, "branch", "--show-current"); err == nil {
@@ -1101,6 +1128,7 @@ func (e *Engine) detectGit(absPath string) *brief.GitInfo {
 		}
 	}()
 
+	wg.Add(1)
 	go func() {
 		defer wg.Done()
 		if out, err := e.git(absPath, "rev-parse", "--abbrev-ref", "origin/HEAD"); err == nil {
@@ -1113,6 +1141,7 @@ func (e *Engine) detectGit(absPath string) *brief.GitInfo {
 		}
 	}()
 
+	wg.Add(1)
 	go func() {
 		defer wg.Done()
 		if out, err := e.git(absPath, "remote"); err == nil {
@@ -1126,6 +1155,7 @@ func (e *Engine) detectGit(absPath string) *brief.GitInfo {
 		}
 	}()
 
+	wg.Add(1)
 	go func() {
 		defer wg.Done()
 		if out, err := e.git(absPath, "rev-list", "--count", "HEAD"); err == nil {
@@ -1335,15 +1365,12 @@ func (e *Engine) Missing(r *brief.Report) *brief.MissingReport {
 	return mr
 }
 
+var confidenceRank = map[brief.Confidence]int{
+	brief.ConfidenceHigh:   rankHigh,
+	brief.ConfidenceMedium: rankMedium,
+	brief.ConfidenceLow:    rankLow,
+}
+
 func rank(c brief.Confidence) int {
-	switch c {
-	case brief.ConfidenceHigh:
-		return 3
-	case brief.ConfidenceMedium:
-		return 2
-	case brief.ConfidenceLow:
-		return 1
-	default:
-		return 0
-	}
+	return confidenceRank[c]
 }

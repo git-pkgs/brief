@@ -47,37 +47,43 @@ func cmdEnrich(args []string) {
 		_, _ = fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)
 	}
-	defer src.Cleanup()
 
+	code := runEnrich(src.Dir, *scanDepth, *skip, *jsonFlag, *humanFlag, *verbose)
+	src.Cleanup()
+	os.Exit(code)
+}
+
+func runEnrich(dir string, scanDepth int, skip string, jsonFlag, humanFlag, verbose bool) int {
 	knowledgeBase, err := kb.Load(brief.KnowledgeFS)
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "error loading knowledge base: %v\n", err)
-		os.Exit(1)
+		return 1
 	}
 
-	engine := detect.New(knowledgeBase, src.Dir)
-	engine.ScanDepth = *scanDepth
-	if *skip != "" {
-		engine.SkipDirs = strings.Split(*skip, ",")
+	engine := detect.New(knowledgeBase, dir)
+	engine.ScanDepth = scanDepth
+	if skip != "" {
+		engine.SkipDirs = strings.Split(skip, ",")
 	}
 	r, err := engine.Run()
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "error: %v\n", err)
-		os.Exit(1)
+		return 1
 	}
 
 	ctx := context.Background()
-	r.Enrichment = enrich(ctx, r, src.Dir)
+	r.Enrichment = enrich(ctx, r, dir)
 
-	useJSON := *jsonFlag || (!*humanFlag && !isTTY())
+	useJSON := jsonFlag || (!humanFlag && !isTTY())
 	if useJSON {
 		if err := report.JSON(os.Stdout, r); err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "error writing JSON: %v\n", err)
-			os.Exit(1)
+			return 1
 		}
 	} else {
-		report.Human(os.Stdout, r, *verbose)
+		report.Human(os.Stdout, r, verbose)
 	}
+	return 0
 }
 
 func enrich(ctx context.Context, r *brief.Report, root string) *brief.EnrichmentInfo {
@@ -87,7 +93,7 @@ func enrich(ctx context.Context, r *brief.Report, root string) *brief.Enrichment
 	var mu sync.Mutex
 
 	// Published packages
-	purls := detectPublishedPURLs(root, r)
+	purls := detectPublishedPURLs(root)
 	if len(purls) > 0 {
 		wg.Add(1)
 		go func() {
@@ -124,7 +130,7 @@ func enrich(ctx context.Context, r *brief.Report, root string) *brief.Enrichment
 
 // detectPublishedPURLs figures out what packages this repo publishes by
 // reading the project's own identity from manifest files.
-func detectPublishedPURLs(root string, r *brief.Report) []string {
+func detectPublishedPURLs(root string) []string {
 	var purls []string
 
 	// Go module
@@ -207,7 +213,7 @@ func pythonPackagePURL(root string) string {
 		for _, line := range strings.Split(string(data), "\n") {
 			line = strings.TrimSpace(line)
 			if strings.HasPrefix(line, "name") && strings.Contains(line, "=") {
-				parts := strings.SplitN(line, "=", 2)
+				parts := strings.SplitN(line, "=", 2) //nolint:mnd // key=value split
 				name := strings.TrimSpace(parts[1])
 				if name != "" {
 					return "pkg:pypi/" + name
@@ -424,8 +430,8 @@ func productFromFile(file string) string {
 
 func majorMinor(version string) string {
 	version = strings.TrimSpace(version)
-	parts := strings.SplitN(version, ".", 3)
-	if len(parts) < 2 {
+	parts := strings.SplitN(version, ".", 3) //nolint:mnd // major.minor.patch
+	if len(parts) < 2 {                      //nolint:mnd // need at least major.minor
 		return version
 	}
 	return parts[0] + "." + parts[1]

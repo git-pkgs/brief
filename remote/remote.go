@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"strings"
 
 	forges "github.com/git-pkgs/forge"
@@ -56,8 +55,9 @@ func Resolve(ctx context.Context, source string, opts Options) (*Source, error) 
 
 // parseRegistryShorthand checks if the source looks like "npm:lodash" or "gem:rails".
 func parseRegistryShorthand(source string) (ecosystem, name string, ok bool) {
-	parts := strings.SplitN(source, ":", 2)
-	if len(parts) != 2 {
+	const splitParts = 2
+	parts := strings.SplitN(source, ":", splitParts)
+	if len(parts) != splitParts {
 		return "", "", false
 	}
 	prefix := parts[0]
@@ -157,9 +157,4 @@ func cloneURL(ctx context.Context, url, name string, opts Options) (*Source, err
 	}
 
 	return &Source{Dir: dir, Cleanup: cleanup, Origin: url}, nil
-}
-
-// TempDir returns the path to the temporary directory, useful for --keep output.
-func (s *Source) TempDir() string {
-	return filepath.Clean(s.Dir)
 }

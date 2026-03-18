@@ -48,7 +48,7 @@ func cmdDiff(args []string) {
 		ref1 = fs.Arg(0)
 		includeUncommitted = true
 		diffRef = ref1 + " (+ uncommitted)"
-	case 2:
+	case 2: //nolint:mnd // two refs
 		ref1 = fs.Arg(0)
 		ref2 = fs.Arg(1)
 		diffRef = ref1 + ".." + ref2

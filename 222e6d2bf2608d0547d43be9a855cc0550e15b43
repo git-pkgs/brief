@@ -1,0 +1,35 @@
+cmd/brief/enrich.go
+  506060b7e9cabaa9 28,52,57,78-81,86
+report/report.go
+  506060b7e9cabaa9 135-136,327,332-333,384-459
+cmd/brief/main.go
+  506060b7e9cabaa9 52,84,89,111-114,119
+cmd/brief/diff.go
+  506060b7e9cabaa9 22,104-107,112
+report/markdown_test.go
+  506060b7e9cabaa9 1-270
+cmd/brief/missing.go
+  506060b7e9cabaa9 19,48-51,56
+report/markdown.go
+  506060b7e9cabaa9 1-358
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.15",
+  "base_commit_sha": "222e6d2bf2608d0547d43be9a855cc0550e15b43",
+  "prompts": {
+    "506060b7e9cabaa9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "18888212-9a4a-48cc-b02f-a8daf1766ebf",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 866,
+      "total_deletions": 209,
+      "accepted_lines": 737,
+      "overriden_lines": 0
+    }
+  }
+}

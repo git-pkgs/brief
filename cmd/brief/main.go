@@ -45,6 +45,9 @@ func main() {
 		case "missing":
 			cmdMissing(os.Args[2:])
 			return
+		case "ai":
+			cmdAI(os.Args[2:])
+			return
 		}
 	}
 

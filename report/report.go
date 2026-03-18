@@ -32,6 +32,33 @@ func JSON(w io.Writer, r *brief.Report) error {
 	return enc.Encode(r)
 }
 
+const maxDisplayItems = 20 // max items to show before truncating
+
+// categoryOrder defines the stable display order for tool categories.
+var categoryOrder = []string{"test", "lint", "format", "typecheck", "docs", "build", "codegen", "database", "security", "ci", "container", "infrastructure", "monorepo", "environment", "i18n", "release", "coverage", "dependency_bot"}
+
+// categoryLabels maps category keys to human-readable labels.
+var categoryLabels = map[string]string{
+	"test":           "Test",
+	"lint":           "Lint",
+	"format":         "Format",
+	"typecheck":      "Typecheck",
+	"docs":           "Docs",
+	"build":          "Build",
+	"codegen":        "Codegen",
+	"database":       "Database",
+	"security":       "Security",
+	"ci":             "CI",
+	"container":      "Container",
+	"infrastructure": "Infra",
+	"monorepo":       "Monorepo",
+	"environment":    "Environment",
+	"i18n":           "i18n",
+	"release":        "Release",
+	"coverage":       "Coverage",
+	"dependency_bot": "Dep Updates",
+}
+
 // Human writes the report in human-readable format.
 func Human(w io.Writer, r *brief.Report, verbose bool) {
 	_, _ = fmt.Fprintf(w, "brief %s — %s\n", r.Version, sanitize(r.Path))
@@ -42,44 +69,57 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 
 	_, _ = fmt.Fprintln(w)
 
-	// Commits (in diff mode only)
-	if len(r.DiffCommits) > 0 {
-		_, _ = fmt.Fprintf(w, "Commits:\n")
-		limit := min(len(r.DiffCommits), 20)
-		for _, c := range r.DiffCommits[:limit] {
-			_, _ = fmt.Fprintf(w, "  %s\n", sanitize(c))
-		}
-		if len(r.DiffCommits) > 20 {
-			_, _ = fmt.Fprintf(w, "  ... and %d more\n", len(r.DiffCommits)-20)
-		}
-		_, _ = fmt.Fprintln(w)
-	}
+	printTruncatedList(w, "Commits:", r.DiffCommits)
+	printTruncatedList(w, "Changed:", r.ChangedFiles)
+	printLanguages(w, r.Languages)
+	printPackageManagers(w, r.PackageManagers)
+	printDependencySummary(w, r.Dependencies)
+	printScripts(w, r.Scripts)
 
-	// Changed files (in diff mode only)
-	if len(r.ChangedFiles) > 0 {
-		_, _ = fmt.Fprintf(w, "Changed:\n")
-		limit := min(len(r.ChangedFiles), 20)
-		for _, f := range r.ChangedFiles[:limit] {
-			_, _ = fmt.Fprintf(w, "  %s\n", sanitize(f))
-		}
-		if len(r.ChangedFiles) > 20 {
-			_, _ = fmt.Fprintf(w, "  ... and %d more\n", len(r.ChangedFiles)-20)
-		}
-		_, _ = fmt.Fprintln(w)
-	}
+	_, _ = fmt.Fprintln(w)
 
-	// Languages
-	if len(r.Languages) > 0 {
-		names := detectionNames(r.Languages)
-		if len(names) == 1 {
-			_, _ = fmt.Fprintf(w, "Language:        %s\n", names[0])
-		} else {
-			_, _ = fmt.Fprintf(w, "Language:        %s (also: %s)\n", names[0], strings.Join(names[1:], ", "))
-		}
-	}
+	printTools(w, r.Tools, verbose)
+	printStyle(w, r.Style)
+	printLayout(w, r.Layout)
+	printPlatforms(w, r.Platforms)
+	printResources(w, r.Resources)
+	printGit(w, r.Git)
+	printLines(w, r.Lines)
+	printEnrichment(w, r.Enrichment)
 
-	// Package managers
-	for _, pm := range r.PackageManagers {
+	_, _ = fmt.Fprintf(w, "\n%.1fms  %d files checked  %d/%d tools matched\n",
+		r.Stats.DurationMS, r.Stats.FilesChecked, r.Stats.ToolsMatched, r.Stats.ToolsChecked)
+}
+
+func printTruncatedList(w io.Writer, header string, items []string) {
+	if len(items) == 0 {
+		return
+	}
+	_, _ = fmt.Fprintf(w, "%s\n", header)
+	limit := min(len(items), maxDisplayItems)
+	for _, item := range items[:limit] {
+		_, _ = fmt.Fprintf(w, "  %s\n", sanitize(item))
+	}
+	if len(items) > maxDisplayItems {
+		_, _ = fmt.Fprintf(w, "  ... and %d more\n", len(items)-maxDisplayItems)
+	}
+	_, _ = fmt.Fprintln(w)
+}
+
+func printLanguages(w io.Writer, languages []brief.Detection) {
+	if len(languages) == 0 {
+		return
+	}
+	names := detectionNames(languages)
+	if len(names) == 1 {
+		_, _ = fmt.Fprintf(w, "Language:        %s\n", names[0])
+	} else {
+		_, _ = fmt.Fprintf(w, "Language:        %s (also: %s)\n", names[0], strings.Join(names[1:], ", "))
+	}
+}
+
+func printPackageManagers(w io.Writer, managers []brief.Detection) {
+	for _, pm := range managers {
 		line := pm.Name
 		if pm.Command != nil {
 			line += " (" + pm.Command.Run + ")"
@@ -89,127 +129,86 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 			_, _ = fmt.Fprintf(w, "                 Lockfile: %s\n", pm.Lockfile)
 		}
 	}
+}
 
-	// Dependencies (exclude CI actions from counts)
-	if len(r.Dependencies) > 0 {
-		directRuntime, directDev, totalRuntime, totalDev := 0, 0, 0, 0
-		for _, d := range r.Dependencies {
-			if strings.HasPrefix(d.PURL, "pkg:githubactions/") || strings.HasPrefix(d.PURL, "pkg:docker/") {
-				continue
-			}
-			isDev := d.Scope == "development" || d.Scope == "test" || d.Scope == "build"
-			if isDev {
-				totalDev++
-				if d.Direct {
-					directDev++
-				}
-			} else {
-				totalRuntime++
-				if d.Direct {
-					directRuntime++
-				}
-			}
+func printDependencySummary(w io.Writer, deps []brief.DepInfo) {
+	if len(deps) == 0 {
+		return
+	}
+	directRuntime, directDev, totalRuntime, totalDev := 0, 0, 0, 0
+	for _, d := range deps {
+		if strings.HasPrefix(d.PURL, "pkg:githubactions/") || strings.HasPrefix(d.PURL, "pkg:docker/") {
+			continue
 		}
-		var parts []string
-		if directRuntime > 0 {
-			s := fmt.Sprintf("%d runtime", directRuntime)
-			if transitive := totalRuntime - directRuntime; transitive > 0 {
-				s += fmt.Sprintf(" (%d total)", totalRuntime)
+		isDev := d.Scope == brief.ScopeDevelopment || d.Scope == brief.ScopeTest || d.Scope == brief.ScopeBuild
+		if isDev {
+			totalDev++
+			if d.Direct {
+				directDev++
 			}
-			parts = append(parts, s)
-		}
-		if directDev > 0 {
-			s := fmt.Sprintf("%d dev", directDev)
-			if transitive := totalDev - directDev; transitive > 0 {
-				s += fmt.Sprintf(" (%d total)", totalDev)
+		} else {
+			totalRuntime++
+			if d.Direct {
+				directRuntime++
 			}
-			parts = append(parts, s)
-		}
-		if len(parts) > 0 {
-			_, _ = fmt.Fprintf(w, "                 %s\n", strings.Join(parts, ", "))
 		}
 	}
-
-	// Scripts
-	if len(r.Scripts) > 0 {
-		_, _ = fmt.Fprintln(w)
-		source := r.Scripts[0].Source
-		_, _ = fmt.Fprintf(w, "Scripts (%s):\n", source)
-		for _, s := range r.Scripts {
-			if s.Source != source {
-				_, _ = fmt.Fprintf(w, "\nScripts (%s):\n", s.Source)
-				source = s.Source
-			}
-			_, _ = fmt.Fprintf(w, "  %-8s %s\n", sanitize(s.Name)+":", sanitize(s.Run))
+	var parts []string
+	if directRuntime > 0 {
+		s := fmt.Sprintf("%d runtime", directRuntime)
+		if transitive := totalRuntime - directRuntime; transitive > 0 {
+			s += fmt.Sprintf(" (%d total)", totalRuntime)
 		}
+		parts = append(parts, s)
 	}
+	if directDev > 0 {
+		s := fmt.Sprintf("%d dev", directDev)
+		if transitive := totalDev - directDev; transitive > 0 {
+			s += fmt.Sprintf(" (%d total)", totalDev)
+		}
+		parts = append(parts, s)
+	}
+	if len(parts) > 0 {
+		_, _ = fmt.Fprintf(w, "                 %s\n", strings.Join(parts, ", "))
+	}
+}
 
+func printScripts(w io.Writer, scripts []brief.Script) {
+	if len(scripts) == 0 {
+		return
+	}
 	_, _ = fmt.Fprintln(w)
-
-	// Tool categories in a stable order
-	categoryOrder := []string{"test", "lint", "format", "typecheck", "docs", "build", "codegen", "database", "security", "ci", "container", "infrastructure", "monorepo", "environment", "i18n", "release", "coverage", "dependency_bot"}
-	categoryLabels := map[string]string{
-		"test":           "Test",
-		"lint":           "Lint",
-		"format":         "Format",
-		"typecheck":      "Typecheck",
-		"docs":           "Docs",
-		"build":          "Build",
-		"codegen":        "Codegen",
-		"database":       "Database",
-		"security":       "Security",
-		"ci":             "CI",
-		"container":      "Container",
-		"infrastructure": "Infra",
-		"monorepo":       "Monorepo",
-		"environment":    "Environment",
-		"i18n":           "i18n",
-		"release":        "Release",
-		"coverage":       "Coverage",
-		"dependency_bot": "Dep Updates",
+	source := scripts[0].Source
+	_, _ = fmt.Fprintf(w, "Scripts (%s):\n", source)
+	for _, s := range scripts {
+		if s.Source != source {
+			_, _ = fmt.Fprintf(w, "\nScripts (%s):\n", s.Source)
+			source = s.Source
+		}
+		_, _ = fmt.Fprintf(w, "  %-8s %s\n", sanitize(s.Name)+":", sanitize(s.Run))
 	}
+}
 
+func printTools(w io.Writer, tools map[string][]brief.Detection, verbose bool) {
 	for _, cat := range categoryOrder {
 		label := categoryLabels[cat]
 		if label == "" {
 			label = cat
 		}
-		tools, ok := r.Tools[cat]
+		dets, ok := tools[cat]
 		if !ok {
 			continue
 		}
-		for i, t := range tools {
-			prefix := label + ":"
-			if i > 0 {
-				prefix = ""
-			}
-			line := t.Name
-			if t.Command != nil {
-				line += " (" + sanitize(t.Command.Run) + ")"
-			}
-			if len(t.ConfigFiles) > 0 {
-				line += "  [" + sanitize(strings.Join(t.ConfigFiles, ", ")) + "]"
-			}
-			_, _ = fmt.Fprintf(w, "%-13s%s\n", prefix, line)
-
-			if verbose {
-				if t.Homepage != "" {
-					_, _ = fmt.Fprintf(w, "              homepage: %s\n", t.Homepage)
-				}
-				if t.Docs != "" {
-					_, _ = fmt.Fprintf(w, "              docs:     %s\n", t.Docs)
-				}
-			}
-		}
+		printToolCategory(w, label, dets, verbose)
 	}
 
 	// Print any categories not in the fixed order
-	for cat, tools := range r.Tools {
+	for cat, dets := range tools {
 		if categoryLabels[cat] != "" {
 			continue
 		}
 		_, _ = fmt.Fprintln(w)
-		for _, t := range tools {
+		for _, t := range dets {
 			line := t.Name
 			if t.Command != nil {
 				line += " (" + t.Command.Run + ")"
@@ -217,148 +216,179 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 			_, _ = fmt.Fprintf(w, "%-13s%s\n", cat+":", line)
 		}
 	}
+}
 
-	// Style
-	if r.Style != nil {
+func printToolCategory(w io.Writer, label string, tools []brief.Detection, verbose bool) {
+	for i, t := range tools {
+		prefix := label + ":"
+		if i > 0 {
+			prefix = ""
+		}
+		line := t.Name
+		if t.Command != nil {
+			line += " (" + sanitize(t.Command.Run) + ")"
+		}
+		if len(t.ConfigFiles) > 0 {
+			line += "  [" + sanitize(strings.Join(t.ConfigFiles, ", ")) + "]"
+		}
+		_, _ = fmt.Fprintf(w, "%-13s%s\n", prefix, line)
+
+		if verbose {
+			if t.Homepage != "" {
+				_, _ = fmt.Fprintf(w, "              homepage: %s\n", t.Homepage)
+			}
+			if t.Docs != "" {
+				_, _ = fmt.Fprintf(w, "              docs:     %s\n", t.Docs)
+			}
+		}
+	}
+}
+
+func printStyle(w io.Writer, style *brief.StyleInfo) {
+	if style == nil {
+		return
+	}
+	_, _ = fmt.Fprintln(w)
+	var parts []string
+	if style.Indentation != "" {
+		s := style.Indentation
+		if style.IndentSource != "" {
+			s += " (" + style.IndentSource + ")"
+		}
+		parts = append(parts, s)
+	}
+	if style.LineEnding != "" {
+		parts = append(parts, style.LineEnding)
+	}
+	if style.TrailingNewline != nil {
+		if *style.TrailingNewline {
+			parts = append(parts, "trailing newline")
+		} else {
+			parts = append(parts, "no trailing newline")
+		}
+	}
+	if len(parts) > 0 {
+		_, _ = fmt.Fprintf(w, "Style:       %s\n", strings.Join(parts, "  "))
+	}
+}
+
+func printLayout(w io.Writer, layout *brief.LayoutInfo) {
+	if layout == nil {
+		return
+	}
+	var parts []string
+	if len(layout.SourceDirs) > 0 {
+		parts = append(parts, strings.Join(layout.SourceDirs, "/ ")+"/ ")
+	}
+	if len(layout.TestDirs) > 0 {
+		parts = append(parts, strings.Join(layout.TestDirs, "/ ")+"/")
+	}
+	if len(parts) > 0 {
+		_, _ = fmt.Fprintf(w, "Layout:      %s\n", strings.Join(parts, " "))
+	}
+}
+
+func printPlatforms(w io.Writer, platforms *brief.PlatformInfo) {
+	if platforms == nil {
+		return
+	}
+	_, _ = fmt.Fprintln(w)
+	for name, versions := range platforms.CIMatrixVersions {
+		_, _ = fmt.Fprintf(w, "Platforms:   %s %s (CI matrix)\n", name, strings.Join(versions, ", "))
+	}
+	for file, version := range platforms.RuntimeVersionFiles {
+		_, _ = fmt.Fprintf(w, "             %s: %s\n", sanitize(file), sanitize(version))
+	}
+	if len(platforms.CIMatrixOS) > 0 {
+		_, _ = fmt.Fprintf(w, "             OS: %s (CI matrix)\n", strings.Join(platforms.CIMatrixOS, ", "))
+	}
+}
+
+func printResources(w io.Writer, res *brief.ResourceInfo) {
+	if res == nil {
+		return
+	}
+	_, _ = fmt.Fprintln(w)
+	printResource(w, res.Readme)
+	printResource(w, res.Contributing)
+	printResource(w, res.Changelog)
+	if res.License != "" {
+		label := res.License
+		if res.LicenseType != "" {
+			label += " (" + res.LicenseType + ")"
+		}
+		_, _ = fmt.Fprintf(w, "Resources:   %s\n", label)
+	}
+	printResource(w, res.Security)
+}
+
+func printGit(w io.Writer, git *brief.GitInfo) {
+	if git == nil {
+		return
+	}
+	_, _ = fmt.Fprintln(w)
+	if git.Branch != "" {
+		_, _ = fmt.Fprintf(w, "Git:         branch %s", sanitize(git.Branch))
+		if git.DefaultBranch != "" && git.DefaultBranch != git.Branch {
+			_, _ = fmt.Fprintf(w, " (default: %s)", sanitize(git.DefaultBranch))
+		}
+		if git.CommitCount > 0 {
+			_, _ = fmt.Fprintf(w, "  %d commits", git.CommitCount)
+		}
 		_, _ = fmt.Fprintln(w)
-		parts := []string{}
-		if r.Style.Indentation != "" {
-			s := r.Style.Indentation
-			if r.Style.IndentSource != "" {
-				s += " (" + r.Style.IndentSource + ")"
-			}
-			parts = append(parts, s)
-		}
-		if r.Style.LineEnding != "" {
-			parts = append(parts, r.Style.LineEnding)
-		}
-		if r.Style.TrailingNewline != nil {
-			if *r.Style.TrailingNewline {
-				parts = append(parts, "trailing newline")
-			} else {
-				parts = append(parts, "no trailing newline")
-			}
-		}
-		if len(parts) > 0 {
-			_, _ = fmt.Fprintf(w, "Style:       %s\n", strings.Join(parts, "  "))
-		}
 	}
-
-	// Layout
-	if r.Layout != nil {
-		parts := []string{}
-		if len(r.Layout.SourceDirs) > 0 {
-			parts = append(parts, strings.Join(r.Layout.SourceDirs, "/ ")+"/ ")
-		}
-		if len(r.Layout.TestDirs) > 0 {
-			parts = append(parts, strings.Join(r.Layout.TestDirs, "/ ")+"/")
-		}
-		if len(parts) > 0 {
-			_, _ = fmt.Fprintf(w, "Layout:      %s\n", strings.Join(parts, " "))
-		}
+	for name, url := range git.Remotes {
+		_, _ = fmt.Fprintf(w, "             %s: %s\n", sanitize(name), sanitize(url))
 	}
+}
 
-	// Platforms
-	if r.Platforms != nil {
+func printLines(w io.Writer, lines *brief.LineCount) {
+	if lines == nil {
+		return
+	}
+	_, _ = fmt.Fprintf(w, "\nLines:       %d code  %d files (%s)\n",
+		lines.TotalLines, lines.TotalFiles, lines.Source)
+}
+
+func printEnrichment(w io.Writer, e *brief.EnrichmentInfo) {
+	if e == nil {
+		return
+	}
+	if e.Repo != nil && e.Repo.Scorecard > 0 {
+		_, _ = fmt.Fprintf(w, "\nScorecard:   %.1f/10 (%s)\n", e.Repo.Scorecard, e.Repo.ScorecardDate)
+	}
+	if len(e.RuntimeEOL) > 0 {
 		_, _ = fmt.Fprintln(w)
-		for name, versions := range r.Platforms.CIMatrixVersions {
-			_, _ = fmt.Fprintf(w, "Platforms:   %s %s (CI matrix)\n", name, strings.Join(versions, ", "))
-		}
-		for file, version := range r.Platforms.RuntimeVersionFiles {
-			_, _ = fmt.Fprintf(w, "             %s: %s\n", sanitize(file), sanitize(version))
-		}
-		if len(r.Platforms.CIMatrixOS) > 0 {
-			_, _ = fmt.Fprintf(w, "             OS: %s (CI matrix)\n", strings.Join(r.Platforms.CIMatrixOS, ", "))
+		for name, eol := range e.RuntimeEOL {
+			status := "supported"
+			if !eol.Supported {
+				status = "EOL"
+			}
+			if eol.LTS {
+				status += ", LTS"
+			}
+			line := name + ": " + status
+			if eol.Latest != "" {
+				line += " (latest: " + eol.Latest + ")"
+			}
+			_, _ = fmt.Fprintf(w, "Runtime:     %s\n", line)
 		}
 	}
-
-	// Resources
-	if r.Resources != nil {
-		_, _ = fmt.Fprintln(w)
-		res := r.Resources
-		printResource(w, res.Readme)
-		printResource(w, res.Contributing)
-		printResource(w, res.Changelog)
-		if res.License != "" {
-			label := res.License
-			if res.LicenseType != "" {
-				label += " (" + res.LicenseType + ")"
-			}
-			_, _ = fmt.Fprintf(w, "Resources:   %s\n", label)
+	for _, pkg := range e.Packages {
+		_, _ = fmt.Fprintf(w, "Published:   %s (%s)\n", pkg.Name, pkg.Ecosystem)
+		if pkg.LatestVersion != "" {
+			_, _ = fmt.Fprintf(w, "             latest: %s\n", pkg.LatestVersion)
 		}
-		printResource(w, res.Security)
-	}
-
-	// Git
-	if r.Git != nil {
-		_, _ = fmt.Fprintln(w)
-		if r.Git.Branch != "" {
-			_, _ = fmt.Fprintf(w, "Git:         branch %s", sanitize(r.Git.Branch))
-			if r.Git.DefaultBranch != "" && r.Git.DefaultBranch != r.Git.Branch {
-				_, _ = fmt.Fprintf(w, " (default: %s)", sanitize(r.Git.DefaultBranch))
-			}
-			if r.Git.CommitCount > 0 {
-				_, _ = fmt.Fprintf(w, "  %d commits", r.Git.CommitCount)
-			}
-			_, _ = fmt.Fprintln(w)
+		if pkg.Downloads > 0 {
+			_, _ = fmt.Fprintf(w, "             downloads: %d (%s)\n", pkg.Downloads, pkg.DownloadsPeriod)
 		}
-		for name, url := range r.Git.Remotes {
-			_, _ = fmt.Fprintf(w, "             %s: %s\n", sanitize(name), sanitize(url))
+		if pkg.DependentReposCount > 0 {
+			_, _ = fmt.Fprintf(w, "             dependents: %d repos, %d packages\n", pkg.DependentReposCount, pkg.DependentPackagesCount)
+		}
+		if pkg.RegistryURL != "" {
+			_, _ = fmt.Fprintf(w, "             registry: %s\n", pkg.RegistryURL)
 		}
 	}
-
-	// Lines
-	if r.Lines != nil {
-		_, _ = fmt.Fprintf(w, "\nLines:       %d code  %d files (%s)\n",
-			r.Lines.TotalLines, r.Lines.TotalFiles, r.Lines.Source)
-	}
-
-	// Enrichment
-	if r.Enrichment != nil {
-		e := r.Enrichment
-		if e.Repo != nil && e.Repo.Scorecard > 0 {
-			_, _ = fmt.Fprintf(w, "\nScorecard:   %.1f/10 (%s)\n", e.Repo.Scorecard, e.Repo.ScorecardDate)
-		}
-		if len(e.RuntimeEOL) > 0 {
-			_, _ = fmt.Fprintln(w)
-			for name, eol := range e.RuntimeEOL {
-				status := "supported"
-				if !eol.Supported {
-					status = "EOL"
-				}
-				if eol.LTS {
-					status += ", LTS"
-				}
-				line := name + ": " + status
-				if eol.Latest != "" {
-					line += " (latest: " + eol.Latest + ")"
-				}
-				_, _ = fmt.Fprintf(w, "Runtime:     %s\n", line)
-			}
-		}
-		if len(e.Packages) > 0 {
-			_, _ = fmt.Fprintln(w)
-			for _, pkg := range e.Packages {
-				_, _ = fmt.Fprintf(w, "Published:   %s (%s)\n", pkg.Name, pkg.Ecosystem)
-				if pkg.LatestVersion != "" {
-					_, _ = fmt.Fprintf(w, "             latest: %s\n", pkg.LatestVersion)
-				}
-				if pkg.Downloads > 0 {
-					_, _ = fmt.Fprintf(w, "             downloads: %d (%s)\n", pkg.Downloads, pkg.DownloadsPeriod)
-				}
-				if pkg.DependentReposCount > 0 {
-					_, _ = fmt.Fprintf(w, "             dependents: %d repos, %d packages\n", pkg.DependentReposCount, pkg.DependentPackagesCount)
-				}
-				if pkg.RegistryURL != "" {
-					_, _ = fmt.Fprintf(w, "             registry: %s\n", pkg.RegistryURL)
-				}
-			}
-		}
-	}
-
-	// Stats
-	_, _ = fmt.Fprintf(w, "\n%.1fms  %d files checked  %d/%d tools matched\n",
-		r.Stats.DurationMS, r.Stats.FilesChecked, r.Stats.ToolsMatched, r.Stats.ToolsChecked)
 }
 
 // MissingJSON writes the missing report as JSON.

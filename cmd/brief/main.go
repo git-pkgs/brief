@@ -79,39 +79,45 @@ func cmdScan(args []string) {
 		_, _ = fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)
 	}
-	defer src.Cleanup()
 
+	code := runScan(src.Dir, *scanDepth, *skip, *category, *jsonFlag, *humanFlag, *verbose)
+	src.Cleanup()
+	os.Exit(code)
+}
+
+func runScan(dir string, scanDepth int, skip, category string, jsonFlag, humanFlag, verbose bool) int {
 	knowledgeBase, err := kb.Load(brief.KnowledgeFS)
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "error loading knowledge base: %v\n", err)
-		os.Exit(1)
+		return 1
 	}
 
-	engine := detect.New(knowledgeBase, src.Dir)
-	engine.ScanDepth = *scanDepth
-	if *skip != "" {
-		engine.SkipDirs = strings.Split(*skip, ",")
+	engine := detect.New(knowledgeBase, dir)
+	engine.ScanDepth = scanDepth
+	if skip != "" {
+		engine.SkipDirs = strings.Split(skip, ",")
 	}
 	r, err := engine.Run()
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "error: %v\n", err)
-		os.Exit(1)
+		return 1
 	}
 
-	if *category != "" {
-		r = filterCategory(r, *category)
+	if category != "" {
+		r = filterCategory(r, category)
 	}
 
-	useJSON := *jsonFlag || (!*humanFlag && !isTTY())
+	useJSON := jsonFlag || (!humanFlag && !isTTY())
 
 	if useJSON {
 		if err := report.JSON(os.Stdout, r); err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "error writing JSON: %v\n", err)
-			os.Exit(1)
+			return 1
 		}
 	} else {
-		report.Human(os.Stdout, r, *verbose)
+		report.Human(os.Stdout, r, verbose)
 	}
+	return 0
 }
 
 func cmdList(args []string) {

@@ -25,6 +25,14 @@ const (
 	SourceConfigFile    Source = "config_file"
 )
 
+// Scope values for DepInfo.
+const (
+	ScopeRuntime     = "runtime"
+	ScopeDevelopment = "development"
+	ScopeTest        = "test"
+	ScopeBuild       = "build"
+)
+
 // Command is a runnable command with provenance.
 type Command struct {
 	Run          string   `json:"run"`

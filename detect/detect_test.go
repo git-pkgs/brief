@@ -16,22 +16,28 @@ func loadKB(t *testing.T) *kb.KnowledgeBase {
 	return knowledgeBase
 }
 
-func TestRubyProject(t *testing.T) {
+func rubyReport(t *testing.T) *brief.Report {
+	t.Helper()
 	engine := New(loadKB(t), "../testdata/ruby-project")
 	r, err := engine.Run()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
+	return r
+}
 
-	// Language detection
+func TestRubyLanguage(t *testing.T) {
+	r := rubyReport(t)
 	if len(r.Languages) == 0 {
 		t.Fatal("expected at least one language")
 	}
 	if r.Languages[0].Name != "Ruby" {
 		t.Errorf("expected Ruby language, got %s", r.Languages[0].Name)
 	}
+}
 
-	// Package manager
+func TestRubyPackageManager(t *testing.T) {
+	r := rubyReport(t)
 	if len(r.PackageManagers) == 0 {
 		t.Fatal("expected at least one package manager")
 	}
@@ -50,14 +56,16 @@ func TestRubyProject(t *testing.T) {
 	if !found {
 		t.Error("expected Bundler package manager")
 	}
+}
 
-	// Test framework
+func TestRubyTools(t *testing.T) {
+	r := rubyReport(t)
 	assertToolDetected(t, r, "test", "RSpec")
-
-	// Linter
 	assertToolDetected(t, r, "lint", "RuboCop")
+}
 
-	// Scripts
+func TestRubyScripts(t *testing.T) {
+	r := rubyReport(t)
 	if len(r.Scripts) == 0 {
 		t.Error("expected scripts from Makefile")
 	}
@@ -70,8 +78,10 @@ func TestRubyProject(t *testing.T) {
 	if !foundTest {
 		t.Error("expected 'test' script from Makefile")
 	}
+}
 
-	// Resources
+func TestRubyResources(t *testing.T) {
+	r := rubyReport(t)
 	if r.Resources == nil || r.Resources.Readme == "" {
 		t.Error("expected README to be detected")
 	}
@@ -81,8 +91,10 @@ func TestRubyProject(t *testing.T) {
 	if r.Resources != nil && r.Resources.LicenseType != "MIT" {
 		t.Errorf("expected MIT license, got %s", r.Resources.LicenseType)
 	}
+}
 
-	// Platforms
+func TestRubyPlatforms(t *testing.T) {
+	r := rubyReport(t)
 	if r.Platforms == nil {
 		t.Fatal("expected platform info")
 	}
@@ -97,8 +109,10 @@ func TestRubyProject(t *testing.T) {
 	if len(r.Platforms.CIMatrixOS) == 0 {
 		t.Error("expected OS targets from CI matrix")
 	}
+}
 
-	// Layout
+func TestRubyLayout(t *testing.T) {
+	r := rubyReport(t)
 	if r.Layout == nil {
 		t.Fatal("expected layout info")
 	}

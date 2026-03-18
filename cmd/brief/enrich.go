@@ -25,6 +25,7 @@ func cmdEnrich(args []string) {
 	fs := flag.NewFlagSet("brief enrich", flag.ExitOnError)
 	jsonFlag := fs.Bool("json", false, "Force JSON output")
 	humanFlag := fs.Bool("human", false, "Force human-readable output")
+	markdownFlag := fs.Bool("markdown", false, "Force markdown output")
 	verbose := fs.Bool("verbose", false, "Include breadcrumb/reference information")
 	keep := fs.Bool("keep", false, "Keep downloaded remote source")
 	depth := fs.Int("depth", -1, "Git clone depth (0 = full clone, default shallow)")
@@ -48,12 +49,12 @@ func cmdEnrich(args []string) {
 		os.Exit(1)
 	}
 
-	code := runEnrich(src.Dir, *scanDepth, *skip, *jsonFlag, *humanFlag, *verbose)
+	code := runEnrich(src.Dir, *scanDepth, *skip, *jsonFlag, *humanFlag, *markdownFlag, *verbose)
 	src.Cleanup()
 	os.Exit(code)
 }
 
-func runEnrich(dir string, scanDepth int, skip string, jsonFlag, humanFlag, verbose bool) int {
+func runEnrich(dir string, scanDepth int, skip string, jsonFlag, humanFlag, markdownFlag, verbose bool) int {
 	knowledgeBase, err := kb.Load(brief.KnowledgeFS)
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "error loading knowledge base: %v\n", err)
@@ -74,13 +75,15 @@ func runEnrich(dir string, scanDepth int, skip string, jsonFlag, humanFlag, verb
 	ctx := context.Background()
 	r.Enrichment = enrich(ctx, r, dir)
 
-	useJSON := jsonFlag || (!humanFlag && !isTTY())
-	if useJSON {
+	switch {
+	case markdownFlag:
+		report.Markdown(os.Stdout, r, verbose)
+	case jsonFlag || (!humanFlag && !isTTY()):
 		if err := report.JSON(os.Stdout, r); err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "error writing JSON: %v\n", err)
 			return 1
 		}
-	} else {
+	default:
 		report.Human(os.Stdout, r, verbose)
 	}
 	return 0

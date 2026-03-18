@@ -1,6 +1,7 @@
 [tool]
 name = "Jest"
 category = "test"
+default = true
 homepage = "https://jestjs.io"
 docs = "https://jestjs.io/docs/getting-started"
 repo = "https://github.com/jestjs/jest"

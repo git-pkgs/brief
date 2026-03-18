@@ -1,0 +1,15 @@
+[tool]
+name = "clojure.test"
+category = "test"
+default = true
+homepage = "https://clojure.github.io/clojure/clojure.test-api.html"
+docs = "https://clojure.org/guides/test"
+description = "Built-in Clojure test framework"
+
+[detect]
+files = ["test/", "project.clj", "deps.edn"]
+ecosystems = ["clojure"]
+
+[commands]
+run = "lein test"
+alternatives = ["clojure -X:test"]

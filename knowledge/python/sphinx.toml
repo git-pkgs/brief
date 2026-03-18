@@ -1,6 +1,7 @@
 [tool]
 name = "Sphinx"
 category = "docs"
+default = true
 homepage = "https://www.sphinx-doc.org"
 docs = "https://www.sphinx-doc.org/en/master/usage/quickstart.html"
 repo = "https://github.com/sphinx-doc/sphinx"

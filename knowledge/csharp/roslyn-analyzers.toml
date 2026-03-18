@@ -1,0 +1,15 @@
+[tool]
+name = "Roslyn Analyzers"
+category = "lint"
+default = true
+homepage = "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/overview"
+docs = "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/overview"
+repo = "https://github.com/dotnet/roslyn-analyzers"
+description = "Built-in .NET code analyzers"
+
+[detect]
+files = ["*.sln", "**/*.csproj"]
+ecosystems = ["csharp"]
+
+[commands]
+run = "dotnet build /p:TreatWarningsAsErrors=true"

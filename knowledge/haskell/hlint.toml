@@ -1,0 +1,18 @@
+[tool]
+name = "HLint"
+category = "lint"
+default = true
+homepage = "https://github.com/ndmitchell/hlint"
+docs = "https://github.com/ndmitchell/hlint#readme"
+repo = "https://github.com/ndmitchell/hlint"
+description = "Haskell source code suggestions"
+
+[detect]
+files = [".hlint.yaml"]
+ecosystems = ["haskell"]
+
+[commands]
+run = "hlint ."
+
+[config]
+files = [".hlint.yaml"]

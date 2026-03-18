@@ -1,0 +1,19 @@
+[tool]
+name = "OWASP Dependency-Check"
+category = "security"
+default = true
+homepage = "https://owasp.org/www-project-dependency-check/"
+docs = "https://jeremylong.github.io/DependencyCheck/"
+repo = "https://github.com/jeremylong/DependencyCheck"
+description = "Java dependency vulnerability scanner"
+
+[detect]
+ecosystems = ["java"]
+[detect.file_contains]
+"pom.xml" = ["dependency-check-maven"]
+"build.gradle" = ["dependency-check"]
+"build.gradle.kts" = ["dependency-check"]
+
+[commands]
+run = "mvn dependency-check:check"
+alternatives = ["gradle dependencyCheckAnalyze"]

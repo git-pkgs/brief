@@ -1,6 +1,7 @@
 [tool]
 name = "Black"
 category = "format"
+default = true
 homepage = "https://black.readthedocs.io"
 docs = "https://black.readthedocs.io/en/stable/"
 repo = "https://github.com/psf/black"

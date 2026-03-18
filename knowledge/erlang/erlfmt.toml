@@ -1,0 +1,20 @@
+[tool]
+name = "erlfmt"
+category = "format"
+default = true
+homepage = "https://github.com/WhatsApp/erlfmt"
+docs = "https://github.com/WhatsApp/erlfmt#readme"
+repo = "https://github.com/WhatsApp/erlfmt"
+description = "Erlang code formatter"
+
+[detect]
+files = [".erlfmt"]
+ecosystems = ["erlang"]
+[detect.file_contains]
+"rebar.config" = ["erlfmt"]
+
+[commands]
+run = "rebar3 fmt"
+
+[config]
+files = [".erlfmt"]

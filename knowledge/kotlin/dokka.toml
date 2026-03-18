@@ -1,0 +1,18 @@
+[tool]
+name = "Dokka"
+category = "docs"
+default = true
+homepage = "https://github.com/Kotlin/dokka"
+docs = "https://kotlinlang.org/docs/dokka-introduction.html"
+repo = "https://github.com/Kotlin/dokka"
+description = "Documentation engine for Kotlin"
+
+[detect]
+ecosystems = ["kotlin"]
+[detect.file_contains]
+"build.gradle.kts" = ["dokka"]
+"build.gradle" = ["dokka"]
+
+[commands]
+run = "gradle dokkaHtml"
+alternatives = ["./gradlew dokkaHtml"]

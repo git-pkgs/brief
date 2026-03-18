@@ -1,0 +1,20 @@
+[tool]
+name = "elvis"
+category = "lint"
+default = true
+homepage = "https://github.com/inaka/elvis"
+docs = "https://github.com/inaka/elvis#readme"
+repo = "https://github.com/inaka/elvis"
+description = "Erlang style reviewer"
+
+[detect]
+files = ["elvis.config"]
+ecosystems = ["erlang"]
+[detect.file_contains]
+"rebar.config" = ["elvis"]
+
+[commands]
+run = "elvis rock"
+
+[config]
+files = ["elvis.config"]

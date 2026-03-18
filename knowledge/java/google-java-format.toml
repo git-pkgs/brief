@@ -1,0 +1,18 @@
+[tool]
+name = "google-java-format"
+category = "format"
+default = true
+homepage = "https://github.com/google/google-java-format"
+docs = "https://github.com/google/google-java-format#readme"
+repo = "https://github.com/google/google-java-format"
+description = "Java source code formatter"
+
+[detect]
+ecosystems = ["java"]
+[detect.file_contains]
+"pom.xml" = ["google-java-format"]
+"build.gradle" = ["google-java-format", "googleJavaFormat"]
+"build.gradle.kts" = ["google-java-format", "googleJavaFormat"]
+
+[commands]
+run = "google-java-format --replace"

@@ -1,6 +1,7 @@
 [tool]
 name = "EUnit"
 category = "test"
+default = true
 homepage = "https://www.erlang.org/doc/apps/eunit/"
 docs = "https://www.erlang.org/doc/apps/eunit/"
 description = "Erlang unit testing framework"

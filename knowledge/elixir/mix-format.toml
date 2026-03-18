@@ -1,0 +1,18 @@
+[tool]
+name = "mix format"
+category = "format"
+default = true
+homepage = "https://hexdocs.pm/mix/Mix.Tasks.Format.html"
+docs = "https://hexdocs.pm/mix/Mix.Tasks.Format.html"
+description = "Built-in Elixir code formatter"
+
+[detect]
+files = [".formatter.exs", "mix.exs"]
+ecosystems = ["elixir"]
+
+[commands]
+run = "mix format"
+alternatives = ["mix format --check-formatted"]
+
+[config]
+files = [".formatter.exs"]

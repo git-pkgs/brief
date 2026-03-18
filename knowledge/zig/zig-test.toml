@@ -1,0 +1,14 @@
+[tool]
+name = "zig test"
+category = "test"
+default = true
+homepage = "https://ziglang.org/documentation/master/#Zig-Test"
+docs = "https://ziglang.org/documentation/master/#Zig-Test"
+description = "Built-in Zig test runner"
+
+[detect]
+files = ["build.zig"]
+ecosystems = ["zig"]
+
+[commands]
+run = "zig build test"

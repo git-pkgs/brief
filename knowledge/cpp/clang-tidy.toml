@@ -1,6 +1,7 @@
 [tool]
 name = "clang-tidy"
 category = "lint"
+default = true
 homepage = "https://clang.llvm.org/extra/clang-tidy/"
 docs = "https://clang.llvm.org/extra/clang-tidy/"
 description = "C/C++ linter and static analysis tool"

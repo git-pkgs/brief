@@ -1,0 +1,14 @@
+[tool]
+name = "nimpretty"
+category = "format"
+default = true
+homepage = "https://nim-lang.org/docs/nimpretty.html"
+docs = "https://nim-lang.org/docs/nimpretty.html"
+description = "Built-in Nim code formatter"
+
+[detect]
+files = ["*.nimble"]
+ecosystems = ["nim"]
+
+[commands]
+run = "nimpretty"

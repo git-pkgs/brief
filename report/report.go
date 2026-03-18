@@ -361,6 +361,39 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 		r.Stats.DurationMS, r.Stats.FilesChecked, r.Stats.ToolsMatched, r.Stats.ToolsChecked)
 }
 
+// MissingJSON writes the missing report as JSON.
+func MissingJSON(w io.Writer, r *brief.MissingReport) error {
+	enc := json.NewEncoder(w)
+	enc.SetIndent("", "  ")
+	return enc.Encode(r)
+}
+
+// MissingHuman writes the missing report in human-readable format.
+func MissingHuman(w io.Writer, r *brief.MissingReport) {
+	if len(r.Missing) == 0 {
+		_, _ = fmt.Fprintf(w, "No missing recommended tooling detected.\n")
+		return
+	}
+
+	_, _ = fmt.Fprintf(w, "Detected: %s\n\n", strings.Join(r.Ecosystems, ", "))
+	_, _ = fmt.Fprintf(w, "Missing recommended tooling:\n\n")
+
+	for _, m := range r.Missing {
+		_, _ = fmt.Fprintf(w, "  %-12s No %s tool configured\n", m.Label, strings.ToLower(m.Label))
+		if m.Suggested != "" {
+			line := "Suggested: " + m.Suggested
+			if m.SuggestedCmd != "" {
+				line += " (" + sanitize(m.SuggestedCmd) + ")"
+			}
+			_, _ = fmt.Fprintf(w, "  %-12s %s\n", "", line)
+		}
+		if m.Docs != "" {
+			_, _ = fmt.Fprintf(w, "  %-12s %s\n", "", sanitize(m.Docs))
+		}
+		_, _ = fmt.Fprintln(w)
+	}
+}
+
 func printResource(w io.Writer, value string) {
 	if value != "" {
 		_, _ = fmt.Fprintf(w, "Resources:   %s\n", value)

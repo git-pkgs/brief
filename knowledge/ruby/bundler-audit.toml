@@ -1,0 +1,17 @@
+[tool]
+name = "bundler-audit"
+category = "security"
+default = true
+homepage = "https://github.com/rubysec/bundler-audit"
+docs = "https://github.com/rubysec/bundler-audit#readme"
+repo = "https://github.com/rubysec/bundler-audit"
+description = "Ruby dependency vulnerability scanner"
+
+[detect]
+dependencies = ["bundler-audit"]
+dev_dependencies = ["bundler-audit"]
+ecosystems = ["ruby"]
+
+[commands]
+run = "bundle exec bundler-audit check --update"
+alternatives = ["bundler-audit"]

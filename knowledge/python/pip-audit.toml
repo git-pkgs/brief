@@ -1,0 +1,17 @@
+[tool]
+name = "pip-audit"
+category = "security"
+default = true
+homepage = "https://github.com/pypa/pip-audit"
+docs = "https://github.com/pypa/pip-audit#readme"
+repo = "https://github.com/pypa/pip-audit"
+description = "Python dependency vulnerability scanner"
+
+[detect]
+dependencies = ["pip-audit"]
+dev_dependencies = ["pip-audit"]
+ecosystems = ["python"]
+
+[commands]
+run = "pip-audit"
+alternatives = ["pip-audit -r requirements.txt"]

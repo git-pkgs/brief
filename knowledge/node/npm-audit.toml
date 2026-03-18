@@ -1,0 +1,15 @@
+[tool]
+name = "npm audit"
+category = "security"
+default = true
+homepage = "https://docs.npmjs.com/cli/commands/npm-audit"
+docs = "https://docs.npmjs.com/auditing-package-dependencies-for-security-vulnerabilities"
+description = "Node.js dependency vulnerability scanner"
+
+[detect]
+files = ["package-lock.json"]
+ecosystems = ["node"]
+
+[commands]
+run = "npm audit"
+alternatives = ["npm audit --production"]

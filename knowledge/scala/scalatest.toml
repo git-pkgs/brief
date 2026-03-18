@@ -1,0 +1,17 @@
+[tool]
+name = "ScalaTest"
+category = "test"
+default = true
+homepage = "https://www.scalatest.org"
+docs = "https://www.scalatest.org/user_guide"
+repo = "https://github.com/scalatest/scalatest"
+description = "Testing framework for Scala"
+
+[detect]
+files = ["src/test/scala/"]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["scalatest", "ScalaTest"]
+
+[commands]
+run = "sbt test"

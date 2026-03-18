@@ -1,0 +1,15 @@
+[tool]
+name = "dart format"
+category = "format"
+default = true
+homepage = "https://dart.dev/tools/dart-format"
+docs = "https://dart.dev/tools/dart-format"
+description = "Built-in Dart code formatter"
+
+[detect]
+files = ["pubspec.yaml"]
+ecosystems = ["dart"]
+
+[commands]
+run = "dart format ."
+alternatives = ["dart format --set-exit-if-changed ."]

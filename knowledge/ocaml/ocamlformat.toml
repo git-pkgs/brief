@@ -1,6 +1,7 @@
 [tool]
 name = "ocamlformat"
 category = "format"
+default = true
 homepage = "https://github.com/ocaml-ppx/ocamlformat"
 docs = "https://github.com/ocaml-ppx/ocamlformat#readme"
 repo = "https://github.com/ocaml-ppx/ocamlformat"

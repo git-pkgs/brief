@@ -1,0 +1,15 @@
+[tool]
+name = "XCTest"
+category = "test"
+default = true
+homepage = "https://developer.apple.com/documentation/xctest"
+docs = "https://developer.apple.com/documentation/xctest"
+description = "Apple's testing framework for Swift"
+
+[detect]
+files = ["Package.swift", "*.xcodeproj/"]
+ecosystems = ["swift"]
+
+[commands]
+run = "swift test"
+alternatives = ["xcodebuild test"]

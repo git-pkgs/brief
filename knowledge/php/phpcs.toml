@@ -1,0 +1,21 @@
+[tool]
+name = "PHP_CodeSniffer"
+category = "lint"
+default = true
+homepage = "https://github.com/PHPCSStandards/PHP_CodeSniffer"
+docs = "https://github.com/PHPCSStandards/PHP_CodeSniffer/wiki"
+repo = "https://github.com/PHPCSStandards/PHP_CodeSniffer"
+description = "PHP coding standards linter"
+
+[detect]
+files = ["phpcs.xml", "phpcs.xml.dist", ".phpcs.xml", ".phpcs.xml.dist"]
+dependencies = ["squizlabs/php_codesniffer"]
+dev_dependencies = ["squizlabs/php_codesniffer"]
+ecosystems = ["php"]
+
+[commands]
+run = "vendor/bin/phpcs"
+alternatives = ["phpcs"]
+
+[config]
+files = ["phpcs.xml", "phpcs.xml.dist", ".phpcs.xml", ".phpcs.xml.dist"]

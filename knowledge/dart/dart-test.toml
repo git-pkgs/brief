@@ -1,0 +1,15 @@
+[tool]
+name = "dart test"
+category = "test"
+default = true
+homepage = "https://dart.dev/guides/testing"
+docs = "https://dart.dev/guides/testing"
+description = "Built-in Dart test runner"
+
+[detect]
+files = ["test/", "pubspec.yaml"]
+ecosystems = ["dart"]
+
+[commands]
+run = "dart test"
+alternatives = ["flutter test"]

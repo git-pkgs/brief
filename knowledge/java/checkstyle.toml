@@ -1,6 +1,7 @@
 [tool]
 name = "Checkstyle"
 category = "lint"
+default = true
 homepage = "https://checkstyle.org"
 docs = "https://checkstyle.org/checks.html"
 repo = "https://github.com/checkstyle/checkstyle"

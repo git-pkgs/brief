@@ -1,0 +1,15 @@
+[tool]
+name = "Javadoc"
+category = "docs"
+default = true
+homepage = "https://docs.oracle.com/en/java/javase/21/javadoc/"
+docs = "https://docs.oracle.com/en/java/javase/21/javadoc/"
+description = "Java API documentation generator"
+
+[detect]
+files = ["pom.xml", "build.gradle", "build.gradle.kts"]
+ecosystems = ["java"]
+
+[commands]
+run = "mvn javadoc:javadoc"
+alternatives = ["gradle javadoc"]

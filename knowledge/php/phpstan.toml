@@ -1,6 +1,7 @@
 [tool]
 name = "PHPStan"
 category = "typecheck"
+default = true
 homepage = "https://phpstan.org"
 docs = "https://phpstan.org/user-guide/getting-started"
 repo = "https://github.com/phpstan/phpstan"

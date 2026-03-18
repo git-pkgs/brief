@@ -1,6 +1,7 @@
 [tool]
 name = "clang-format"
 category = "format"
+default = true
 homepage = "https://clang.llvm.org/docs/ClangFormat.html"
 docs = "https://clang.llvm.org/docs/ClangFormatStyleOptions.html"
 description = "C/C++ code formatter"

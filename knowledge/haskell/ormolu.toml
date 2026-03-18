@@ -1,0 +1,18 @@
+[tool]
+name = "Ormolu"
+category = "format"
+default = true
+homepage = "https://github.com/tweag/ormolu"
+docs = "https://github.com/tweag/ormolu#readme"
+repo = "https://github.com/tweag/ormolu"
+description = "Haskell code formatter"
+
+[detect]
+ecosystems = ["haskell"]
+[detect.file_contains]
+"package.yaml" = ["ormolu"]
+"cabal.project" = ["ormolu"]
+
+[commands]
+run = "ormolu --mode inplace"
+alternatives = ["ormolu --mode check"]

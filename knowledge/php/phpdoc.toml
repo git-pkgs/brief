@@ -1,0 +1,19 @@
+[tool]
+name = "phpDocumentor"
+category = "docs"
+default = true
+homepage = "https://www.phpdoc.org"
+docs = "https://docs.phpdoc.org"
+repo = "https://github.com/phpDocumentor/phpDocumentor"
+description = "Documentation generator for PHP"
+
+[detect]
+files = ["phpdoc.xml", "phpdoc.dist.xml", ".phpdoc.xml", ".phpdoc.dist.xml"]
+dependencies = ["phpdocumentor/phpdocumentor"]
+ecosystems = ["php"]
+
+[commands]
+run = "vendor/bin/phpdoc"
+
+[config]
+files = ["phpdoc.xml", "phpdoc.dist.xml"]

@@ -1,0 +1,14 @@
+[tool]
+name = "dart doc"
+category = "docs"
+default = true
+homepage = "https://dart.dev/tools/dart-doc"
+docs = "https://dart.dev/tools/dart-doc"
+description = "Built-in Dart documentation generator"
+
+[detect]
+files = ["pubspec.yaml"]
+ecosystems = ["dart"]
+
+[commands]
+run = "dart doc"

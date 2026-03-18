@@ -1,0 +1,14 @@
+[tool]
+name = "crystal spec"
+category = "test"
+default = true
+homepage = "https://crystal-lang.org/reference/guides/testing.html"
+docs = "https://crystal-lang.org/reference/guides/testing.html"
+description = "Built-in Crystal test runner"
+
+[detect]
+files = ["spec/", "shard.yml"]
+ecosystems = ["crystal"]
+
+[commands]
+run = "crystal spec"

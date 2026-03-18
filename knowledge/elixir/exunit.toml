@@ -1,6 +1,7 @@
 [tool]
 name = "ExUnit"
 category = "test"
+default = true
 homepage = "https://hexdocs.pm/ex_unit"
 docs = "https://hexdocs.pm/ex_unit/ExUnit.html"
 description = "Built-in Elixir test framework"

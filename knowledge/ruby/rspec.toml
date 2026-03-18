@@ -1,6 +1,7 @@
 [tool]
 name = "RSpec"
 category = "test"
+default = true
 homepage = "https://rspec.info"
 docs = "https://rspec.info/documentation"
 repo = "https://github.com/rspec/rspec"

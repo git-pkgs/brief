@@ -1,6 +1,7 @@
 [tool]
 name = "Docusaurus"
 category = "docs"
+default = true
 homepage = "https://docusaurus.io"
 docs = "https://docusaurus.io/docs"
 repo = "https://github.com/facebook/docusaurus"

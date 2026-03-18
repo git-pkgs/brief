@@ -1,0 +1,15 @@
+[tool]
+name = "pkgsite"
+category = "docs"
+default = true
+homepage = "https://pkg.go.dev"
+docs = "https://pkg.go.dev/golang.org/x/pkgsite/cmd/pkgsite"
+repo = "https://github.com/golang/pkgsite"
+description = "Go documentation server"
+
+[detect]
+files = ["go.mod"]
+ecosystems = ["go"]
+
+[commands]
+run = "go run golang.org/x/pkgsite/cmd/pkgsite@latest"

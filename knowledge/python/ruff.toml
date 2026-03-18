@@ -1,6 +1,7 @@
 [tool]
 name = "Ruff"
 category = "lint"
+default = true
 homepage = "https://docs.astral.sh/ruff/"
 docs = "https://docs.astral.sh/ruff/"
 repo = "https://github.com/astral-sh/ruff"

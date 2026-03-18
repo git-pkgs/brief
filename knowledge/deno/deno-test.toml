@@ -1,0 +1,15 @@
+[tool]
+name = "deno test"
+category = "test"
+default = true
+homepage = "https://docs.deno.com/runtime/fundamentals/testing/"
+docs = "https://docs.deno.com/runtime/fundamentals/testing/"
+description = "Built-in Deno test runner"
+
+[detect]
+files = ["deno.json", "deno.jsonc"]
+ecosystems = ["deno"]
+
+[commands]
+run = "deno test"
+alternatives = ["deno test --coverage"]

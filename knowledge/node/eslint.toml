@@ -1,6 +1,7 @@
 [tool]
 name = "ESLint"
 category = "lint"
+default = true
 homepage = "https://eslint.org"
 docs = "https://eslint.org/docs/latest/"
 repo = "https://github.com/eslint/eslint"

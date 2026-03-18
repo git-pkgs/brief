@@ -1,6 +1,7 @@
 [tool]
 name = "PHP CS Fixer"
 category = "format"
+default = true
 homepage = "https://cs.symfony.com"
 docs = "https://cs.symfony.com/doc/usage.html"
 repo = "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer"

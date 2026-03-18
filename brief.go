@@ -156,6 +156,26 @@ type RuntimeEOL struct {
 	Latest    string `json:"latest,omitempty"` // latest patch version
 }
 
+// MissingReport is the output of a brief missing analysis.
+type MissingReport struct {
+	Version    string            `json:"version"`
+	Path       string            `json:"path"`
+	Ecosystems []string          `json:"ecosystems"`
+	Missing    []MissingCategory `json:"missing"`
+}
+
+// MissingCategory describes a tool category that has no detected tools
+// despite the ecosystem having known tools for it.
+type MissingCategory struct {
+	Category     string `json:"category"`
+	Label        string `json:"label"`
+	Ecosystem    string `json:"ecosystem"`
+	Suggested    string `json:"suggested"`
+	SuggestedCmd string `json:"suggested_cmd,omitempty"`
+	Description  string `json:"description,omitempty"`
+	Docs         string `json:"docs,omitempty"`
+}
+
 // Report is the complete output of a brief analysis.
 type Report struct {
 	Version         string                 `json:"version"`

@@ -1,6 +1,7 @@
 [tool]
 name = "Clippy"
 category = "lint"
+default = true
 homepage = "https://github.com/rust-lang/rust-clippy"
 docs = "https://doc.rust-lang.org/clippy/"
 repo = "https://github.com/rust-lang/rust-clippy"

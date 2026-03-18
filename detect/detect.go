@@ -1256,6 +1256,85 @@ func detectLicenseType(path string) string {
 	return normalized
 }
 
+// recommendedCategories are tool categories that every project benefits from.
+var recommendedCategories = map[string]string{
+	"test":      "Test",
+	"lint":      "Lint",
+	"format":    "Format",
+	"typecheck": "Typecheck",
+	"docs":      "Docs",
+}
+
+// Missing computes which recommended tool categories have no detected tools
+// for the project's ecosystems. It requires Run() to have been called first
+// so that detectedEcosystems is populated.
+func (e *Engine) Missing(r *brief.Report) *brief.MissingReport {
+	mr := &brief.MissingReport{
+		Version: brief.Version,
+		Path:    r.Path,
+	}
+
+	for eco := range e.detectedEcosystems {
+		mr.Ecosystems = append(mr.Ecosystems, eco)
+	}
+	sort.Strings(mr.Ecosystems)
+
+	// Build set of categories that were actually detected.
+	detected := make(map[string]bool)
+	for cat := range r.Tools {
+		detected[cat] = true
+	}
+
+	// Check each recommended category against each detected ecosystem.
+	categoryOrder := []string{"test", "lint", "format", "typecheck", "docs"}
+	for _, cat := range categoryOrder {
+		if detected[cat] {
+			continue
+		}
+
+		label := recommendedCategories[cat]
+
+		// Find the best tool for this category across detected ecosystems.
+		// Prefer tools marked as default, fall back to first match.
+		var best *kb.ToolDef
+		var bestEco string
+		for _, eco := range mr.Ecosystems {
+			for _, tool := range e.KB.ToolsForEcosystem(eco) {
+				if tool.Tool.Category != cat {
+					continue
+				}
+				if best == nil {
+					best = tool
+					bestEco = eco
+				}
+				if tool.Tool.Default {
+					best = tool
+					bestEco = eco
+					goto found
+				}
+			}
+		}
+		if best == nil {
+			continue
+		}
+	found:
+		mc := brief.MissingCategory{
+			Category:    cat,
+			Label:       label,
+			Ecosystem:   bestEco,
+			Suggested:   best.Tool.Name,
+			Description: best.Tool.Description,
+			Docs:        best.Tool.Docs,
+		}
+		if best.Commands.Run != "" {
+			mc.SuggestedCmd = best.Commands.Run
+		}
+		mr.Missing = append(mr.Missing, mc)
+	}
+
+	return mr
+}
+
 func rank(c brief.Confidence) int {
 	switch c {
 	case brief.ConfidenceHigh:

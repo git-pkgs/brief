@@ -1,0 +1,18 @@
+[tool]
+name = "clj-kondo"
+category = "lint"
+default = true
+homepage = "https://github.com/clj-kondo/clj-kondo"
+docs = "https://github.com/clj-kondo/clj-kondo#readme"
+repo = "https://github.com/clj-kondo/clj-kondo"
+description = "Linter for Clojure"
+
+[detect]
+files = [".clj-kondo/"]
+ecosystems = ["clojure"]
+
+[commands]
+run = "clj-kondo --lint src"
+
+[config]
+files = [".clj-kondo/config.edn"]

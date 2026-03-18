@@ -1,0 +1,15 @@
+[tool]
+name = "deno fmt"
+category = "format"
+default = true
+homepage = "https://docs.deno.com/runtime/reference/cli/fmt/"
+docs = "https://docs.deno.com/runtime/reference/cli/fmt/"
+description = "Built-in Deno code formatter"
+
+[detect]
+files = ["deno.json", "deno.jsonc"]
+ecosystems = ["deno"]
+
+[commands]
+run = "deno fmt"
+alternatives = ["deno fmt --check"]

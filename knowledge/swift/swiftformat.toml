@@ -1,6 +1,7 @@
 [tool]
 name = "SwiftFormat"
 category = "format"
+default = true
 homepage = "https://github.com/nicklockwood/SwiftFormat"
 docs = "https://github.com/nicklockwood/SwiftFormat#readme"
 repo = "https://github.com/nicklockwood/SwiftFormat"

@@ -132,44 +132,8 @@ func printPackageManagers(w io.Writer, managers []brief.Detection) {
 }
 
 func printDependencySummary(w io.Writer, deps []brief.DepInfo) {
-	if len(deps) == 0 {
-		return
-	}
-	directRuntime, directDev, totalRuntime, totalDev := 0, 0, 0, 0
-	for _, d := range deps {
-		if strings.HasPrefix(d.PURL, "pkg:githubactions/") || strings.HasPrefix(d.PURL, "pkg:docker/") {
-			continue
-		}
-		isDev := d.Scope == brief.ScopeDevelopment || d.Scope == brief.ScopeTest || d.Scope == brief.ScopeBuild
-		if isDev {
-			totalDev++
-			if d.Direct {
-				directDev++
-			}
-		} else {
-			totalRuntime++
-			if d.Direct {
-				directRuntime++
-			}
-		}
-	}
-	var parts []string
-	if directRuntime > 0 {
-		s := fmt.Sprintf("%d runtime", directRuntime)
-		if transitive := totalRuntime - directRuntime; transitive > 0 {
-			s += fmt.Sprintf(" (%d total)", totalRuntime)
-		}
-		parts = append(parts, s)
-	}
-	if directDev > 0 {
-		s := fmt.Sprintf("%d dev", directDev)
-		if transitive := totalDev - directDev; transitive > 0 {
-			s += fmt.Sprintf(" (%d total)", totalDev)
-		}
-		parts = append(parts, s)
-	}
-	if len(parts) > 0 {
-		_, _ = fmt.Fprintf(w, "                 %s\n", strings.Join(parts, ", "))
+	if s := depSummary(deps); s != "" {
+		_, _ = fmt.Fprintf(w, "                 %s\n", s)
 	}
 }
 
@@ -360,33 +324,13 @@ func printEnrichment(w io.Writer, e *brief.EnrichmentInfo) {
 	if len(e.RuntimeEOL) > 0 {
 		_, _ = fmt.Fprintln(w)
 		for name, eol := range e.RuntimeEOL {
-			status := "supported"
-			if !eol.Supported {
-				status = "EOL"
-			}
-			if eol.LTS {
-				status += ", LTS"
-			}
-			line := name + ": " + status
-			if eol.Latest != "" {
-				line += " (latest: " + eol.Latest + ")"
-			}
-			_, _ = fmt.Fprintf(w, "Runtime:     %s\n", line)
+			_, _ = fmt.Fprintf(w, "Runtime:     %s\n", enrichmentRuntimeLine(name, eol))
 		}
 	}
 	for _, pkg := range e.Packages {
 		_, _ = fmt.Fprintf(w, "Published:   %s (%s)\n", pkg.Name, pkg.Ecosystem)
-		if pkg.LatestVersion != "" {
-			_, _ = fmt.Fprintf(w, "             latest: %s\n", pkg.LatestVersion)
-		}
-		if pkg.Downloads > 0 {
-			_, _ = fmt.Fprintf(w, "             downloads: %d (%s)\n", pkg.Downloads, pkg.DownloadsPeriod)
-		}
-		if pkg.DependentReposCount > 0 {
-			_, _ = fmt.Fprintf(w, "             dependents: %d repos, %d packages\n", pkg.DependentReposCount, pkg.DependentPackagesCount)
-		}
-		if pkg.RegistryURL != "" {
-			_, _ = fmt.Fprintf(w, "             registry: %s\n", pkg.RegistryURL)
+		for _, line := range packageDetailLines(pkg) {
+			_, _ = fmt.Fprintf(w, "             %s\n", line)
 		}
 	}
 }
@@ -436,4 +380,80 @@ func detectionNames(ds []brief.Detection) []string {
 		names[i] = d.Name
 	}
 	return names
+}
+
+// depSummary computes a human-readable dependency summary string.
+// Returns empty string if there are no relevant dependencies.
+func depSummary(deps []brief.DepInfo) string {
+	if len(deps) == 0 {
+		return ""
+	}
+	directRuntime, directDev, totalRuntime, totalDev := 0, 0, 0, 0
+	for _, d := range deps {
+		if strings.HasPrefix(d.PURL, "pkg:githubactions/") || strings.HasPrefix(d.PURL, "pkg:docker/") {
+			continue
+		}
+		isDev := d.Scope == brief.ScopeDevelopment || d.Scope == brief.ScopeTest || d.Scope == brief.ScopeBuild
+		if isDev {
+			totalDev++
+			if d.Direct {
+				directDev++
+			}
+		} else {
+			totalRuntime++
+			if d.Direct {
+				directRuntime++
+			}
+		}
+	}
+	var parts []string
+	if directRuntime > 0 {
+		s := fmt.Sprintf("%d runtime", directRuntime)
+		if transitive := totalRuntime - directRuntime; transitive > 0 {
+			s += fmt.Sprintf(" (%d total)", totalRuntime)
+		}
+		parts = append(parts, s)
+	}
+	if directDev > 0 {
+		s := fmt.Sprintf("%d dev", directDev)
+		if transitive := totalDev - directDev; transitive > 0 {
+			s += fmt.Sprintf(" (%d total)", totalDev)
+		}
+		parts = append(parts, s)
+	}
+	return strings.Join(parts, ", ")
+}
+
+// enrichmentRuntimeLine formats a single runtime EOL entry.
+func enrichmentRuntimeLine(name string, eol *brief.RuntimeEOL) string {
+	status := "supported"
+	if !eol.Supported {
+		status = "EOL"
+	}
+	if eol.LTS {
+		status += ", LTS"
+	}
+	line := name + ": " + status
+	if eol.Latest != "" {
+		line += " (latest: " + eol.Latest + ")"
+	}
+	return line
+}
+
+// packageDetailLines returns detail lines for a published package.
+func packageDetailLines(pkg brief.PublishedPackage) []string {
+	var lines []string
+	if pkg.LatestVersion != "" {
+		lines = append(lines, "latest: "+pkg.LatestVersion)
+	}
+	if pkg.Downloads > 0 {
+		lines = append(lines, fmt.Sprintf("downloads: %d (%s)", pkg.Downloads, pkg.DownloadsPeriod))
+	}
+	if pkg.DependentReposCount > 0 {
+		lines = append(lines, fmt.Sprintf("dependents: %d repos, %d packages", pkg.DependentReposCount, pkg.DependentPackagesCount))
+	}
+	if pkg.RegistryURL != "" {
+		lines = append(lines, "registry: "+pkg.RegistryURL)
+	}
+	return lines
 }

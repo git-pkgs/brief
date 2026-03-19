@@ -19,6 +19,7 @@ func cmdDiff(args []string) {
 	fs := flag.NewFlagSet("brief diff", flag.ExitOnError)
 	jsonFlag := fs.Bool("json", false, "Force JSON output")
 	humanFlag := fs.Bool("human", false, "Force human-readable output")
+	markdownFlag := fs.Bool("markdown", false, "Force markdown output")
 	verbose := fs.Bool("verbose", false, "Include breadcrumb/reference information")
 	category := fs.String("category", "", "Only report on specific category")
 	_ = fs.Parse(args)
@@ -100,14 +101,15 @@ func cmdDiff(args []string) {
 		r = filterCategory(r, *category)
 	}
 
-	useJSON := *jsonFlag || (!*humanFlag && !isTTY())
-
-	if useJSON {
+	switch {
+	case *markdownFlag:
+		report.Markdown(os.Stdout, r, *verbose)
+	case *jsonFlag || (!*humanFlag && !isTTY()):
 		if err := report.JSON(os.Stdout, r); err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "error writing JSON: %v\n", err)
 			os.Exit(1)
 		}
-	} else {
+	default:
 		report.Human(os.Stdout, r, *verbose)
 	}
 }

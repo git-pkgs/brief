@@ -16,6 +16,7 @@ func cmdMissing(args []string) {
 	fs := flag.NewFlagSet("brief missing", flag.ExitOnError)
 	jsonFlag := fs.Bool("json", false, "Force JSON output")
 	humanFlag := fs.Bool("human", false, "Force human-readable output")
+	markdownFlag := fs.Bool("markdown", false, "Force markdown output")
 	scanDepth := fs.Int("scan-depth", 0, "Max directory depth for language detection (default 4)")
 	skip := fs.String("skip", "", "Additional directories to skip, comma-separated")
 	_ = fs.Parse(args)
@@ -44,14 +45,15 @@ func cmdMissing(args []string) {
 
 	mr := engine.Missing(r)
 
-	useJSON := *jsonFlag || (!*humanFlag && !isTTY())
-
-	if useJSON {
+	switch {
+	case *markdownFlag:
+		report.MissingMarkdown(os.Stdout, mr)
+	case *jsonFlag || (!*humanFlag && !isTTY()):
 		if err := report.MissingJSON(os.Stdout, mr); err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "error writing JSON: %v\n", err)
 			os.Exit(1)
 		}
-	} else {
+	default:
 		report.MissingHuman(os.Stdout, mr)
 	}
 }

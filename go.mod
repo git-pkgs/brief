@@ -4,7 +4,8 @@ go 1.25.6
 
 require (
 	github.com/BurntSushi/toml v1.6.0
-	github.com/git-pkgs/forge v0.2.0
+	github.com/git-pkgs/enrichment v0.2.1-0.20260315122223-33d51357bb26
+	github.com/git-pkgs/forge v0.3.0
 	github.com/git-pkgs/licensecheck v0.4.0
 	github.com/git-pkgs/manifests v0.4.2
 	github.com/git-pkgs/purl v0.1.9
@@ -77,7 +78,6 @@ require (
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/fzipp/gocyclo v0.6.0 // indirect
 	github.com/ghostiam/protogetter v0.3.20 // indirect
-	github.com/git-pkgs/enrichment v0.2.1-0.20260315122223-33d51357bb26 // indirect
 	github.com/git-pkgs/packageurl-go v0.3.1 // indirect
 	github.com/git-pkgs/vers v0.2.3 // indirect
 	github.com/github/go-spdx/v2 v2.4.0 // indirect
@@ -222,7 +222,7 @@ require (
 	golang.org/x/mod v0.33.0 // indirect
 	golang.org/x/sync v0.20.0 // indirect
 	golang.org/x/sys v0.42.0 // indirect
-	golang.org/x/text v0.34.0 // indirect
+	golang.org/x/text v0.35.0 // indirect
 	golang.org/x/tools v0.42.0 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect

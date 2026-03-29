@@ -4,13 +4,13 @@ go 1.25.6
 
 require (
 	github.com/BurntSushi/toml v1.6.0
-	github.com/git-pkgs/enrichment v0.2.1-0.20260315122223-33d51357bb26
-	github.com/git-pkgs/forge v0.3.0
+	github.com/git-pkgs/enrichment v0.2.1
+	github.com/git-pkgs/forge v0.3.1
 	github.com/git-pkgs/licensecheck v0.4.0
-	github.com/git-pkgs/manifests v0.4.2
-	github.com/git-pkgs/purl v0.1.9
-	github.com/git-pkgs/registries v0.3.0
-	github.com/git-pkgs/spdx v0.1.1
+	github.com/git-pkgs/manifests v0.4.3
+	github.com/git-pkgs/purl v0.1.10
+	github.com/git-pkgs/registries v0.4.0
+	github.com/git-pkgs/spdx v0.1.2
 	golang.org/x/term v0.41.0
 	gopkg.in/yaml.v3 v3.0.1
 )
@@ -79,7 +79,7 @@ require (
 	github.com/fzipp/gocyclo v0.6.0 // indirect
 	github.com/ghostiam/protogetter v0.3.20 // indirect
 	github.com/git-pkgs/packageurl-go v0.3.1 // indirect
-	github.com/git-pkgs/vers v0.2.3 // indirect
+	github.com/git-pkgs/vers v0.2.4 // indirect
 	github.com/github/go-spdx/v2 v2.4.0 // indirect
 	github.com/go-critic/go-critic v0.14.3 // indirect
 	github.com/go-toolsmith/astcast v1.1.0 // indirect

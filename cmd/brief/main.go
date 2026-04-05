@@ -6,9 +6,11 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"reflect"
 	"runtime/debug"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/git-pkgs/brief"
 	"github.com/git-pkgs/brief/detect"
@@ -20,6 +22,10 @@ import (
 )
 
 func main() {
+	// Disable GC for the duration of this short-lived CLI process.
+	// Detection typically completes in under 100ms and allocates modestly,
+	// so skipping collection avoids ~10% overhead. The enrich subcommand
+	// may allocate more due to network I/O, but still finishes quickly.
 	debug.SetGCPercent(-1)
 
 	if len(os.Args) > 1 {
@@ -182,7 +188,10 @@ func listTools(knowledgeBase *kb.KnowledgeBase) {
 	} else {
 		enc := json.NewEncoder(os.Stdout)
 		enc.SetIndent("", "  ")
-		_ = enc.Encode(tools)
+		if err := enc.Encode(tools); err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "error writing JSON: %v\n", err)
+			os.Exit(1)
+		}
 	}
 }
 
@@ -210,133 +219,110 @@ func listEcosystems(knowledgeBase *kb.KnowledgeBase) {
 	} else {
 		enc := json.NewEncoder(os.Stdout)
 		enc.SetIndent("", "  ")
-		_ = enc.Encode(entries)
+		if err := enc.Encode(entries); err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "error writing JSON: %v\n", err)
+			os.Exit(1)
+		}
 	}
 }
 
 func cmdSchema() {
-	schema := map[string]any{
-		"$schema":     "https://json-schema.org/draft/2020-12/schema",
-		"title":       "brief report",
-		"description": "Output of brief project detection",
-		"type":        "object",
-		"properties": map[string]any{
-			"version":          map[string]any{"type": "string"},
-			"path":             map[string]any{"type": "string"},
-			"languages":        map[string]any{"type": "array", "items": map[string]any{"$ref": "#/$defs/detection"}},
-			"package_managers": map[string]any{"type": "array", "items": map[string]any{"$ref": "#/$defs/detection"}},
-			"scripts":          map[string]any{"type": "array", "items": map[string]any{"$ref": "#/$defs/script"}},
-			"tools":            map[string]any{"type": "object", "additionalProperties": map[string]any{"type": "array", "items": map[string]any{"$ref": "#/$defs/detection"}}},
-			"style":            map[string]any{"$ref": "#/$defs/style"},
-			"layout":           map[string]any{"$ref": "#/$defs/layout"},
-			"platforms":        map[string]any{"$ref": "#/$defs/platforms"},
-			"resources":        map[string]any{"$ref": "#/$defs/resources"},
-			"git":              map[string]any{"$ref": "#/$defs/git"},
-			"lines":            map[string]any{"$ref": "#/$defs/lines"},
-			"stats":            map[string]any{"$ref": "#/$defs/stats"},
-		},
-		"$defs": map[string]any{
-			"detection": map[string]any{
-				"type": "object",
-				"properties": map[string]any{
-					"name":         map[string]any{"type": "string"},
-					"category":     map[string]any{"type": "string"},
-					"confidence":   map[string]any{"type": "string", "enum": []string{"high", "medium", "low"}},
-					"command":      map[string]any{"$ref": "#/$defs/command"},
-					"config_files": map[string]any{"type": "array", "items": map[string]any{"type": "string"}},
-					"lockfile":     map[string]any{"type": "string"},
-					"homepage":     map[string]any{"type": "string"},
-					"docs":         map[string]any{"type": "string"},
-					"repo":         map[string]any{"type": "string"},
-					"description":  map[string]any{"type": "string"},
-				},
-			},
-			"command": map[string]any{
-				"type": "object",
-				"properties": map[string]any{
-					"run":           map[string]any{"type": "string"},
-					"alternatives":  map[string]any{"type": "array", "items": map[string]any{"type": "string"}},
-					"source":        map[string]any{"type": "string", "enum": []string{"project_script", "knowledge_base", "config_file"}},
-					"inferred_tool": map[string]any{"type": "string"},
-				},
-			},
-			"script": map[string]any{
-				"type": "object",
-				"properties": map[string]any{
-					"name":   map[string]any{"type": "string"},
-					"run":    map[string]any{"type": "string"},
-					"source": map[string]any{"type": "string"},
-				},
-			},
-			"style": map[string]any{
-				"type": "object",
-				"properties": map[string]any{
-					"indentation":      map[string]any{"type": "string"},
-					"indent_source":    map[string]any{"type": "string"},
-					"line_ending":      map[string]any{"type": "string"},
-					"trailing_newline": map[string]any{"type": "boolean"},
-				},
-			},
-			"layout": map[string]any{
-				"type": "object",
-				"properties": map[string]any{
-					"source_dirs":    map[string]any{"type": "array", "items": map[string]any{"type": "string"}},
-					"test_dirs":      map[string]any{"type": "array", "items": map[string]any{"type": "string"}},
-					"mirrors_source": map[string]any{"type": "boolean"},
-				},
-			},
-			"platforms": map[string]any{
-				"type": "object",
-				"properties": map[string]any{
-					"runtime_version_files": map[string]any{"type": "object", "additionalProperties": map[string]any{"type": "string"}},
-					"ci_matrix_versions":    map[string]any{"type": "object", "additionalProperties": map[string]any{"type": "array", "items": map[string]any{"type": "string"}}},
-					"ci_matrix_os":          map[string]any{"type": "array", "items": map[string]any{"type": "string"}},
-				},
-			},
-			"resources": map[string]any{
-				"type": "object",
-				"properties": map[string]any{
-					"readme":       map[string]any{"type": "string"},
-					"contributing": map[string]any{"type": "string"},
-					"changelog":    map[string]any{"type": "string"},
-					"license":      map[string]any{"type": "string"},
-					"license_type": map[string]any{"type": "string"},
-					"security":     map[string]any{"type": "string"},
-				},
-			},
-			"git": map[string]any{
-				"type": "object",
-				"properties": map[string]any{
-					"branch":         map[string]any{"type": "string"},
-					"default_branch": map[string]any{"type": "string"},
-					"remotes":        map[string]any{"type": "object", "additionalProperties": map[string]any{"type": "string"}},
-					"commit_count":   map[string]any{"type": "integer"},
-				},
-			},
-			"lines": map[string]any{
-				"type": "object",
-				"properties": map[string]any{
-					"total_files": map[string]any{"type": "integer"},
-					"total_lines": map[string]any{"type": "integer"},
-					"by_language": map[string]any{"type": "object", "additionalProperties": map[string]any{"type": "integer"}},
-					"source":      map[string]any{"type": "string"},
-				},
-			},
-			"stats": map[string]any{
-				"type": "object",
-				"properties": map[string]any{
-					"duration_ms":   map[string]any{"type": "number"},
-					"files_checked": map[string]any{"type": "integer"},
-					"tools_matched": map[string]any{"type": "integer"},
-					"tools_checked": map[string]any{"type": "integer"},
-				},
-			},
-		},
+	defs := make(map[string]any)
+	root := schemaForType(reflect.TypeFor[brief.Report](), defs)
+	root["$schema"] = "https://json-schema.org/draft/2020-12/schema"
+	root["title"] = "brief report"
+	root["description"] = "Output of brief project detection"
+	if len(defs) > 0 {
+		root["$defs"] = defs
 	}
 
 	enc := json.NewEncoder(os.Stdout)
 	enc.SetIndent("", "  ")
-	_ = enc.Encode(schema)
+	if err := enc.Encode(root); err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "error writing schema: %v\n", err)
+		os.Exit(1)
+	}
+}
+
+// schemaForType generates a JSON Schema object for a Go type using reflection.
+// Named struct types are emitted as $ref pointers into the $defs map.
+func schemaForType(t reflect.Type, defs map[string]any) map[string]any {
+	// Unwrap pointers.
+	for t.Kind() == reflect.Ptr {
+		t = t.Elem()
+	}
+
+	// Skip special types that don't appear in JSON output.
+	if t == reflect.TypeFor[time.Duration]() {
+		return map[string]any{"type": "string"}
+	}
+
+	switch t.Kind() {
+	case reflect.String:
+		return map[string]any{"type": "string"}
+	case reflect.Bool:
+		return map[string]any{"type": "boolean"}
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		return map[string]any{"type": "integer"}
+	case reflect.Float32, reflect.Float64:
+		return map[string]any{"type": "number"}
+	case reflect.Slice:
+		return map[string]any{
+			"type":  "array",
+			"items": schemaForType(t.Elem(), defs),
+		}
+	case reflect.Map:
+		return map[string]any{
+			"type":                 "object",
+			"additionalProperties": schemaForType(t.Elem(), defs),
+		}
+	case reflect.Struct:
+		return schemaForStruct(t, defs)
+	default:
+		return map[string]any{}
+	}
+}
+
+func schemaForStruct(t reflect.Type, defs map[string]any) map[string]any {
+	// For the root type (Report), inline it. For other named types, use $ref.
+	if t != reflect.TypeFor[brief.Report]() && t.Name() != "" {
+		name := schemaDefName(t)
+		if _, exists := defs[name]; !exists {
+			// Insert placeholder to break cycles, then fill it in.
+			defs[name] = map[string]any{}
+			defs[name] = buildStructSchema(t, defs)
+		}
+		return map[string]any{"$ref": "#/$defs/" + name}
+	}
+	return buildStructSchema(t, defs)
+}
+
+func buildStructSchema(t reflect.Type, defs map[string]any) map[string]any {
+	props := make(map[string]any)
+	for i := range t.NumField() {
+		f := t.Field(i)
+		if !f.IsExported() {
+			continue
+		}
+		tag := f.Tag.Get("json")
+		if tag == "-" {
+			continue
+		}
+		name, _, _ := strings.Cut(tag, ",")
+		if name == "" {
+			name = f.Name
+		}
+		props[name] = schemaForType(f.Type, defs)
+	}
+	return map[string]any{
+		"type":       "object",
+		"properties": props,
+	}
+}
+
+// schemaDefName returns a lowercase name for use in $defs.
+func schemaDefName(t reflect.Type) string {
+	return strings.ToLower(t.Name())
 }
 
 func filterCategory(r *brief.Report, category string) *brief.Report {

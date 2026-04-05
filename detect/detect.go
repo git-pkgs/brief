@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -402,22 +403,26 @@ func (e *Engine) recursiveGlob(pattern string) bool {
 		return e.fileExts[ext] > 0
 	}
 
-	// Fall back to walk for complex patterns
+	// Fall back to walk for complex patterns.
+	// Uses WalkDir to avoid following symlinks into directories.
 	root := filepath.Join(e.Root, parts[0])
 	found := false
 	errDone := errors.New("found")
-	_ = filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+	_ = filepath.WalkDir(root, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
 			return nil
 		}
-		if info.IsDir() {
-			name := info.Name()
+		if d.IsDir() {
+			name := d.Name()
 			if name != "." && e.shouldSkipDir(name) {
 				return filepath.SkipDir
 			}
 			return nil
 		}
-		matched, _ := filepath.Match(suffix, info.Name())
+		if d.Type()&os.ModeSymlink != 0 {
+			return nil
+		}
+		matched, _ := filepath.Match(suffix, d.Name())
 		if matched {
 			found = true
 			return errDone
@@ -430,6 +435,7 @@ func (e *Engine) recursiveGlob(pattern string) bool {
 // loadFileExts walks the project to a bounded depth to collect file extensions.
 // Cached for the lifetime of the engine. Default depth of 4 covers most layouts
 // (src/main/java/*.java, lib/something/*.rb).
+// Uses WalkDir instead of Walk to avoid following symlinks into directories.
 func (e *Engine) loadFileExts() {
 	if e.fileExts != nil {
 		return
@@ -440,16 +446,15 @@ func (e *Engine) loadFileExts() {
 		maxDepth = defaultScanDepth
 	}
 	rootLen := len(e.Root)
-	_ = filepath.Walk(e.Root, func(path string, info os.FileInfo, err error) error {
+	_ = filepath.WalkDir(e.Root, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
 			return nil
 		}
-		if info.IsDir() {
-			name := info.Name()
+		if d.IsDir() {
+			name := d.Name()
 			if name != "." && e.shouldSkipDir(name) {
 				return filepath.SkipDir
 			}
-			// Check depth
 			rel := path[rootLen:]
 			depth := strings.Count(rel, string(filepath.Separator))
 			if depth > maxDepth {
@@ -457,7 +462,10 @@ func (e *Engine) loadFileExts() {
 			}
 			return nil
 		}
-		ext := filepath.Ext(info.Name())
+		if d.Type()&os.ModeSymlink != 0 {
+			return nil
+		}
+		ext := filepath.Ext(d.Name())
 		if ext != "" {
 			e.fileExts[ext]++
 		}
@@ -467,6 +475,7 @@ func (e *Engine) loadFileExts() {
 
 // safeReadFile reads a file within the project root, rejecting symlinks
 // that point outside the root to prevent file disclosure attacks.
+// It opens the file via O_NOFOLLOW to avoid TOCTOU races between stat and read.
 func (e *Engine) safeReadFile(file string) ([]byte, error) {
 	path := filepath.Join(e.Root, file)
 	info, err := os.Lstat(path)
@@ -482,8 +491,17 @@ func (e *Engine) safeReadFile(file string) ([]byte, error) {
 		if !strings.HasPrefix(target, absRoot+string(filepath.Separator)) {
 			return nil, fmt.Errorf("symlink escapes project root: %s -> %s", file, target)
 		}
+		// Safe symlink within root: read the resolved target directly.
+		return os.ReadFile(target)
 	}
-	return os.ReadFile(path)
+	// Not a symlink: open with O_NOFOLLOW so a symlink swap between
+	// the Lstat and Open is rejected by the kernel.
+	f, err := openNoFollow(path)
+	if err != nil {
+		return nil, err
+	}
+	defer func() { _ = f.Close() }()
+	return io.ReadAll(f)
 }
 
 // contains checks if a file contains any of the given strings.
@@ -852,6 +870,7 @@ func (sc *styleCounts) toStyleInfo() *brief.StyleInfo {
 }
 
 // inferStyle samples source files to detect indentation style.
+// Uses WalkDir to avoid following symlinks, and reads via safeReadFile.
 func (e *Engine) inferStyle() *brief.StyleInfo {
 	if e.KB.StyleConfig == nil {
 		return nil
@@ -869,15 +888,18 @@ func (e *Engine) inferStyle() *brief.StyleInfo {
 
 	var sc styleCounts
 	errDone := errors.New("done")
-	_ = filepath.Walk(e.Root, func(path string, info os.FileInfo, err error) error {
+	_ = filepath.WalkDir(e.Root, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
 			return nil
 		}
-		if info.IsDir() {
-			name := info.Name()
+		if d.IsDir() {
+			name := d.Name()
 			if name != "." && e.shouldSkipDir(name) {
 				return filepath.SkipDir
 			}
+			return nil
+		}
+		if d.Type()&os.ModeSymlink != 0 {
 			return nil
 		}
 		if sc.sampled >= limit {
@@ -886,7 +908,11 @@ func (e *Engine) inferStyle() *brief.StyleInfo {
 		if !exts[filepath.Ext(path)] {
 			return nil
 		}
-		data, err := os.ReadFile(path)
+		rel, err := filepath.Rel(e.Root, path)
+		if err != nil {
+			return nil
+		}
+		data, err := e.safeReadFile(rel)
 		if err != nil {
 			return nil
 		}
@@ -1323,31 +1349,10 @@ func (e *Engine) Missing(r *brief.Report) *brief.MissingReport {
 		}
 
 		label := recommendedCategories[cat]
-
-		// Find the best tool for this category across detected ecosystems.
-		// Prefer tools marked as default, fall back to first match.
-		var best *kb.ToolDef
-		var bestEco string
-		for _, eco := range mr.Ecosystems {
-			for _, tool := range e.KB.ToolsForEcosystem(eco) {
-				if tool.Tool.Category != cat {
-					continue
-				}
-				if best == nil {
-					best = tool
-					bestEco = eco
-				}
-				if tool.Tool.Default {
-					best = tool
-					bestEco = eco
-					goto found
-				}
-			}
-		}
+		best, bestEco := e.findBestTool(cat, mr.Ecosystems)
 		if best == nil {
 			continue
 		}
-	found:
 		mc := brief.MissingCategory{
 			Category:    cat,
 			Label:       label,
@@ -1363,6 +1368,28 @@ func (e *Engine) Missing(r *brief.Report) *brief.MissingReport {
 	}
 
 	return mr
+}
+
+// findBestTool returns the best tool for a category across ecosystems.
+// Prefers tools marked as default, falls back to the first match.
+func (e *Engine) findBestTool(category string, ecosystems []string) (*kb.ToolDef, string) {
+	var best *kb.ToolDef
+	var bestEco string
+	for _, eco := range ecosystems {
+		for _, tool := range e.KB.ToolsForEcosystem(eco) {
+			if tool.Tool.Category != category {
+				continue
+			}
+			if best == nil {
+				best = tool
+				bestEco = eco
+			}
+			if tool.Tool.Default {
+				return tool, eco
+			}
+		}
+	}
+	return best, bestEco
 }
 
 var confidenceRank = map[brief.Confidence]int{

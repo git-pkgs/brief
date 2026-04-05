@@ -139,13 +139,8 @@ func mdTools(w io.Writer, tools map[string][]brief.Detection, verbose bool) {
 }
 
 func hasAnyTools(tools map[string][]brief.Detection) bool {
-	for _, cat := range categoryOrder {
-		if _, ok := tools[cat]; ok {
-			return true
-		}
-	}
-	for cat := range tools {
-		if categoryLabels[cat] == "" {
+	for _, dets := range tools {
+		if len(dets) > 0 {
 			return true
 		}
 	}
@@ -222,10 +217,10 @@ func mdLayout(w io.Writer, layout *brief.LayoutInfo) {
 	}
 	var parts []string
 	if len(layout.SourceDirs) > 0 {
-		parts = append(parts, "source: "+strings.Join(layout.SourceDirs, "/, ")+"/")
+		parts = append(parts, "source: "+joinDirs(layout.SourceDirs))
 	}
 	if len(layout.TestDirs) > 0 {
-		parts = append(parts, "test: "+strings.Join(layout.TestDirs, "/, ")+"/")
+		parts = append(parts, "test: "+joinDirs(layout.TestDirs))
 	}
 	if len(parts) > 0 {
 		_, _ = fmt.Fprintf(w, "**Layout:** %s\n", strings.Join(parts, " | "))
@@ -237,11 +232,11 @@ func mdPlatforms(w io.Writer, platforms *brief.PlatformInfo) {
 		return
 	}
 	_, _ = fmt.Fprintln(w)
-	for name, versions := range platforms.CIMatrixVersions {
-		_, _ = fmt.Fprintf(w, "**Platforms:** %s %s (CI matrix)\n", name, strings.Join(versions, ", "))
+	for _, name := range sortedKeys(platforms.CIMatrixVersions) {
+		_, _ = fmt.Fprintf(w, "**Platforms:** %s %s (CI matrix)\n", name, strings.Join(platforms.CIMatrixVersions[name], ", "))
 	}
-	for file, version := range platforms.RuntimeVersionFiles {
-		_, _ = fmt.Fprintf(w, "- %s: %s\n", sanitize(file), sanitize(version))
+	for _, file := range sortedKeys(platforms.RuntimeVersionFiles) {
+		_, _ = fmt.Fprintf(w, "- %s: %s\n", sanitize(file), sanitize(platforms.RuntimeVersionFiles[file]))
 	}
 	if len(platforms.CIMatrixOS) > 0 {
 		_, _ = fmt.Fprintf(w, "- OS: %s (CI matrix)\n", strings.Join(platforms.CIMatrixOS, ", "))
@@ -294,8 +289,8 @@ func mdGit(w io.Writer, git *brief.GitInfo) {
 		}
 		_, _ = fmt.Fprintln(w)
 	}
-	for name, url := range git.Remotes {
-		_, _ = fmt.Fprintf(w, "- %s: %s\n", sanitize(name), sanitize(url))
+	for _, name := range sortedKeys(git.Remotes) {
+		_, _ = fmt.Fprintf(w, "- %s: %s\n", sanitize(name), sanitize(git.Remotes[name]))
 	}
 }
 

@@ -25,12 +25,15 @@ const (
 	SourceConfigFile    Source = "config_file"
 )
 
+// Scope indicates the dependency scope.
+type Scope = string
+
 // Scope values for DepInfo.
 const (
-	ScopeRuntime     = "runtime"
-	ScopeDevelopment = "development"
-	ScopeTest        = "test"
-	ScopeBuild       = "build"
+	ScopeRuntime     Scope = "runtime"
+	ScopeDevelopment Scope = "development"
+	ScopeTest        Scope = "test"
+	ScopeBuild       Scope = "build"
 )
 
 // Command is a runnable command with provenance.

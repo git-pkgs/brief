@@ -1,0 +1,217 @@
+knowledge/_shared/circleci.toml
+  020fef4fbbdb2614 1-12
+knowledge/node/react.toml
+  020fef4fbbdb2614 1-14
+knowledge/node/np.toml
+  020fef4fbbdb2614 1-14
+knowledge/_shared/asdf.toml
+  020fef4fbbdb2614 1-13
+knowledge/python/twine.toml
+  020fef4fbbdb2614 1-15
+knowledge/rust/cargo-workspaces.toml
+  020fef4fbbdb2614 1-15
+knowledge/gleam/gleam.toml
+  020fef4fbbdb2614 2
+knowledge/rust/mdbook.toml
+  020fef4fbbdb2614 1-19
+knowledge/python/yapf.toml
+  020fef4fbbdb2614 1-23
+knowledge/_shared/moon.toml
+  020fef4fbbdb2614 1-16
+knowledge/python/bandit.toml
+  020fef4fbbdb2614 1-22
+knowledge/python/flake8.toml
+  020fef4fbbdb2614 1-23
+knowledge/node/nextra.toml
+  020fef4fbbdb2614 1-14
+knowledge/node/oxlint.toml
+  020fef4fbbdb2614 1-18
+knowledge/_shared/render.toml
+  020fef4fbbdb2614 1-12
+knowledge/deno/deno.toml
+  020fef4fbbdb2614 2
+knowledge/node/redoc.toml
+  020fef4fbbdb2614 1-14
+knowledge/node/typedoc.toml
+  020fef4fbbdb2614 1-18
+knowledge/go/sqlx.toml
+  020fef4fbbdb2614 1-11
+knowledge/_shared/drone.toml
+  020fef4fbbdb2614 1-13
+knowledge/_shared/tauri.toml
+  020fef4fbbdb2614 1-17
+knowledge/_shared/azure-pipelines.toml
+  020fef4fbbdb2614 1-12
+knowledge/node/swagger-ui.toml
+  020fef4fbbdb2614 1-14
+knowledge/java/gatling.toml
+  020fef4fbbdb2614 1-15
+knowledge/_shared/cloudformation.toml
+  020fef4fbbdb2614 1-14
+knowledge/node/fluent.toml
+  020fef4fbbdb2614 1-11
+knowledge/go/pgx.toml
+  020fef4fbbdb2614 1-11
+knowledge/node/standard-version.toml
+  020fef4fbbdb2614 1-18
+knowledge/node/mongoose.toml
+  020fef4fbbdb2614 1-11
+knowledge/node/knex.toml
+  020fef4fbbdb2614 1-18
+knowledge/ruby/brakeman.toml
+  020fef4fbbdb2614 1-14
+knowledge/python/peewee.toml
+  020fef4fbbdb2614 1-11
+detect/detect_test.go
+  020fef4fbbdb2614 297-312
+knowledge/node/tape.toml
+  020fef4fbbdb2614 1-14
+knowledge/_shared/packer.toml
+  020fef4fbbdb2614 1-13
+knowledge/java/spotless.toml
+  020fef4fbbdb2614 1-18
+knowledge/php/pest.toml
+  020fef4fbbdb2614 1-19
+knowledge/rust/axum.toml
+  020fef4fbbdb2614 1-14
+knowledge/java/pmd.toml
+  020fef4fbbdb2614 1-17
+knowledge/dart/flutter.toml
+  020fef4fbbdb2614 1-16
+knowledge/ruby/sequel.toml
+  020fef4fbbdb2614 1-11
+knowledge/_shared/buildpacks.toml
+  020fef4fbbdb2614 1-19
+knowledge/node/lingui.toml
+  020fef4fbbdb2614 1-14
+kb/kb.go
+  020fef4fbbdb2614 20,221-222
+knowledge/go/ginkgo.toml
+  020fef4fbbdb2614 1-15
+knowledge/go/revive.toml
+  020fef4fbbdb2614 1-18
+knowledge/node/nyc.toml
+  020fef4fbbdb2614 1-18
+knowledge/_shared/typos.toml
+  020fef4fbbdb2614 1-16
+knowledge/_shared/osv-scanner.toml
+  020fef4fbbdb2614 1-16
+knowledge/python/pyright.toml
+  020fef4fbbdb2614 1-22
+knowledge/ruby/steep.toml
+  020fef4fbbdb2614 1-19
+knowledge/_shared/grype.toml
+  020fef4fbbdb2614 1-16
+knowledge/_shared/grpc.toml
+  020fef4fbbdb2614 1-10
+knowledge/ruby/yard.toml
+  020fef4fbbdb2614 1-19
+knowledge/ruby/sinatra.toml
+  020fef4fbbdb2614 1-14
+knowledge/_shared/buildkite.toml
+  020fef4fbbdb2614 1-12
+knowledge/rust/rocket.toml
+  020fef4fbbdb2614 1-14
+knowledge/node/yarn-workspaces.toml
+  020fef4fbbdb2614 1-15
+knowledge/node/vue-i18n.toml
+  020fef4fbbdb2614 1-11
+knowledge/_shared/jenkins.toml
+  020fef4fbbdb2614 1-13
+knowledge/_shared/trivy.toml
+  020fef4fbbdb2614 1-16
+knowledge/_shared/bats.toml
+  020fef4fbbdb2614 1-13
+knowledge/kotlin/kotest.toml
+  020fef4fbbdb2614 1-14
+knowledge/python/pylint.toml
+  020fef4fbbdb2614 1-22
+knowledge/node/electron.toml
+  020fef4fbbdb2614 1-14
+knowledge/go/fiber.toml
+  020fef4fbbdb2614 1-14
+knowledge/_shared/travis-ci.toml
+  020fef4fbbdb2614 1-12
+knowledge/_shared/flyio.toml
+  020fef4fbbdb2614 1-15
+knowledge/go/wire.toml
+  020fef4fbbdb2614 1-14
+knowledge/_shared/kustomize.toml
+  020fef4fbbdb2614 1-16
+knowledge/node/flow.toml
+  020fef4fbbdb2614 1-18
+knowledge/elixir/excoveralls.toml
+  020fef4fbbdb2614 1-14
+knowledge/_shared/readthedocs.toml
+  020fef4fbbdb2614 1-12
+knowledge/node/svelte.toml
+  020fef4fbbdb2614 1-18
+knowledge/_shared/atlas.toml
+  020fef4fbbdb2614 1-16
+knowledge/node/jasmine.toml
+  020fef4fbbdb2614 1-18
+knowledge/_shared/trufflehog.toml
+  020fef4fbbdb2614 1-16
+knowledge/_shared/vale.toml
+  020fef4fbbdb2614 1-16
+knowledge/python/tortoise-orm.toml
+  020fef4fbbdb2614 1-11
+knowledge/php/laravel.toml
+  020fef4fbbdb2614 1-15
+knowledge/python/flask.toml
+  020fef4fbbdb2614 1-14
+knowledge/node/react-native.toml
+  020fef4fbbdb2614 1-14
+knowledge/_shared/snyk.toml
+  020fef4fbbdb2614 1-15
+knowledge/node/react-intl.toml
+  020fef4fbbdb2614 1-11
+knowledge/node/testing-library.toml
+  020fef4fbbdb2614 1-14
+knowledge/go/mockgen.toml
+  020fef4fbbdb2614 1-14
+knowledge/go/testify.toml
+  020fef4fbbdb2614 1-14
+knowledge/go/echo.toml
+  020fef4fbbdb2614 1-14
+knowledge/_shared/podman.toml
+  020fef4fbbdb2614 1-13
+knowledge/elixir/dialyzer.toml
+  020fef4fbbdb2614 2,5,8
+knowledge/node/mikro-orm.toml
+  020fef4fbbdb2614 1-11
+knowledge/_shared/vagrant.toml
+  020fef4fbbdb2614 1-16
+knowledge/node/vue.toml
+  020fef4fbbdb2614 1-14
+knowledge/php/symfony.toml
+  020fef4fbbdb2614 1-15
+knowledge/_shared/mise.toml
+  020fef4fbbdb2614 1-16
+knowledge/go/chi.toml
+  020fef4fbbdb2614 1-14
+knowledge/_shared/cspell.toml
+  020fef4fbbdb2614 1-16
+knowledge/_shared/thrift.toml
+  020fef4fbbdb2614 1-13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "891c9bb97edd86514903df84b52496890e25343f",
+  "prompts": {
+    "020fef4fbbdb2614": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e6af2841-fea5-44ee-a456-6b0485ac9b7a",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt",
+      "messages": [],
+      "total_additions": 1439,
+      "total_deletions": 23,
+      "accepted_lines": 1421,
+      "overriden_lines": 0
+    }
+  }
+}

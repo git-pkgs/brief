@@ -65,10 +65,13 @@ func TestFilterByConfidence(t *testing.T) {
 		},
 	}
 
-	t.Run("filter low keeps all", func(t *testing.T) {
+	t.Run("filter low keeps commits with findings", func(t *testing.T) {
 		filtered := filterByConfidence(report, detection.ConfidenceLow)
 		if filtered.Summary.AICommits != 2 {
 			t.Errorf("expected 2 AI commits, got %d", filtered.Summary.AICommits)
+		}
+		if len(filtered.Commits) != 2 {
+			t.Errorf("expected 2 commits (empty-finding commit excluded), got %d", len(filtered.Commits))
 		}
 		if len(filtered.Commits[0].Findings) != 2 {
 			t.Errorf("expected 2 findings in first commit, got %d", len(filtered.Commits[0].Findings))
@@ -88,13 +91,16 @@ func TestFilterByConfidence(t *testing.T) {
 		}
 	})
 
-	t.Run("filter high drops low and medium", func(t *testing.T) {
+	t.Run("filter high drops commits with no remaining findings", func(t *testing.T) {
 		filtered := filterByConfidence(report, detection.ConfidenceHigh)
 		if filtered.Summary.AICommits != 1 {
 			t.Errorf("expected 1 AI commit, got %d", filtered.Summary.AICommits)
 		}
-		if len(filtered.Commits[1].Findings) != 0 {
-			t.Errorf("expected 0 findings in second commit, got %d", len(filtered.Commits[1].Findings))
+		if len(filtered.Commits) != 1 {
+			t.Errorf("expected 1 commit, got %d", len(filtered.Commits))
+		}
+		if filtered.Commits[0].Hash != "abc123" {
+			t.Errorf("expected abc123, got %s", filtered.Commits[0].Hash)
 		}
 	})
 

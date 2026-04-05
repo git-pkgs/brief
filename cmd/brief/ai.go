@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"sort"
 
 	"github.com/chaoss/ai-detection-action/detection"
 	"github.com/chaoss/ai-detection-action/detection/coauthor"
@@ -91,22 +92,22 @@ func filterByConfidence(r scan.Report, minConf detection.Confidence) scan.Report
 				findings = append(findings, f)
 			}
 		}
-		filtered = append(filtered, scan.CommitResult{
-			Hash:     cr.Hash,
-			Findings: findings,
-		})
+		if len(findings) > 0 {
+			filtered = append(filtered, scan.CommitResult{
+				Hash:     cr.Hash,
+				Findings: findings,
+			})
+		}
 	}
 
 	// Rebuild summary from filtered results.
 	summary := scan.Summary{
-		TotalCommits: len(filtered),
+		TotalCommits: len(r.Commits),
+		AICommits:    len(filtered),
 		ToolCounts:   map[string]int{},
 		ByConfidence: map[string]int{},
 	}
 	for _, cr := range filtered {
-		if len(cr.Findings) > 0 {
-			summary.AICommits++
-		}
 		for _, f := range cr.Findings {
 			summary.ToolCounts[f.Tool]++
 			summary.ByConfidence[f.Confidence.String()]++
@@ -119,6 +120,15 @@ func filterByConfidence(r scan.Report, minConf detection.Confidence) scan.Report
 	}
 }
 
+func sortedToolNames(counts map[string]int) []string {
+	names := make([]string, 0, len(counts))
+	for name := range counts {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	return names
+}
+
 const shortHashLen = 12
 
 func aiHuman(w io.Writer, r scan.Report) {
@@ -129,15 +139,12 @@ func aiHuman(w io.Writer, r scan.Report) {
 	}
 
 	_, _ = fmt.Fprintln(w)
-	for tool, count := range r.Summary.ToolCounts {
-		_, _ = fmt.Fprintf(w, "  %-25s %d commits\n", tool, count)
+	for _, tool := range sortedToolNames(r.Summary.ToolCounts) {
+		_, _ = fmt.Fprintf(w, "  %-25s %d commits\n", tool, r.Summary.ToolCounts[tool])
 	}
 
 	_, _ = fmt.Fprintln(w)
 	for _, cr := range r.Commits {
-		if len(cr.Findings) == 0 {
-			continue
-		}
 		_, _ = fmt.Fprintf(w, "%s\n", cr.Hash[:min(len(cr.Hash), shortHashLen)])
 		for _, f := range cr.Findings {
 			_, _ = fmt.Fprintf(w, "  [%s] %s: %s\n", f.Confidence, f.Tool, f.Detail)
@@ -155,15 +162,12 @@ func aiMarkdown(w io.Writer, r scan.Report) {
 
 	_, _ = fmt.Fprintln(w, "| Tool | Commits |")
 	_, _ = fmt.Fprintln(w, "|------|---------|")
-	for tool, count := range r.Summary.ToolCounts {
-		_, _ = fmt.Fprintf(w, "| %s | %d |\n", tool, count)
+	for _, tool := range sortedToolNames(r.Summary.ToolCounts) {
+		_, _ = fmt.Fprintf(w, "| %s | %d |\n", tool, r.Summary.ToolCounts[tool])
 	}
 
 	_, _ = fmt.Fprintf(w, "\n### Findings\n\n")
 	for _, cr := range r.Commits {
-		if len(cr.Findings) == 0 {
-			continue
-		}
 		_, _ = fmt.Fprintf(w, "**%s**\n\n", cr.Hash[:min(len(cr.Hash), shortHashLen)])
 		for _, f := range cr.Findings {
 			_, _ = fmt.Fprintf(w, "- [%s] %s: %s\n", f.Confidence, f.Tool, f.Detail)

@@ -1,0 +1,19 @@
+[tool]
+name = "Yard"
+category = "docs"
+default = true
+homepage = "https://yardoc.org"
+docs = "https://rubydoc.info/gems/yard"
+repo = "https://github.com/lsegal/yard"
+description = "Documentation tool for Ruby"
+
+[detect]
+files = [".yardopts"]
+dependencies = ["yard"]
+ecosystems = ["ruby"]
+
+[commands]
+run = "yard doc"
+
+[config]
+files = [".yardopts"]

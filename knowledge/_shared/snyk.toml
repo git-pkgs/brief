@@ -1,0 +1,15 @@
+[tool]
+name = "Snyk"
+category = "security"
+homepage = "https://snyk.io"
+docs = "https://docs.snyk.io"
+description = "Developer security platform"
+
+[detect]
+files = [".snyk"]
+
+[commands]
+run = "snyk test"
+
+[config]
+files = [".snyk"]

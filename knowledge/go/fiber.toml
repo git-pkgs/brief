@@ -1,0 +1,14 @@
+[tool]
+name = "Fiber"
+category = "build"
+homepage = "https://gofiber.io"
+docs = "https://docs.gofiber.io"
+repo = "https://github.com/gofiber/fiber"
+description = "Express-inspired web framework for Go"
+
+[detect]
+dependencies = ["github.com/gofiber/fiber", "github.com/gofiber/fiber/v2", "github.com/gofiber/fiber/v3"]
+ecosystems = ["go"]
+
+[commands]
+run = "go run ."

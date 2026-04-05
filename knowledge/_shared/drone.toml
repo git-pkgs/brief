@@ -1,0 +1,13 @@
+[tool]
+name = "Drone"
+category = "ci"
+homepage = "https://www.drone.io"
+docs = "https://docs.drone.io"
+repo = "https://github.com/harness/harness"
+description = "Container-native CI/CD platform"
+
+[detect]
+files = [".drone.yml", ".drone.yaml"]
+
+[config]
+files = [".drone.yml"]

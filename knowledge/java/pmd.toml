@@ -1,0 +1,17 @@
+[tool]
+name = "PMD"
+category = "lint"
+homepage = "https://pmd.github.io"
+docs = "https://docs.pmd-code.org/latest/"
+repo = "https://github.com/pmd/pmd"
+description = "Source code analyzer for Java and others"
+
+[detect]
+files = ["pmd.xml", "pmd-ruleset.xml", ".pmd"]
+ecosystems = ["java"]
+
+[commands]
+run = "pmd check"
+
+[config]
+files = ["pmd.xml", "pmd-ruleset.xml"]

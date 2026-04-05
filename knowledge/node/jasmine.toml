@@ -1,0 +1,18 @@
+[tool]
+name = "Jasmine"
+category = "test"
+homepage = "https://jasmine.github.io"
+docs = "https://jasmine.github.io/pages/docs_home.html"
+repo = "https://github.com/jasmine/jasmine"
+description = "BDD testing framework for JavaScript"
+
+[detect]
+files = ["jasmine.json", "spec/support/jasmine.json"]
+dev_dependencies = ["jasmine"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx jasmine"
+
+[config]
+files = ["jasmine.json", "spec/support/jasmine.json"]

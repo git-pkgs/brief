@@ -1,0 +1,14 @@
+[tool]
+name = "CloudFormation"
+category = "infrastructure"
+homepage = "https://aws.amazon.com/cloudformation/"
+docs = "https://docs.aws.amazon.com/cloudformation/"
+description = "AWS infrastructure as code"
+
+[detect.file_contains]
+"template.yaml" = ["AWSTemplateFormatVersion"]
+"template.yml" = ["AWSTemplateFormatVersion"]
+"template.json" = ["AWSTemplateFormatVersion"]
+
+[config]
+files = ["template.yaml", "template.yml", "template.json"]

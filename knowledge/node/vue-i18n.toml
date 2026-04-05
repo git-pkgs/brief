@@ -1,0 +1,11 @@
+[tool]
+name = "vue-i18n"
+category = "i18n"
+homepage = "https://vue-i18n.intlify.dev"
+docs = "https://vue-i18n.intlify.dev/guide/introduction"
+repo = "https://github.com/intlify/vue-i18n"
+description = "Internationalization plugin for Vue.js"
+
+[detect]
+dependencies = ["vue-i18n"]
+ecosystems = ["node"]

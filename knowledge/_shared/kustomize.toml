@@ -1,0 +1,16 @@
+[tool]
+name = "Kustomize"
+category = "infrastructure"
+homepage = "https://kustomize.io"
+docs = "https://kubectl.docs.kubernetes.io/references/kustomize/"
+repo = "https://github.com/kubernetes-sigs/kustomize"
+description = "Kubernetes configuration customization"
+
+[detect]
+files = ["kustomization.yaml", "kustomization.yml"]
+
+[commands]
+run = "kustomize build ."
+
+[config]
+files = ["kustomization.yaml", "kustomization.yml"]

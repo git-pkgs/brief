@@ -1,0 +1,10 @@
+[tool]
+name = "gRPC"
+category = "codegen"
+homepage = "https://grpc.io"
+docs = "https://grpc.io/docs/"
+repo = "https://github.com/grpc/grpc"
+description = "High performance RPC framework"
+
+[detect]
+dependencies = ["grpc", "@grpc/grpc-js", "google.golang.org/grpc", "grpcio", "tonic"]

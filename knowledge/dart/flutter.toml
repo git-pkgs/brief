@@ -1,0 +1,16 @@
+[tool]
+name = "Flutter"
+category = "build"
+homepage = "https://flutter.dev"
+docs = "https://docs.flutter.dev"
+repo = "https://github.com/flutter/flutter"
+description = "UI toolkit for mobile, web, and desktop"
+
+[detect]
+ecosystems = ["dart"]
+
+[detect.file_contains]
+"pubspec.yaml" = ["flutter:"]
+
+[commands]
+run = "flutter run"

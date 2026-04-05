@@ -1,0 +1,18 @@
+[tool]
+name = "Spotless"
+category = "format"
+homepage = "https://github.com/diffplug/spotless"
+docs = "https://github.com/diffplug/spotless/tree/main/plugin-gradle"
+repo = "https://github.com/diffplug/spotless"
+description = "Code formatter for JVM projects"
+
+[detect]
+ecosystems = ["java", "kotlin", "scala"]
+
+[detect.file_contains]
+"build.gradle" = ["spotless"]
+"build.gradle.kts" = ["spotless"]
+
+[commands]
+run = "gradle spotlessApply"
+alternatives = ["gradle spotlessCheck"]

@@ -1,0 +1,12 @@
+[tool]
+name = "Render"
+category = "ci"
+homepage = "https://render.com"
+docs = "https://render.com/docs"
+description = "Cloud application hosting platform"
+
+[detect]
+files = ["render.yaml", "render.yml"]
+
+[config]
+files = ["render.yaml"]

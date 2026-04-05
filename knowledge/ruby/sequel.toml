@@ -1,0 +1,11 @@
+[tool]
+name = "Sequel"
+category = "database"
+homepage = "https://sequel.jeremyevans.net"
+docs = "https://sequel.jeremyevans.net/documentation.html"
+repo = "https://github.com/jeremyevans/sequel"
+description = "Database toolkit for Ruby"
+
+[detect]
+dependencies = ["sequel"]
+ecosystems = ["ruby"]

@@ -1,0 +1,11 @@
+[tool]
+name = "pgx"
+category = "database"
+homepage = "https://github.com/jackc/pgx"
+docs = "https://pkg.go.dev/github.com/jackc/pgx/v5"
+repo = "https://github.com/jackc/pgx"
+description = "PostgreSQL driver and toolkit for Go"
+
+[detect]
+dependencies = ["github.com/jackc/pgx", "github.com/jackc/pgx/v4", "github.com/jackc/pgx/v5"]
+ecosystems = ["go"]

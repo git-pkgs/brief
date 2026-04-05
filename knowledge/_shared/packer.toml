@@ -1,0 +1,13 @@
+[tool]
+name = "Packer"
+category = "infrastructure"
+homepage = "https://developer.hashicorp.com/packer"
+docs = "https://developer.hashicorp.com/packer/docs"
+repo = "https://github.com/hashicorp/packer"
+description = "Automated machine image builder"
+
+[detect]
+files = ["**/*.pkr.hcl", "*.pkr.hcl"]
+
+[commands]
+run = "packer build ."

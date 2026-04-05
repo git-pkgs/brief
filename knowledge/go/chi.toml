@@ -1,0 +1,14 @@
+[tool]
+name = "Chi"
+category = "build"
+homepage = "https://go-chi.io"
+docs = "https://go-chi.io/#/README"
+repo = "https://github.com/go-chi/chi"
+description = "Lightweight HTTP router for Go"
+
+[detect]
+dependencies = ["github.com/go-chi/chi", "github.com/go-chi/chi/v5"]
+ecosystems = ["go"]
+
+[commands]
+run = "go run ."

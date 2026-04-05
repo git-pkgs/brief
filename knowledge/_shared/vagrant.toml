@@ -1,0 +1,16 @@
+[tool]
+name = "Vagrant"
+category = "infrastructure"
+homepage = "https://developer.hashicorp.com/vagrant"
+docs = "https://developer.hashicorp.com/vagrant/docs"
+repo = "https://github.com/hashicorp/vagrant"
+description = "Development environment automation"
+
+[detect]
+files = ["Vagrantfile"]
+
+[commands]
+run = "vagrant up"
+
+[config]
+files = ["Vagrantfile"]

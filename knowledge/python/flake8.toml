@@ -1,0 +1,23 @@
+[tool]
+name = "Flake8"
+category = "lint"
+homepage = "https://flake8.pycqa.org"
+docs = "https://flake8.pycqa.org/en/latest/"
+repo = "https://github.com/PyCQA/flake8"
+description = "Python linting tool"
+
+[detect]
+files = [".flake8"]
+dependencies = ["flake8"]
+dev_dependencies = ["flake8"]
+ecosystems = ["python"]
+
+[detect.file_contains]
+"setup.cfg" = ["[flake8]"]
+"pyproject.toml" = ["[tool.flake8"]
+
+[commands]
+run = "flake8"
+
+[config]
+files = [".flake8"]

@@ -1,0 +1,16 @@
+[tool]
+name = "cspell"
+category = "lint"
+homepage = "https://cspell.org"
+docs = "https://cspell.org/docs/getting-started"
+repo = "https://github.com/streetsidesoftware/cspell"
+description = "Code spell checker"
+
+[detect]
+files = ["cspell.json", ".cspell.json", "cspell.config.js", "cspell.config.yaml"]
+
+[commands]
+run = "npx cspell"
+
+[config]
+files = ["cspell.json", ".cspell.json", "cspell.config.js", "cspell.config.yaml"]

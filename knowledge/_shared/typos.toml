@@ -1,0 +1,16 @@
+[tool]
+name = "typos"
+category = "lint"
+homepage = "https://github.com/crate-ci/typos"
+docs = "https://github.com/crate-ci/typos#readme"
+repo = "https://github.com/crate-ci/typos"
+description = "Source code spell checker"
+
+[detect]
+files = ["_typos.toml", ".typos.toml", "typos.toml"]
+
+[commands]
+run = "typos"
+
+[config]
+files = ["_typos.toml", ".typos.toml", "typos.toml"]

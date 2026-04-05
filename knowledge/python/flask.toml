@@ -1,0 +1,14 @@
+[tool]
+name = "Flask"
+category = "build"
+homepage = "https://flask.palletsprojects.com"
+docs = "https://flask.palletsprojects.com/en/stable/"
+repo = "https://github.com/pallets/flask"
+description = "Lightweight Python web framework"
+
+[detect]
+dependencies = ["flask"]
+ecosystems = ["python"]
+
+[commands]
+run = "flask run"

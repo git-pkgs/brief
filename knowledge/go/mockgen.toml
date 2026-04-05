@@ -1,0 +1,14 @@
+[tool]
+name = "mockgen"
+category = "codegen"
+homepage = "https://github.com/uber-go/mock"
+docs = "https://pkg.go.dev/go.uber.org/mock"
+repo = "https://github.com/uber-go/mock"
+description = "Mock code generator for Go interfaces"
+
+[detect]
+dependencies = ["go.uber.org/mock", "github.com/golang/mock"]
+ecosystems = ["go"]
+
+[commands]
+run = "mockgen"

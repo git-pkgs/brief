@@ -1,0 +1,15 @@
+[tool]
+name = "Gatling"
+category = "test"
+homepage = "https://gatling.io"
+docs = "https://docs.gatling.io"
+repo = "https://github.com/gatling/gatling"
+description = "Load testing framework for JVM"
+
+[detect]
+files = ["src/gatling/"]
+ecosystems = ["java", "scala", "kotlin"]
+
+[commands]
+run = "gradle gatlingRun"
+alternatives = ["mvn gatling:test"]

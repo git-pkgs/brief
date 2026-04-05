@@ -1,0 +1,14 @@
+[tool]
+name = "np"
+category = "release"
+homepage = "https://github.com/sindresorhus/np"
+docs = "https://github.com/sindresorhus/np#readme"
+repo = "https://github.com/sindresorhus/np"
+description = "Better npm publish"
+
+[detect]
+dev_dependencies = ["np"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx np"

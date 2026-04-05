@@ -1,0 +1,14 @@
+[tool]
+name = "Testify"
+category = "test"
+homepage = "https://github.com/stretchr/testify"
+docs = "https://pkg.go.dev/github.com/stretchr/testify"
+repo = "https://github.com/stretchr/testify"
+description = "Go testing toolkit with assertions and mocks"
+
+[detect]
+dependencies = ["github.com/stretchr/testify"]
+ecosystems = ["go"]
+
+[commands]
+run = "go test ./..."

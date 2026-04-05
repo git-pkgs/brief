@@ -1,0 +1,15 @@
+[tool]
+name = "Laravel"
+category = "build"
+homepage = "https://laravel.com"
+docs = "https://laravel.com/docs"
+repo = "https://github.com/laravel/framework"
+description = "PHP web application framework"
+
+[detect]
+files = ["artisan"]
+dependencies = ["laravel/framework"]
+ecosystems = ["php"]
+
+[commands]
+run = "php artisan serve"

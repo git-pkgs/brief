@@ -1,0 +1,18 @@
+[tool]
+name = "standard-version"
+category = "release"
+homepage = "https://github.com/conventional-changelog/standard-version"
+docs = "https://github.com/conventional-changelog/standard-version#readme"
+repo = "https://github.com/conventional-changelog/standard-version"
+description = "Automate versioning and changelog generation"
+
+[detect]
+files = [".versionrc", ".versionrc.json", ".versionrc.js"]
+dev_dependencies = ["standard-version"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx standard-version"
+
+[config]
+files = [".versionrc", ".versionrc.json"]

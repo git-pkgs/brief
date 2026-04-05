@@ -1,0 +1,11 @@
+[tool]
+name = "Mongoose"
+category = "database"
+homepage = "https://mongoosejs.com"
+docs = "https://mongoosejs.com/docs/"
+repo = "https://github.com/Automattic/mongoose"
+description = "MongoDB object modeling for Node.js"
+
+[detect]
+dependencies = ["mongoose"]
+ecosystems = ["node"]

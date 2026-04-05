@@ -1,0 +1,16 @@
+[tool]
+name = "Grype"
+category = "security"
+homepage = "https://github.com/anchore/grype"
+docs = "https://github.com/anchore/grype#readme"
+repo = "https://github.com/anchore/grype"
+description = "Vulnerability scanner for container images and filesystems"
+
+[detect]
+files = [".grype.yaml", ".grype/config.yaml"]
+
+[commands]
+run = "grype dir:."
+
+[config]
+files = [".grype.yaml", ".grype/config.yaml"]

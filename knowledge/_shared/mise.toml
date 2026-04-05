@@ -1,0 +1,16 @@
+[tool]
+name = "Mise"
+category = "environment"
+homepage = "https://mise.jdx.dev"
+docs = "https://mise.jdx.dev/getting-started.html"
+repo = "https://github.com/jdx/mise"
+description = "Polyglot runtime and dev tool manager"
+
+[detect]
+files = [".mise.toml", "mise.toml", ".mise.local.toml"]
+
+[commands]
+run = "mise install"
+
+[config]
+files = [".mise.toml", "mise.toml"]

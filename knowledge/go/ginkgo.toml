@@ -1,0 +1,15 @@
+[tool]
+name = "Ginkgo"
+category = "test"
+homepage = "https://onsi.github.io/ginkgo/"
+docs = "https://onsi.github.io/ginkgo/"
+repo = "https://github.com/onsi/ginkgo"
+description = "BDD testing framework for Go"
+
+[detect]
+dependencies = ["github.com/onsi/ginkgo", "github.com/onsi/ginkgo/v2"]
+ecosystems = ["go"]
+
+[commands]
+run = "ginkgo ./..."
+alternatives = ["go test ./..."]

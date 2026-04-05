@@ -1,0 +1,17 @@
+[tool]
+name = "Tauri"
+category = "build"
+homepage = "https://tauri.app"
+docs = "https://tauri.app/start/"
+repo = "https://github.com/tauri-apps/tauri"
+description = "Build desktop apps with web technologies"
+
+[detect]
+files = ["tauri.conf.json", "src-tauri/tauri.conf.json"]
+
+[commands]
+run = "npx tauri dev"
+alternatives = ["cargo tauri dev"]
+
+[config]
+files = ["tauri.conf.json", "src-tauri/tauri.conf.json"]

@@ -1,0 +1,14 @@
+[tool]
+name = "Electron"
+category = "build"
+homepage = "https://www.electronjs.org"
+docs = "https://www.electronjs.org/docs/latest/"
+repo = "https://github.com/electron/electron"
+description = "Build cross-platform desktop apps"
+
+[detect]
+dev_dependencies = ["electron"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx electron ."

@@ -1,0 +1,14 @@
+[tool]
+name = "Wire"
+category = "codegen"
+homepage = "https://github.com/google/wire"
+docs = "https://github.com/google/wire/blob/main/docs/guide.md"
+repo = "https://github.com/google/wire"
+description = "Compile-time dependency injection for Go"
+
+[detect]
+dependencies = ["github.com/google/wire"]
+ecosystems = ["go"]
+
+[commands]
+run = "wire ./..."

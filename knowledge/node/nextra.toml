@@ -1,0 +1,14 @@
+[tool]
+name = "Nextra"
+category = "docs"
+homepage = "https://nextra.site"
+docs = "https://nextra.site/docs"
+repo = "https://github.com/shuding/nextra"
+description = "Next.js based documentation framework"
+
+[detect]
+dependencies = ["nextra", "nextra-theme-docs"]
+ecosystems = ["node"]
+
+[commands]
+run = "next build"

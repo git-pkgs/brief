@@ -1,0 +1,22 @@
+[tool]
+name = "Pyright"
+category = "typecheck"
+default = true
+homepage = "https://github.com/microsoft/pyright"
+docs = "https://microsoft.github.io/pyright/"
+repo = "https://github.com/microsoft/pyright"
+description = "Static type checker for Python"
+
+[detect]
+files = ["pyrightconfig.json"]
+dev_dependencies = ["pyright"]
+ecosystems = ["python"]
+
+[detect.file_contains]
+"pyproject.toml" = ["[tool.pyright"]
+
+[commands]
+run = "pyright"
+
+[config]
+files = ["pyrightconfig.json"]

@@ -294,6 +294,22 @@ func TestNoEmptyToolNames(t *testing.T) {
 	}
 }
 
+func TestNoDuplicateToolNames(t *testing.T) {
+	knowledgeBase := loadKB(t)
+
+	seen := make(map[string]string) // name -> first source path
+	for _, tool := range knowledgeBase.Tools {
+		if tool.Tool.Name == "" {
+			continue
+		}
+		if prev, ok := seen[tool.Tool.Name]; ok {
+			t.Errorf("duplicate tool name %q: first in %s, also in %s", tool.Tool.Name, prev, tool.Source)
+		} else {
+			seen[tool.Tool.Name] = tool.Source
+		}
+	}
+}
+
 func TestScriptPriority(t *testing.T) {
 	engine := New(loadKB(t), "../testdata/ruby-project")
 	r, err := engine.Run()

@@ -1,0 +1,14 @@
+[tool]
+name = "Testing Library"
+category = "test"
+homepage = "https://testing-library.com"
+docs = "https://testing-library.com/docs/"
+repo = "https://github.com/testing-library"
+description = "Simple and complete testing utilities"
+
+[detect]
+dev_dependencies = ["@testing-library/react", "@testing-library/vue", "@testing-library/dom", "@testing-library/jest-dom", "@testing-library/angular"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx jest"

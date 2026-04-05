@@ -1,0 +1,14 @@
+[tool]
+name = "Excoveralls"
+category = "coverage"
+homepage = "https://github.com/parroty/excoveralls"
+docs = "https://hexdocs.pm/excoveralls"
+repo = "https://github.com/parroty/excoveralls"
+description = "Coverage report tool for Elixir"
+
+[detect]
+dependencies = ["excoveralls"]
+ecosystems = ["elixir"]
+
+[commands]
+run = "mix coveralls"

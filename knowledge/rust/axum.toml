@@ -1,0 +1,14 @@
+[tool]
+name = "Axum"
+category = "build"
+homepage = "https://github.com/tokio-rs/axum"
+docs = "https://docs.rs/axum"
+repo = "https://github.com/tokio-rs/axum"
+description = "Ergonomic web framework for Rust"
+
+[detect]
+dependencies = ["axum"]
+ecosystems = ["rust"]
+
+[commands]
+run = "cargo run"

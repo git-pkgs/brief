@@ -1,0 +1,12 @@
+[tool]
+name = "CircleCI"
+category = "ci"
+homepage = "https://circleci.com"
+docs = "https://circleci.com/docs/"
+description = "Continuous integration and delivery platform"
+
+[detect]
+files = [".circleci/config.yml", ".circleci/config.yaml"]
+
+[config]
+files = [".circleci/config.yml"]

@@ -1,0 +1,19 @@
+[tool]
+name = "Cloud Native Buildpacks"
+category = "container"
+homepage = "https://buildpacks.io"
+docs = "https://buildpacks.io/docs/"
+repo = "https://github.com/buildpacks/pack"
+description = "Transform source code into container images"
+
+[detect]
+files = ["project.toml"]
+
+[detect.file_contains]
+"project.toml" = ["[build]", "[io.buildpacks"]
+
+[commands]
+run = "pack build"
+
+[config]
+files = ["project.toml"]

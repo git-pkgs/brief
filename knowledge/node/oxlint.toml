@@ -1,0 +1,18 @@
+[tool]
+name = "oxlint"
+category = "lint"
+homepage = "https://oxc.rs/docs/guide/usage/linter"
+docs = "https://oxc.rs/docs/guide/usage/linter"
+repo = "https://github.com/oxc-project/oxc"
+description = "Fast JavaScript/TypeScript linter"
+
+[detect]
+files = [".oxlintrc.json", "oxlint.json"]
+dev_dependencies = ["oxlint"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx oxlint"
+
+[config]
+files = [".oxlintrc.json", "oxlint.json"]

@@ -1,0 +1,13 @@
+[tool]
+name = "Bats"
+category = "test"
+homepage = "https://bats-core.readthedocs.io"
+docs = "https://bats-core.readthedocs.io/en/stable/"
+repo = "https://github.com/bats-core/bats-core"
+description = "Bash Automated Testing System"
+
+[detect]
+files = ["**/*.bats", "test/*.bats", "tests/*.bats"]
+
+[commands]
+run = "bats test/"

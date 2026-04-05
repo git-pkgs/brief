@@ -1,0 +1,18 @@
+[tool]
+name = "Revive"
+category = "lint"
+homepage = "https://revive.run"
+docs = "https://revive.run/docs"
+repo = "https://github.com/mgechev/revive"
+description = "Fast and extensible Go linter"
+
+[detect]
+files = ["revive.toml"]
+dependencies = ["github.com/mgechev/revive"]
+ecosystems = ["go"]
+
+[commands]
+run = "revive ./..."
+
+[config]
+files = ["revive.toml"]

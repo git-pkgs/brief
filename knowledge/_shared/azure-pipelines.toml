@@ -1,0 +1,12 @@
+[tool]
+name = "Azure Pipelines"
+category = "ci"
+homepage = "https://azure.microsoft.com/en-us/products/devops/pipelines"
+docs = "https://learn.microsoft.com/en-us/azure/devops/pipelines/"
+description = "CI/CD service from Azure DevOps"
+
+[detect]
+files = ["azure-pipelines.yml", "azure-pipelines.yaml"]
+
+[config]
+files = ["azure-pipelines.yml"]

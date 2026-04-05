@@ -1,0 +1,15 @@
+[tool]
+name = "Symfony"
+category = "build"
+homepage = "https://symfony.com"
+docs = "https://symfony.com/doc"
+repo = "https://github.com/symfony/symfony"
+description = "PHP web application framework"
+
+[detect]
+dependencies = ["symfony/framework-bundle"]
+ecosystems = ["php"]
+
+[commands]
+run = "symfony server:start"
+alternatives = ["php bin/console server:run"]

@@ -1,0 +1,16 @@
+[tool]
+name = "osv-scanner"
+category = "security"
+homepage = "https://google.github.io/osv-scanner/"
+docs = "https://google.github.io/osv-scanner/configuration/"
+repo = "https://github.com/google/osv-scanner"
+description = "Vulnerability scanner using OSV database"
+
+[detect]
+files = ["osv-scanner.toml", ".osv-scanner.toml"]
+
+[commands]
+run = "osv-scanner -r ."
+
+[config]
+files = ["osv-scanner.toml", ".osv-scanner.toml"]

@@ -1,0 +1,12 @@
+[tool]
+name = "Buildkite"
+category = "ci"
+homepage = "https://buildkite.com"
+docs = "https://buildkite.com/docs"
+description = "CI/CD platform for teams"
+
+[detect]
+files = [".buildkite/pipeline.yml", ".buildkite/pipeline.yaml", "buildkite.yml"]
+
+[config]
+files = [".buildkite/pipeline.yml"]

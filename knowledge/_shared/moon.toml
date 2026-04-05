@@ -1,0 +1,16 @@
+[tool]
+name = "Moon"
+category = "monorepo"
+homepage = "https://moonrepo.dev"
+docs = "https://moonrepo.dev/docs"
+repo = "https://github.com/moonrepo/moon"
+description = "Repository management and build system"
+
+[detect]
+files = [".moon/workspace.yml", ".moon/workspace.yaml"]
+
+[commands]
+run = "moon run"
+
+[config]
+files = [".moon/workspace.yml"]

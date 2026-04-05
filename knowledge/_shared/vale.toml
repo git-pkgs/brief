@@ -1,0 +1,16 @@
+[tool]
+name = "Vale"
+category = "lint"
+homepage = "https://vale.sh"
+docs = "https://vale.sh/docs"
+repo = "https://github.com/vale-cli/vale"
+description = "Prose linter for technical writing"
+
+[detect]
+files = [".vale.ini"]
+
+[commands]
+run = "vale"
+
+[config]
+files = [".vale.ini"]

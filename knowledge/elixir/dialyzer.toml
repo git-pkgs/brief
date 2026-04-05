@@ -1,11 +1,11 @@
 [tool]
-name = "Dialyzer"
+name = "Dialyxir"
 category = "typecheck"
 default = true
-homepage = "https://www.erlang.org/doc/apps/dialyzer"
+homepage = "https://github.com/jeremyjh/dialyxir"
 docs = "https://hexdocs.pm/dialyxir"
 repo = "https://github.com/jeremyjh/dialyxir"
-description = "Static analysis tool for Erlang/Elixir"
+description = "Dialyzer wrapper for Elixir"
 
 [detect]
 dependencies = ["dialyxir"]

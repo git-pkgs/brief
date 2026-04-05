@@ -1,0 +1,12 @@
+[tool]
+name = "Read the Docs"
+category = "docs"
+homepage = "https://about.readthedocs.com"
+docs = "https://docs.readthedocs.com"
+description = "Documentation hosting platform"
+
+[detect]
+files = [".readthedocs.yml", ".readthedocs.yaml", "readthedocs.yml", "readthedocs.yaml"]
+
+[config]
+files = [".readthedocs.yml", ".readthedocs.yaml"]

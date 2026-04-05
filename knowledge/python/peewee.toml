@@ -1,0 +1,11 @@
+[tool]
+name = "Peewee"
+category = "database"
+homepage = "https://docs.peewee-orm.com"
+docs = "https://docs.peewee-orm.com/en/latest/"
+repo = "https://github.com/coleifer/peewee"
+description = "Small Python ORM"
+
+[detect]
+dependencies = ["peewee"]
+ecosystems = ["python"]

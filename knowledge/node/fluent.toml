@@ -1,0 +1,11 @@
+[tool]
+name = "Fluent"
+category = "i18n"
+homepage = "https://projectfluent.org"
+docs = "https://projectfluent.org/fluent/guide/"
+repo = "https://github.com/projectfluent/fluent.js"
+description = "Mozilla localization system"
+
+[detect]
+dependencies = ["@fluent/bundle", "@fluent/react"]
+ecosystems = ["node"]

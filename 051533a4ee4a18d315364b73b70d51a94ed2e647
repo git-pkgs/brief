@@ -1,0 +1,41 @@
+detect/nofollow_other.go
+  020fef4fbbdb2614 1-12
+report/markdown.go
+  020fef4fbbdb2614 142-143,220,223,235-236,238-239,292-293
+cmd/brief/main.go
+  020fef4fbbdb2614 9,13,25-28,191-194,222-225,230-236,241-325
+detect/detect.go
+  020fef4fbbdb2614 8,406-407,411,415-416,422-425,438,449,453-454,465-468,478,494-495,497-501,503-504,873,891,895-896,902-904,911-912,915,1352,1373-1394
+brief.go
+  020fef4fbbdb2614 28-30,33-36
+cmd/brief/schema_test.go
+  020fef4fbbdb2614 1-89
+report/report.go
+  020fef4fbbdb2614 8,246,249,252,256-262,270-271,273-274,314-315,470-479
+detect/nofollow_unix.go
+  020fef4fbbdb2614 1-14
+cmd/brief/enrich_test.go
+  020fef4fbbdb2614 1-194
+report/report_test.go
+  020fef4fbbdb2614 1-200
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "051533a4ee4a18d315364b73b70d51a94ed2e647",
+  "prompts": {
+    "020fef4fbbdb2614": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e6af2841-fea5-44ee-a456-6b0485ac9b7a",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt",
+      "messages": [],
+      "total_additions": 729,
+      "total_deletions": 189,
+      "accepted_lines": 725,
+      "overriden_lines": 0
+    }
+  }
+}

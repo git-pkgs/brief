@@ -1,6 +1,6 @@
 # brief
 
-A single-binary CLI tool that detects a software project's toolchain, configuration, and conventions, then outputs a structured report. Written in Go, 54 ecosystems, 355 tool definitions.
+A single-binary CLI tool that detects a software project's toolchain, configuration, and conventions, then outputs a structured report.
 
 brief answers the bootstrap questions every AI coding agent, new contributor, and CI pipeline faces: what language is this, how do I install dependencies, how do I run the tests, what linter is configured.
 

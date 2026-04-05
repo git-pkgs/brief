@@ -111,8 +111,8 @@ func mdTools(w io.Writer, tools map[string][]brief.Detection, verbose bool) {
 	_, _ = fmt.Fprintln(w, "| Category | Tool | Command | Config |")
 	_, _ = fmt.Fprintln(w, "|----------|------|---------|--------|")
 
-	for _, cat := range categoryOrder {
-		label := categoryLabels[cat]
+	for _, cat := range CategoryOrder {
+		label := CategoryLabels[cat]
 		if label == "" {
 			label = cat
 		}
@@ -125,7 +125,7 @@ func mdTools(w io.Writer, tools map[string][]brief.Detection, verbose bool) {
 
 	// Print any categories not in the fixed order
 	for cat, dets := range tools {
-		if categoryLabels[cat] != "" {
+		if CategoryLabels[cat] != "" {
 			continue
 		}
 		mdToolRows(w, cat, dets)
@@ -163,7 +163,7 @@ func mdToolRows(w io.Writer, label string, dets []brief.Detection) {
 
 func mdToolLinks(w io.Writer, tools map[string][]brief.Detection) {
 	_, _ = fmt.Fprintln(w)
-	for _, cat := range categoryOrder {
+	for _, cat := range CategoryOrder {
 		dets, ok := tools[cat]
 		if !ok {
 			continue

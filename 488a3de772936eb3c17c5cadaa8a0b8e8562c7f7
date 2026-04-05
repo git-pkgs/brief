@@ -1,0 +1,25 @@
+detect/detect_test.go
+  020fef4fbbdb2614 287-296
+kb/kb.go
+  020fef4fbbdb2614 186-189,191,193,195,197,199,201
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "488a3de772936eb3c17c5cadaa8a0b8e8562c7f7",
+  "prompts": {
+    "020fef4fbbdb2614": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e6af2841-fea5-44ee-a456-6b0485ac9b7a",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt",
+      "messages": [],
+      "total_additions": 47,
+      "total_deletions": 34,
+      "accepted_lines": 20,
+      "overriden_lines": 0
+    }
+  }
+}

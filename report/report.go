@@ -35,11 +35,11 @@ func JSON(w io.Writer, r *brief.Report) error {
 
 const maxDisplayItems = 20 // max items to show before truncating
 
-// categoryOrder defines the stable display order for tool categories.
-var categoryOrder = []string{"test", "lint", "format", "typecheck", "docs", "build", "codegen", "database", "security", "ci", "container", "infrastructure", "monorepo", "environment", "i18n", "release", "coverage", "dependency_bot"}
+// CategoryOrder defines the stable display order for tool categories.
+var CategoryOrder = []string{"test", "lint", "format", "typecheck", "docs", "build", "codegen", "database", "security", "ci", "container", "infrastructure", "monorepo", "environment", "i18n", "release", "coverage", "dependency_bot"}
 
-// categoryLabels maps category keys to human-readable labels.
-var categoryLabels = map[string]string{
+// CategoryLabels maps category keys to human-readable labels.
+var CategoryLabels = map[string]string{
 	"test":           "Test",
 	"lint":           "Lint",
 	"format":         "Format",
@@ -155,8 +155,8 @@ func printScripts(w io.Writer, scripts []brief.Script) {
 }
 
 func printTools(w io.Writer, tools map[string][]brief.Detection, verbose bool) {
-	for _, cat := range categoryOrder {
-		label := categoryLabels[cat]
+	for _, cat := range CategoryOrder {
+		label := CategoryLabels[cat]
 		if label == "" {
 			label = cat
 		}
@@ -169,7 +169,7 @@ func printTools(w io.Writer, tools map[string][]brief.Detection, verbose bool) {
 
 	// Print any categories not in the fixed order
 	for cat, dets := range tools {
-		if categoryLabels[cat] != "" {
+		if CategoryLabels[cat] != "" {
 			continue
 		}
 		_, _ = fmt.Fprintln(w)

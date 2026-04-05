@@ -129,7 +129,11 @@ func runScan(dir string, scanDepth int, skip, category string, jsonFlag, humanFl
 }
 
 func cmdList(args []string) {
-	if len(args) == 0 {
+	fs := flag.NewFlagSet("brief list", flag.ExitOnError)
+	readmeFlag := fs.Bool("readme", false, "Output markdown for README")
+	_ = fs.Parse(args)
+
+	if fs.NArg() == 0 {
 		_, _ = fmt.Fprintln(os.Stderr, "usage: brief list <tools|ecosystems>")
 		os.Exit(1)
 	}
@@ -140,13 +144,17 @@ func cmdList(args []string) {
 		os.Exit(1)
 	}
 
-	switch args[0] {
+	switch fs.Arg(0) {
 	case "tools":
-		listTools(knowledgeBase)
+		if *readmeFlag {
+			listToolsReadme(knowledgeBase)
+		} else {
+			listTools(knowledgeBase)
+		}
 	case "ecosystems":
 		listEcosystems(knowledgeBase)
 	default:
-		_, _ = fmt.Fprintf(os.Stderr, "unknown list type: %s\nusage: brief list <tools|ecosystems>\n", args[0])
+		_, _ = fmt.Fprintf(os.Stderr, "unknown list type: %s\nusage: brief list <tools|ecosystems>\n", fs.Arg(0))
 		os.Exit(1)
 	}
 }
@@ -193,6 +201,66 @@ func listTools(knowledgeBase *kb.KnowledgeBase) {
 			os.Exit(1)
 		}
 	}
+}
+
+func listToolsReadme(knowledgeBase *kb.KnowledgeBase) {
+	// Group tools by category, deduplicating names.
+	seen := make(map[string]map[string]bool)
+	byCategory := make(map[string][]string)
+	for _, t := range knowledgeBase.Tools {
+		if t.Tool.Name == "" {
+			continue
+		}
+		cat := t.Tool.Category
+		if seen[cat] == nil {
+			seen[cat] = make(map[string]bool)
+		}
+		if seen[cat][t.Tool.Name] {
+			continue
+		}
+		seen[cat][t.Tool.Name] = true
+		byCategory[cat] = append(byCategory[cat], t.Tool.Name)
+	}
+	for _, names := range byCategory {
+		sort.Strings(names)
+	}
+
+	languages := byCategory["language"]
+
+	ecosystems := knowledgeBase.AllEcosystems()
+	totalTools := 0
+	for _, names := range byCategory {
+		totalTools += len(names)
+	}
+
+	_, _ = fmt.Fprintf(os.Stdout, "## What it detects\n\n")
+	_, _ = fmt.Fprintf(os.Stdout, "%d language ecosystems with %d tool definitions across %d categories.\n\n",
+		len(ecosystems), totalTools, len(byCategory))
+
+	// Languages
+	if len(languages) > 0 {
+		_, _ = fmt.Fprintf(os.Stdout, "**Languages:** %s.\n\n", strings.Join(languages, ", "))
+	}
+
+	// Package managers
+	if pms := byCategory["package_manager"]; len(pms) > 0 {
+		_, _ = fmt.Fprintf(os.Stdout, "**Package Managers:** %s.\n\n", strings.Join(pms, ", "))
+	}
+
+	// Tool categories in display order.
+	for _, cat := range report.CategoryOrder {
+		names := byCategory[cat]
+		if len(names) == 0 {
+			continue
+		}
+		label := report.CategoryLabels[cat]
+		if label == "" {
+			label = cat
+		}
+		_, _ = fmt.Fprintf(os.Stdout, "**%s:** %s.\n\n", label, strings.Join(names, ", "))
+	}
+
+	_, _ = fmt.Fprintf(os.Stdout, "Run `brief list tools` for the full list.\n")
 }
 
 func listEcosystems(knowledgeBase *kb.KnowledgeBase) {

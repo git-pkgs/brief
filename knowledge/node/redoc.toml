@@ -1,0 +1,14 @@
+[tool]
+name = "Redoc"
+category = "docs"
+homepage = "https://redocly.com/redoc"
+docs = "https://redocly.com/docs/redoc"
+repo = "https://github.com/Redocly/redoc"
+description = "OpenAPI documentation renderer"
+
+[detect]
+dependencies = ["redoc"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx redocly build-docs"

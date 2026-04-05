@@ -1,0 +1,18 @@
+[tool]
+name = "Knex.js"
+category = "database"
+homepage = "https://knexjs.org"
+docs = "https://knexjs.org/guide/"
+repo = "https://github.com/knex/knex"
+description = "SQL query builder for Node.js"
+
+[detect]
+files = ["knexfile.js", "knexfile.ts"]
+dependencies = ["knex"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx knex migrate:latest"
+
+[config]
+files = ["knexfile.js", "knexfile.ts"]

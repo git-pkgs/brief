@@ -1,5 +1,5 @@
 [tool]
-name = "Gleam"
+name = "Gleam Packages"
 category = "package_manager"
 homepage = "https://gleam.run"
 docs = "https://gleam.run/documentation/"

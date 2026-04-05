@@ -1,0 +1,23 @@
+[tool]
+name = "yapf"
+category = "format"
+homepage = "https://github.com/google/yapf"
+docs = "https://github.com/google/yapf#readme"
+repo = "https://github.com/google/yapf"
+description = "Python code formatter by Google"
+
+[detect]
+files = [".style.yapf"]
+dependencies = ["yapf"]
+dev_dependencies = ["yapf"]
+ecosystems = ["python"]
+
+[detect.file_contains]
+"pyproject.toml" = ["[tool.yapf"]
+"setup.cfg" = ["[yapf]"]
+
+[commands]
+run = "yapf -r -i ."
+
+[config]
+files = [".style.yapf"]

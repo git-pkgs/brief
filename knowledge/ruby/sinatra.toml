@@ -1,0 +1,14 @@
+[tool]
+name = "Sinatra"
+category = "build"
+homepage = "https://sinatrarb.com"
+docs = "https://sinatrarb.com/documentation.html"
+repo = "https://github.com/sinatra/sinatra"
+description = "DSL for creating web applications in Ruby"
+
+[detect]
+dependencies = ["sinatra"]
+ecosystems = ["ruby"]
+
+[commands]
+run = "ruby app.rb"

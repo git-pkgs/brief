@@ -1,0 +1,14 @@
+[tool]
+name = "Vue"
+category = "build"
+homepage = "https://vuejs.org"
+docs = "https://vuejs.org/guide/introduction"
+repo = "https://github.com/vuejs/core"
+description = "Progressive JavaScript framework"
+
+[detect]
+dependencies = ["vue"]
+ecosystems = ["node"]
+
+[commands]
+run = "npm run dev"

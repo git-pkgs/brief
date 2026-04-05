@@ -1,0 +1,15 @@
+[tool]
+name = "Cargo workspaces"
+category = "monorepo"
+homepage = "https://doc.rust-lang.org/cargo/reference/workspaces.html"
+docs = "https://doc.rust-lang.org/cargo/reference/workspaces.html"
+description = "Rust monorepo workspace support"
+
+[detect]
+ecosystems = ["rust"]
+
+[detect.key_exists]
+"Cargo.toml" = ["workspace"]
+
+[commands]
+run = "cargo build --workspace"

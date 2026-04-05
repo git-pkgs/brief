@@ -1,0 +1,16 @@
+[tool]
+name = "Trivy"
+category = "security"
+homepage = "https://trivy.dev"
+docs = "https://trivy.dev/"
+repo = "https://github.com/aquasecurity/trivy"
+description = "Vulnerability scanner for containers and code"
+
+[detect]
+files = [".trivy.yaml", "trivy.yaml"]
+
+[commands]
+run = "trivy fs ."
+
+[config]
+files = [".trivy.yaml", "trivy.yaml"]

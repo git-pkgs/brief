@@ -1,0 +1,14 @@
+[tool]
+name = "Brakeman"
+category = "security"
+homepage = "https://brakemanscanner.org"
+docs = "https://brakemanscanner.org/docs/"
+repo = "https://github.com/presidentbeef/brakeman"
+description = "Static analysis security scanner for Ruby on Rails"
+
+[detect]
+dependencies = ["brakeman"]
+ecosystems = ["ruby"]
+
+[commands]
+run = "brakeman"

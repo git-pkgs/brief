@@ -1,0 +1,13 @@
+[tool]
+name = "asdf"
+category = "environment"
+homepage = "https://asdf-vm.com"
+docs = "https://asdf-vm.com/guide/getting-started.html"
+repo = "https://github.com/asdf-vm/asdf"
+description = "Multiple runtime version manager"
+
+[detect]
+files = [".tool-versions"]
+
+[config]
+files = [".tool-versions"]

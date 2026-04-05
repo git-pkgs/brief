@@ -1,0 +1,13 @@
+[tool]
+name = "Thrift"
+category = "codegen"
+homepage = "https://thrift.apache.org"
+docs = "https://thrift.apache.org/docs/"
+repo = "https://github.com/apache/thrift"
+description = "Cross-language RPC framework"
+
+[detect]
+files = ["**/*.thrift"]
+
+[commands]
+run = "thrift --gen"

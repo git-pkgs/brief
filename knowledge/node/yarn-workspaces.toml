@@ -1,0 +1,15 @@
+[tool]
+name = "Yarn workspaces"
+category = "monorepo"
+homepage = "https://yarnpkg.com/features/workspaces"
+docs = "https://yarnpkg.com/features/workspaces"
+description = "Yarn monorepo workspace support"
+
+[detect]
+ecosystems = ["node"]
+
+[detect.key_exists]
+"package.json" = ["workspaces"]
+
+[commands]
+run = "yarn workspaces info"

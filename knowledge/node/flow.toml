@@ -1,0 +1,18 @@
+[tool]
+name = "Flow"
+category = "typecheck"
+homepage = "https://flow.org"
+docs = "https://flow.org/en/docs/"
+repo = "https://github.com/facebook/flow"
+description = "Static type checker for JavaScript"
+
+[detect]
+files = [".flowconfig"]
+dev_dependencies = ["flow-bin"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx flow"
+
+[config]
+files = [".flowconfig"]

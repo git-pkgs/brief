@@ -1,0 +1,11 @@
+[tool]
+name = "sqlx"
+category = "database"
+homepage = "https://github.com/jmoiron/sqlx"
+docs = "https://pkg.go.dev/github.com/jmoiron/sqlx"
+repo = "https://github.com/jmoiron/sqlx"
+description = "Extensions to Go database/sql"
+
+[detect]
+dependencies = ["github.com/jmoiron/sqlx"]
+ecosystems = ["go"]

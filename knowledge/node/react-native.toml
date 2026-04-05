@@ -1,0 +1,14 @@
+[tool]
+name = "React Native"
+category = "build"
+homepage = "https://reactnative.dev"
+docs = "https://reactnative.dev/docs/getting-started"
+repo = "https://github.com/facebook/react-native"
+description = "Build native mobile apps with React"
+
+[detect]
+dependencies = ["react-native"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx react-native start"

@@ -1,0 +1,18 @@
+[tool]
+name = "Svelte"
+category = "build"
+homepage = "https://svelte.dev"
+docs = "https://svelte.dev/docs"
+repo = "https://github.com/sveltejs/svelte"
+description = "Compile-time UI framework"
+
+[detect]
+files = ["svelte.config.js", "svelte.config.ts"]
+dependencies = ["svelte"]
+ecosystems = ["node"]
+
+[commands]
+run = "npm run dev"
+
+[config]
+files = ["svelte.config.js", "svelte.config.ts"]

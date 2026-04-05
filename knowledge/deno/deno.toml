@@ -1,5 +1,5 @@
 [tool]
-name = "Deno"
+name = "Deno Modules"
 category = "package_manager"
 homepage = "https://deno.com"
 docs = "https://docs.deno.com/runtime/fundamentals/modules/"

@@ -1,0 +1,14 @@
+[tool]
+name = "Lingui"
+category = "i18n"
+homepage = "https://lingui.dev"
+docs = "https://lingui.dev/introduction"
+repo = "https://github.com/lingui/js-lingui"
+description = "JavaScript internationalization framework"
+
+[detect]
+dependencies = ["@lingui/core", "@lingui/react"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx lingui extract"

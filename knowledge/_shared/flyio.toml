@@ -1,0 +1,15 @@
+[tool]
+name = "Fly.io"
+category = "ci"
+homepage = "https://fly.io"
+docs = "https://fly.io/docs/"
+description = "Application deployment platform"
+
+[detect]
+files = ["fly.toml"]
+
+[commands]
+run = "fly deploy"
+
+[config]
+files = ["fly.toml"]

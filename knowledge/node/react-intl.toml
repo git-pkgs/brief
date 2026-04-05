@@ -1,0 +1,11 @@
+[tool]
+name = "FormatJS"
+category = "i18n"
+homepage = "https://formatjs.github.io"
+docs = "https://formatjs.github.io/docs/getting-started/installation"
+repo = "https://github.com/formatjs/formatjs"
+description = "Internationalization libraries for JavaScript"
+
+[detect]
+dependencies = ["react-intl", "@formatjs/intl"]
+ecosystems = ["node"]

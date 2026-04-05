@@ -1,0 +1,19 @@
+[tool]
+name = "Pest"
+category = "test"
+homepage = "https://pestphp.com"
+docs = "https://pestphp.com/docs/installation"
+repo = "https://github.com/pestphp/pest"
+description = "Elegant PHP testing framework"
+
+[detect]
+files = ["tests/Pest.php"]
+dev_dependencies = ["pestphp/pest"]
+ecosystems = ["php"]
+
+[commands]
+run = "vendor/bin/pest"
+alternatives = ["php artisan test --pest"]
+
+[config]
+files = ["tests/Pest.php"]

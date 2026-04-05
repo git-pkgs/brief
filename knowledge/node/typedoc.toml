@@ -1,0 +1,18 @@
+[tool]
+name = "TypeDoc"
+category = "docs"
+homepage = "https://typedoc.org"
+docs = "https://typedoc.org/guides/overview/"
+repo = "https://github.com/TypeStrong/typedoc"
+description = "Documentation generator for TypeScript"
+
+[detect]
+files = ["typedoc.json", "typedoc.config.js"]
+dev_dependencies = ["typedoc"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx typedoc"
+
+[config]
+files = ["typedoc.json", "typedoc.config.js"]

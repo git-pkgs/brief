@@ -1,0 +1,13 @@
+[tool]
+name = "Podman"
+category = "container"
+homepage = "https://podman.io"
+docs = "https://docs.podman.io"
+repo = "https://github.com/containers/podman"
+description = "Daemonless container engine"
+
+[detect]
+files = ["Containerfile", ".containerignore"]
+
+[commands]
+run = "podman build ."

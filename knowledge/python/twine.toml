@@ -1,0 +1,15 @@
+[tool]
+name = "twine"
+category = "release"
+homepage = "https://twine.readthedocs.io"
+docs = "https://twine.readthedocs.io/en/stable/"
+repo = "https://github.com/pypa/twine"
+description = "Utility for publishing Python packages to PyPI"
+
+[detect]
+dependencies = ["twine"]
+dev_dependencies = ["twine"]
+ecosystems = ["python"]
+
+[commands]
+run = "twine upload dist/*"

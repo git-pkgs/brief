@@ -1,0 +1,14 @@
+[tool]
+name = "React"
+category = "build"
+homepage = "https://react.dev"
+docs = "https://react.dev/learn"
+repo = "https://github.com/facebook/react"
+description = "Library for building user interfaces"
+
+[detect]
+dependencies = ["react"]
+ecosystems = ["node"]
+
+[commands]
+run = "npm run dev"

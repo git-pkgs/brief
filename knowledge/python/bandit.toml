@@ -1,0 +1,22 @@
+[tool]
+name = "Bandit"
+category = "security"
+homepage = "https://bandit.readthedocs.io"
+docs = "https://bandit.readthedocs.io/en/latest/"
+repo = "https://github.com/PyCQA/bandit"
+description = "Security linter for Python"
+
+[detect]
+files = [".bandit"]
+dependencies = ["bandit"]
+dev_dependencies = ["bandit"]
+ecosystems = ["python"]
+
+[detect.file_contains]
+"pyproject.toml" = ["[tool.bandit"]
+
+[commands]
+run = "bandit -r ."
+
+[config]
+files = [".bandit"]

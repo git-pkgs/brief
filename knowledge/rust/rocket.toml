@@ -1,0 +1,14 @@
+[tool]
+name = "Rocket"
+category = "build"
+homepage = "https://rocket.rs"
+docs = "https://rocket.rs/guide/v0.5/"
+repo = "https://github.com/rwf2/Rocket"
+description = "Web framework for Rust"
+
+[detect]
+dependencies = ["rocket"]
+ecosystems = ["rust"]
+
+[commands]
+run = "cargo run"

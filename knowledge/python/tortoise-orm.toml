@@ -1,0 +1,11 @@
+[tool]
+name = "Tortoise ORM"
+category = "database"
+homepage = "https://tortoise.github.io"
+docs = "https://tortoise.github.io/getting_started.html"
+repo = "https://github.com/tortoise/tortoise-orm"
+description = "Async ORM for Python"
+
+[detect]
+dependencies = ["tortoise-orm"]
+ecosystems = ["python"]

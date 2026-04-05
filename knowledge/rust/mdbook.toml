@@ -1,0 +1,19 @@
+[tool]
+name = "mdBook"
+category = "docs"
+homepage = "https://rust-lang.github.io/mdBook/"
+docs = "https://rust-lang.github.io/mdBook/"
+repo = "https://github.com/rust-lang/mdBook"
+description = "Create books from Markdown"
+
+[detect]
+ecosystems = ["rust"]
+
+[detect.file_contains]
+"book.toml" = ["[book]"]
+
+[commands]
+run = "mdbook build"
+
+[config]
+files = ["book.toml"]

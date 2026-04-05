@@ -1,0 +1,13 @@
+[tool]
+name = "Jenkins"
+category = "ci"
+homepage = "https://www.jenkins.io"
+docs = "https://www.jenkins.io/doc/"
+repo = "https://github.com/jenkinsci/jenkins"
+description = "Open source automation server"
+
+[detect]
+files = ["Jenkinsfile"]
+
+[config]
+files = ["Jenkinsfile"]

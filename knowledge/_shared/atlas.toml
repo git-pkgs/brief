@@ -1,0 +1,16 @@
+[tool]
+name = "Atlas"
+category = "database"
+homepage = "https://atlasgo.io"
+docs = "https://atlasgo.io/getting-started/"
+repo = "https://github.com/ariga/atlas"
+description = "Database schema management tool"
+
+[detect]
+files = ["atlas.hcl", "atlas.yaml"]
+
+[commands]
+run = "atlas schema apply"
+
+[config]
+files = ["atlas.hcl", "atlas.yaml"]

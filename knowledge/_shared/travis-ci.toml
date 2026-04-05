@@ -1,0 +1,12 @@
+[tool]
+name = "Travis CI"
+category = "ci"
+homepage = "https://www.travis-ci.com"
+docs = "https://docs.travis-ci.com"
+description = "Continuous integration service"
+
+[detect]
+files = [".travis.yml"]
+
+[config]
+files = [".travis.yml"]

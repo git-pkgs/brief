@@ -1,0 +1,14 @@
+[tool]
+name = "Echo"
+category = "build"
+homepage = "https://echo.labstack.com"
+docs = "https://echo.labstack.com/docs"
+repo = "https://github.com/labstack/echo"
+description = "High performance Go web framework"
+
+[detect]
+dependencies = ["github.com/labstack/echo", "github.com/labstack/echo/v4", "github.com/labstack/echo/v5"]
+ecosystems = ["go"]
+
+[commands]
+run = "go run ."

@@ -1,0 +1,14 @@
+[tool]
+name = "Swagger UI"
+category = "docs"
+homepage = "https://swagger.io/tools/swagger-ui/"
+docs = "https://swagger.io/tools/swagger-ui/"
+repo = "https://github.com/swagger-api/swagger-ui"
+description = "Interactive API documentation"
+
+[detect]
+dependencies = ["swagger-ui-express", "swagger-ui-dist"]
+ecosystems = ["node"]
+
+[commands]
+run = "npm start"

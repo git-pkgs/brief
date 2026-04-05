@@ -1,0 +1,18 @@
+[tool]
+name = "nyc"
+category = "coverage"
+homepage = "https://istanbul.js.org"
+docs = "https://github.com/istanbuljs/nyc#readme"
+repo = "https://github.com/istanbuljs/nyc"
+description = "Istanbul command line interface for code coverage"
+
+[detect]
+files = [".nycrc", ".nycrc.json", ".nycrc.yml", ".nycrc.yaml"]
+dev_dependencies = ["nyc"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx nyc"
+
+[config]
+files = [".nycrc", ".nycrc.json"]

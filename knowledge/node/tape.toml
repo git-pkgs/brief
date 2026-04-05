@@ -1,0 +1,14 @@
+[tool]
+name = "tape"
+category = "test"
+homepage = "https://github.com/tape-testing/tape"
+docs = "https://github.com/tape-testing/tape#readme"
+repo = "https://github.com/tape-testing/tape"
+description = "TAP-producing test harness for Node.js"
+
+[detect]
+dev_dependencies = ["tape"]
+ecosystems = ["node"]
+
+[commands]
+run = "npx tape test/**/*.js"

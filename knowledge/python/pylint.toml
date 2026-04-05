@@ -1,0 +1,22 @@
+[tool]
+name = "Pylint"
+category = "lint"
+homepage = "https://pylint.readthedocs.io"
+docs = "https://pylint.readthedocs.io/en/stable/"
+repo = "https://github.com/pylint-dev/pylint"
+description = "Static code analyser for Python"
+
+[detect]
+files = [".pylintrc", "pylintrc"]
+dependencies = ["pylint"]
+dev_dependencies = ["pylint"]
+ecosystems = ["python"]
+
+[detect.file_contains]
+"pyproject.toml" = ["[tool.pylint"]
+
+[commands]
+run = "pylint"
+
+[config]
+files = [".pylintrc", "pylintrc"]

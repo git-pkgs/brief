@@ -1,0 +1,11 @@
+[tool]
+name = "MikroORM"
+category = "database"
+homepage = "https://mikro-orm.io"
+docs = "https://mikro-orm.io/docs/guide"
+repo = "https://github.com/mikro-orm/mikro-orm"
+description = "TypeScript ORM with data mapper pattern"
+
+[detect]
+dependencies = ["@mikro-orm/core"]
+ecosystems = ["node"]

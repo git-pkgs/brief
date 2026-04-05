@@ -17,6 +17,7 @@ type ToolDef struct {
 	Detect   DetectInfo  `toml:"detect"`
 	Commands CommandInfo `toml:"commands"`
 	Config   ConfigInfo  `toml:"config"`
+	Source   string      `toml:"-"` // filesystem path this was loaded from
 }
 
 // ToolInfo holds metadata about a tool.
@@ -216,6 +217,8 @@ func (base *KnowledgeBase) loadTool(data []byte, path string) error {
 	if err := toml.Unmarshal(data, &def); err != nil {
 		return fmt.Errorf("parsing %s: %w", path, err)
 	}
+
+	def.Source = path
 
 	dir := filepath.Dir(path)
 	ecosystem := filepath.Base(dir)

@@ -1,0 +1,16 @@
+[tool]
+name = "TruffleHog"
+category = "security"
+homepage = "https://trufflesecurity.com/trufflehog"
+docs = "https://github.com/trufflesecurity/trufflehog#readme"
+repo = "https://github.com/trufflesecurity/trufflehog"
+description = "Secrets scanner"
+
+[detect]
+files = [".trufflehog.yml", ".trufflehog.yaml"]
+
+[commands]
+run = "trufflehog filesystem ."
+
+[config]
+files = [".trufflehog.yml", ".trufflehog.yaml"]

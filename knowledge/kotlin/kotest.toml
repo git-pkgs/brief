@@ -1,0 +1,14 @@
+[tool]
+name = "Kotest"
+category = "test"
+homepage = "https://kotest.io"
+docs = "https://kotest.io/docs/framework/framework.html"
+repo = "https://github.com/kotest/kotest"
+description = "Flexible Kotlin testing framework"
+
+[detect]
+dependencies = ["io.kotest:kotest-runner-junit5"]
+ecosystems = ["kotlin"]
+
+[commands]
+run = "gradle test"

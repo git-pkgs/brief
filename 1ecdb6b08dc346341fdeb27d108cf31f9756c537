@@ -1,0 +1,25 @@
+cmd/brief/ai.go
+  3fcfd19c03de1170 9,95-100,105-106,123-131,142-143,165-166
+cmd/brief/ai_test.go
+  3fcfd19c03de1170 68,73-75,94,99-100,102-103
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "1ecdb6b08dc346341fdeb27d108cf31f9756c537",
+  "prompts": {
+    "3fcfd19c03de1170": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c5ff2fb5-3196-4ca4-a431-9fde305eaded",
+        "model": "<synthetic>"
+      },
+      "human_author": "Andrew Nesbitt",
+      "messages": [],
+      "total_additions": 32,
+      "total_deletions": 22,
+      "accepted_lines": 32,
+      "overriden_lines": 0
+    }
+  }
+}

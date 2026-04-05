@@ -1,0 +1,29 @@
+report/markdown.go
+  020fef4fbbdb2614 114-115,128,166
+cmd/brief/main.go
+  020fef4fbbdb2614 132-136,147,149-153,157,206-265
+report/report.go
+  020fef4fbbdb2614 38-39,41-42,158-159,172
+README.md
+  020fef4fbbdb2614 161,164,166,168,170,172,174,176,178,180,182,184,186,188,190,192,194,196,198,200,202,204,207
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "7e3a5886b6a19ef7a9c4fa3b74ba05eee1801630",
+  "prompts": {
+    "020fef4fbbdb2614": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e6af2841-fea5-44ee-a456-6b0485ac9b7a",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt",
+      "messages": [],
+      "total_additions": 166,
+      "total_deletions": 90,
+      "accepted_lines": 110,
+      "overriden_lines": 0
+    }
+  }
+}

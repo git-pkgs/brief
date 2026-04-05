@@ -4,7 +4,7 @@ go 1.25.6
 
 require (
 	github.com/BurntSushi/toml v1.6.0
-	github.com/git-pkgs/enrichment v0.2.1
+	github.com/git-pkgs/enrichment v0.2.2
 	github.com/git-pkgs/forge v0.3.1
 	github.com/git-pkgs/licensecheck v0.4.0
 	github.com/git-pkgs/manifests v0.4.3

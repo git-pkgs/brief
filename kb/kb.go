@@ -183,21 +183,22 @@ func Load(fsys embed.FS) (*KnowledgeBase, error) {
 
 		name := filepath.Base(path)
 
-		// Route to the right parser based on filename convention
-		switch name {
-		case "_scripts.toml":
+		// Route to the right parser based on filename convention.
+		// Script sources use a _scripts prefix (e.g. _scripts.toml, _scripts_justfile.toml).
+		switch {
+		case strings.HasPrefix(name, "_scripts"):
 			return base.loadScriptSource(data, path)
-		case "_resources.toml":
+		case name == "_resources.toml":
 			return base.loadResources(data, path)
-		case "_layout.toml":
+		case name == "_layout.toml":
 			return base.loadLayout(data, path)
-		case "_style.toml":
+		case name == "_style.toml":
 			return base.loadStyle(data, path)
-		case "_runtimes.toml":
+		case name == "_runtimes.toml":
 			return base.loadRuntimes(data, path)
-		case "_manifests.toml":
+		case name == "_manifests.toml":
 			return base.loadManifests(data, path)
-		case "_ci.toml":
+		case name == "_ci.toml":
 			return base.loadCIConfig(data, path)
 		default:
 			return base.loadTool(data, path)

@@ -284,6 +284,16 @@ func TestKnowledgeBaseLoads(t *testing.T) {
 	}
 }
 
+func TestNoEmptyToolNames(t *testing.T) {
+	knowledgeBase := loadKB(t)
+
+	for _, tool := range knowledgeBase.Tools {
+		if tool.Tool.Name == "" {
+			t.Errorf("tool with empty name loaded into knowledge base (category=%q)", tool.Tool.Category)
+		}
+	}
+}
+
 func TestScriptPriority(t *testing.T) {
 	engine := New(loadKB(t), "../testdata/ruby-project")
 	r, err := engine.Run()

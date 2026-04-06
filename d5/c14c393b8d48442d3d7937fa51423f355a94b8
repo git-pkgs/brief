@@ -1,0 +1,41 @@
+cmd/brief/ai_test.go
+  fc4d8099815ab885 1-67,69-72,76-93,95-97,104-227
+cmd/brief/main.go
+  fc4d8099815ab885 48-50
+cmd/brief/ai.go
+  fc4d8099815ab885 1-8,10-94,101-104,107-119,132-141,144-164,167-177
+  3fcfd19c03de1170 120-122
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "d5c14c393b8d48442d3d7937fa51423f355a94b8",
+  "prompts": {
+    "3fcfd19c03de1170": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c5ff2fb5-3196-4ca4-a431-9fde305eaded",
+        "model": "<synthetic>"
+      },
+      "human_author": "Andrew Nesbitt",
+      "messages": [],
+      "total_additions": 32,
+      "total_deletions": 22,
+      "accepted_lines": 3,
+      "overriden_lines": 0
+    },
+    "fc4d8099815ab885": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "03f5183a-3fc4-4bf6-ba1c-1a2db7ef030b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Andrew Nesbitt <andrewnez@gmail.com>",
+      "messages": [],
+      "total_additions": 410,
+      "total_deletions": 13,
+      "accepted_lines": 371,
+      "overriden_lines": 0
+    }
+  }
+}

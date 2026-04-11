@@ -36,40 +36,15 @@ func (e *Engine) ThreatModel(r *brief.Report) *brief.ThreatReport {
 		}
 	}
 
+	contributes := e.resolveThreats(allDetections(r), addThreat)
+
+	// Build stack from tools that actually contribute threats or sinks.
 	for _, d := range allDetections(r) {
-		tool := e.KB.ByName[d.Name]
-		if tool == nil {
-			continue
-		}
-
-		// Build the tool's tag set for conjunctive matching.
-		tags := make(map[string]bool)
-		for _, t := range tool.Taxonomy.Tags() {
-			tags[t] = true
-		}
-
-		// Skip stack entry if the tool has no taxonomy and no security data:
-		// it contributes nothing and would just be noise.
-		hasSecurityData := len(tool.Security.Threats) > 0 || len(tool.Security.Sinks) > 0
-		if len(tags) > 0 || hasSecurityData {
+		if contributes[d.Name] {
 			tr.Stack = append(tr.Stack, brief.StackEntry{
 				Name:     d.Name,
 				Taxonomy: d.Taxonomy,
 			})
-		}
-
-		// Check each mapping for a conjunctive match against this tool's tags.
-		for _, m := range e.KB.ThreatMappings {
-			if matchesAll(tags, m.Match) {
-				for _, id := range m.Threats {
-					addThreat(id, d.Name, m.Note)
-				}
-			}
-		}
-
-		// Explicit threats on the tool definition.
-		for _, id := range tool.Security.Threats {
-			addThreat(id, d.Name, "")
 		}
 	}
 
@@ -152,6 +127,43 @@ func allDetections(r *brief.Report) []brief.Detection {
 		all = append(all, r.Tools[cat]...)
 	}
 	return all
+}
+
+// resolveThreats iterates detections, matches taxonomy tags against threat
+// mappings, and calls addThreat for each hit. Returns a set of tool names
+// that contribute threats or sinks (for stack filtering).
+func (e *Engine) resolveThreats(detections []brief.Detection, addThreat func(id, tool, note string)) map[string]bool {
+	contributes := make(map[string]bool)
+	for _, d := range detections {
+		tool := e.KB.ByName[d.Name]
+		if tool == nil {
+			continue
+		}
+
+		tags := make(map[string]bool)
+		for _, t := range tool.Taxonomy.Tags() {
+			tags[t] = true
+		}
+
+		for _, m := range e.KB.ThreatMappings {
+			if matchesAll(tags, m.Match) {
+				contributes[d.Name] = true
+				for _, id := range m.Threats {
+					addThreat(id, d.Name, m.Note)
+				}
+			}
+		}
+
+		for _, id := range tool.Security.Threats {
+			contributes[d.Name] = true
+			addThreat(id, d.Name, "")
+		}
+
+		if len(tool.Security.Sinks) > 0 {
+			contributes[d.Name] = true
+		}
+	}
+	return contributes
 }
 
 // matchesAll reports whether the tag set contains every required tag.

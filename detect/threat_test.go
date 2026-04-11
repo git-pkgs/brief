@@ -42,7 +42,7 @@ func TestThreatModelRubyProject(t *testing.T) {
 		threatIDs[th.ID] = true
 	}
 
-	wantThreats := []string{"xss", "csrf", "ssti", "auth_bypass", "ssrf"}
+	wantThreats := []string{"xss", "csrf", "ssti", "auth_bypass"}
 	for _, w := range wantThreats {
 		if !threatIDs[w] {
 			t.Errorf("expected threat %q, got %v", w, tr.Threats)

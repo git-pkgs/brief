@@ -252,7 +252,7 @@ func TestThreatHuman(t *testing.T) {
 func TestThreatHumanEmpty(t *testing.T) {
 	var buf bytes.Buffer
 	ThreatHuman(&buf, &brief.ThreatReport{})
-	if !strings.Contains(buf.String(), "No security data available") {
+	if !strings.Contains(buf.String(), "No threat categories match") {
 		t.Errorf("expected empty message, got:\n%s", buf.String())
 	}
 }

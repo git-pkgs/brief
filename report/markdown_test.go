@@ -296,7 +296,7 @@ func TestThreatMarkdown(t *testing.T) {
 func TestThreatMarkdownEmpty(t *testing.T) {
 	var buf bytes.Buffer
 	ThreatMarkdown(&buf, &brief.ThreatReport{})
-	if !strings.Contains(buf.String(), "No security data available") {
+	if !strings.Contains(buf.String(), "No threat categories match") {
 		t.Errorf("expected empty message\ngot:\n%s", buf.String())
 	}
 }

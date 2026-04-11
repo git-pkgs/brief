@@ -352,6 +352,83 @@ func MissingJSON(w io.Writer, r *brief.MissingReport) error {
 	return enc.Encode(r)
 }
 
+// ThreatJSON writes the threat report as JSON.
+func ThreatJSON(w io.Writer, r *brief.ThreatReport) error {
+	enc := json.NewEncoder(w)
+	enc.SetIndent("", "  ")
+	return enc.Encode(r)
+}
+
+// ThreatHuman writes the threat report in human-readable format.
+func ThreatHuman(w io.Writer, r *brief.ThreatReport) {
+	if len(r.Threats) == 0 {
+		_, _ = fmt.Fprintln(w, "No security data available for detected tools.")
+		return
+	}
+
+	if len(r.Ecosystems) > 0 {
+		_, _ = fmt.Fprintf(w, "Detected: %s\n", strings.Join(r.Ecosystems, ", "))
+	}
+	if len(r.Stack) > 0 {
+		names := make([]string, len(r.Stack))
+		for i, s := range r.Stack {
+			names[i] = s.Name
+		}
+		_, _ = fmt.Fprintf(w, "Stack:    %s\n", strings.Join(names, ", "))
+	}
+	_, _ = fmt.Fprintln(w)
+
+	for _, t := range r.Threats {
+		refs := t.CWE
+		if t.OWASP != "" {
+			if refs != "" {
+				refs += " "
+			}
+			refs += t.OWASP
+		}
+		_, _ = fmt.Fprintf(w, "  %-18s %s  [%s]\n", t.ID, t.Title, refs)
+		_, _ = fmt.Fprintf(w, "  %-18s via %s\n", "", strings.Join(t.IntroducedBy, ", "))
+		if t.Note != "" {
+			_, _ = fmt.Fprintf(w, "  %-18s %s\n", "", t.Note)
+		}
+		_, _ = fmt.Fprintln(w)
+	}
+}
+
+// SinksJSON writes the sink report as JSON.
+func SinksJSON(w io.Writer, r *brief.SinkReport) error {
+	enc := json.NewEncoder(w)
+	enc.SetIndent("", "  ")
+	return enc.Encode(r)
+}
+
+// SinksHuman writes the sink report in human-readable format, grouped by tool.
+func SinksHuman(w io.Writer, r *brief.SinkReport) {
+	if len(r.Sinks) == 0 {
+		_, _ = fmt.Fprintln(w, "No sink data available for detected tools.")
+		return
+	}
+
+	currentTool := ""
+	for _, s := range r.Sinks {
+		if s.Tool != currentTool {
+			if currentTool != "" {
+				_, _ = fmt.Fprintln(w)
+			}
+			currentTool = s.Tool
+			_, _ = fmt.Fprintf(w, "%s:\n", s.Tool)
+		}
+		line := fmt.Sprintf("  %-24s %-20s", s.Symbol, s.Threat)
+		if s.CWE != "" {
+			line += " " + s.CWE
+		}
+		_, _ = fmt.Fprintln(w, line)
+		if s.Note != "" {
+			_, _ = fmt.Fprintf(w, "  %-24s %s\n", "", s.Note)
+		}
+	}
+}
+
 // MissingHuman writes the missing report in human-readable format.
 func MissingHuman(w io.Writer, r *brief.MissingReport) {
 	if len(r.Missing) == 0 {

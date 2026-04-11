@@ -268,3 +268,65 @@ func TestMissingMarkdownEmpty(t *testing.T) {
 		t.Errorf("expected empty message\ngot:\n%s", out)
 	}
 }
+
+func TestThreatMarkdown(t *testing.T) {
+	tr := &brief.ThreatReport{
+		Ecosystems: []string{"ruby"},
+		Threats: []brief.Threat{
+			{ID: "xss", CWE: "CWE-79", OWASP: "A03:2021", Title: "Cross-Site Scripting", IntroducedBy: []string{"Rails"}},
+		},
+	}
+
+	var buf bytes.Buffer
+	ThreatMarkdown(&buf, tr)
+	out := buf.String()
+
+	checks := []string{
+		"**Detected:** ruby",
+		"| Threat | CWE | OWASP | Introduced by |",
+		"| Cross-Site Scripting | CWE-79 | A03:2021 | Rails |",
+	}
+	for _, want := range checks {
+		if !strings.Contains(out, want) {
+			t.Errorf("output missing %q\ngot:\n%s", want, out)
+		}
+	}
+}
+
+func TestThreatMarkdownEmpty(t *testing.T) {
+	var buf bytes.Buffer
+	ThreatMarkdown(&buf, &brief.ThreatReport{})
+	if !strings.Contains(buf.String(), "No security data available") {
+		t.Errorf("expected empty message\ngot:\n%s", buf.String())
+	}
+}
+
+func TestSinksMarkdown(t *testing.T) {
+	sr := &brief.SinkReport{
+		Sinks: []brief.SinkEntry{
+			{Symbol: "eval", Tool: "Ruby", Threat: "code_injection", CWE: "CWE-95"},
+		},
+	}
+
+	var buf bytes.Buffer
+	SinksMarkdown(&buf, sr)
+	out := buf.String()
+
+	checks := []string{
+		"| Tool | Symbol | Threat | CWE |",
+		"| Ruby | `eval` | code_injection | CWE-95 |",
+	}
+	for _, want := range checks {
+		if !strings.Contains(out, want) {
+			t.Errorf("output missing %q\ngot:\n%s", want, out)
+		}
+	}
+}
+
+func TestSinksMarkdownEmpty(t *testing.T) {
+	var buf bytes.Buffer
+	SinksMarkdown(&buf, &brief.SinkReport{})
+	if !strings.Contains(buf.String(), "No sink data available") {
+		t.Errorf("expected empty message\ngot:\n%s", buf.String())
+	}
+}

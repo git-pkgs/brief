@@ -42,6 +42,8 @@ Or download a binary from [releases](https://github.com/git-pkgs/brief/releases)
 brief [flags] [path | url]        Detect project toolchain
 brief diff [flags] [ref1] [ref2]  Detect only what changed between refs
 brief missing [flags] [path]      Show recommended tooling gaps
+brief threat-model [flags] [path] Threat categories implied by detected stack
+brief sinks [flags] [path]        Dangerous functions in detected tools
 brief enrich [flags] [path]       Detect and enrich with external data
 brief list tools                  All tools in the knowledge base
 brief list ecosystems             Supported ecosystems

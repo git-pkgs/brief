@@ -16,3 +16,7 @@ run = "npx tsup"
 
 [config]
 files = ["tsup.config.ts", "tsup.config.js", "tsup.config.mjs", "tsup.config.cjs"]
+
+[taxonomy]
+role = ["build-tool"]
+function = ["bundling"]

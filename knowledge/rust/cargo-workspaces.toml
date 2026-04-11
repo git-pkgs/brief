@@ -13,3 +13,6 @@ ecosystems = ["rust"]
 
 [commands]
 run = "cargo build --workspace"
+
+[taxonomy]
+role = ["build-tool"]

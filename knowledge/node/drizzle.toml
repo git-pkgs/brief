@@ -18,3 +18,8 @@ alternatives = ["npx drizzle-kit generate", "npx drizzle-kit migrate"]
 
 [config]
 files = ["drizzle.config.ts", "drizzle.config.js"]
+
+[taxonomy]
+role = ["library"]
+function = ["data-mapping"]
+layer = ["data-layer"]

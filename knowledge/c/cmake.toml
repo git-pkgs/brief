@@ -16,3 +16,6 @@ alternatives = ["cmake -B build && cmake --build build"]
 
 [config]
 files = ["CMakeLists.txt", "CMakePresets.json"]
+
+[taxonomy]
+role = ["build-tool"]

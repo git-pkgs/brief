@@ -9,3 +9,9 @@ description = "Resumable web framework"
 [detect]
 dependencies = ["@builder.io/qwik"]
 ecosystems = ["node"]
+
+[taxonomy]
+role = ["framework"]
+function = ["templating"]
+layer = ["frontend", "full-stack"]
+domain = ["web-development"]

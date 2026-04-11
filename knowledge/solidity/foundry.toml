@@ -16,3 +16,7 @@ alternatives = ["forge test"]
 
 [config]
 files = ["foundry.toml"]
+
+[taxonomy]
+role = ["build-tool", "testing-framework"]
+domain = ["blockchain"]

@@ -12,3 +12,6 @@ ecosystems = ["c", "cpp"]
 [commands]
 run = "make"
 alternatives = ["make all", "make clean"]
+
+[taxonomy]
+role = ["build-tool"]

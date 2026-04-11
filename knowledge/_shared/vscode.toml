@@ -10,3 +10,6 @@ files = [".vscode/settings.json", ".vscode/extensions.json"]
 
 [config]
 files = [".vscode/settings.json", ".vscode/extensions.json", ".vscode/launch.json", ".vscode/tasks.json"]
+
+[taxonomy]
+role = ["editor"]

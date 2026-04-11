@@ -8,3 +8,7 @@ description = "Open-source feature flag management"
 
 [detect]
 dependencies = ["unleash-client", "@unleash/proxy-client-react"]
+
+[taxonomy]
+role = ["service"]
+function = ["feature-flags"]

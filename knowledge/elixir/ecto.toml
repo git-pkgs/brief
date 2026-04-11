@@ -15,3 +15,8 @@ ecosystems = ["elixir"]
 
 [commands]
 run = "mix ecto.migrate"
+
+[taxonomy]
+role = ["library"]
+function = ["data-mapping", "validation"]
+layer = ["data-layer"]

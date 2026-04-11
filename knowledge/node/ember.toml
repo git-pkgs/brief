@@ -17,3 +17,9 @@ alternatives = ["npx ember build"]
 
 [config]
 files = [".ember-cli", "ember-cli-build.js"]
+
+[taxonomy]
+role = ["framework"]
+function = ["templating"]
+layer = ["frontend"]
+domain = ["web-development"]

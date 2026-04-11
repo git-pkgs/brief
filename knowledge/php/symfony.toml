@@ -13,3 +13,9 @@ ecosystems = ["php"]
 [commands]
 run = "symfony server:start"
 alternatives = ["php bin/console server:run"]
+
+[taxonomy]
+role = ["framework"]
+function = ["api-development", "templating", "dependency-injection"]
+layer = ["backend", "full-stack"]
+domain = ["web-development"]

@@ -11,3 +11,6 @@ ecosystems = ["node"]
 
 [config]
 files = ["pnpm-workspace.yaml"]
+
+[taxonomy]
+role = ["build-tool"]

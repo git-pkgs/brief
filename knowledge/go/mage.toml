@@ -16,3 +16,6 @@ alternatives = ["go run mage.go"]
 
 [config]
 files = ["magefile.go", "magefiles/"]
+
+[taxonomy]
+role = ["build-tool"]

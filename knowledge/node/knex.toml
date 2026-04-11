@@ -16,3 +16,8 @@ run = "npx knex migrate:latest"
 
 [config]
 files = ["knexfile.js", "knexfile.ts"]
+
+[taxonomy]
+role = ["library"]
+function = ["data-mapping"]
+layer = ["data-layer"]

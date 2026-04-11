@@ -9,3 +9,8 @@ description = "Database toolkit for Ruby"
 [detect]
 dependencies = ["sequel"]
 ecosystems = ["ruby"]
+
+[taxonomy]
+role = ["library"]
+function = ["data-mapping"]
+layer = ["data-layer"]

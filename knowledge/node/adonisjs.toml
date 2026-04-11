@@ -17,3 +17,9 @@ alternatives = ["node ace build"]
 
 [config]
 files = ["adonisrc.ts", "adonisrc.js", ".adonisrc.json"]
+
+[taxonomy]
+role = ["framework"]
+function = ["api-development", "templating", "data-mapping", "authentication"]
+layer = ["backend", "full-stack"]
+domain = ["web-development"]

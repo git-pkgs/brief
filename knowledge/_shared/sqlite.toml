@@ -25,3 +25,7 @@ dependencies = [
     "github.com/glebarez/sqlite",
 ]
 ".gitignore" = ["*.sqlite", "*.sqlite3"]
+
+[taxonomy]
+role = ["database-system"]
+layer = ["data-layer"]

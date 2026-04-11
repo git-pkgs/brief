@@ -12,3 +12,8 @@ ecosystems = ["node"]
 
 [commands]
 run = "npx react-native start"
+
+[taxonomy]
+role = ["framework"]
+layer = ["frontend", "application-layer"]
+domain = ["mobile-development"]

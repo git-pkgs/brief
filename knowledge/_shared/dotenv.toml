@@ -9,3 +9,7 @@ files = [".env", ".env.example", ".env.sample", ".env.template"]
 
 [config]
 files = [".env", ".env.example", ".env.sample", ".env.template"]
+
+[taxonomy]
+role = ["library"]
+function = ["secrets-management"]

@@ -20,3 +20,9 @@ alternatives = ["npx next build"]
 
 [config]
 files = ["next.config.js", "next.config.mjs", "next.config.ts"]
+
+[taxonomy]
+role = ["framework"]
+function = ["api-development", "templating"]
+layer = ["full-stack", "frontend", "backend"]
+domain = ["web-development"]

@@ -17,3 +17,8 @@ alternatives = ["rake db:migrate"]
 
 [config]
 files = ["db/migrate/", "db/schema.rb", "config/database.yml"]
+
+[taxonomy]
+role = ["library"]
+function = ["data-mapping"]
+layer = ["data-layer"]

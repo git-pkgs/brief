@@ -16,3 +16,9 @@ run = "python manage.py runserver"
 
 [config]
 files = ["manage.py"]
+
+[taxonomy]
+role = ["framework"]
+function = ["api-development", "templating", "data-mapping", "authentication"]
+layer = ["backend", "full-stack"]
+domain = ["web-development"]

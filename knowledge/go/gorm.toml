@@ -11,3 +11,8 @@ ecosystems = ["go"]
 
 [detect.file_contains]
 "go.mod" = ["gorm.io/gorm"]
+
+[taxonomy]
+role = ["library"]
+function = ["data-mapping"]
+layer = ["data-layer"]

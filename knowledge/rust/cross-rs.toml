@@ -15,3 +15,6 @@ run = "cross build --target"
 
 [config]
 files = ["Cross.toml"]
+
+[taxonomy]
+role = ["build-tool"]

@@ -9,3 +9,9 @@ description = "Lightweight web framework for multiple runtimes"
 [detect]
 dependencies = ["hono"]
 ecosystems = ["node"]
+
+[taxonomy]
+role = ["framework"]
+function = ["api-development"]
+layer = ["backend", "edge"]
+domain = ["web-development"]

@@ -17,3 +17,9 @@ alternatives = ["bin/rails server"]
 
 [config]
 files = ["config/routes.rb", "config/application.rb", "config/environments/"]
+
+[taxonomy]
+role = ["framework"]
+function = ["api-development", "templating", "authentication"]
+layer = ["backend", "full-stack"]
+domain = ["web-development"]

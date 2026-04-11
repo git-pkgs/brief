@@ -64,6 +64,39 @@ func TestRubyTools(t *testing.T) {
 	assertToolDetected(t, r, "lint", "RuboCop")
 }
 
+func TestRubyTaxonomyPassesThrough(t *testing.T) {
+	r := rubyReport(t)
+
+	// Rails has [taxonomy] populated, should appear on the Detection.
+	var rails *brief.Detection
+	for i, d := range r.Tools["build"] {
+		if d.Name == "Rails" {
+			rails = &r.Tools["build"][i]
+		}
+	}
+	if rails == nil {
+		t.Fatal("expected Rails in build tools")
+	}
+	if rails.Taxonomy == nil {
+		t.Fatal("expected Rails detection to carry taxonomy")
+	}
+	if len(rails.Taxonomy.Role) == 0 || rails.Taxonomy.Role[0] != "framework" {
+		t.Errorf("Rails taxonomy.role = %v, want [framework]", rails.Taxonomy.Role)
+	}
+	if len(rails.Taxonomy.Layer) == 0 {
+		t.Error("Rails taxonomy.layer should be populated")
+	}
+
+	// RuboCop has no [taxonomy], should be nil not empty struct.
+	for _, d := range r.Tools["lint"] {
+		if d.Name == "RuboCop" {
+			if d.Taxonomy != nil {
+				t.Errorf("RuboCop has no taxonomy in KB but Detection.Taxonomy = %+v", d.Taxonomy)
+			}
+		}
+	}
+}
+
 func TestRubyScripts(t *testing.T) {
 	r := rubyReport(t)
 	if len(r.Scripts) == 0 {

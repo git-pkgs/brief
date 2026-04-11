@@ -1,0 +1,189 @@
+# Threat ID registry for brief threat-model.
+# IDs are short names cross-referenced to CWE and OWASP Top 10 2021.
+
+[[threats]]
+id = "sql_injection"
+cwe = "CWE-89"
+owasp = "A03:2021"
+title = "SQL Injection"
+
+[[threats]]
+id = "xss"
+cwe = "CWE-79"
+owasp = "A03:2021"
+title = "Cross-Site Scripting"
+
+[[threats]]
+id = "command_injection"
+cwe = "CWE-78"
+owasp = "A03:2021"
+title = "OS Command Injection"
+
+[[threats]]
+id = "code_injection"
+cwe = "CWE-94"
+owasp = "A03:2021"
+title = "Code Injection"
+
+[[threats]]
+id = "deserialization"
+cwe = "CWE-502"
+owasp = "A08:2021"
+title = "Insecure Deserialization"
+
+[[threats]]
+id = "ssrf"
+cwe = "CWE-918"
+owasp = "A10:2021"
+title = "Server-Side Request Forgery"
+
+[[threats]]
+id = "path_traversal"
+cwe = "CWE-22"
+owasp = "A01:2021"
+title = "Path Traversal"
+
+[[threats]]
+id = "mass_assignment"
+cwe = "CWE-915"
+owasp = "A08:2021"
+title = "Mass Assignment"
+
+[[threats]]
+id = "ssti"
+cwe = "CWE-1336"
+owasp = "A03:2021"
+title = "Server-Side Template Injection"
+
+[[threats]]
+id = "open_redirect"
+cwe = "CWE-601"
+owasp = "A01:2021"
+title = "Open Redirect"
+
+[[threats]]
+id = "xxe"
+cwe = "CWE-611"
+owasp = "A05:2021"
+title = "XML External Entity"
+
+[[threats]]
+id = "csrf"
+cwe = "CWE-352"
+owasp = "A01:2021"
+title = "Cross-Site Request Forgery"
+
+[[threats]]
+id = "auth_bypass"
+cwe = "CWE-287"
+owasp = "A07:2021"
+title = "Authentication Bypass"
+
+[[threats]]
+id = "session_fixation"
+cwe = "CWE-384"
+owasp = "A07:2021"
+title = "Session Fixation"
+
+[[threats]]
+id = "weak_crypto"
+cwe = "CWE-327"
+owasp = "A02:2021"
+title = "Weak Cryptography"
+
+[[threats]]
+id = "secret_exposure"
+cwe = "CWE-200"
+owasp = "A02:2021"
+title = "Secret Exposure"
+
+[[threats]]
+id = "dos"
+cwe = "CWE-400"
+title = "Denial of Service"
+
+[[threats]]
+id = "nosql_injection"
+cwe = "CWE-943"
+owasp = "A03:2021"
+title = "NoSQL Injection"
+
+[[threats]]
+id = "ldap_injection"
+cwe = "CWE-90"
+owasp = "A03:2021"
+title = "LDAP Injection"
+
+[[threats]]
+id = "unsafe_reflection"
+cwe = "CWE-470"
+owasp = "A03:2021"
+title = "Unsafe Reflection"
+
+# Mappings from oss-taxonomy facet:term tags to threat IDs.
+# match is conjunctive: a tool must carry all listed tags to trigger the mapping.
+
+[[mappings]]
+match = ["function:templating"]
+threats = ["xss", "ssti"]
+note = "Renders data into output, escaping is bypassable"
+
+[[mappings]]
+match = ["function:serialization"]
+threats = ["deserialization"]
+note = "Deserializes data into objects, may instantiate arbitrary types"
+
+[[mappings]]
+match = ["function:parsing"]
+threats = ["xxe", "dos"]
+note = "Parsers for XML/YAML may resolve external entities or have quadratic blowup"
+
+[[mappings]]
+match = ["function:encryption"]
+threats = ["weak_crypto"]
+note = "Crypto primitives can be misconfigured or use deprecated algorithms"
+
+[[mappings]]
+match = ["function:file-management"]
+threats = ["path_traversal"]
+note = "File operations with caller-controlled paths"
+
+[[mappings]]
+match = ["function:scraping"]
+threats = ["ssrf"]
+note = "Fetches caller-controlled URLs"
+
+[[mappings]]
+match = ["function:http-client"]
+threats = ["ssrf"]
+note = "Outbound HTTP with caller-controlled URLs"
+
+[[mappings]]
+match = ["function:authentication"]
+threats = ["auth_bypass", "session_fixation"]
+note = "Identity and session handling"
+
+[[mappings]]
+match = ["function:data-mapping"]
+threats = ["sql_injection", "mass_assignment"]
+note = "Constructs database queries, often with raw escape hatches"
+
+[[mappings]]
+match = ["function:secrets-management"]
+threats = ["secret_exposure"]
+note = "Loads credentials into process environment"
+
+[[mappings]]
+match = ["function:process-execution"]
+threats = ["command_injection"]
+note = "Spawns OS processes from string arguments"
+
+[[mappings]]
+match = ["role:framework", "layer:backend"]
+threats = ["xss", "csrf", "open_redirect", "ssrf", "path_traversal", "auth_bypass"]
+note = "Server-side framework handling user-controlled HTTP input"
+
+[[mappings]]
+match = ["role:framework", "layer:frontend"]
+threats = ["xss", "open_redirect"]
+note = "Client-side framework rendering user-controlled data"

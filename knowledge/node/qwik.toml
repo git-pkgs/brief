@@ -15,3 +15,20 @@ role = ["framework"]
 function = ["templating"]
 layer = ["frontend", "full-stack"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "dangerouslySetInnerHTML"
+threat = "xss"
+cwe = "CWE-79"
+
+[[security.sinks]]
+symbol = "Element"
+threat = "xss"
+cwe = "CWE-79"
+note = "innerHTML prop on JSX elements"
+
+[[security.sinks]]
+symbol = "useNavigate"
+threat = "open_redirect"
+cwe = "CWE-601"
+note = "When target is caller-controlled"

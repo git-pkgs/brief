@@ -23,3 +23,90 @@ role = ["framework"]
 function = ["api-development", "templating", "data-mapping", "authentication"]
 layer = ["backend", "full-stack"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "{{{"
+threat = "xss"
+cwe = "CWE-79"
+note = "Triple-stash unescaped output in Edge templates"
+
+[[security.sinks]]
+symbol = "@!section"
+threat = "xss"
+cwe = "CWE-79"
+note = "Raw section output"
+
+[[security.sinks]]
+symbol = "safe"
+threat = "xss"
+cwe = "CWE-79"
+note = "Edge safe() helper marks content as pre-escaped"
+
+[[security.sinks]]
+symbol = "Database.rawQuery"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "Raw SQL; use bindings parameter"
+
+[[security.sinks]]
+symbol = ".whereRaw"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = ".joinRaw"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = ".orderByRaw"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = ".havingRaw"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "Database.from"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "With raw string; use Knex bindings"
+
+[[security.sinks]]
+symbol = "response.redirect"
+threat = "open_redirect"
+cwe = "CWE-601"
+
+[[security.sinks]]
+symbol = "response.redirect().toPath"
+threat = "open_redirect"
+cwe = "CWE-601"
+
+[[security.sinks]]
+symbol = "response.download"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "response.attachment"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "auth.use().login"
+threat = "session_fixation"
+cwe = "CWE-384"
+note = "Ensure session regeneration on login"
+
+[[security.sinks]]
+symbol = "Model.create"
+threat = "mass_assignment"
+cwe = "CWE-915"
+note = "Without $fillable or $guarded on the model"
+
+[[security.sinks]]
+symbol = "Model.fill"
+threat = "mass_assignment"
+cwe = "CWE-915"

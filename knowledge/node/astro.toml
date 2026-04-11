@@ -23,3 +23,33 @@ role = ["framework"]
 function = ["templating", "site-generation"]
 layer = ["frontend", "full-stack"]
 domain = ["web-development", "content-management"]
+
+[[security.sinks]]
+symbol = "set:html"
+threat = "xss"
+cwe = "CWE-79"
+note = "Directive that renders raw HTML without escaping"
+
+[[security.sinks]]
+symbol = "Fragment"
+threat = "xss"
+cwe = "CWE-79"
+note = "set:html on Fragment"
+
+[[security.sinks]]
+symbol = "Astro.redirect"
+threat = "open_redirect"
+cwe = "CWE-601"
+note = "In SSR mode with caller-controlled URL"
+
+[[security.sinks]]
+symbol = "Response.redirect"
+threat = "open_redirect"
+cwe = "CWE-601"
+note = "In API routes/endpoints"
+
+[[security.sinks]]
+symbol = "dangerouslySetInnerHTML"
+threat = "xss"
+cwe = "CWE-79"
+note = "When using React components in Astro"

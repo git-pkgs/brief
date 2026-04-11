@@ -1,0 +1,27 @@
+[tool]
+name = "net-ldap"
+category = "build"
+homepage = "https://github.com/ruby-ldap/ruby-net-ldap"
+docs = "https://www.rubydoc.info/gems/net-ldap"
+repo = "https://github.com/ruby-ldap/ruby-net-ldap"
+description = "LDAP client library for Ruby"
+
+[detect]
+dependencies = ["net-ldap"]
+ecosystems = ["ruby"]
+
+[taxonomy]
+role = ["library"]
+function = ["authentication"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "Net::LDAP#search"
+threat = "ldap_injection"
+cwe = "CWE-90"
+note = "When filter built via string interpolation; use Net::LDAP::Filter"
+
+[[security.sinks]]
+symbol = "Net::LDAP#bind_as"
+threat = "ldap_injection"
+cwe = "CWE-90"

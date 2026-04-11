@@ -1,0 +1,34 @@
+[tool]
+name = "PHP LDAP"
+category = "build"
+homepage = "https://www.php.net/manual/en/book.ldap.php"
+docs = "https://www.php.net/manual/en/book.ldap.php"
+description = "LDAP extension for PHP"
+
+[detect]
+ecosystems = ["php"]
+
+[detect.file_contains]
+"composer.json" = ["ext-ldap"]
+
+[taxonomy]
+role = ["library"]
+function = ["authentication"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "ldap_search"
+threat = "ldap_injection"
+cwe = "CWE-90"
+note = "When filter built from user input without escaping; use ldap_escape"
+
+[[security.sinks]]
+symbol = "ldap_bind"
+threat = "ldap_injection"
+cwe = "CWE-90"
+note = "When DN built from user input"
+
+[[security.sinks]]
+symbol = "ldap_read"
+threat = "ldap_injection"
+cwe = "CWE-90"

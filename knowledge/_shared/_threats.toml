@@ -149,11 +149,6 @@ threats = ["path_traversal"]
 note = "File operations with caller-controlled paths"
 
 [[mappings]]
-match = ["function:scraping"]
-threats = ["ssrf"]
-note = "Fetches caller-controlled URLs"
-
-[[mappings]]
 match = ["function:http-client"]
 threats = ["ssrf"]
 note = "Outbound HTTP with caller-controlled URLs"
@@ -182,6 +177,11 @@ note = "Spawns OS processes from string arguments"
 match = ["role:framework", "layer:backend"]
 threats = ["xss", "csrf", "open_redirect", "ssrf", "path_traversal", "auth_bypass"]
 note = "Server-side framework handling user-controlled HTTP input"
+
+[[mappings]]
+match = ["function:feature-flags"]
+threats = ["auth_bypass"]
+note = "Feature gates protecting access checks; accidental exposure of flagged-off code paths"
 
 [[mappings]]
 match = ["role:framework", "layer:frontend"]

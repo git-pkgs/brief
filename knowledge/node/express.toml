@@ -15,3 +15,35 @@ role = ["framework"]
 function = ["api-development"]
 layer = ["backend"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "res.send"
+threat = "xss"
+cwe = "CWE-79"
+note = "When sending raw HTML without Content-Type override"
+
+[[security.sinks]]
+symbol = "res.write"
+threat = "xss"
+cwe = "CWE-79"
+
+[[security.sinks]]
+symbol = "res.redirect"
+threat = "open_redirect"
+cwe = "CWE-601"
+
+[[security.sinks]]
+symbol = "res.sendFile"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "res.download"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "res.render"
+threat = "ssti"
+cwe = "CWE-1336"
+note = "When view name is caller-controlled"

@@ -22,3 +22,121 @@ files = ["db/migrate/", "db/schema.rb", "config/database.yml"]
 role = ["library"]
 function = ["data-mapping"]
 layer = ["data-layer"]
+
+[[security.sinks]]
+symbol = "find_by_sql"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "where"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "With string interpolation; safe with hash or parameterized array"
+
+[[security.sinks]]
+symbol = "select"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "With string argument from user input"
+
+[[security.sinks]]
+symbol = "order"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "Column name not parameterizable; allowlist instead"
+
+[[security.sinks]]
+symbol = "reorder"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "group"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "having"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "joins"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "With raw string; symbol/hash forms are safe"
+
+[[security.sinks]]
+symbol = "from"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "lock"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "pluck"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "With Arel.sql wrapped string"
+
+[[security.sinks]]
+symbol = "calculate"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "exists?"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "With string argument"
+
+[[security.sinks]]
+symbol = "delete_all"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "update_all"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "connection.execute"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "connection.exec_query"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "Arel.sql"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "Marks string as safe SQL, bypassing protections"
+
+[[security.sinks]]
+symbol = "new"
+threat = "mass_assignment"
+cwe = "CWE-915"
+note = "When passed unfiltered params hash"
+
+[[security.sinks]]
+symbol = "create"
+threat = "mass_assignment"
+cwe = "CWE-915"
+
+[[security.sinks]]
+symbol = "update"
+threat = "mass_assignment"
+cwe = "CWE-915"
+
+[[security.sinks]]
+symbol = "assign_attributes"
+threat = "mass_assignment"
+cwe = "CWE-915"

@@ -23,3 +23,14 @@ role = ["framework"]
 function = ["api-development", "templating"]
 layer = ["full-stack", "frontend", "backend"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "dangerouslySetInnerHTML"
+threat = "xss"
+cwe = "CWE-79"
+
+[[security.sinks]]
+symbol = "redirect"
+threat = "open_redirect"
+cwe = "CWE-601"
+note = "@remix-run/node redirect"

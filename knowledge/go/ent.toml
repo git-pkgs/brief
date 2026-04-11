@@ -21,3 +21,15 @@ files = ["ent/schema/"]
 
 [taxonomy]
 function = ["code-generation"]
+
+[[security.sinks]]
+symbol = "sql.Raw"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "Generated code is safe; raw escape hatch is not"
+
+[[security.sinks]]
+symbol = "ExecContext"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "Direct driver access"

@@ -18,3 +18,50 @@ role = ["framework"]
 function = ["api-development", "dependency-injection", "data-mapping"]
 layer = ["backend", "full-stack"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "@ResponseBody"
+threat = "xss"
+cwe = "CWE-79"
+note = "When returning HTML string without escaping"
+
+[[security.sinks]]
+symbol = "th:utext"
+threat = "xss"
+cwe = "CWE-79"
+note = "Thymeleaf unescaped text"
+
+[[security.sinks]]
+symbol = "RedirectView"
+threat = "open_redirect"
+cwe = "CWE-601"
+
+[[security.sinks]]
+symbol = "redirect:"
+threat = "open_redirect"
+cwe = "CWE-601"
+note = "View name prefix with caller-controlled suffix"
+
+[[security.sinks]]
+symbol = "@Query"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "Spring Data with nativeQuery=true and concat"
+
+[[security.sinks]]
+symbol = "createNativeQuery"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "JPA EntityManager"
+
+[[security.sinks]]
+symbol = "JdbcTemplate.query"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "With concat; PreparedStatement form is safe"
+
+[[security.sinks]]
+symbol = "SpEL"
+threat = "code_injection"
+cwe = "CWE-95"
+note = "SpelExpressionParser.parseExpression with user input; CVE-2022-22965 class"

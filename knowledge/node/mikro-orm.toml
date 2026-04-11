@@ -14,3 +14,15 @@ ecosystems = ["node"]
 role = ["library"]
 function = ["data-mapping"]
 layer = ["data-layer"]
+
+[[security.sinks]]
+symbol = "execute"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "em.execute / em.getConnection().execute"
+
+[[security.sinks]]
+symbol = "raw"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "qb.raw"

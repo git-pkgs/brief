@@ -18,3 +18,37 @@ role = ["framework"]
 function = ["api-development", "templating"]
 layer = ["backend"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "Markup"
+threat = "xss"
+cwe = "CWE-79"
+note = "jinja2.Markup or markupsafe.Markup; bypasses escaping"
+
+[[security.sinks]]
+symbol = "|safe"
+threat = "xss"
+cwe = "CWE-79"
+note = "Jinja2 filter"
+
+[[security.sinks]]
+symbol = "render_template_string"
+threat = "ssti"
+cwe = "CWE-1336"
+note = "When template body is caller-controlled"
+
+[[security.sinks]]
+symbol = "redirect"
+threat = "open_redirect"
+cwe = "CWE-601"
+
+[[security.sinks]]
+symbol = "send_file"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "send_from_directory"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "Safer than send_file but check directory arg"

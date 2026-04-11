@@ -26,3 +26,15 @@ role = ["framework"]
 function = ["api-development", "templating"]
 layer = ["full-stack", "frontend", "backend"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "{@html}"
+threat = "xss"
+cwe = "CWE-79"
+note = "Svelte directive that bypasses escaping"
+
+[[security.sinks]]
+symbol = "redirect"
+threat = "open_redirect"
+cwe = "CWE-601"
+note = "@sveltejs/kit redirect"

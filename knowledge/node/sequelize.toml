@@ -21,3 +21,27 @@ files = [".sequelizerc"]
 role = ["library"]
 function = ["data-mapping"]
 layer = ["data-layer"]
+
+[[security.sinks]]
+symbol = "query"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "sequelize.query with interpolated string"
+
+[[security.sinks]]
+symbol = "literal"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "Sequelize.literal"
+
+[[security.sinks]]
+symbol = "fn"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "When fn args are caller-controlled"
+
+[[security.sinks]]
+symbol = "where"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "With literal fragment"

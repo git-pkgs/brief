@@ -258,26 +258,38 @@ func TestSinksRubyProject(t *testing.T) {
 	sr := engine.Sinks(r)
 
 	if len(sr.Sinks) == 0 {
-		t.Fatal("expected sinks from Ruby language def")
+		t.Fatal("expected sinks from detected tools")
 	}
 
-	// All sinks in this fixture come from Ruby (only ruby/language.toml has sinks).
-	bySymbol := make(map[string]brief.SinkEntry)
+	// Index by tool+symbol since multiple tools can have a sink with the same name.
+	type key struct{ tool, symbol string }
+	idx := make(map[key]brief.SinkEntry)
 	for _, s := range sr.Sinks {
-		if s.Tool != "Ruby" {
-			t.Errorf("unexpected sink from %q: %v", s.Tool, s)
-		}
-		bySymbol[s.Symbol] = s
+		idx[key{s.Tool, s.Symbol}] = s
 	}
 
-	if e, ok := bySymbol["eval"]; !ok {
-		t.Error("expected eval sink")
+	// Ruby stdlib sinks
+	if e, ok := idx[key{"Ruby", "eval"}]; !ok {
+		t.Error("expected Ruby eval sink")
 	} else if e.Threat != "code_injection" || e.CWE != "CWE-95" {
-		t.Errorf("eval sink = %+v", e)
+		t.Errorf("Ruby eval sink = %+v", e)
+	}
+	if _, ok := idx[key{"Ruby", "Marshal.load"}]; !ok {
+		t.Error("expected Ruby Marshal.load sink")
 	}
 
-	if _, ok := bySymbol["Marshal.load"]; !ok {
-		t.Error("expected Marshal.load sink")
+	// Rails framework sinks
+	if e, ok := idx[key{"Rails", "html_safe"}]; !ok {
+		t.Error("expected Rails html_safe sink")
+	} else if e.Threat != "xss" {
+		t.Errorf("Rails html_safe threat = %q, want xss", e.Threat)
+	}
+
+	// ActiveRecord ORM sinks
+	if e, ok := idx[key{"ActiveRecord", "find_by_sql"}]; !ok {
+		t.Error("expected ActiveRecord find_by_sql sink")
+	} else if e.Threat != "sql_injection" {
+		t.Errorf("ActiveRecord find_by_sql threat = %q, want sql_injection", e.Threat)
 	}
 }
 

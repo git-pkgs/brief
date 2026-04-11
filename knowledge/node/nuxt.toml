@@ -26,3 +26,21 @@ role = ["framework"]
 function = ["api-development", "templating"]
 layer = ["full-stack", "frontend", "backend"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "v-html"
+threat = "xss"
+cwe = "CWE-79"
+note = "Vue directive that bypasses escaping"
+
+[[security.sinks]]
+symbol = "navigateTo"
+threat = "open_redirect"
+cwe = "CWE-601"
+note = "With external: true"
+
+[[security.sinks]]
+symbol = "sendRedirect"
+threat = "open_redirect"
+cwe = "CWE-601"
+note = "h3 server utility"

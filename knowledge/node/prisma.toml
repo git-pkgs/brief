@@ -23,3 +23,24 @@ files = ["prisma/schema.prisma"]
 role = ["library"]
 function = ["data-mapping", "code-generation"]
 layer = ["data-layer"]
+
+[[security.sinks]]
+symbol = "$queryRaw"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "Tagged template is safe; concat is not"
+
+[[security.sinks]]
+symbol = "$queryRawUnsafe"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "$executeRaw"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "$executeRawUnsafe"
+threat = "sql_injection"
+cwe = "CWE-89"

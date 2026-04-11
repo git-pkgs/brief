@@ -22,3 +22,15 @@ files = ["diesel.toml"]
 role = ["library"]
 function = ["data-mapping"]
 layer = ["data-layer"]
+
+[[security.sinks]]
+symbol = "sql_query"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "diesel::sql_query with format!"
+
+[[security.sinks]]
+symbol = "sql"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "diesel::dsl::sql in expressions"

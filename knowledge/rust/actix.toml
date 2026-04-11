@@ -15,3 +15,20 @@ role = ["framework"]
 function = ["api-development"]
 layer = ["backend"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "HttpResponse::Ok().body"
+threat = "xss"
+cwe = "CWE-79"
+note = "When body is HTML and Content-Type is text/html"
+
+[[security.sinks]]
+symbol = "Redirect::to"
+threat = "open_redirect"
+cwe = "CWE-601"
+
+[[security.sinks]]
+symbol = "NamedFile::open"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "actix-files"

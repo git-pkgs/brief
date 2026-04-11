@@ -17,3 +17,30 @@ role = ["framework"]
 function = ["api-development"]
 layer = ["backend"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "c.String"
+threat = "xss"
+cwe = "CWE-79"
+note = "No HTML escaping; use c.HTML for templated output"
+
+[[security.sinks]]
+symbol = "c.Data"
+threat = "xss"
+cwe = "CWE-79"
+note = "When Content-Type is text/html"
+
+[[security.sinks]]
+symbol = "c.Redirect"
+threat = "open_redirect"
+cwe = "CWE-601"
+
+[[security.sinks]]
+symbol = "c.File"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "c.FileAttachment"
+threat = "path_traversal"
+cwe = "CWE-22"

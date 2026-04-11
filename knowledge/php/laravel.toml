@@ -19,3 +19,90 @@ role = ["framework"]
 function = ["api-development", "templating", "data-mapping", "authentication"]
 layer = ["backend", "full-stack"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "{!! !!}"
+threat = "xss"
+cwe = "CWE-79"
+note = "Blade unescaped output syntax"
+
+[[security.sinks]]
+symbol = "Blade::render"
+threat = "ssti"
+cwe = "CWE-1336"
+note = "When template body is caller-controlled"
+
+[[security.sinks]]
+symbol = "DB::raw"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "DB::statement"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "DB::select"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "With interpolation; bindings are safe"
+
+[[security.sinks]]
+symbol = "whereRaw"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "selectRaw"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "orderByRaw"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "havingRaw"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "groupByRaw"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "redirect()->to"
+threat = "open_redirect"
+cwe = "CWE-601"
+
+[[security.sinks]]
+symbol = "redirect()->away"
+threat = "open_redirect"
+cwe = "CWE-601"
+note = "Explicitly allows external URLs"
+
+[[security.sinks]]
+symbol = "Storage::get"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "When path is from request"
+
+[[security.sinks]]
+symbol = "Storage::download"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "fill"
+threat = "mass_assignment"
+cwe = "CWE-915"
+note = "Without $fillable or $guarded"
+
+[[security.sinks]]
+symbol = "forceFill"
+threat = "mass_assignment"
+cwe = "CWE-915"
+note = "Bypasses $fillable"

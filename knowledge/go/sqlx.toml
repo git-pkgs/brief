@@ -14,3 +14,29 @@ ecosystems = ["go"]
 role = ["library"]
 function = ["data-mapping"]
 layer = ["data-layer"]
+
+[[security.sinks]]
+symbol = "Query"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "When query built via Sprintf; use bindvars"
+
+[[security.sinks]]
+symbol = "Queryx"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "Exec"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "Get"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "Select"
+threat = "sql_injection"
+cwe = "CWE-89"

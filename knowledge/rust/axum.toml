@@ -18,3 +18,19 @@ role = ["framework"]
 function = ["api-development"]
 layer = ["backend"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "Html"
+threat = "xss"
+cwe = "CWE-79"
+note = "axum::response::Html does not escape"
+
+[[security.sinks]]
+symbol = "Redirect::to"
+threat = "open_redirect"
+cwe = "CWE-601"
+
+[[security.sinks]]
+symbol = "Redirect::permanent"
+threat = "open_redirect"
+cwe = "CWE-601"

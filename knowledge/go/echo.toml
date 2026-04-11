@@ -18,3 +18,29 @@ role = ["framework"]
 function = ["api-development"]
 layer = ["backend"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "c.HTML"
+threat = "xss"
+cwe = "CWE-79"
+note = "Renders raw HTML string"
+
+[[security.sinks]]
+symbol = "c.HTMLBlob"
+threat = "xss"
+cwe = "CWE-79"
+
+[[security.sinks]]
+symbol = "c.Redirect"
+threat = "open_redirect"
+cwe = "CWE-601"
+
+[[security.sinks]]
+symbol = "c.File"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "c.Attachment"
+threat = "path_traversal"
+cwe = "CWE-22"

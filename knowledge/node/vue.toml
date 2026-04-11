@@ -18,3 +18,14 @@ role = ["framework"]
 function = ["templating"]
 layer = ["frontend"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "v-html"
+threat = "xss"
+cwe = "CWE-79"
+
+[[security.sinks]]
+symbol = "innerHTML"
+threat = "xss"
+cwe = "CWE-79"
+note = "Direct DOM manipulation in lifecycle hooks"

@@ -20,4 +20,4 @@ files = ["k6.config.js", "k6.config.ts"]
 
 [taxonomy]
 role = ["testing-framework"]
-function = ["testing"]
+function = ["benchmarking"]

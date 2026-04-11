@@ -18,3 +18,4 @@ files = ["postcss.config.js", "postcss.config.mjs", "postcss.config.cjs", "postc
 role = ["build-tool"]
 layer = ["frontend"]
 domain = ["web-development"]
+function = ["styling"]

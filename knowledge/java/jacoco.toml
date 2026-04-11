@@ -19,4 +19,4 @@ run = "mvn verify"
 alternatives = ["gradle jacocoTestReport"]
 
 [taxonomy]
-function = ["testing"]
+function = ["coverage"]

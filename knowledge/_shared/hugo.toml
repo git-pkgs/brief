@@ -20,4 +20,4 @@ alternatives = ["hugo"]
 files = ["hugo.toml", "hugo.yaml", "hugo.yml", "config.toml"]
 
 [taxonomy]
-function = ["documentation"]
+function = ["documentation", "site-generation"]

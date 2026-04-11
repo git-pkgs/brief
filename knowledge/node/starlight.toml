@@ -11,4 +11,4 @@ dependencies = ["@astrojs/starlight"]
 ecosystems = ["node"]
 
 [taxonomy]
-function = ["documentation"]
+function = ["documentation", "site-generation"]

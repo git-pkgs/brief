@@ -20,4 +20,4 @@ alternatives = ["npx vitepress build"]
 files = [".vitepress/config.js", ".vitepress/config.ts", ".vitepress/config.mts"]
 
 [taxonomy]
-function = ["documentation"]
+function = ["documentation", "site-generation"]

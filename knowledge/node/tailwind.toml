@@ -19,3 +19,4 @@ files = ["tailwind.config.js", "tailwind.config.ts", "tailwind.config.mjs", "tai
 role = ["library"]
 layer = ["frontend"]
 domain = ["web-development"]
+function = ["styling"]

@@ -13,4 +13,4 @@ files = ["release-please-config.json", ".release-please-manifest.json"]
 files = ["release-please-config.json", ".release-please-manifest.json"]
 
 [taxonomy]
-function = ["deployment"]
+function = ["release-management"]

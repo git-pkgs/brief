@@ -12,4 +12,4 @@ files = [".coveralls.yml"]
 files = [".coveralls.yml"]
 
 [taxonomy]
-function = ["testing"]
+function = ["coverage"]

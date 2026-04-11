@@ -19,4 +19,4 @@ alternatives = ["npx changeset publish"]
 files = [".changeset/config.json"]
 
 [taxonomy]
-function = ["deployment"]
+function = ["release-management"]

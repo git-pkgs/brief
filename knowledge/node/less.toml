@@ -18,3 +18,4 @@ run = "npx lessc"
 role = ["compiler"]
 layer = ["frontend"]
 domain = ["web-development"]
+function = ["styling"]

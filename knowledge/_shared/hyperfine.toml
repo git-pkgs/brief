@@ -17,4 +17,4 @@ files = [".hyperfine.toml"]
 
 [taxonomy]
 role = ["testing-framework"]
-function = ["testing"]
+function = ["benchmarking"]

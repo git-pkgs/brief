@@ -17,4 +17,4 @@ run = "npx c8 npm test"
 alternatives = ["npx nyc npm test"]
 
 [taxonomy]
-function = ["testing"]
+function = ["coverage"]

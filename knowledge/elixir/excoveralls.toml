@@ -14,4 +14,4 @@ ecosystems = ["elixir"]
 run = "mix coveralls"
 
 [taxonomy]
-function = ["testing"]
+function = ["coverage"]

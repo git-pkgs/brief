@@ -15,4 +15,4 @@ run = "go test -coverprofile=coverage.out ./..."
 alternatives = ["go tool cover -html=coverage.out"]
 
 [taxonomy]
-function = ["testing"]
+function = ["coverage"]

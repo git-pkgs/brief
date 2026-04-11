@@ -12,4 +12,4 @@ files = ["codecov.yml", ".codecov.yml", "codecov.yaml", ".codecov.yaml"]
 files = ["codecov.yml", ".codecov.yml", "codecov.yaml", ".codecov.yaml"]
 
 [taxonomy]
-function = ["testing"]
+function = ["coverage"]

@@ -20,6 +20,6 @@ files = ["astro.config.mjs", "astro.config.ts", "astro.config.js"]
 
 [taxonomy]
 role = ["framework"]
-function = ["templating"]
+function = ["templating", "site-generation"]
 layer = ["frontend", "full-stack"]
 domain = ["web-development", "content-management"]

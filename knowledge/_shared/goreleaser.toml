@@ -18,4 +18,4 @@ files = [".goreleaser.yaml", ".goreleaser.yml", "goreleaser.yaml", "goreleaser.y
 
 [taxonomy]
 role = ["build-tool"]
-function = ["deployment"]
+function = ["release-management", "deployment"]

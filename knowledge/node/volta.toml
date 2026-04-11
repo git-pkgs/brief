@@ -17,3 +17,4 @@ files = ["package.json"]
 
 [taxonomy]
 role = ["cli-tool"]
+function = ["runtime-management"]

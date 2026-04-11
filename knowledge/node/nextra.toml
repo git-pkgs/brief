@@ -14,4 +14,4 @@ ecosystems = ["node"]
 run = "next build"
 
 [taxonomy]
-function = ["documentation"]
+function = ["documentation", "site-generation"]

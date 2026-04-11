@@ -9,3 +9,8 @@ description = "Async ORM for Python"
 [detect]
 dependencies = ["tortoise-orm"]
 ecosystems = ["python"]
+
+[taxonomy]
+role = ["library"]
+function = ["data-mapping"]
+layer = ["data-layer"]

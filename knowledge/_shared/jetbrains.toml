@@ -9,3 +9,6 @@ files = [".idea/"]
 
 [config]
 files = [".idea/"]
+
+[taxonomy]
+role = ["editor"]

@@ -9,3 +9,9 @@ description = "Reactive JavaScript UI library"
 [detect]
 dependencies = ["solid-js"]
 ecosystems = ["node"]
+
+[taxonomy]
+role = ["library"]
+function = ["templating"]
+layer = ["frontend"]
+domain = ["web-development"]

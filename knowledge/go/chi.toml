@@ -12,3 +12,9 @@ ecosystems = ["go"]
 
 [commands]
 run = "go run ."
+
+[taxonomy]
+role = ["library"]
+function = ["api-development"]
+layer = ["backend"]
+domain = ["web-development"]

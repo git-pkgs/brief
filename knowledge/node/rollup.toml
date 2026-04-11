@@ -16,3 +16,8 @@ run = "npx rollup -c"
 
 [config]
 files = ["rollup.config.js", "rollup.config.ts", "rollup.config.mjs"]
+
+[taxonomy]
+role = ["build-tool"]
+function = ["bundling"]
+layer = ["frontend"]

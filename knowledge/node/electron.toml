@@ -12,3 +12,8 @@ ecosystems = ["node"]
 
 [commands]
 run = "npx electron ."
+
+[taxonomy]
+role = ["framework"]
+layer = ["application-layer"]
+domain = ["desktop-development"]

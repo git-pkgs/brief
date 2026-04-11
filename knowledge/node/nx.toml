@@ -17,3 +17,6 @@ alternatives = ["npx nx graph"]
 
 [config]
 files = ["nx.json"]
+
+[taxonomy]
+role = ["build-tool", "orchestrator"]

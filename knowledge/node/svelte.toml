@@ -16,3 +16,9 @@ run = "npm run dev"
 
 [config]
 files = ["svelte.config.js", "svelte.config.ts"]
+
+[taxonomy]
+role = ["framework", "compiler"]
+function = ["templating"]
+layer = ["frontend"]
+domain = ["web-development"]

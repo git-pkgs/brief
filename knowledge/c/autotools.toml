@@ -15,3 +15,6 @@ alternatives = ["autoreconf -i && ./configure && make"]
 
 [config]
 files = ["configure.ac", "Makefile.am"]
+
+[taxonomy]
+role = ["build-tool"]

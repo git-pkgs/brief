@@ -16,3 +16,8 @@ run = "npx sequelize-cli db:migrate"
 
 [config]
 files = [".sequelizerc"]
+
+[taxonomy]
+role = ["library"]
+function = ["data-mapping"]
+layer = ["data-layer"]

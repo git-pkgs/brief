@@ -12,3 +12,9 @@ ecosystems = ["python"]
 
 [commands]
 run = "uvicorn main:app --reload"
+
+[taxonomy]
+role = ["framework"]
+function = ["api-development", "validation"]
+layer = ["backend"]
+domain = ["web-development"]

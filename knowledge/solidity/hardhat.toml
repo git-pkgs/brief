@@ -17,3 +17,7 @@ alternatives = ["npx hardhat test"]
 
 [config]
 files = ["hardhat.config.js", "hardhat.config.ts"]
+
+[taxonomy]
+role = ["build-tool", "testing-framework"]
+domain = ["blockchain"]

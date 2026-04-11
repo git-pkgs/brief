@@ -16,3 +16,8 @@ run = "npx unocss"
 
 [config]
 files = ["uno.config.js", "uno.config.ts"]
+
+[taxonomy]
+role = ["library"]
+layer = ["frontend"]
+domain = ["web-development"]

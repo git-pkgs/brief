@@ -16,3 +16,6 @@ alternatives = ["rush build", "rush update"]
 
 [config]
 files = ["rush.json"]
+
+[taxonomy]
+role = ["build-tool", "orchestrator"]

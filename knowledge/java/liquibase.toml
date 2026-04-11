@@ -15,3 +15,8 @@ run = "liquibase update"
 
 [config]
 files = ["liquibase.properties", "liquibase.yml", "liquibase.yaml"]
+
+[taxonomy]
+role = ["cli-tool"]
+function = ["database-management"]
+layer = ["data-layer"]

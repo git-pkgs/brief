@@ -11,3 +11,7 @@ files = [".envrc"]
 
 [config]
 files = [".envrc"]
+
+[taxonomy]
+role = ["cli-tool"]
+function = ["secrets-management"]

@@ -12,3 +12,6 @@ ecosystems = ["python"]
 
 [config]
 files = [".python-version"]
+
+[taxonomy]
+role = ["cli-tool"]

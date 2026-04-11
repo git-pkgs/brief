@@ -15,3 +15,6 @@ alternatives = ["bazel test //..."]
 
 [config]
 files = ["WORKSPACE", "WORKSPACE.bazel", "MODULE.bazel", ".bazelrc"]
+
+[taxonomy]
+role = ["build-tool", "orchestrator"]

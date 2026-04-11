@@ -17,3 +17,8 @@ alternatives = ["alembic revision --autogenerate"]
 
 [config]
 files = ["alembic.ini", "alembic/env.py"]
+
+[taxonomy]
+role = ["cli-tool"]
+function = ["database-management"]
+layer = ["data-layer"]

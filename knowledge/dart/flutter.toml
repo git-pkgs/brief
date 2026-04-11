@@ -14,3 +14,8 @@ ecosystems = ["dart"]
 
 [commands]
 run = "flutter run"
+
+[taxonomy]
+role = ["framework"]
+layer = ["frontend", "application-layer"]
+domain = ["mobile-development"]

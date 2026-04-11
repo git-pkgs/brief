@@ -17,3 +17,9 @@ alternatives = ["npx astro build"]
 
 [config]
 files = ["astro.config.mjs", "astro.config.ts", "astro.config.js"]
+
+[taxonomy]
+role = ["framework"]
+function = ["templating"]
+layer = ["frontend", "full-stack"]
+domain = ["web-development", "content-management"]

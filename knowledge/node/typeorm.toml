@@ -16,3 +16,8 @@ run = "npx typeorm migration:run"
 
 [config]
 files = ["ormconfig.json", "ormconfig.yml", "ormconfig.yaml", "ormconfig.js", "ormconfig.ts"]
+
+[taxonomy]
+role = ["library"]
+function = ["data-mapping"]
+layer = ["data-layer"]

@@ -17,3 +17,9 @@ alternatives = ["npx nest build"]
 
 [config]
 files = ["nest-cli.json"]
+
+[taxonomy]
+role = ["framework"]
+function = ["api-development", "dependency-injection"]
+layer = ["backend"]
+domain = ["web-development"]

@@ -12,3 +12,9 @@ ecosystems = ["node"]
 
 [commands]
 run = "npm run dev"
+
+[taxonomy]
+role = ["library"]
+function = ["templating"]
+layer = ["frontend"]
+domain = ["web-development"]

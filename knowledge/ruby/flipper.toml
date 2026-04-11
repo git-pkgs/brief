@@ -9,3 +9,7 @@ description = "Feature flag library for Ruby"
 [detect]
 dependencies = ["flipper"]
 ecosystems = ["ruby"]
+
+[taxonomy]
+role = ["library"]
+function = ["feature-flags"]

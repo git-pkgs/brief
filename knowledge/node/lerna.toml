@@ -17,3 +17,6 @@ alternatives = ["npx lerna publish"]
 
 [config]
 files = ["lerna.json"]
+
+[taxonomy]
+role = ["build-tool", "orchestrator"]

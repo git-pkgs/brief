@@ -19,3 +19,8 @@ alternatives = ["goose create"]
 
 [config]
 files = ["migrations/"]
+
+[taxonomy]
+role = ["cli-tool"]
+function = ["database-management"]
+layer = ["data-layer"]

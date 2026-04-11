@@ -18,3 +18,8 @@ alternatives = ["npx prisma db push", "npx prisma generate"]
 
 [config]
 files = ["prisma/schema.prisma"]
+
+[taxonomy]
+role = ["library"]
+function = ["data-mapping", "code-generation"]
+layer = ["data-layer"]

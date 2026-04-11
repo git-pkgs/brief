@@ -11,3 +11,6 @@ files = [".tool-versions"]
 
 [config]
 files = [".tool-versions"]
+
+[taxonomy]
+role = ["cli-tool"]

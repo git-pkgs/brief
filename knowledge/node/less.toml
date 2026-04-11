@@ -13,3 +13,8 @@ ecosystems = ["node"]
 
 [commands]
 run = "npx lessc"
+
+[taxonomy]
+role = ["compiler"]
+layer = ["frontend"]
+domain = ["web-development"]

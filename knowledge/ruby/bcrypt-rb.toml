@@ -1,0 +1,22 @@
+[tool]
+name = "bcrypt-ruby"
+category = "build"
+homepage = "https://github.com/bcrypt-ruby/bcrypt-ruby"
+docs = "https://github.com/bcrypt-ruby/bcrypt-ruby"
+repo = "https://github.com/bcrypt-ruby/bcrypt-ruby"
+description = "Password hashing"
+
+[detect]
+dependencies = ["bcrypt"]
+ecosystems = ["ruby"]
+
+[taxonomy]
+role = ["library"]
+function = ["encryption", "authentication"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "BCrypt::Password.create"
+threat = "weak_crypto"
+cwe = "CWE-916"
+note = "Truncates at 72 bytes; cost too low"

@@ -1,0 +1,28 @@
+[tool]
+name = "js-yaml"
+category = "build"
+homepage = "https://github.com/nodeca/js-yaml"
+docs = "https://github.com/nodeca/js-yaml"
+repo = "https://github.com/nodeca/js-yaml"
+description = "YAML parser for JavaScript"
+
+[detect]
+dependencies = ["js-yaml"]
+ecosystems = ["node"]
+
+[taxonomy]
+role = ["library"]
+function = ["serialization", "parsing"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "yaml.load"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Pre-4.0 default schema allowed !!js/function; safe in 4.x"
+
+[[security.sinks]]
+symbol = "DEFAULT_FULL_SCHEMA"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Pre-4.0 schema with !!js/* tags"

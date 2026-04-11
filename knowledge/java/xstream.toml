@@ -1,0 +1,22 @@
+[tool]
+name = "XStream"
+category = "build"
+homepage = "https://x-stream.github.io"
+docs = "https://x-stream.github.io"
+repo = "https://github.com/x-stream/xstream"
+description = "XML serialization for Java"
+
+[detect]
+dependencies = ["com.thoughtworks.xstream:xstream"]
+ecosystems = ["java"]
+
+[taxonomy]
+role = ["library"]
+function = ["serialization", "parsing"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "XStream.fromXML"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Without security framework configured; many CVEs"

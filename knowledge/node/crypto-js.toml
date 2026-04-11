@@ -1,0 +1,42 @@
+[tool]
+name = "crypto-js"
+category = "build"
+homepage = "https://github.com/brix/crypto-js"
+docs = "https://github.com/brix/crypto-js"
+repo = "https://github.com/brix/crypto-js"
+description = "JavaScript crypto standards"
+
+[detect]
+dependencies = ["crypto-js"]
+ecosystems = ["node"]
+
+[taxonomy]
+role = ["library"]
+function = ["encryption"]
+layer = ["frontend", "backend"]
+
+[[security.sinks]]
+symbol = "CryptoJS.MD5"
+threat = "weak_crypto"
+cwe = "CWE-327"
+
+[[security.sinks]]
+symbol = "CryptoJS.SHA1"
+threat = "weak_crypto"
+cwe = "CWE-327"
+
+[[security.sinks]]
+symbol = "CryptoJS.DES"
+threat = "weak_crypto"
+cwe = "CWE-327"
+
+[[security.sinks]]
+symbol = "CryptoJS.RC4"
+threat = "weak_crypto"
+cwe = "CWE-327"
+
+[[security.sinks]]
+symbol = "CryptoJS.AES.encrypt"
+threat = "weak_crypto"
+cwe = "CWE-327"
+note = "Default mode/padding may not match expectations; CVE-2023-46233"

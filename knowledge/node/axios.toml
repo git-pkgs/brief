@@ -1,0 +1,37 @@
+[tool]
+name = "axios"
+category = "build"
+homepage = "https://axios-http.com"
+docs = "https://axios-http.com"
+repo = "https://github.com/axios/axios"
+description = "Promise-based HTTP client"
+
+[detect]
+dependencies = ["axios"]
+ecosystems = ["node"]
+
+[taxonomy]
+role = ["library"]
+function = ["http-client"]
+layer = ["backend", "frontend"]
+
+[[security.sinks]]
+symbol = "axios.get"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "axios.post"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "axios.request"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "axios.create"
+threat = "ssrf"
+cwe = "CWE-918"
+note = "When baseURL is caller-controlled"

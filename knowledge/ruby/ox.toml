@@ -1,0 +1,28 @@
+[tool]
+name = "Ox"
+category = "build"
+homepage = "https://github.com/ohler55/ox"
+docs = "https://github.com/ohler55/ox"
+repo = "https://github.com/ohler55/ox"
+description = "Fast XML parser for Ruby"
+
+[detect]
+dependencies = ["ox"]
+ecosystems = ["ruby"]
+
+[taxonomy]
+role = ["library"]
+function = ["parsing"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "Ox.parse_obj"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Object mode instantiates arbitrary classes"
+
+[[security.sinks]]
+symbol = "Ox.load"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "With mode: :object"

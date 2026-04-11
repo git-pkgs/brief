@@ -1,0 +1,21 @@
+[tool]
+name = "node-fetch"
+category = "build"
+homepage = "https://github.com/node-fetch/node-fetch"
+docs = "https://github.com/node-fetch/node-fetch"
+repo = "https://github.com/node-fetch/node-fetch"
+description = "Fetch API for Node.js"
+
+[detect]
+dependencies = ["node-fetch"]
+ecosystems = ["node"]
+
+[taxonomy]
+role = ["library"]
+function = ["http-client"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "fetch"
+threat = "ssrf"
+cwe = "CWE-918"

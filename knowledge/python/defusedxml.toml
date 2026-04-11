@@ -1,0 +1,16 @@
+[tool]
+name = "defusedxml"
+category = "build"
+homepage = "https://github.com/tiran/defusedxml"
+docs = "https://github.com/tiran/defusedxml"
+repo = "https://github.com/tiran/defusedxml"
+description = "XML parser wrappers that block XXE and billion-laughs"
+
+[detect]
+dependencies = ["defusedxml"]
+ecosystems = ["python"]
+
+[taxonomy]
+role = ["library"]
+function = ["parsing"]
+layer = ["backend"]

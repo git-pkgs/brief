@@ -1,0 +1,28 @@
+[tool]
+name = "NextAuth.js"
+category = "build"
+homepage = "https://next-auth.js.org"
+docs = "https://next-auth.js.org"
+repo = "https://github.com/nextauthjs/next-auth"
+description = "Authentication for Next.js"
+
+[detect]
+dependencies = ["next-auth"]
+ecosystems = ["node"]
+
+[taxonomy]
+role = ["library"]
+function = ["authentication"]
+layer = ["backend", "full-stack"]
+
+[[security.sinks]]
+symbol = "callbacks.signIn"
+threat = "auth_bypass"
+cwe = "CWE-287"
+note = "Returning true unconditionally"
+
+[[security.sinks]]
+symbol = "NEXTAUTH_SECRET"
+threat = "auth_bypass"
+cwe = "CWE-321"
+note = "Missing or weak secret in production"

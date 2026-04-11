@@ -1,0 +1,22 @@
+[tool]
+name = "fast-xml-parser"
+category = "build"
+homepage = "https://github.com/NaturalIntelligence/fast-xml-parser"
+docs = "https://github.com/NaturalIntelligence/fast-xml-parser"
+repo = "https://github.com/NaturalIntelligence/fast-xml-parser"
+description = "Fast XML parser without C/C++ deps"
+
+[detect]
+dependencies = ["fast-xml-parser"]
+ecosystems = ["node"]
+
+[taxonomy]
+role = ["library"]
+function = ["parsing"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "XMLParser"
+threat = "dos"
+cwe = "CWE-400"
+note = "No XXE since no DTD support; entity expansion DoS possible"

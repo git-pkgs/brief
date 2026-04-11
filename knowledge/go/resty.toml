@@ -1,0 +1,32 @@
+[tool]
+name = "Resty"
+category = "build"
+homepage = "https://resty.dev"
+docs = "https://resty.dev"
+repo = "https://github.com/go-resty/resty"
+description = "HTTP and REST client for Go"
+
+[detect]
+dependencies = ["github.com/go-resty/resty/v2", "github.com/go-resty/resty"]
+ecosystems = ["go"]
+
+[taxonomy]
+role = ["library"]
+function = ["http-client"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "client.R().Get"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "client.R().Post"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "SetHostURL"
+threat = "ssrf"
+cwe = "CWE-918"
+note = "When base URL is caller-controlled"

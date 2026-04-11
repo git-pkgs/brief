@@ -1,0 +1,34 @@
+[tool]
+name = "Haml"
+category = "build"
+homepage = "https://haml.info"
+docs = "https://haml.info"
+repo = "https://github.com/haml/haml"
+description = "HTML abstraction markup language"
+
+[detect]
+dependencies = ["haml"]
+ecosystems = ["ruby"]
+
+[taxonomy]
+role = ["library"]
+function = ["templating"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "!="
+threat = "xss"
+cwe = "CWE-79"
+note = "Unescaped output; = is escaped"
+
+[[security.sinks]]
+symbol = "!"
+threat = "xss"
+cwe = "CWE-79"
+note = "Unescaped interpolation prefix"
+
+[[security.sinks]]
+symbol = "Haml::Engine.new"
+threat = "ssti"
+cwe = "CWE-1336"
+note = "When template string is caller-controlled"

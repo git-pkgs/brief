@@ -1,0 +1,28 @@
+[tool]
+name = "Mustache"
+category = "build"
+homepage = "https://github.com/janl/mustache.js"
+docs = "https://github.com/janl/mustache.js"
+repo = "https://github.com/janl/mustache.js"
+description = "Logic-less templates"
+
+[detect]
+dependencies = ["mustache"]
+ecosystems = ["node"]
+
+[taxonomy]
+role = ["library"]
+function = ["templating"]
+layer = ["backend", "frontend"]
+
+[[security.sinks]]
+symbol = "{{{"
+threat = "xss"
+cwe = "CWE-79"
+note = "Triple mustache unescaped"
+
+[[security.sinks]]
+symbol = "{{&"
+threat = "xss"
+cwe = "CWE-79"
+note = "Ampersand unescaped"

@@ -1,0 +1,22 @@
+[tool]
+name = "python-jose"
+category = "build"
+homepage = "https://github.com/mpdavis/python-jose"
+docs = "https://github.com/mpdavis/python-jose"
+repo = "https://github.com/mpdavis/python-jose"
+description = "JOSE implementation for Python"
+
+[detect]
+dependencies = ["python-jose"]
+ecosystems = ["python"]
+
+[taxonomy]
+role = ["library"]
+function = ["authentication", "encryption"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "jwt.decode"
+threat = "auth_bypass"
+cwe = "CWE-347"
+note = "Algorithm confusion; CVE-2024-33663"

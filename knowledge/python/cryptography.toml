@@ -1,0 +1,28 @@
+[tool]
+name = "cryptography"
+category = "build"
+homepage = "https://cryptography.io"
+docs = "https://cryptography.io"
+repo = "https://github.com/pyca/cryptography"
+description = "Cryptographic recipes and primitives"
+
+[detect]
+dependencies = ["cryptography"]
+ecosystems = ["python"]
+
+[taxonomy]
+role = ["library"]
+function = ["encryption"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "hazmat"
+threat = "weak_crypto"
+cwe = "CWE-327"
+note = "hazmat layer is intentionally low-level; misuse is easy"
+
+[[security.sinks]]
+symbol = "ECB"
+threat = "weak_crypto"
+cwe = "CWE-327"
+note = "modes.ECB() leaks plaintext patterns"

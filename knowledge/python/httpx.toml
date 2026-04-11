@@ -1,0 +1,31 @@
+[tool]
+name = "httpx"
+category = "build"
+homepage = "https://www.python-httpx.org"
+docs = "https://www.python-httpx.org"
+repo = "https://github.com/encode/httpx"
+description = "Async HTTP client for Python"
+
+[detect]
+dependencies = ["httpx"]
+ecosystems = ["python"]
+
+[taxonomy]
+role = ["library"]
+function = ["http-client"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "httpx.get"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "httpx.post"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "AsyncClient.get"
+threat = "ssrf"
+cwe = "CWE-918"

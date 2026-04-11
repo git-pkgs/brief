@@ -248,6 +248,40 @@ func TestThreatModelGoProjectEmpty(t *testing.T) {
 	}
 }
 
+func TestThreatModelPythonLibs(t *testing.T) {
+	// Python fixture has requests (function:http-client) and jinja2
+	// (function:templating) which fire SSRF and XSS/SSTI mappings.
+	engine := New(loadKB(t), "../testdata/python-project")
+	r, err := engine.Run()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	tr := engine.ThreatModel(r)
+	threatIDs := make(map[string][]string)
+	for _, th := range tr.Threats {
+		threatIDs[th.ID] = th.IntroducedBy
+	}
+
+	if intro, ok := threatIDs["ssrf"]; !ok {
+		t.Error("expected ssrf threat from requests")
+	} else if !slices.Contains(intro, "requests") {
+		t.Errorf("ssrf introduced_by = %v, want to include requests", intro)
+	}
+
+	if intro, ok := threatIDs["ssti"]; !ok {
+		t.Error("expected ssti threat from jinja2")
+	} else if !slices.Contains(intro, "Jinja2") {
+		t.Errorf("ssti introduced_by = %v, want to include Jinja2", intro)
+	}
+
+	if intro, ok := threatIDs["xss"]; !ok {
+		t.Error("expected xss threat from jinja2 templating")
+	} else if !slices.Contains(intro, "Jinja2") {
+		t.Errorf("xss introduced_by = %v, want to include Jinja2", intro)
+	}
+}
+
 func TestSinksRubyProject(t *testing.T) {
 	engine := New(loadKB(t), "../testdata/ruby-project")
 	r, err := engine.Run()

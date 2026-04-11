@@ -1,0 +1,34 @@
+[tool]
+name = "EJS"
+category = "build"
+homepage = "https://ejs.co"
+docs = "https://ejs.co"
+repo = "https://github.com/mde/ejs"
+description = "Embedded JavaScript templates"
+
+[detect]
+dependencies = ["ejs"]
+ecosystems = ["node"]
+
+[taxonomy]
+role = ["library"]
+function = ["templating"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "<%-"
+threat = "xss"
+cwe = "CWE-79"
+note = "Unescaped output tag; <%= is escaped"
+
+[[security.sinks]]
+symbol = "ejs.render"
+threat = "ssti"
+cwe = "CWE-1336"
+note = "When template string is caller-controlled; CVE-2022-29078"
+
+[[security.sinks]]
+symbol = "ejs.renderFile"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "When filename is caller-controlled"

@@ -1,0 +1,28 @@
+[tool]
+name = "Newtonsoft.Json"
+category = "build"
+homepage = "https://www.newtonsoft.com/json"
+docs = "https://www.newtonsoft.com/json"
+repo = "https://github.com/JamesNK/Newtonsoft.Json"
+description = "JSON framework for .NET"
+
+[detect]
+dependencies = ["Newtonsoft.Json"]
+ecosystems = ["csharp"]
+
+[taxonomy]
+role = ["library"]
+function = ["serialization", "parsing"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "TypeNameHandling"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "TypeNameHandling.All or .Auto enables polymorphic gadgets"
+
+[[security.sinks]]
+symbol = "JsonConvert.DeserializeObject"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "When TypeNameHandling is enabled"

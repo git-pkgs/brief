@@ -1,0 +1,21 @@
+[tool]
+name = "Shrine"
+category = "build"
+homepage = "https://shrinerb.com"
+docs = "https://shrinerb.com"
+repo = "https://github.com/shrinerb/shrine"
+description = "File attachment toolkit"
+
+[detect]
+dependencies = ["shrine"]
+ecosystems = ["ruby"]
+
+[taxonomy]
+role = ["library"]
+function = ["file-management"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "original_filename"
+threat = "path_traversal"
+cwe = "CWE-22"

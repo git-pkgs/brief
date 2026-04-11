@@ -1,0 +1,33 @@
+[tool]
+name = "Nokogiri"
+category = "build"
+homepage = "https://nokogiri.org"
+docs = "https://nokogiri.org"
+repo = "https://github.com/sparklemotion/nokogiri"
+description = "XML and HTML parser"
+
+[detect]
+dependencies = ["nokogiri"]
+ecosystems = ["ruby"]
+
+[taxonomy]
+role = ["library"]
+function = ["parsing"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "Nokogiri::XML"
+threat = "xxe"
+cwe = "CWE-611"
+note = "Pass NONET option to block; safe-ish defaults since 1.13"
+
+[[security.sinks]]
+symbol = "Nokogiri::XML::Document.parse"
+threat = "xxe"
+cwe = "CWE-611"
+
+[[security.sinks]]
+symbol = "Nokogiri::XSLT"
+threat = "code_injection"
+cwe = "CWE-94"
+note = "XSLT extensions can call Ruby; CVE-2019-5477 class"

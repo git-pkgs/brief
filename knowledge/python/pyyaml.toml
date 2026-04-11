@@ -1,0 +1,33 @@
+[tool]
+name = "PyYAML"
+category = "build"
+homepage = "https://pyyaml.org"
+docs = "https://pyyaml.org"
+repo = "https://github.com/yaml/pyyaml"
+description = "YAML parser and emitter for Python"
+
+[detect]
+dependencies = ["pyyaml", "PyYAML"]
+ecosystems = ["python"]
+
+[taxonomy]
+role = ["library"]
+function = ["serialization", "parsing"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "yaml.load"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Without Loader=SafeLoader; constructs arbitrary Python objects"
+
+[[security.sinks]]
+symbol = "yaml.unsafe_load"
+threat = "deserialization"
+cwe = "CWE-502"
+
+[[security.sinks]]
+symbol = "yaml.full_load"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Less dangerous than load but still allows some object construction"

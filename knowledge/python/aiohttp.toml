@@ -1,0 +1,26 @@
+[tool]
+name = "aiohttp"
+category = "build"
+homepage = "https://docs.aiohttp.org"
+docs = "https://docs.aiohttp.org"
+repo = "https://github.com/aio-libs/aiohttp"
+description = "Async HTTP client/server for Python"
+
+[detect]
+dependencies = ["aiohttp"]
+ecosystems = ["python"]
+
+[taxonomy]
+role = ["library"]
+function = ["http-client", "api-development"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "ClientSession.get"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "ClientSession.request"
+threat = "ssrf"
+cwe = "CWE-918"

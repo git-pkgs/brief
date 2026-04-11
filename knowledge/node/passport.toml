@@ -1,0 +1,28 @@
+[tool]
+name = "Passport"
+category = "build"
+homepage = "https://www.passportjs.org"
+docs = "https://www.passportjs.org"
+repo = "https://github.com/jaredhanson/passport"
+description = "Authentication middleware for Node.js"
+
+[detect]
+dependencies = ["passport"]
+ecosystems = ["node"]
+
+[taxonomy]
+role = ["library"]
+function = ["authentication"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "passport.authenticate"
+threat = "auth_bypass"
+cwe = "CWE-287"
+note = "Strategy misconfiguration; check failureRedirect"
+
+[[security.sinks]]
+symbol = "req.login"
+threat = "session_fixation"
+cwe = "CWE-384"
+note = "Without session regeneration"

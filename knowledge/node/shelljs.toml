@@ -1,0 +1,21 @@
+[tool]
+name = "ShellJS"
+category = "build"
+homepage = "https://github.com/shelljs/shelljs"
+docs = "https://github.com/shelljs/shelljs"
+repo = "https://github.com/shelljs/shelljs"
+description = "Unix shell commands for Node.js"
+
+[detect]
+dependencies = ["shelljs"]
+ecosystems = ["node"]
+
+[taxonomy]
+role = ["library"]
+function = ["process-execution"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "shell.exec"
+threat = "command_injection"
+cwe = "CWE-78"

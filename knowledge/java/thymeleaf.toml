@@ -1,0 +1,34 @@
+[tool]
+name = "Thymeleaf"
+category = "build"
+homepage = "https://www.thymeleaf.org"
+docs = "https://www.thymeleaf.org"
+repo = "https://github.com/thymeleaf/thymeleaf"
+description = "Server-side Java template engine"
+
+[detect]
+dependencies = ["org.thymeleaf:thymeleaf", "org.springframework.boot:spring-boot-starter-thymeleaf"]
+ecosystems = ["java"]
+
+[taxonomy]
+role = ["library"]
+function = ["templating"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "th:utext"
+threat = "xss"
+cwe = "CWE-79"
+note = "Unescaped text; th:text is escaped"
+
+[[security.sinks]]
+symbol = "[("
+threat = "xss"
+cwe = "CWE-79"
+note = "Inline unescaped expression"
+
+[[security.sinks]]
+symbol = "SpringTemplateEngine.process"
+threat = "ssti"
+cwe = "CWE-1336"
+note = "When template name is caller-controlled; SpEL evaluation"

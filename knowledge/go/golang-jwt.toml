@@ -1,0 +1,27 @@
+[tool]
+name = "golang-jwt"
+category = "build"
+homepage = "https://golang-jwt.github.io/jwt"
+docs = "https://golang-jwt.github.io/jwt"
+repo = "https://github.com/golang-jwt/jwt"
+description = "JWT implementation for Go"
+
+[detect]
+dependencies = ["github.com/golang-jwt/jwt/v5", "github.com/golang-jwt/jwt/v4", "github.com/golang-jwt/jwt"]
+ecosystems = ["go"]
+
+[taxonomy]
+role = ["library"]
+function = ["authentication"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "jwt.Parse"
+threat = "auth_bypass"
+cwe = "CWE-347"
+note = "Keyfunc must verify token.Method against expected"
+
+[[security.sinks]]
+symbol = "jwt.ParseWithClaims"
+threat = "auth_bypass"
+cwe = "CWE-347"

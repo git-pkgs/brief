@@ -1,0 +1,31 @@
+[tool]
+name = "reqwest"
+category = "build"
+homepage = "https://docs.rs/reqwest"
+docs = "https://docs.rs/reqwest"
+repo = "https://github.com/seanmonstar/reqwest"
+description = "HTTP client for Rust"
+
+[detect]
+dependencies = ["reqwest"]
+ecosystems = ["rust"]
+
+[taxonomy]
+role = ["library"]
+function = ["http-client"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "reqwest::get"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "Client::get"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "Client::post"
+threat = "ssrf"
+cwe = "CWE-918"

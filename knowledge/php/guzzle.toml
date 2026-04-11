@@ -1,0 +1,31 @@
+[tool]
+name = "Guzzle"
+category = "build"
+homepage = "https://docs.guzzlephp.org"
+docs = "https://docs.guzzlephp.org"
+repo = "https://github.com/guzzle/guzzle"
+description = "HTTP client for PHP"
+
+[detect]
+dependencies = ["guzzlehttp/guzzle"]
+ecosystems = ["php"]
+
+[taxonomy]
+role = ["library"]
+function = ["http-client"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "Client::get"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "Client::post"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "Client::request"
+threat = "ssrf"
+cwe = "CWE-918"

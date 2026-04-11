@@ -1,0 +1,27 @@
+[tool]
+name = "Slim"
+category = "build"
+homepage = "https://slim-template.github.io"
+docs = "https://slim-template.github.io"
+repo = "https://github.com/slim-template/slim"
+description = "Lightweight template engine"
+
+[detect]
+dependencies = ["slim"]
+ecosystems = ["ruby"]
+
+[taxonomy]
+role = ["library"]
+function = ["templating"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "=="
+threat = "xss"
+cwe = "CWE-79"
+note = "Unescaped output; = is escaped"
+
+[[security.sinks]]
+symbol = "Slim::Template.new"
+threat = "ssti"
+cwe = "CWE-1336"

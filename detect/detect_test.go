@@ -245,6 +245,10 @@ func TestPythonProject(t *testing.T) {
 	assertToolDetected(t, r, "lint", "Ruff")
 	assertToolDetected(t, r, "typecheck", "mypy")
 
+	// Detection-only library defs via dependencies primitive
+	assertToolDetected(t, r, "build", "requests")
+	assertToolDetected(t, r, "build", "Jinja2")
+
 	// Layout
 	if r.Layout == nil {
 		t.Fatal("expected layout info")

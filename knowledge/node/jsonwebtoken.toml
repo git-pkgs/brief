@@ -1,0 +1,28 @@
+[tool]
+name = "jsonwebtoken"
+category = "build"
+homepage = "https://github.com/auth0/node-jsonwebtoken"
+docs = "https://github.com/auth0/node-jsonwebtoken"
+repo = "https://github.com/auth0/node-jsonwebtoken"
+description = "JWT implementation for Node.js"
+
+[detect]
+dependencies = ["jsonwebtoken"]
+ecosystems = ["node"]
+
+[taxonomy]
+role = ["library"]
+function = ["authentication"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "jwt.verify"
+threat = "auth_bypass"
+cwe = "CWE-347"
+note = "Without algorithms option; CVE-2022-23529 class"
+
+[[security.sinks]]
+symbol = "jwt.decode"
+threat = "auth_bypass"
+cwe = "CWE-347"
+note = "Does not verify signature, only decodes"

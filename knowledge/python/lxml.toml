@@ -1,0 +1,38 @@
+[tool]
+name = "lxml"
+category = "build"
+homepage = "https://lxml.de"
+docs = "https://lxml.de"
+repo = "https://github.com/lxml/lxml"
+description = "XML and HTML processing library"
+
+[detect]
+dependencies = ["lxml"]
+ecosystems = ["python"]
+
+[taxonomy]
+role = ["library"]
+function = ["parsing"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "etree.parse"
+threat = "xxe"
+cwe = "CWE-611"
+note = "Without resolve_entities=False on the parser"
+
+[[security.sinks]]
+symbol = "etree.fromstring"
+threat = "xxe"
+cwe = "CWE-611"
+
+[[security.sinks]]
+symbol = "etree.XMLParser"
+threat = "xxe"
+cwe = "CWE-611"
+note = "Default resolve_entities=True"
+
+[[security.sinks]]
+symbol = "objectify.parse"
+threat = "xxe"
+cwe = "CWE-611"

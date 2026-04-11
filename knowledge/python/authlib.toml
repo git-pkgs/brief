@@ -1,0 +1,22 @@
+[tool]
+name = "Authlib"
+category = "build"
+homepage = "https://authlib.org"
+docs = "https://authlib.org"
+repo = "https://github.com/lepture/authlib"
+description = "OAuth and OpenID Connect library"
+
+[detect]
+dependencies = ["authlib", "Authlib"]
+ecosystems = ["python"]
+
+[taxonomy]
+role = ["library"]
+function = ["authentication"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "jwt.decode"
+threat = "auth_bypass"
+cwe = "CWE-347"
+note = "Verify alg claim against expected"

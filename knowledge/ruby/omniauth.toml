@@ -1,0 +1,22 @@
+[tool]
+name = "OmniAuth"
+category = "build"
+homepage = "https://github.com/omniauth/omniauth"
+docs = "https://github.com/omniauth/omniauth"
+repo = "https://github.com/omniauth/omniauth"
+description = "Multi-provider authentication"
+
+[detect]
+dependencies = ["omniauth"]
+ecosystems = ["ruby"]
+
+[taxonomy]
+role = ["library"]
+function = ["authentication"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "request.env[\"omniauth.auth\"]"
+threat = "auth_bypass"
+cwe = "CWE-287"
+note = "Trust only after CSRF protection; CVE-2015-9284"

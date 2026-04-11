@@ -1,0 +1,28 @@
+[tool]
+name = "Devise"
+category = "build"
+homepage = "https://github.com/heartcombo/devise"
+docs = "https://github.com/heartcombo/devise"
+repo = "https://github.com/heartcombo/devise"
+description = "Authentication solution for Rails"
+
+[detect]
+dependencies = ["devise"]
+ecosystems = ["ruby"]
+
+[taxonomy]
+role = ["library"]
+function = ["authentication"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "sign_in"
+threat = "session_fixation"
+cwe = "CWE-384"
+note = "Without session reset; Devise handles by default but custom flows may not"
+
+[[security.sinks]]
+symbol = "skip_before_action :authenticate_user!"
+threat = "auth_bypass"
+cwe = "CWE-287"
+note = "Selective skips can leak"

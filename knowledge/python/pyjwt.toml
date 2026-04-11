@@ -1,0 +1,28 @@
+[tool]
+name = "PyJWT"
+category = "build"
+homepage = "https://pyjwt.readthedocs.io"
+docs = "https://pyjwt.readthedocs.io"
+repo = "https://github.com/jpadilla/pyjwt"
+description = "JSON Web Token implementation"
+
+[detect]
+dependencies = ["pyjwt", "PyJWT"]
+ecosystems = ["python"]
+
+[taxonomy]
+role = ["library"]
+function = ["authentication"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "jwt.decode"
+threat = "auth_bypass"
+cwe = "CWE-347"
+note = "Without algorithms= explicitly set; alg=none CVE-2015-9235 class"
+
+[[security.sinks]]
+symbol = "verify=False"
+threat = "auth_bypass"
+cwe = "CWE-347"
+note = "Disables signature verification"

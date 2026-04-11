@@ -1,0 +1,22 @@
+[tool]
+name = "Liquid"
+category = "build"
+homepage = "https://shopify.github.io/liquid"
+docs = "https://shopify.github.io/liquid"
+repo = "https://github.com/Shopify/liquid"
+description = "Safe customer-facing template language"
+
+[detect]
+dependencies = ["liquid"]
+ecosystems = ["ruby"]
+
+[taxonomy]
+role = ["library"]
+function = ["templating"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "Liquid::Template.parse"
+threat = "ssti"
+cwe = "CWE-1336"
+note = "Designed to be safe but custom tags/filters may not be"

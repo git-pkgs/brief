@@ -1,6 +1,7 @@
 [project]
 name = "test-project"
 version = "0.1.0"
+dependencies = ["requests", "jinja2"]
 
 [tool.ruff]
 line-length = 88

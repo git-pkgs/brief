@@ -1,0 +1,28 @@
+[tool]
+name = "bcrypt"
+category = "build"
+homepage = "https://github.com/kelektiv/node.bcrypt.js"
+docs = "https://github.com/kelektiv/node.bcrypt.js"
+repo = "https://github.com/kelektiv/node.bcrypt.js"
+description = "Password hashing"
+
+[detect]
+dependencies = ["bcrypt", "bcryptjs"]
+ecosystems = ["node"]
+
+[taxonomy]
+role = ["library"]
+function = ["encryption", "authentication"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "bcrypt.hash"
+threat = "weak_crypto"
+cwe = "CWE-916"
+note = "Truncates input at 72 bytes silently; cost factor too low"
+
+[[security.sinks]]
+symbol = "bcrypt.compare"
+threat = "auth_bypass"
+cwe = "CWE-697"
+note = "Returns false on error in some versions; check for null"

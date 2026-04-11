@@ -1,0 +1,27 @@
+[tool]
+name = "ruamel.yaml"
+category = "build"
+homepage = "https://yaml.readthedocs.io"
+docs = "https://yaml.readthedocs.io"
+repo = "https://sourceforge.net/projects/ruamel-yaml"
+description = "YAML parser with round-trip preservation"
+
+[detect]
+dependencies = ["ruamel.yaml", "ruamel-yaml"]
+ecosystems = ["python"]
+
+[taxonomy]
+role = ["library"]
+function = ["serialization", "parsing"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "YAML(typ=\"unsafe\")"
+threat = "deserialization"
+cwe = "CWE-502"
+
+[[security.sinks]]
+symbol = "YAML().load"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Default typ is rt which is safe; unsafe/full are not"

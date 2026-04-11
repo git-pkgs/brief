@@ -1,0 +1,28 @@
+[tool]
+name = "xml2js"
+category = "build"
+homepage = "https://github.com/Leonidas-from-XIV/node-xml2js"
+docs = "https://github.com/Leonidas-from-XIV/node-xml2js"
+repo = "https://github.com/Leonidas-from-XIV/node-xml2js"
+description = "XML to JavaScript object converter"
+
+[detect]
+dependencies = ["xml2js"]
+ecosystems = ["node"]
+
+[taxonomy]
+role = ["library"]
+function = ["parsing"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "parseString"
+threat = "xxe"
+cwe = "CWE-611"
+note = "Underlying sax parser; entity expansion DoS more likely than XXE"
+
+[[security.sinks]]
+symbol = "Parser"
+threat = "dos"
+cwe = "CWE-400"
+note = "Billion-laughs without explicitChildren limits"

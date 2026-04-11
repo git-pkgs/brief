@@ -1,0 +1,32 @@
+[tool]
+name = "Faraday"
+category = "build"
+homepage = "https://lostisland.github.io/faraday"
+docs = "https://lostisland.github.io/faraday"
+repo = "https://github.com/lostisland/faraday"
+description = "HTTP client library with middleware"
+
+[detect]
+dependencies = ["faraday"]
+ecosystems = ["ruby"]
+
+[taxonomy]
+role = ["library"]
+function = ["http-client"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "Faraday.get"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "Faraday.post"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "Faraday.new"
+threat = "ssrf"
+cwe = "CWE-918"
+note = "When url is caller-controlled"

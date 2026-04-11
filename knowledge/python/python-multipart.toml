@@ -1,0 +1,22 @@
+[tool]
+name = "python-multipart"
+category = "build"
+homepage = "https://github.com/Kludex/python-multipart"
+docs = "https://github.com/Kludex/python-multipart"
+repo = "https://github.com/Kludex/python-multipart"
+description = "Streaming multipart parser"
+
+[detect]
+dependencies = ["python-multipart"]
+ecosystems = ["python"]
+
+[taxonomy]
+role = ["library"]
+function = ["file-management", "parsing"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "filename"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "From Content-Disposition header, client-controlled"

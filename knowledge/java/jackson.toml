@@ -1,0 +1,34 @@
+[tool]
+name = "Jackson"
+category = "build"
+homepage = "https://github.com/FasterXML/jackson"
+docs = "https://github.com/FasterXML/jackson"
+repo = "https://github.com/FasterXML/jackson-databind"
+description = "JSON processor for Java"
+
+[detect]
+dependencies = ["com.fasterxml.jackson.core:jackson-databind"]
+ecosystems = ["java"]
+
+[taxonomy]
+role = ["library"]
+function = ["serialization", "parsing"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "enableDefaultTyping"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Polymorphic deserialization with gadget chains; dozens of CVEs"
+
+[[security.sinks]]
+symbol = "@JsonTypeInfo"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "With use=Id.CLASS or Id.MINIMAL_CLASS"
+
+[[security.sinks]]
+symbol = "readValue"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "When target type uses polymorphic typing"

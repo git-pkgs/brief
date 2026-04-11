@@ -1,0 +1,26 @@
+[tool]
+name = "undici"
+category = "build"
+homepage = "https://undici.nodejs.org"
+docs = "https://undici.nodejs.org"
+repo = "https://github.com/nodejs/undici"
+description = "HTTP client written from scratch for Node.js"
+
+[detect]
+dependencies = ["undici"]
+ecosystems = ["node"]
+
+[taxonomy]
+role = ["library"]
+function = ["http-client"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "fetch"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "request"
+threat = "ssrf"
+cwe = "CWE-918"

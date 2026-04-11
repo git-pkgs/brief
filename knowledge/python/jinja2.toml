@@ -1,0 +1,45 @@
+[tool]
+name = "Jinja2"
+category = "build"
+homepage = "https://jinja.palletsprojects.com"
+docs = "https://jinja.palletsprojects.com"
+repo = "https://github.com/pallets/jinja"
+description = "Template engine for Python"
+
+[detect]
+dependencies = ["jinja2", "Jinja2"]
+ecosystems = ["python"]
+
+[taxonomy]
+role = ["library"]
+function = ["templating"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "Markup"
+threat = "xss"
+cwe = "CWE-79"
+note = "Bypasses autoescaping"
+
+[[security.sinks]]
+symbol = "|safe"
+threat = "xss"
+cwe = "CWE-79"
+note = "Filter that bypasses escaping"
+
+[[security.sinks]]
+symbol = "Environment"
+threat = "ssti"
+cwe = "CWE-1336"
+note = "When autoescape=False or template source is caller-controlled"
+
+[[security.sinks]]
+symbol = "Template"
+threat = "ssti"
+cwe = "CWE-1336"
+note = "When template source string is caller-controlled"
+
+[[security.sinks]]
+symbol = "from_string"
+threat = "ssti"
+cwe = "CWE-1336"

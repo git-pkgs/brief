@@ -1,0 +1,31 @@
+[tool]
+name = "got"
+category = "build"
+homepage = "https://github.com/sindresorhus/got"
+docs = "https://github.com/sindresorhus/got"
+repo = "https://github.com/sindresorhus/got"
+description = "HTTP request library for Node.js"
+
+[detect]
+dependencies = ["got"]
+ecosystems = ["node"]
+
+[taxonomy]
+role = ["library"]
+function = ["http-client"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "got"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "got.get"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "got.post"
+threat = "ssrf"
+cwe = "CWE-918"

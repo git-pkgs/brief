@@ -1,0 +1,26 @@
+[tool]
+name = "urllib3"
+category = "build"
+homepage = "https://urllib3.readthedocs.io"
+docs = "https://urllib3.readthedocs.io"
+repo = "https://github.com/urllib3/urllib3"
+description = "HTTP client with connection pooling"
+
+[detect]
+dependencies = ["urllib3"]
+ecosystems = ["python"]
+
+[taxonomy]
+role = ["library"]
+function = ["http-client"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "PoolManager.request"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "urlopen"
+threat = "ssrf"
+cwe = "CWE-918"

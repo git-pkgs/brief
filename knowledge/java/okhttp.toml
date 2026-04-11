@@ -1,0 +1,26 @@
+[tool]
+name = "OkHttp"
+category = "build"
+homepage = "https://square.github.io/okhttp"
+docs = "https://square.github.io/okhttp"
+repo = "https://github.com/square/okhttp"
+description = "HTTP client for JVM and Android"
+
+[detect]
+dependencies = ["com.squareup.okhttp3:okhttp"]
+ecosystems = ["java"]
+
+[taxonomy]
+role = ["library"]
+function = ["http-client"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "OkHttpClient.newCall"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "Request.Builder.url"
+threat = "ssrf"
+cwe = "CWE-918"

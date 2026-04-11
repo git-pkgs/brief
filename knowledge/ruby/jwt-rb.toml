@@ -1,0 +1,22 @@
+[tool]
+name = "ruby-jwt"
+category = "build"
+homepage = "https://github.com/jwt/ruby-jwt"
+docs = "https://github.com/jwt/ruby-jwt"
+repo = "https://github.com/jwt/ruby-jwt"
+description = "JWT implementation for Ruby"
+
+[detect]
+dependencies = ["jwt"]
+ecosystems = ["ruby"]
+
+[taxonomy]
+role = ["library"]
+function = ["authentication"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "JWT.decode"
+threat = "auth_bypass"
+cwe = "CWE-347"
+note = "With verify=false or without algorithm restriction"

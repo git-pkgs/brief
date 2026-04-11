@@ -1,0 +1,28 @@
+[tool]
+name = "Mako"
+category = "build"
+homepage = "https://www.makotemplates.org"
+docs = "https://www.makotemplates.org"
+repo = "https://github.com/sqlalchemy/mako"
+description = "Template library for Python"
+
+[detect]
+dependencies = ["mako", "Mako"]
+ecosystems = ["python"]
+
+[taxonomy]
+role = ["library"]
+function = ["templating"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "Template"
+threat = "ssti"
+cwe = "CWE-1336"
+note = "No autoescaping by default; template source is Python"
+
+[[security.sinks]]
+symbol = "|n"
+threat = "xss"
+cwe = "CWE-79"
+note = "Disables filtering"

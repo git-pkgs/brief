@@ -1,0 +1,31 @@
+[tool]
+name = "PyCryptodome"
+category = "build"
+homepage = "https://www.pycryptodome.org"
+docs = "https://www.pycryptodome.org"
+repo = "https://github.com/Legrandin/pycryptodome"
+description = "Cryptographic library for Python"
+
+[detect]
+dependencies = ["pycryptodome", "pycryptodomex"]
+ecosystems = ["python"]
+
+[taxonomy]
+role = ["library"]
+function = ["encryption"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "DES.new"
+threat = "weak_crypto"
+cwe = "CWE-327"
+
+[[security.sinks]]
+symbol = "ARC4.new"
+threat = "weak_crypto"
+cwe = "CWE-327"
+
+[[security.sinks]]
+symbol = "MODE_ECB"
+threat = "weak_crypto"
+cwe = "CWE-327"

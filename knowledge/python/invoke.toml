@@ -1,0 +1,27 @@
+[tool]
+name = "Invoke"
+category = "build"
+homepage = "https://www.pyinvoke.org"
+docs = "https://www.pyinvoke.org"
+repo = "https://github.com/pyinvoke/invoke"
+description = "Task execution and command running"
+
+[detect]
+dependencies = ["invoke"]
+ecosystems = ["python"]
+
+[taxonomy]
+role = ["library"]
+function = ["process-execution", "automation"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "Context.run"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "Runs through shell by default"
+
+[[security.sinks]]
+symbol = "c.run"
+threat = "command_injection"
+cwe = "CWE-78"

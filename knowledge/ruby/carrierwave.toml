@@ -1,0 +1,28 @@
+[tool]
+name = "CarrierWave"
+category = "build"
+homepage = "https://github.com/carrierwaveuploader/carrierwave"
+docs = "https://github.com/carrierwaveuploader/carrierwave"
+repo = "https://github.com/carrierwaveuploader/carrierwave"
+description = "File upload solution for Rails"
+
+[detect]
+dependencies = ["carrierwave"]
+ecosystems = ["ruby"]
+
+[taxonomy]
+role = ["library"]
+function = ["file-management"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "original_filename"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "Client-controlled; sanitize before use"
+
+[[security.sinks]]
+symbol = "extension_allowlist"
+threat = "auth_bypass"
+cwe = "CWE-434"
+note = "Missing allowlist permits arbitrary file types"

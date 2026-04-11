@@ -1,0 +1,28 @@
+[tool]
+name = "FreeMarker"
+category = "build"
+homepage = "https://freemarker.apache.org"
+docs = "https://freemarker.apache.org"
+repo = "https://github.com/apache/freemarker"
+description = "Template engine for Java"
+
+[detect]
+dependencies = ["org.freemarker:freemarker"]
+ecosystems = ["java"]
+
+[taxonomy]
+role = ["library"]
+function = ["templating"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "?no_esc"
+threat = "xss"
+cwe = "CWE-79"
+note = "Built-in that bypasses autoescaping"
+
+[[security.sinks]]
+symbol = "Template.process"
+threat = "ssti"
+cwe = "CWE-1336"
+note = "When template source is caller-controlled; new() built-in"

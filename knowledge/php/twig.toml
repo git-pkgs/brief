@@ -1,0 +1,34 @@
+[tool]
+name = "Twig"
+category = "build"
+homepage = "https://twig.symfony.com"
+docs = "https://twig.symfony.com"
+repo = "https://github.com/twigphp/Twig"
+description = "Template engine for PHP"
+
+[detect]
+dependencies = ["twig/twig"]
+ecosystems = ["php"]
+
+[taxonomy]
+role = ["library"]
+function = ["templating"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "|raw"
+threat = "xss"
+cwe = "CWE-79"
+note = "Filter that bypasses autoescaping"
+
+[[security.sinks]]
+symbol = "autoescape false"
+threat = "xss"
+cwe = "CWE-79"
+note = "Block tag"
+
+[[security.sinks]]
+symbol = "createTemplate"
+threat = "ssti"
+cwe = "CWE-1336"
+note = "When template string is caller-controlled"

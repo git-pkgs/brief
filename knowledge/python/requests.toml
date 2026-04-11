@@ -1,0 +1,37 @@
+[tool]
+name = "requests"
+category = "build"
+homepage = "https://requests.readthedocs.io"
+docs = "https://requests.readthedocs.io"
+repo = "https://github.com/psf/requests"
+description = "HTTP library for Python"
+
+[detect]
+dependencies = ["requests"]
+ecosystems = ["python"]
+
+[taxonomy]
+role = ["library"]
+function = ["http-client"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "requests.get"
+threat = "ssrf"
+cwe = "CWE-918"
+note = "When URL is caller-controlled"
+
+[[security.sinks]]
+symbol = "requests.post"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "requests.request"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "Session.get"
+threat = "ssrf"
+cwe = "CWE-918"

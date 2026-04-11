@@ -1,0 +1,22 @@
+[tool]
+name = "sh"
+category = "build"
+homepage = "https://sh.readthedocs.io"
+docs = "https://sh.readthedocs.io"
+repo = "https://github.com/amoffat/sh"
+description = "Subprocess interface for Python"
+
+[detect]
+dependencies = ["sh"]
+ecosystems = ["python"]
+
+[taxonomy]
+role = ["library"]
+function = ["process-execution"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "sh.Command"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "When command name is caller-controlled"

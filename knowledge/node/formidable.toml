@@ -1,0 +1,28 @@
+[tool]
+name = "Formidable"
+category = "build"
+homepage = "https://github.com/node-formidable/formidable"
+docs = "https://github.com/node-formidable/formidable"
+repo = "https://github.com/node-formidable/formidable"
+description = "Form data parser"
+
+[detect]
+dependencies = ["formidable"]
+ecosystems = ["node"]
+
+[taxonomy]
+role = ["library"]
+function = ["file-management", "parsing"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "uploadDir"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "When derived from request data"
+
+[[security.sinks]]
+symbol = "originalFilename"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "Client-controlled"

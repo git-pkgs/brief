@@ -1,0 +1,27 @@
+[tool]
+name = "SnakeYAML"
+category = "build"
+homepage = "https://bitbucket.org/snakeyaml/snakeyaml"
+docs = "https://bitbucket.org/snakeyaml/snakeyaml"
+repo = "https://bitbucket.org/snakeyaml/snakeyaml"
+description = "YAML parser for Java"
+
+[detect]
+dependencies = ["org.yaml:snakeyaml"]
+ecosystems = ["java"]
+
+[taxonomy]
+role = ["library"]
+function = ["serialization", "parsing"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "Yaml.load"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Default Constructor allows arbitrary types; use SafeConstructor; CVE-2022-1471"
+
+[[security.sinks]]
+symbol = "Yaml(new Constructor())"
+threat = "deserialization"
+cwe = "CWE-502"

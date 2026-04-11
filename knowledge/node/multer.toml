@@ -1,0 +1,28 @@
+[tool]
+name = "Multer"
+category = "build"
+homepage = "https://github.com/expressjs/multer"
+docs = "https://github.com/expressjs/multer"
+repo = "https://github.com/expressjs/multer"
+description = "Multipart form data middleware"
+
+[detect]
+dependencies = ["multer"]
+ecosystems = ["node"]
+
+[taxonomy]
+role = ["library"]
+function = ["file-management"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "diskStorage"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "When destination/filename use req fields without sanitization"
+
+[[security.sinks]]
+symbol = "originalname"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "Client-controlled, may contain ../"

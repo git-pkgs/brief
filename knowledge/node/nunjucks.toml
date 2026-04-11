@@ -1,0 +1,33 @@
+[tool]
+name = "Nunjucks"
+category = "build"
+homepage = "https://mozilla.github.io/nunjucks"
+docs = "https://mozilla.github.io/nunjucks"
+repo = "https://github.com/mozilla/nunjucks"
+description = "Jinja2-inspired templating for JavaScript"
+
+[detect]
+dependencies = ["nunjucks"]
+ecosystems = ["node"]
+
+[taxonomy]
+role = ["library"]
+function = ["templating"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "|safe"
+threat = "xss"
+cwe = "CWE-79"
+
+[[security.sinks]]
+symbol = "renderString"
+threat = "ssti"
+cwe = "CWE-1336"
+note = "When template is caller-controlled"
+
+[[security.sinks]]
+symbol = "configure"
+threat = "ssti"
+cwe = "CWE-1336"
+note = "autoescape: false"

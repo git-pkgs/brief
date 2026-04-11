@@ -1,0 +1,22 @@
+[tool]
+name = "Gson"
+category = "build"
+homepage = "https://github.com/google/gson"
+docs = "https://github.com/google/gson"
+repo = "https://github.com/google/gson"
+description = "JSON serialization for Java"
+
+[detect]
+dependencies = ["com.google.code.gson:gson"]
+ecosystems = ["java"]
+
+[taxonomy]
+role = ["library"]
+function = ["serialization", "parsing"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "fromJson"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Less gadget surface than Jackson but still risk with custom adapters"

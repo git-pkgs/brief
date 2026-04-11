@@ -1,0 +1,34 @@
+[tool]
+name = "Handlebars"
+category = "build"
+homepage = "https://handlebarsjs.com"
+docs = "https://handlebarsjs.com"
+repo = "https://github.com/handlebars-lang/handlebars.js"
+description = "Logic-less templates"
+
+[detect]
+dependencies = ["handlebars"]
+ecosystems = ["node"]
+
+[taxonomy]
+role = ["library"]
+function = ["templating"]
+layer = ["backend", "frontend"]
+
+[[security.sinks]]
+symbol = "{{{"
+threat = "xss"
+cwe = "CWE-79"
+note = "Triple-stash unescaped; {{ }} is escaped"
+
+[[security.sinks]]
+symbol = "SafeString"
+threat = "xss"
+cwe = "CWE-79"
+note = "Marks string as pre-escaped"
+
+[[security.sinks]]
+symbol = "compile"
+threat = "ssti"
+cwe = "CWE-1336"
+note = "When template string is caller-controlled; prototype pollution gadgets"

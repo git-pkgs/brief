@@ -1,0 +1,39 @@
+[tool]
+name = "Pug"
+category = "build"
+homepage = "https://pugjs.org"
+docs = "https://pugjs.org"
+repo = "https://github.com/pugjs/pug"
+description = "Template engine for Node.js"
+
+[detect]
+dependencies = ["pug"]
+ecosystems = ["node"]
+
+[taxonomy]
+role = ["library"]
+function = ["templating"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "!{"
+threat = "xss"
+cwe = "CWE-79"
+note = "Unescaped interpolation; #{} is escaped"
+
+[[security.sinks]]
+symbol = "!="
+threat = "xss"
+cwe = "CWE-79"
+note = "Unescaped buffered code"
+
+[[security.sinks]]
+symbol = "pug.compile"
+threat = "ssti"
+cwe = "CWE-1336"
+note = "When template string is caller-controlled"
+
+[[security.sinks]]
+symbol = "pug.render"
+threat = "ssti"
+cwe = "CWE-1336"

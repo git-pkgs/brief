@@ -354,13 +354,13 @@ func MissingMarkdown(w io.Writer, r *brief.MissingReport) {
 
 // ThreatMarkdown writes the threat report in markdown format.
 func ThreatMarkdown(w io.Writer, r *brief.ThreatReport) {
-	if len(r.Threats) == 0 {
-		_, _ = fmt.Fprintln(w, "No security data available for detected tools.")
-		return
-	}
-
 	if len(r.Ecosystems) > 0 {
 		_, _ = fmt.Fprintf(w, "**Detected:** %s\n\n", strings.Join(r.Ecosystems, ", "))
+	}
+
+	if len(r.Threats) == 0 {
+		_, _ = fmt.Fprintln(w, "No threat categories match the detected stack.")
+		return
 	}
 
 	_, _ = fmt.Fprintln(w, "| Threat | CWE | OWASP | Introduced by |")

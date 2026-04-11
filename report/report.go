@@ -361,11 +361,6 @@ func ThreatJSON(w io.Writer, r *brief.ThreatReport) error {
 
 // ThreatHuman writes the threat report in human-readable format.
 func ThreatHuman(w io.Writer, r *brief.ThreatReport) {
-	if len(r.Threats) == 0 {
-		_, _ = fmt.Fprintln(w, "No security data available for detected tools.")
-		return
-	}
-
 	if len(r.Ecosystems) > 0 {
 		_, _ = fmt.Fprintf(w, "Detected: %s\n", strings.Join(r.Ecosystems, ", "))
 	}
@@ -375,6 +370,11 @@ func ThreatHuman(w io.Writer, r *brief.ThreatReport) {
 			names[i] = s.Name
 		}
 		_, _ = fmt.Fprintf(w, "Stack:    %s\n", strings.Join(names, ", "))
+	}
+
+	if len(r.Threats) == 0 {
+		_, _ = fmt.Fprintln(w, "\nNo threat categories match the detected stack.")
+		return
 	}
 	_, _ = fmt.Fprintln(w)
 

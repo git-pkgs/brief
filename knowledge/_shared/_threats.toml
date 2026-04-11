@@ -175,7 +175,7 @@ note = "Spawns OS processes from string arguments"
 
 [[mappings]]
 match = ["role:framework", "layer:backend"]
-threats = ["xss", "csrf", "open_redirect", "ssrf", "path_traversal", "auth_bypass"]
+threats = ["xss", "csrf", "open_redirect", "path_traversal", "auth_bypass"]
 note = "Server-side framework handling user-controlled HTTP input"
 
 [[mappings]]

@@ -37,12 +37,14 @@ domain:web-development
 function:api-development
 function:authentication
 function:automation
+function:benchmarking
 function:bundling
 function:caching
 function:ci-cd
 function:code-generation
 function:compression
 function:containerization
+function:coverage
 function:data-mapping
 function:database-management
 function:dependency-injection
@@ -61,6 +63,8 @@ function:monitoring
 function:networking
 function:parsing
 function:process-execution
+function:release-management
+function:runtime-management
 function:scheduling
 function:scraping
 function:search
@@ -68,6 +72,8 @@ function:secrets-management
 function:security-scanning
 function:serialization
 function:simulation
+function:site-generation
+function:styling
 function:templating
 function:testing
 function:text-processing

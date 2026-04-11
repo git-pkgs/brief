@@ -12,3 +12,74 @@ ecosystems = ["dart"]
 
 [taxonomy]
 role = ["language"]
+
+[[security.sinks]]
+symbol = "Process.run"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "When executable or args from caller input"
+
+[[security.sinks]]
+symbol = "Process.start"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "Process.runSync"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "File.readAsString"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "dart:io"
+
+[[security.sinks]]
+symbol = "File.readAsBytes"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "File.writeAsString"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "File.writeAsBytes"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "Directory.list"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "HttpClient.getUrl"
+threat = "ssrf"
+cwe = "CWE-918"
+note = "dart:io HttpClient"
+
+[[security.sinks]]
+symbol = "HttpClient.postUrl"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "http.get"
+threat = "ssrf"
+cwe = "CWE-918"
+note = "package:http convenience function"
+
+[[security.sinks]]
+symbol = "Isolate.spawnUri"
+threat = "code_injection"
+cwe = "CWE-470"
+note = "When URI is caller-controlled"
+
+[[security.sinks]]
+symbol = "Random"
+threat = "weak_crypto"
+cwe = "CWE-338"
+note = "dart:math Random; use Random.secure() for security"

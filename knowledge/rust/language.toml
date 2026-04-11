@@ -12,3 +12,76 @@ ecosystems = ["rust"]
 
 [taxonomy]
 role = ["language"]
+
+[[security.sinks]]
+symbol = "Command::new"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "When program or args built from caller input"
+
+[[security.sinks]]
+symbol = "Command::arg"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "std::process::exit"
+threat = "dos"
+cwe = "CWE-400"
+note = "Abrupt termination without cleanup"
+
+[[security.sinks]]
+symbol = "transmute"
+threat = "code_injection"
+cwe = "CWE-119"
+note = "Reinterprets memory; any type to any type"
+
+[[security.sinks]]
+symbol = "from_raw_parts"
+threat = "code_injection"
+cwe = "CWE-119"
+note = "slice::from_raw_parts trusts pointer and length"
+
+[[security.sinks]]
+symbol = "std::ptr::read"
+threat = "code_injection"
+cwe = "CWE-119"
+note = "Reads arbitrary memory"
+
+[[security.sinks]]
+symbol = "std::ptr::write"
+threat = "code_injection"
+cwe = "CWE-119"
+
+[[security.sinks]]
+symbol = "CStr::from_ptr"
+threat = "code_injection"
+cwe = "CWE-119"
+note = "Trusts pointer to be nul-terminated"
+
+[[security.sinks]]
+symbol = "File::open"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "When path is caller-controlled"
+
+[[security.sinks]]
+symbol = "fs::read"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "fs::write"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "fs::read_to_string"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "reqwest::get"
+threat = "ssrf"
+cwe = "CWE-918"
+note = "In reqwest crate, not stdlib; listed since nearly universal"

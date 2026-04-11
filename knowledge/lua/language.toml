@@ -11,3 +11,66 @@ ecosystems = ["lua"]
 
 [taxonomy]
 role = ["language"]
+
+[[security.sinks]]
+symbol = "loadstring"
+threat = "code_injection"
+cwe = "CWE-95"
+note = "Lua 5.1; compiles and returns string as function"
+
+[[security.sinks]]
+symbol = "load"
+threat = "code_injection"
+cwe = "CWE-95"
+note = "Lua 5.2+; replaces loadstring"
+
+[[security.sinks]]
+symbol = "dofile"
+threat = "code_injection"
+cwe = "CWE-95"
+note = "Loads and executes a Lua file"
+
+[[security.sinks]]
+symbol = "loadfile"
+threat = "code_injection"
+cwe = "CWE-95"
+note = "Compiles file without executing"
+
+[[security.sinks]]
+symbol = "os.execute"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "io.popen"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "io.open"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "When filename is caller-controlled"
+
+[[security.sinks]]
+symbol = "io.input"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "require"
+threat = "code_injection"
+cwe = "CWE-470"
+note = "When module name is caller-controlled; searches package.path"
+
+[[security.sinks]]
+symbol = "debug.getinfo"
+threat = "code_injection"
+cwe = "CWE-200"
+note = "Leaks internal state; the debug library should be disabled in sandboxes"
+
+[[security.sinks]]
+symbol = "debug.sethook"
+threat = "code_injection"
+cwe = "CWE-94"
+note = "Can intercept all function calls"

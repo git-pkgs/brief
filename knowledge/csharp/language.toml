@@ -11,3 +11,199 @@ ecosystems = ["csharp"]
 
 [taxonomy]
 role = ["language"]
+
+[[security.sinks]]
+symbol = "Process.Start"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "ProcessStartInfo"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "When FileName or Arguments are caller-controlled"
+
+[[security.sinks]]
+symbol = "BinaryFormatter.Deserialize"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Obsolete in .NET 5+; gadget chains via ysoserial.net"
+
+[[security.sinks]]
+symbol = "BinaryFormatter.Serialize"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Paired with Deserialize for untrusted roundtrip"
+
+[[security.sinks]]
+symbol = "LosFormatter.Deserialize"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "ViewState formatter; RCE via gadget chains"
+
+[[security.sinks]]
+symbol = "ObjectStateFormatter.Deserialize"
+threat = "deserialization"
+cwe = "CWE-502"
+
+[[security.sinks]]
+symbol = "SoapFormatter.Deserialize"
+threat = "deserialization"
+cwe = "CWE-502"
+
+[[security.sinks]]
+symbol = "NetDataContractSerializer.ReadObject"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Type info in payload; gadget chains"
+
+[[security.sinks]]
+symbol = "DataContractSerializer"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "When knownTypes includes dangerous types or resolver is open"
+
+[[security.sinks]]
+symbol = "JavaScriptSerializer.Deserialize"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "With SimpleTypeResolver or JavaScriptTypeResolver"
+
+[[security.sinks]]
+symbol = "XmlSerializer"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "When type parameter is caller-controlled"
+
+[[security.sinks]]
+symbol = "JsonConvert.DeserializeObject"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Newtonsoft with TypeNameHandling enabled"
+
+[[security.sinks]]
+symbol = "Assembly.Load"
+threat = "code_injection"
+cwe = "CWE-470"
+note = "When assembly name is caller-controlled"
+
+[[security.sinks]]
+symbol = "Assembly.LoadFrom"
+threat = "code_injection"
+cwe = "CWE-470"
+
+[[security.sinks]]
+symbol = "Assembly.LoadFile"
+threat = "code_injection"
+cwe = "CWE-470"
+
+[[security.sinks]]
+symbol = "Activator.CreateInstance"
+threat = "unsafe_reflection"
+cwe = "CWE-470"
+note = "When type name is caller-controlled"
+
+[[security.sinks]]
+symbol = "Type.GetType"
+threat = "unsafe_reflection"
+cwe = "CWE-470"
+note = "When type string is caller-controlled"
+
+[[security.sinks]]
+symbol = "Type.InvokeMember"
+threat = "unsafe_reflection"
+cwe = "CWE-470"
+
+[[security.sinks]]
+symbol = "XmlDocument.Load"
+threat = "xxe"
+cwe = "CWE-611"
+note = "Without XmlResolver = null; safe by default in .NET 4.5.2+"
+
+[[security.sinks]]
+symbol = "XmlTextReader"
+threat = "xxe"
+cwe = "CWE-611"
+note = "DtdProcessing.Parse default pre-.NET 4.0"
+
+[[security.sinks]]
+symbol = "XsltCompiledTransform.Load"
+threat = "xxe"
+cwe = "CWE-611"
+
+[[security.sinks]]
+symbol = "SqlCommand"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "When CommandText built via string concat; use Parameters.Add"
+
+[[security.sinks]]
+symbol = "SqlDataAdapter"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "File.ReadAllText"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "File.WriteAllText"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "File.Open"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "FileStream"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "Directory.GetFiles"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "HttpClient.GetAsync"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "HttpClient.PostAsync"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "WebClient.DownloadString"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "Response.Redirect"
+threat = "open_redirect"
+cwe = "CWE-601"
+
+[[security.sinks]]
+symbol = "MD5.Create"
+threat = "weak_crypto"
+cwe = "CWE-327"
+
+[[security.sinks]]
+symbol = "SHA1.Create"
+threat = "weak_crypto"
+cwe = "CWE-327"
+
+[[security.sinks]]
+symbol = "DES.Create"
+threat = "weak_crypto"
+cwe = "CWE-327"
+
+[[security.sinks]]
+symbol = "Random"
+threat = "weak_crypto"
+cwe = "CWE-338"
+note = "System.Random; use RandomNumberGenerator for security"

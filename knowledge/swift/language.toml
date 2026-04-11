@@ -12,3 +12,96 @@ ecosystems = ["swift"]
 
 [taxonomy]
 role = ["language"]
+
+[[security.sinks]]
+symbol = "Process"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "Foundation.Process (was NSTask)"
+
+[[security.sinks]]
+symbol = "NSTask"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "Legacy name for Process"
+
+[[security.sinks]]
+symbol = "NSKeyedUnarchiver.unarchiveObject"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Instantiates arbitrary classes; use unarchivedObject(ofClass:)"
+
+[[security.sinks]]
+symbol = "NSKeyedUnarchiver.unarchiveTopLevelObjectWithData"
+threat = "deserialization"
+cwe = "CWE-502"
+
+[[security.sinks]]
+symbol = "NSCoding"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Protocol enabling arbitrary object deserialization"
+
+[[security.sinks]]
+symbol = "FileManager.contents"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "When path from user input"
+
+[[security.sinks]]
+symbol = "FileManager.createFile"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "String.init(contentsOfFile:)"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "Data.init(contentsOf:)"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "Also accepts URLs (SSRF)"
+
+[[security.sinks]]
+symbol = "URLSession.dataTask"
+threat = "ssrf"
+cwe = "CWE-918"
+note = "When URL is caller-controlled"
+
+[[security.sinks]]
+symbol = "URLSession.shared.data"
+threat = "ssrf"
+cwe = "CWE-918"
+note = "async/await form"
+
+[[security.sinks]]
+symbol = "NSExpression"
+threat = "code_injection"
+cwe = "CWE-95"
+note = "Evaluates expressions; constrained but gadgets exist"
+
+[[security.sinks]]
+symbol = "NSPredicate"
+threat = "code_injection"
+cwe = "CWE-95"
+note = "Format string injection with caller input"
+
+[[security.sinks]]
+symbol = "WKWebView.loadHTMLString"
+threat = "xss"
+cwe = "CWE-79"
+note = "Renders HTML in WebKit"
+
+[[security.sinks]]
+symbol = "UIWebView.loadHTMLString"
+threat = "xss"
+cwe = "CWE-79"
+note = "Deprecated; same risk"
+
+[[security.sinks]]
+symbol = "XMLParser"
+threat = "xxe"
+cwe = "CWE-611"
+note = "Foundation; resolves external entities by default"

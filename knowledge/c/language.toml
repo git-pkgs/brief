@@ -11,3 +11,155 @@ ecosystems = ["c"]
 
 [taxonomy]
 role = ["language"]
+
+[[security.sinks]]
+symbol = "system"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "popen"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "execvp"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "When filename or argv from caller input"
+
+[[security.sinks]]
+symbol = "execlp"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "execl"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "gets"
+threat = "code_injection"
+cwe = "CWE-120"
+note = "Removed in C11; no bounds checking"
+
+[[security.sinks]]
+symbol = "strcpy"
+threat = "code_injection"
+cwe = "CWE-120"
+note = "No bounds checking; use strncpy or strlcpy"
+
+[[security.sinks]]
+symbol = "strcat"
+threat = "code_injection"
+cwe = "CWE-120"
+
+[[security.sinks]]
+symbol = "sprintf"
+threat = "code_injection"
+cwe = "CWE-120"
+note = "No bounds checking; use snprintf"
+
+[[security.sinks]]
+symbol = "vsprintf"
+threat = "code_injection"
+cwe = "CWE-120"
+
+[[security.sinks]]
+symbol = "scanf"
+threat = "code_injection"
+cwe = "CWE-120"
+note = "With %s and no width limit"
+
+[[security.sinks]]
+symbol = "printf"
+threat = "code_injection"
+cwe = "CWE-134"
+note = "When format string is caller-controlled"
+
+[[security.sinks]]
+symbol = "fprintf"
+threat = "code_injection"
+cwe = "CWE-134"
+
+[[security.sinks]]
+symbol = "syslog"
+threat = "code_injection"
+cwe = "CWE-134"
+note = "Format string vulnerability"
+
+[[security.sinks]]
+symbol = "tmpnam"
+threat = "path_traversal"
+cwe = "CWE-377"
+note = "Race condition; use mkstemp"
+
+[[security.sinks]]
+symbol = "mktemp"
+threat = "path_traversal"
+cwe = "CWE-377"
+
+[[security.sinks]]
+symbol = "fopen"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "When filename is caller-controlled"
+
+[[security.sinks]]
+symbol = "open"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "access"
+threat = "path_traversal"
+cwe = "CWE-367"
+note = "TOCTOU race between check and use"
+
+[[security.sinks]]
+symbol = "rand"
+threat = "weak_crypto"
+cwe = "CWE-338"
+note = "Not cryptographically secure"
+
+[[security.sinks]]
+symbol = "srand"
+threat = "weak_crypto"
+cwe = "CWE-338"
+note = "Predictable seeding with time(NULL)"
+
+[[security.sinks]]
+symbol = "atoi"
+threat = "code_injection"
+cwe = "CWE-190"
+note = "No error checking; undefined on overflow"
+
+[[security.sinks]]
+symbol = "alloca"
+threat = "code_injection"
+cwe = "CWE-770"
+note = "Stack allocation with caller-controlled size"
+
+[[security.sinks]]
+symbol = "free"
+threat = "code_injection"
+cwe = "CWE-415"
+note = "Double-free when pointer reused without null"
+
+[[security.sinks]]
+symbol = "memcpy"
+threat = "code_injection"
+cwe = "CWE-120"
+note = "When size argument is caller-controlled"
+
+[[security.sinks]]
+symbol = "memmove"
+threat = "code_injection"
+cwe = "CWE-120"
+
+[[security.sinks]]
+symbol = "realloc"
+threat = "code_injection"
+cwe = "CWE-415"
+note = "Returns null on failure; original freed"

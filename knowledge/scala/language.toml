@@ -12,3 +12,66 @@ ecosystems = ["scala"]
 
 [taxonomy]
 role = ["language"]
+
+[[security.sinks]]
+symbol = "Process"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "scala.sys.process.Process(string).!"
+
+[[security.sinks]]
+symbol = ".!"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "stringToProcess implicit; runs via shell"
+
+[[security.sinks]]
+symbol = ".!!"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "Captures stdout"
+
+[[security.sinks]]
+symbol = ".lazyLines"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "Runtime.getRuntime().exec"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "JVM interop"
+
+[[security.sinks]]
+symbol = "ObjectInputStream.readObject"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "JVM native serialization"
+
+[[security.sinks]]
+symbol = "Source.fromURL"
+threat = "ssrf"
+cwe = "CWE-918"
+note = "scala.io.Source"
+
+[[security.sinks]]
+symbol = "Source.fromFile"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "XML.load"
+threat = "xxe"
+cwe = "CWE-611"
+note = "scala.xml.XML.load; default parser resolves entities"
+
+[[security.sinks]]
+symbol = "XML.loadFile"
+threat = "xxe"
+cwe = "CWE-611"
+
+[[security.sinks]]
+symbol = "Random"
+threat = "weak_crypto"
+cwe = "CWE-338"
+note = "scala.util.Random; use java.security.SecureRandom"

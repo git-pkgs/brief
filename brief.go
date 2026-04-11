@@ -56,6 +56,18 @@ type Detection struct {
 	Docs        string     `json:"docs,omitempty"`
 	Repo        string     `json:"repo,omitempty"`
 	Description string     `json:"description,omitempty"`
+	Taxonomy    *Taxonomy  `json:"taxonomy,omitempty"`
+}
+
+// Taxonomy holds oss-taxonomy facet classifications carried through from
+// the tool definition. Values are kebab-case term IDs.
+type Taxonomy struct {
+	Role       []string `json:"role,omitempty"`
+	Function   []string `json:"function,omitempty"`
+	Layer      []string `json:"layer,omitempty"`
+	Domain     []string `json:"domain,omitempty"`
+	Audience   []string `json:"audience,omitempty"`
+	Technology []string `json:"technology,omitempty"`
 }
 
 // Script is a project-defined task (Makefile target, package.json script, etc.).
@@ -165,6 +177,47 @@ type RuntimeEOL struct {
 	Supported bool   `json:"supported"`
 	LTS       bool   `json:"lts,omitempty"`
 	Latest    string `json:"latest,omitempty"` // latest patch version
+}
+
+// ThreatReport is the output of brief threat-model.
+type ThreatReport struct {
+	Version    string       `json:"version"`
+	Path       string       `json:"path"`
+	Ecosystems []string     `json:"ecosystems"`
+	Stack      []StackEntry `json:"stack"`
+	Threats    []Threat     `json:"threats"`
+}
+
+// StackEntry is a detected tool that contributed to the threat model.
+type StackEntry struct {
+	Name     string    `json:"name"`
+	Taxonomy *Taxonomy `json:"taxonomy,omitempty"`
+}
+
+// Threat is a threat category that applies to the project's stack.
+type Threat struct {
+	ID           string   `json:"id"`
+	CWE          string   `json:"cwe,omitempty"`
+	OWASP        string   `json:"owasp,omitempty"`
+	Title        string   `json:"title"`
+	IntroducedBy []string `json:"introduced_by"`
+	Note         string   `json:"note,omitempty"`
+}
+
+// SinkReport is the output of brief sinks.
+type SinkReport struct {
+	Version string      `json:"version"`
+	Path    string      `json:"path"`
+	Sinks   []SinkEntry `json:"sinks"`
+}
+
+// SinkEntry is a known dangerous function in a detected tool.
+type SinkEntry struct {
+	Symbol string `json:"symbol"`
+	Tool   string `json:"tool"`
+	Threat string `json:"threat"`
+	CWE    string `json:"cwe,omitempty"`
+	Note   string `json:"note,omitempty"`
 }
 
 // MissingReport is the output of a brief missing analysis.

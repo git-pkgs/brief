@@ -13,11 +13,13 @@ import (
 
 // ToolDef is the parsed representation of a tool TOML file.
 type ToolDef struct {
-	Tool     ToolInfo    `toml:"tool"`
-	Detect   DetectInfo  `toml:"detect"`
-	Commands CommandInfo `toml:"commands"`
-	Config   ConfigInfo  `toml:"config"`
-	Source   string      `toml:"-"` // filesystem path this was loaded from
+	Tool     ToolInfo     `toml:"tool"`
+	Detect   DetectInfo   `toml:"detect"`
+	Commands CommandInfo  `toml:"commands"`
+	Config   ConfigInfo   `toml:"config"`
+	Taxonomy Taxonomy     `toml:"taxonomy"`
+	Security SecurityInfo `toml:"security"`
+	Source   string       `toml:"-"` // filesystem path this was loaded from
 }
 
 // ToolInfo holds metadata about a tool.
@@ -51,6 +53,78 @@ type CommandInfo struct {
 type ConfigInfo struct {
 	Files    []string `toml:"files"`
 	Lockfile string   `toml:"lockfile"`
+}
+
+// Taxonomy holds oss-taxonomy facet classifications for a tool.
+// Term values are kebab-case IDs from github.com/ecosyste-ms/oss-taxonomy.
+type Taxonomy struct {
+	Role       []string `toml:"role"`
+	Function   []string `toml:"function"`
+	Layer      []string `toml:"layer"`
+	Domain     []string `toml:"domain"`
+	Audience   []string `toml:"audience"`
+	Technology []string `toml:"technology"`
+}
+
+// Empty reports whether all facets are unset.
+func (t Taxonomy) Empty() bool {
+	return len(t.Role) == 0 && len(t.Function) == 0 && len(t.Layer) == 0 &&
+		len(t.Domain) == 0 && len(t.Audience) == 0 && len(t.Technology) == 0
+}
+
+// Tags returns all facet values as facet:term strings, e.g. "role:framework".
+// Used for matching against threat mappings.
+func (t Taxonomy) Tags() []string {
+	var tags []string
+	for _, v := range t.Role {
+		tags = append(tags, "role:"+v)
+	}
+	for _, v := range t.Function {
+		tags = append(tags, "function:"+v)
+	}
+	for _, v := range t.Layer {
+		tags = append(tags, "layer:"+v)
+	}
+	for _, v := range t.Domain {
+		tags = append(tags, "domain:"+v)
+	}
+	for _, v := range t.Audience {
+		tags = append(tags, "audience:"+v)
+	}
+	for _, v := range t.Technology {
+		tags = append(tags, "technology:"+v)
+	}
+	return tags
+}
+
+// SecurityInfo holds security-relevant data for a tool.
+type SecurityInfo struct {
+	Threats []string `toml:"threats"` // explicit threat IDs beyond what taxonomy implies
+	Sinks   []Sink   `toml:"sinks"`
+}
+
+// Sink is a known dangerous function or method in a tool.
+type Sink struct {
+	Symbol string `toml:"symbol"` // method/function name, e.g. "html_safe"
+	Threat string `toml:"threat"` // threat ID from _threats.toml registry
+	CWE    string `toml:"cwe"`    // optional, defaults from threat registry
+	Note   string `toml:"note"`
+}
+
+// ThreatDef is a threat ID registered in _threats.toml.
+type ThreatDef struct {
+	ID    string `toml:"id"`
+	CWE   string `toml:"cwe"`
+	OWASP string `toml:"owasp"`
+	Title string `toml:"title"`
+}
+
+// ThreatMapping maps a set of taxonomy tags to threat IDs.
+// Match is conjunctive: a tool must carry all listed tags to trigger.
+type ThreatMapping struct {
+	Match   []string `toml:"match"`   // facet:term tags, all must be present
+	Threats []string `toml:"threats"` // threat IDs that apply when matched
+	Note    string   `toml:"note"`
 }
 
 // ScriptSourceDef defines how to extract scripts from a project file.
@@ -148,17 +222,19 @@ type ManifestInfo struct {
 
 // KnowledgeBase holds all loaded definitions.
 type KnowledgeBase struct {
-	Tools         []*ToolDef
-	ByName        map[string]*ToolDef
-	ByCategory    map[string][]*ToolDef
-	Ecosystems    map[string][]*ToolDef
-	ScriptSources []ScriptSourceDef
-	Resources     []ResourceDef
-	Layouts       *LayoutDef
-	StyleConfig   *StyleConfigDef
-	Runtimes      []RuntimeVersionDef
-	ManifestFiles []string
-	CIConfig      *CIConfigDef
+	Tools          []*ToolDef
+	ByName         map[string]*ToolDef
+	ByCategory     map[string][]*ToolDef
+	Ecosystems     map[string][]*ToolDef
+	ScriptSources  []ScriptSourceDef
+	Resources      []ResourceDef
+	Layouts        *LayoutDef
+	StyleConfig    *StyleConfigDef
+	Runtimes       []RuntimeVersionDef
+	ManifestFiles  []string
+	CIConfig       *CIConfigDef
+	Threats        map[string]ThreatDef // threat ID -> definition
+	ThreatMappings []ThreatMapping
 }
 
 // Load reads all TOML files from the embedded filesystem and returns a KnowledgeBase.
@@ -167,6 +243,7 @@ func Load(fsys embed.FS) (*KnowledgeBase, error) {
 		ByName:     make(map[string]*ToolDef),
 		ByCategory: make(map[string][]*ToolDef),
 		Ecosystems: make(map[string][]*ToolDef),
+		Threats:    make(map[string]ThreatDef),
 	}
 
 	err := fs.WalkDir(fsys, "knowledge", func(path string, d fs.DirEntry, err error) error {
@@ -201,12 +278,18 @@ func Load(fsys embed.FS) (*KnowledgeBase, error) {
 			return base.loadManifests(data, path)
 		case name == "_ci.toml":
 			return base.loadCIConfig(data, path)
+		case name == "_threats.toml":
+			return base.loadThreats(data, path)
 		default:
 			return base.loadTool(data, path)
 		}
 	})
 	if err != nil {
 		return nil, err
+	}
+
+	if err := base.Validate(); err != nil {
+		return nil, fmt.Errorf("knowledge base validation: %w", err)
 	}
 
 	return base, nil
@@ -305,6 +388,49 @@ func (base *KnowledgeBase) loadCIConfig(data []byte, path string) error {
 		return fmt.Errorf("parsing %s: %w", path, err)
 	}
 	base.CIConfig = &def
+	return nil
+}
+
+func (base *KnowledgeBase) loadThreats(data []byte, path string) error {
+	var wrapper struct {
+		Threats  []ThreatDef     `toml:"threats"`
+		Mappings []ThreatMapping `toml:"mappings"`
+	}
+	if err := toml.Unmarshal(data, &wrapper); err != nil {
+		return fmt.Errorf("parsing %s: %w", path, err)
+	}
+	for _, t := range wrapper.Threats {
+		if _, dup := base.Threats[t.ID]; dup {
+			return fmt.Errorf("%s: duplicate threat id %q", path, t.ID)
+		}
+		base.Threats[t.ID] = t
+	}
+	base.ThreatMappings = append(base.ThreatMappings, wrapper.Mappings...)
+	return nil
+}
+
+// Validate checks cross-references in the loaded knowledge base.
+// Called after Load to verify threat IDs in mappings and sinks resolve.
+func (base *KnowledgeBase) Validate() error {
+	for _, m := range base.ThreatMappings {
+		for _, id := range m.Threats {
+			if _, ok := base.Threats[id]; !ok {
+				return fmt.Errorf("threat mapping %v references unknown threat id %q", m.Match, id)
+			}
+		}
+	}
+	for _, tool := range base.Tools {
+		for _, id := range tool.Security.Threats {
+			if _, ok := base.Threats[id]; !ok {
+				return fmt.Errorf("%s: [security].threats references unknown threat id %q", tool.Source, id)
+			}
+		}
+		for _, sink := range tool.Security.Sinks {
+			if _, ok := base.Threats[sink.Threat]; !ok {
+				return fmt.Errorf("%s: sink %q references unknown threat id %q", tool.Source, sink.Symbol, sink.Threat)
+			}
+		}
+	}
 	return nil
 }
 

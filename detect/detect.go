@@ -303,6 +303,17 @@ func (e *Engine) detectCategory(category string) []brief.Detection {
 			Description: tool.Tool.Description,
 		}
 
+		if !tool.Taxonomy.Empty() {
+			d.Taxonomy = &brief.Taxonomy{
+				Role:       tool.Taxonomy.Role,
+				Function:   tool.Taxonomy.Function,
+				Layer:      tool.Taxonomy.Layer,
+				Domain:     tool.Taxonomy.Domain,
+				Audience:   tool.Taxonomy.Audience,
+				Technology: tool.Taxonomy.Technology,
+			}
+		}
+
 		if tool.Commands.Run != "" {
 			d.Command = &brief.Command{
 				Run:          tool.Commands.Run,

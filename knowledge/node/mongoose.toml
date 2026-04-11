@@ -9,3 +9,8 @@ description = "MongoDB object modeling for Node.js"
 [detect]
 dependencies = ["mongoose"]
 ecosystems = ["node"]
+
+[taxonomy]
+role = ["library"]
+function = ["data-mapping", "validation"]
+layer = ["data-layer"]

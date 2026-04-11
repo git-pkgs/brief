@@ -17,3 +17,7 @@ alternatives = ["npx cypress open"]
 
 [config]
 files = ["cypress.config.ts", "cypress.config.js", "cypress.config.mjs", "cypress.json"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

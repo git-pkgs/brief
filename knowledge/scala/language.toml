@@ -9,3 +9,6 @@ description = "Multi-paradigm language for the JVM"
 [detect]
 files = ["build.sbt", "*.scala", "**/*.scala", "project/build.properties"]
 ecosystems = ["scala"]
+
+[taxonomy]
+role = ["language"]

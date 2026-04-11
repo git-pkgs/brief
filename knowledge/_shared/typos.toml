@@ -14,3 +14,6 @@ run = "typos"
 
 [config]
 files = ["_typos.toml", ".typos.toml", "typos.toml"]
+
+[taxonomy]
+role = ["linter"]

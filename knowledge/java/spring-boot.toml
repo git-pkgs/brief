@@ -12,3 +12,9 @@ ecosystems = ["java", "kotlin"]
 
 [config]
 files = ["src/main/resources/application.properties", "src/main/resources/application.yml"]
+
+[taxonomy]
+role = ["framework"]
+function = ["api-development", "dependency-injection", "data-mapping"]
+layer = ["backend", "full-stack"]
+domain = ["web-development"]

@@ -13,3 +13,6 @@ ecosystems = ["java"]
 [commands]
 run = "mvn spotbugs:check"
 alternatives = ["gradle spotbugsMain"]
+
+[taxonomy]
+role = ["linter"]

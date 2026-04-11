@@ -18,3 +18,7 @@ alternatives = ["rake spec", "rspec"]
 
 [config]
 files = [".rspec", "spec/spec_helper.rb", "spec/rails_helper.rb"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

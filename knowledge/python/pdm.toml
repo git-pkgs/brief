@@ -20,3 +20,6 @@ alternatives = ["pdm sync"]
 [config]
 files = ["pyproject.toml", "pdm.lock"]
 lockfile = "pdm.lock"
+
+[taxonomy]
+role = ["package-manager"]

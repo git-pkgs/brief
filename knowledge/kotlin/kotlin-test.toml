@@ -16,3 +16,7 @@ ecosystems = ["kotlin"]
 [commands]
 run = "gradle test"
 alternatives = ["./gradlew test"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

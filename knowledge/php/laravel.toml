@@ -13,3 +13,9 @@ ecosystems = ["php"]
 
 [commands]
 run = "php artisan serve"
+
+[taxonomy]
+role = ["framework"]
+function = ["api-development", "templating", "data-mapping", "authentication"]
+layer = ["backend", "full-stack"]
+domain = ["web-development"]

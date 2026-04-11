@@ -12,3 +12,7 @@ description = "AWS infrastructure as code"
 
 [config]
 files = ["template.yaml", "template.yml", "template.json"]
+
+[taxonomy]
+layer = ["infrastructure"]
+function = ["deployment"]

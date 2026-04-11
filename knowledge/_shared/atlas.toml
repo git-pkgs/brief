@@ -14,3 +14,8 @@ run = "atlas schema apply"
 
 [config]
 files = ["atlas.hcl", "atlas.yaml"]
+
+[taxonomy]
+role = ["cli-tool"]
+function = ["database-management"]
+layer = ["data-layer"]

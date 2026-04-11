@@ -12,3 +12,9 @@ ecosystems = ["rust"]
 
 [commands]
 run = "cargo run"
+
+[taxonomy]
+role = ["framework"]
+function = ["api-development"]
+layer = ["backend"]
+domain = ["web-development"]

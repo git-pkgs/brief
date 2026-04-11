@@ -8,3 +8,6 @@ description = "Statistical computing and graphics language"
 [detect]
 files = ["DESCRIPTION", "NAMESPACE", "*.R", "**/*.R", "*.Rmd"]
 ecosystems = ["r"]
+
+[taxonomy]
+role = ["language"]

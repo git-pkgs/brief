@@ -17,3 +17,6 @@ alternatives = ["pnpm i"]
 [config]
 files = ["package.json", "pnpm-lock.yaml", ".npmrc", "pnpm-workspace.yaml"]
 lockfile = "pnpm-lock.yaml"
+
+[taxonomy]
+role = ["package-manager"]

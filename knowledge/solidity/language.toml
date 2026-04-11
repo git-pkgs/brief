@@ -9,3 +9,6 @@ description = "Contract-oriented language for Ethereum smart contracts"
 [detect]
 files = ["*.sol", "**/*.sol", "hardhat.config.js", "hardhat.config.ts", "foundry.toml"]
 ecosystems = ["solidity"]
+
+[taxonomy]
+role = ["language"]

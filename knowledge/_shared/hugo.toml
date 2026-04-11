@@ -18,3 +18,6 @@ alternatives = ["hugo"]
 
 [config]
 files = ["hugo.toml", "hugo.yaml", "hugo.yml", "config.toml"]
+
+[taxonomy]
+function = ["documentation", "site-generation"]

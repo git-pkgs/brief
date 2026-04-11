@@ -9,3 +9,8 @@ description = "TypeScript ORM with data mapper pattern"
 [detect]
 dependencies = ["@mikro-orm/core"]
 ecosystems = ["node"]
+
+[taxonomy]
+role = ["library"]
+function = ["data-mapping"]
+layer = ["data-layer"]

@@ -16,3 +16,6 @@ alternatives = ["dune clean", "dune exec"]
 
 [config]
 files = ["dune-project", "dune"]
+
+[taxonomy]
+role = ["build-tool"]

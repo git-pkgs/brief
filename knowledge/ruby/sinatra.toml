@@ -12,3 +12,9 @@ ecosystems = ["ruby"]
 
 [commands]
 run = "ruby app.rb"
+
+[taxonomy]
+role = ["framework"]
+function = ["api-development", "templating"]
+layer = ["backend"]
+domain = ["web-development"]

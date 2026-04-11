@@ -16,3 +16,6 @@ alternatives = ["sbt update"]
 
 [config]
 files = ["build.sbt", "project/build.properties", "project/plugins.sbt"]
+
+[taxonomy]
+role = ["package-manager"]

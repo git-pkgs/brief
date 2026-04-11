@@ -13,3 +13,9 @@ ecosystems = ["node"]
 
 [config]
 files = ["postcss.config.js", "postcss.config.mjs", "postcss.config.cjs", "postcss.config.ts", ".postcssrc", ".postcssrc.json"]
+
+[taxonomy]
+role = ["build-tool"]
+layer = ["frontend"]
+domain = ["web-development"]
+function = ["styling"]

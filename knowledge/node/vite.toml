@@ -17,3 +17,8 @@ alternatives = ["npx vite build", "npx vite preview"]
 
 [config]
 files = ["vite.config.js", "vite.config.ts", "vite.config.mjs", "vite.config.mts"]
+
+[taxonomy]
+role = ["build-tool"]
+function = ["bundling"]
+layer = ["frontend"]

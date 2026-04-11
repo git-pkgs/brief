@@ -17,3 +17,6 @@ alternatives = ["bundle"]
 [config]
 files = ["Gemfile", "Gemfile.lock", ".bundle/config"]
 lockfile = "Gemfile.lock"
+
+[taxonomy]
+role = ["package-manager"]

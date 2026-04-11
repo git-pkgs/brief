@@ -19,3 +19,7 @@ run = "npx ava"
 
 [config]
 files = ["ava.config.js", "ava.config.cjs", "ava.config.mjs"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

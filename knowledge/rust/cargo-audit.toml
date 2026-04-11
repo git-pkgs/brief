@@ -13,3 +13,6 @@ ecosystems = ["rust"]
 
 [commands]
 run = "cargo audit"
+
+[taxonomy]
+function = ["security-scanning"]

@@ -17,3 +17,7 @@ alternatives = ["npx serverless invoke local"]
 
 [config]
 files = ["serverless.yml", "serverless.yaml", "serverless.ts", "serverless.json"]
+
+[taxonomy]
+layer = ["infrastructure"]
+function = ["deployment"]

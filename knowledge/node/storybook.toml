@@ -17,3 +17,6 @@ alternatives = ["npx storybook build"]
 
 [config]
 files = [".storybook/main.js", ".storybook/main.ts", ".storybook/preview.js", ".storybook/preview.ts"]
+
+[taxonomy]
+function = ["documentation"]

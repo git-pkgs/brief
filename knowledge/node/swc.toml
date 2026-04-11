@@ -16,3 +16,8 @@ run = "npx swc"
 
 [config]
 files = [".swcrc"]
+
+[taxonomy]
+role = ["compiler"]
+function = ["bundling"]
+layer = ["frontend"]

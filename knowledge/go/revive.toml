@@ -16,3 +16,6 @@ run = "revive ./..."
 
 [config]
 files = ["revive.toml"]
+
+[taxonomy]
+role = ["linter"]

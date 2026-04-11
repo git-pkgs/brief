@@ -20,3 +20,6 @@ alternatives = ["./gradlew detekt"]
 
 [config]
 files = ["detekt.yml", "config/detekt/detekt.yml"]
+
+[taxonomy]
+role = ["linter"]

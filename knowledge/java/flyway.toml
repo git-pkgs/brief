@@ -15,3 +15,8 @@ run = "flyway migrate"
 
 [config]
 files = ["flyway.conf", "flyway.toml"]
+
+[taxonomy]
+role = ["cli-tool"]
+function = ["database-management"]
+layer = ["data-layer"]

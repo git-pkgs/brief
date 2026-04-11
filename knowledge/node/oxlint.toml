@@ -16,3 +16,6 @@ run = "npx oxlint"
 
 [config]
 files = [".oxlintrc.json", "oxlint.json"]
+
+[taxonomy]
+role = ["linter"]

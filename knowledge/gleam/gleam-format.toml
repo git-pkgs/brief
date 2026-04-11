@@ -13,3 +13,6 @@ ecosystems = ["gleam"]
 [commands]
 run = "gleam format"
 alternatives = ["gleam format --check"]
+
+[taxonomy]
+role = ["formatter"]

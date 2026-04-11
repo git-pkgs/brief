@@ -16,3 +16,6 @@ alternatives = ["cabal build"]
 [config]
 files = ["cabal.project", "cabal.project.local"]
 lockfile = "cabal.project.freeze"
+
+[taxonomy]
+role = ["package-manager"]

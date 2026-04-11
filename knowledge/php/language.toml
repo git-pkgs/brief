@@ -10,6 +10,9 @@ description = "General-purpose scripting language for web development"
 files = ["composer.json", "*.php", "**/*.php"]
 ecosystems = ["php"]
 
+[taxonomy]
+role = ["language"]
+
 [[security.sinks]]
 symbol = "eval"
 threat = "code_injection"

@@ -17,3 +17,8 @@ alternatives = ["diesel migration generate"]
 
 [config]
 files = ["diesel.toml"]
+
+[taxonomy]
+role = ["library"]
+function = ["data-mapping"]
+layer = ["data-layer"]

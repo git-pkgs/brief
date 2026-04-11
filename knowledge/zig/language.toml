@@ -12,3 +12,6 @@ ecosystems = ["zig"]
 
 [commands]
 run = "zig build"
+
+[taxonomy]
+role = ["language"]

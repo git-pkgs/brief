@@ -13,3 +13,7 @@ ecosystems = ["nim"]
 [commands]
 run = "nimble test"
 alternatives = ["testament all"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

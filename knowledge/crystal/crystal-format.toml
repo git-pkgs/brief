@@ -13,3 +13,6 @@ ecosystems = ["crystal"]
 [commands]
 run = "crystal tool format"
 alternatives = ["crystal tool format --check"]
+
+[taxonomy]
+role = ["formatter"]

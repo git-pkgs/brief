@@ -16,3 +16,6 @@ run = "opam install . --deps-only"
 [config]
 files = ["*.opam"]
 lockfile = "opam.locked"
+
+[taxonomy]
+role = ["package-manager"]

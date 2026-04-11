@@ -9,3 +9,6 @@ description = "Functional-first language for the .NET platform"
 [detect]
 files = ["*.fsproj", "*.fs", "**/*.fs", "*.fsx", "**/*.fsx"]
 ecosystems = ["fsharp"]
+
+[taxonomy]
+role = ["language"]

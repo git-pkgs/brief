@@ -11,3 +11,6 @@ ecosystems = ["go"]
 
 [config]
 files = ["go.work", "go.work.sum"]
+
+[taxonomy]
+role = ["build-tool"]

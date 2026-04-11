@@ -17,3 +17,8 @@ alternatives = ["npx webpack serve"]
 
 [config]
 files = ["webpack.config.js", "webpack.config.ts", "webpack.config.mjs", "webpack.config.cjs"]
+
+[taxonomy]
+role = ["build-tool"]
+function = ["bundling"]
+layer = ["frontend"]

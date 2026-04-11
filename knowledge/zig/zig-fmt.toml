@@ -13,3 +13,6 @@ ecosystems = ["zig"]
 [commands]
 run = "zig fmt ."
 alternatives = ["zig fmt --check ."]
+
+[taxonomy]
+role = ["formatter"]

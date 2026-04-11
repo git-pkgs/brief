@@ -21,3 +21,7 @@ alternatives = ["npm test"]
 
 [config]
 files = ["jest.config.js", "jest.config.ts", "jest.config.mjs", "jest.config.cjs"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

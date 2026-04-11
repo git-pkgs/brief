@@ -17,3 +17,7 @@ ecosystems = ["cpp"]
 
 [commands]
 run = "ctest --test-dir build"
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

@@ -10,6 +10,9 @@ description = "High-level, general-purpose programming language"
 files = ["pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "*.py", "**/*.py"]
 ecosystems = ["python"]
 
+[taxonomy]
+role = ["language"]
+
 [[security.sinks]]
 symbol = "eval"
 threat = "code_injection"

@@ -13,3 +13,7 @@ ecosystems = ["rust"]
 [commands]
 run = "cargo test"
 alternatives = ["cargo test --release"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

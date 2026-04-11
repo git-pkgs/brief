@@ -20,3 +20,9 @@ alternatives = ["npx vite build"]
 
 [config]
 files = ["svelte.config.js", "svelte.config.ts"]
+
+[taxonomy]
+role = ["framework"]
+function = ["api-development", "templating"]
+layer = ["full-stack", "frontend", "backend"]
+domain = ["web-development"]

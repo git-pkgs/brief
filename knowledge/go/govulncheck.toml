@@ -13,3 +13,6 @@ ecosystems = ["go"]
 
 [commands]
 run = "govulncheck ./..."
+
+[taxonomy]
+function = ["security-scanning"]

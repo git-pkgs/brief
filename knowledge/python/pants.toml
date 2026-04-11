@@ -16,3 +16,6 @@ alternatives = ["pants lint ::", "pants fmt ::"]
 
 [config]
 files = ["pants.toml"]
+
+[taxonomy]
+role = ["build-tool", "orchestrator"]

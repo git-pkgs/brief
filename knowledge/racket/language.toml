@@ -9,3 +9,6 @@ description = "Language-oriented programming language"
 [detect]
 files = ["*.rkt", "**/*.rkt", "info.rkt"]
 ecosystems = ["racket"]
+
+[taxonomy]
+role = ["language"]

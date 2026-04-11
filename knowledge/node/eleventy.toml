@@ -18,3 +18,9 @@ alternatives = ["npx eleventy"]
 
 [config]
 files = [".eleventy.js", "eleventy.config.js", "eleventy.config.mjs", "eleventy.config.cjs"]
+
+[taxonomy]
+role = ["framework"]
+function = ["templating", "site-generation"]
+layer = ["frontend"]
+domain = ["web-development", "content-management"]

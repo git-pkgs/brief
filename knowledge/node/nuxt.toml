@@ -20,3 +20,9 @@ alternatives = ["npx nuxt build"]
 
 [config]
 files = ["nuxt.config.ts", "nuxt.config.js"]
+
+[taxonomy]
+role = ["framework"]
+function = ["api-development", "templating"]
+layer = ["full-stack", "frontend", "backend"]
+domain = ["web-development"]

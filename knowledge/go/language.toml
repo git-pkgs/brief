@@ -10,6 +10,9 @@ description = "Statically typed, compiled programming language"
 files = ["go.mod", "*.go", "**/*.go"]
 ecosystems = ["go"]
 
+[taxonomy]
+role = ["language"]
+
 [[security.sinks]]
 symbol = "exec.Command"
 threat = "command_injection"

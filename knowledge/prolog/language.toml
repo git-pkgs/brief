@@ -9,3 +9,6 @@ description = "Logic programming language"
 [detect]
 files = ["*.pro", "**/*.pro", "*.prolog", "**/*.prolog"]
 ecosystems = ["prolog"]
+
+[taxonomy]
+role = ["language"]

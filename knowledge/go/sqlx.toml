@@ -9,3 +9,8 @@ description = "Extensions to Go database/sql"
 [detect]
 dependencies = ["github.com/jmoiron/sqlx"]
 ecosystems = ["go"]
+
+[taxonomy]
+role = ["library"]
+function = ["data-mapping"]
+layer = ["data-layer"]

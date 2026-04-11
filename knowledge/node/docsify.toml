@@ -20,3 +20,6 @@ run = "npx docsify serve docs"
 
 [config]
 files = ["docs/index.html"]
+
+[taxonomy]
+function = ["documentation", "site-generation"]

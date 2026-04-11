@@ -17,3 +17,9 @@ alternatives = ["npx remix build"]
 
 [config]
 files = ["remix.config.js", "remix.config.ts"]
+
+[taxonomy]
+role = ["framework"]
+function = ["api-development", "templating"]
+layer = ["full-stack", "frontend", "backend"]
+domain = ["web-development"]

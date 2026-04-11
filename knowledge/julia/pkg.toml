@@ -15,3 +15,6 @@ run = "julia -e 'using Pkg; Pkg.instantiate()'"
 [config]
 files = ["Project.toml", "Manifest.toml"]
 lockfile = "Manifest.toml"
+
+[taxonomy]
+role = ["package-manager"]

@@ -12,3 +12,6 @@ ecosystems = ["node"]
 
 [commands]
 run = "npx np"
+
+[taxonomy]
+function = ["release-management"]

@@ -16,3 +16,6 @@ run = "npx nyc"
 
 [config]
 files = [".nycrc", ".nycrc.json"]
+
+[taxonomy]
+function = ["coverage"]

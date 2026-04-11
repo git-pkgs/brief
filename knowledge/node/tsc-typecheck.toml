@@ -19,3 +19,6 @@ alternatives = ["tsc --noEmit"]
 
 [config]
 files = ["tsconfig.json"]
+
+[taxonomy]
+function = ["type-checking"]

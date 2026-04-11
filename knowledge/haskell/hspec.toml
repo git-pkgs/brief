@@ -16,3 +16,7 @@ ecosystems = ["haskell"]
 [commands]
 run = "cabal test"
 alternatives = ["stack test"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

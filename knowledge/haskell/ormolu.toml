@@ -16,3 +16,6 @@ ecosystems = ["haskell"]
 [commands]
 run = "ormolu --mode inplace"
 alternatives = ["ormolu --mode check"]
+
+[taxonomy]
+role = ["formatter"]

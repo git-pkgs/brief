@@ -13,3 +13,6 @@ ecosystems = ["go"]
 [commands]
 run = "gofmt -w ."
 alternatives = ["gofmt -l ."]
+
+[taxonomy]
+role = ["formatter"]

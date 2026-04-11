@@ -15,3 +15,8 @@ run = "npx esbuild"
 
 [config]
 files = []
+
+[taxonomy]
+role = ["build-tool", "compiler"]
+function = ["bundling"]
+layer = ["frontend"]

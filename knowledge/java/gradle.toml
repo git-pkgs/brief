@@ -17,3 +17,6 @@ alternatives = ["./gradlew build"]
 [config]
 files = ["build.gradle", "build.gradle.kts", "settings.gradle", "settings.gradle.kts", "gradle.properties"]
 lockfile = "gradle.lockfile"
+
+[taxonomy]
+role = ["package-manager"]

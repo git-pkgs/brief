@@ -8,3 +8,6 @@ description = "Python-superset language for AI and systems programming"
 [detect]
 files = ["*.mojo", "**/*.mojo", "mojoproject.toml"]
 ecosystems = ["mojo"]
+
+[taxonomy]
+role = ["language"]

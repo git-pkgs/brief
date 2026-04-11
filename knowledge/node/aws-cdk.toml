@@ -18,3 +18,7 @@ alternatives = ["npx cdk synth", "npx cdk diff"]
 
 [config]
 files = ["cdk.json"]
+
+[taxonomy]
+layer = ["infrastructure"]
+function = ["deployment"]

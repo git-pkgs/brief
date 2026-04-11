@@ -15,3 +15,6 @@ ecosystems = ["scala"]
 
 [commands]
 run = "sbt compile"
+
+[taxonomy]
+role = ["linter"]

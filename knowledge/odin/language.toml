@@ -9,3 +9,6 @@ description = "Systems programming language for reliable software"
 [detect]
 files = ["*.odin", "**/*.odin"]
 ecosystems = ["odin"]
+
+[taxonomy]
+role = ["language"]

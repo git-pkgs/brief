@@ -19,3 +19,6 @@ alternatives = ["rubocop"]
 
 [config]
 files = [".rubocop.yml", ".rubocop_todo.yml"]
+
+[taxonomy]
+role = ["linter"]

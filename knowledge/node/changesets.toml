@@ -17,3 +17,6 @@ alternatives = ["npx changeset publish"]
 
 [config]
 files = [".changeset/config.json"]
+
+[taxonomy]
+function = ["release-management"]

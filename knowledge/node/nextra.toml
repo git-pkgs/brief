@@ -12,3 +12,6 @@ ecosystems = ["node"]
 
 [commands]
 run = "next build"
+
+[taxonomy]
+function = ["documentation", "site-generation"]

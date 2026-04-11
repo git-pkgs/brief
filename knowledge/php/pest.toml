@@ -17,3 +17,7 @@ alternatives = ["php artisan test --pest"]
 
 [config]
 files = ["tests/Pest.php"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

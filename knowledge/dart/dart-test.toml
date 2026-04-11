@@ -13,3 +13,7 @@ ecosystems = ["dart"]
 [commands]
 run = "dart test"
 alternatives = ["flutter test"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

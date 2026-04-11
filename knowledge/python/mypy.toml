@@ -23,3 +23,6 @@ alternatives = ["python -m mypy ."]
 
 [config]
 files = ["mypy.ini", ".mypy.ini", "pyproject.toml", "setup.cfg"]
+
+[taxonomy]
+function = ["type-checking"]

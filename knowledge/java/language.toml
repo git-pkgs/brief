@@ -9,6 +9,9 @@ description = "General-purpose, class-based, object-oriented programming languag
 files = ["pom.xml", "build.gradle", "build.gradle.kts", "*.java", "**/*.java"]
 ecosystems = ["java"]
 
+[taxonomy]
+role = ["language"]
+
 [[security.sinks]]
 symbol = "Runtime.exec"
 threat = "command_injection"

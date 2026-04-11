@@ -17,3 +17,7 @@ alternatives = ["npx playwright test --ui"]
 
 [config]
 files = ["playwright.config.ts", "playwright.config.js", "playwright.config.mjs"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

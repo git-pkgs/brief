@@ -16,3 +16,6 @@ alternatives = ["swift build"]
 [config]
 files = ["Package.swift", "Package.resolved"]
 lockfile = "Package.resolved"
+
+[taxonomy]
+role = ["package-manager"]

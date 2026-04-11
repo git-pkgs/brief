@@ -15,3 +15,8 @@ alternatives = ["cargo tauri dev"]
 
 [config]
 files = ["tauri.conf.json", "src-tauri/tauri.conf.json"]
+
+[taxonomy]
+role = ["framework"]
+layer = ["application-layer"]
+domain = ["desktop-development"]

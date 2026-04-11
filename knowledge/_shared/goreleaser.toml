@@ -15,3 +15,7 @@ alternatives = ["goreleaser build --snapshot"]
 
 [config]
 files = [".goreleaser.yaml", ".goreleaser.yml", "goreleaser.yaml", "goreleaser.yml"]
+
+[taxonomy]
+role = ["build-tool"]
+function = ["release-management", "deployment"]

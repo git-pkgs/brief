@@ -8,3 +8,6 @@ description = "General-purpose systems programming language"
 [detect]
 files = ["*.cpp", "**/*.cpp", "*.hpp", "**/*.hpp", "*.cc", "**/*.cc", "*.cxx", "**/*.cxx"]
 ecosystems = ["cpp"]
+
+[taxonomy]
+role = ["language"]

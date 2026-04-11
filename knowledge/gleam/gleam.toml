@@ -17,3 +17,6 @@ alternatives = ["gleam build"]
 [config]
 files = ["gleam.toml", "manifest.toml"]
 lockfile = "manifest.toml"
+
+[taxonomy]
+role = ["package-manager"]

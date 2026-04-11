@@ -8,3 +8,6 @@ description = "Business-oriented programming language"
 [detect]
 files = ["*.cob", "**/*.cob", "*.cbl", "**/*.cbl", "*.cobol", "**/*.cobol"]
 ecosystems = ["cobol"]
+
+[taxonomy]
+role = ["language"]

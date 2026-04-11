@@ -13,3 +13,7 @@ ecosystems = ["go"]
 [commands]
 run = "ginkgo ./..."
 alternatives = ["go test ./..."]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

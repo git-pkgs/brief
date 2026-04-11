@@ -12,3 +12,6 @@ ecosystems = ["node"]
 
 [commands]
 run = "npm start"
+
+[taxonomy]
+function = ["documentation"]

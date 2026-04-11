@@ -16,3 +16,7 @@ run = "npx jasmine"
 
 [config]
 files = ["jasmine.json", "spec/support/jasmine.json"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

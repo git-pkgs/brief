@@ -13,3 +13,6 @@ ecosystems = ["node"]
 [commands]
 run = "npm audit"
 alternatives = ["npm audit --production"]
+
+[taxonomy]
+function = ["security-scanning"]

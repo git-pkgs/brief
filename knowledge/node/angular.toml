@@ -17,3 +17,9 @@ alternatives = ["npx ng build"]
 
 [config]
 files = ["angular.json"]
+
+[taxonomy]
+role = ["framework"]
+function = ["templating"]
+layer = ["frontend"]
+domain = ["web-development"]

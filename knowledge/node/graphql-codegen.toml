@@ -16,3 +16,6 @@ run = "npx graphql-codegen"
 
 [config]
 files = ["codegen.ts", "codegen.yml", "codegen.yaml", "codegen.json"]
+
+[taxonomy]
+function = ["code-generation"]

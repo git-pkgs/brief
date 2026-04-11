@@ -16,3 +16,6 @@ alternatives = ["mix deps.compile"]
 [config]
 files = ["mix.exs", "mix.lock"]
 lockfile = "mix.lock"
+
+[taxonomy]
+role = ["package-manager"]

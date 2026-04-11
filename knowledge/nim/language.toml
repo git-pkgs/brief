@@ -9,3 +9,6 @@ description = "Statically typed compiled systems programming language"
 [detect]
 files = ["*.nimble", "*.nim", "**/*.nim"]
 ecosystems = ["nim"]
+
+[taxonomy]
+role = ["language"]

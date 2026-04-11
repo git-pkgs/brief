@@ -18,3 +18,6 @@ alternatives = ["make -C docs html"]
 
 [config]
 files = ["docs/conf.py", "doc/conf.py"]
+
+[taxonomy]
+function = ["documentation"]

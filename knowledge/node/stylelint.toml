@@ -16,3 +16,6 @@ run = "npx stylelint '**/*.css'"
 
 [config]
 files = [".stylelintrc", ".stylelintrc.json", ".stylelintrc.yml", ".stylelintrc.yaml", ".stylelintrc.js", "stylelint.config.js", "stylelint.config.mjs", ".stylelintignore"]
+
+[taxonomy]
+role = ["linter"]

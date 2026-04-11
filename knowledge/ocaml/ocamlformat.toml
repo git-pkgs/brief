@@ -17,3 +17,6 @@ alternatives = ["ocamlformat --inplace"]
 
 [config]
 files = [".ocamlformat"]
+
+[taxonomy]
+role = ["formatter"]

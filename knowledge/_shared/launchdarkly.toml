@@ -7,3 +7,7 @@ description = "Feature flag management platform"
 
 [detect]
 dependencies = ["launchdarkly-server-sdk", "launchdarkly-node-server-sdk", "@launchdarkly/node-server-sdk", "launchdarkly-react-client-sdk"]
+
+[taxonomy]
+role = ["service"]
+function = ["feature-flags"]

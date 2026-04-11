@@ -16,3 +16,6 @@ alternatives = ["meson setup build && meson compile -C build"]
 
 [config]
 files = ["meson.build", "meson_options.txt"]
+
+[taxonomy]
+role = ["build-tool"]

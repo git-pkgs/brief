@@ -9,6 +9,9 @@ description = "Dynamic programming language for the web"
 files = ["package.json", "*.js", "**/*.js", "*.mjs"]
 ecosystems = ["node"]
 
+[taxonomy]
+role = ["language"]
+
 [[security.sinks]]
 symbol = "eval"
 threat = "code_injection"

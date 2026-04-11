@@ -17,3 +17,9 @@ run = "mix phx.server"
 
 [config]
 files = ["config/config.exs"]
+
+[taxonomy]
+role = ["framework"]
+function = ["api-development", "templating"]
+layer = ["backend", "full-stack"]
+domain = ["web-development"]

@@ -17,3 +17,6 @@ alternatives = ["swiftlint lint", "swiftlint --strict"]
 
 [config]
 files = [".swiftlint.yml", ".swiftlint.yaml"]
+
+[taxonomy]
+role = ["linter"]

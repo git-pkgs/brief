@@ -17,3 +17,6 @@ ecosystems = ["java"]
 [commands]
 run = "mvn verify"
 alternatives = ["gradle jacocoTestReport"]
+
+[taxonomy]
+function = ["coverage"]

@@ -21,3 +21,6 @@ run = "isort ."
 
 [config]
 files = [".isort.cfg"]
+
+[taxonomy]
+role = ["formatter"]

@@ -13,3 +13,7 @@ ecosystems = ["deno"]
 [commands]
 run = "deno test"
 alternatives = ["deno test --coverage"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

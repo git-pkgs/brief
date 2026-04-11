@@ -14,3 +14,6 @@ run = "moon run"
 
 [config]
 files = [".moon/workspace.yml"]
+
+[taxonomy]
+role = ["build-tool", "orchestrator"]

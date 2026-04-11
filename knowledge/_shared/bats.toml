@@ -11,3 +11,7 @@ files = ["**/*.bats", "test/*.bats", "tests/*.bats"]
 
 [commands]
 run = "bats test/"
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

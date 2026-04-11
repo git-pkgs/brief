@@ -16,3 +16,7 @@ run = "locust"
 
 [config]
 files = ["locustfile.py", "locust.conf"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["benchmarking"]

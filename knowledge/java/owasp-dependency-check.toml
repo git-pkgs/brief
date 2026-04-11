@@ -17,3 +17,6 @@ ecosystems = ["java"]
 [commands]
 run = "mvn dependency-check:check"
 alternatives = ["gradle dependencyCheckAnalyze"]
+
+[taxonomy]
+function = ["security-scanning"]

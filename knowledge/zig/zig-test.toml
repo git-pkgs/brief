@@ -12,3 +12,7 @@ ecosystems = ["zig"]
 
 [commands]
 run = "zig build test"
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

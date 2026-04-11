@@ -17,3 +17,6 @@ alternatives = ["golangci-lint run ./..."]
 
 [config]
 files = [".golangci.yml", ".golangci.yaml", ".golangci.toml", ".golangci.json"]
+
+[taxonomy]
+role = ["linter"]

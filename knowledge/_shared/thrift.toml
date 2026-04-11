@@ -11,3 +11,6 @@ files = ["**/*.thrift"]
 
 [commands]
 run = "thrift --gen"
+
+[taxonomy]
+function = ["code-generation"]

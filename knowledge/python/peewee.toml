@@ -9,3 +9,8 @@ description = "Small Python ORM"
 [detect]
 dependencies = ["peewee"]
 ecosystems = ["python"]
+
+[taxonomy]
+role = ["library"]
+function = ["data-mapping"]
+layer = ["data-layer"]

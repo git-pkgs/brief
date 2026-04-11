@@ -10,3 +10,9 @@ description = "CSS preprocessor"
 files = ["**/*.scss", "**/*.sass"]
 dependencies = ["sass", "sass-rails"]
 dev_dependencies = ["sass"]
+
+[taxonomy]
+role = ["compiler"]
+layer = ["frontend"]
+domain = ["web-development"]
+function = ["styling"]

@@ -16,3 +16,6 @@ run = "npx standard-version"
 
 [config]
 files = [".versionrc", ".versionrc.json"]
+
+[taxonomy]
+function = ["release-management"]

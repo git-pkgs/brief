@@ -9,3 +9,9 @@ description = "Web framework for Rust"
 [detect]
 dependencies = ["actix-web"]
 ecosystems = ["rust"]
+
+[taxonomy]
+role = ["framework"]
+function = ["api-development"]
+layer = ["backend"]
+domain = ["web-development"]

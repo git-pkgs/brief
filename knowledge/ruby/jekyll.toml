@@ -18,3 +18,6 @@ alternatives = ["jekyll build"]
 
 [config]
 files = ["_config.yml", "_config.yaml"]
+
+[taxonomy]
+function = ["documentation", "site-generation"]

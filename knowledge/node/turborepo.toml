@@ -20,3 +20,6 @@ alternatives = ["turbo run build"]
 
 [config]
 files = ["turbo.json"]
+
+[taxonomy]
+role = ["build-tool", "orchestrator"]

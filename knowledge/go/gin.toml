@@ -11,3 +11,9 @@ ecosystems = ["go"]
 
 [detect.file_contains]
 "go.mod" = ["github.com/gin-gonic/gin"]
+
+[taxonomy]
+role = ["framework"]
+function = ["api-development"]
+layer = ["backend"]
+domain = ["web-development"]

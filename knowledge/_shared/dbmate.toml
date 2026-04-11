@@ -15,3 +15,8 @@ alternatives = ["dbmate new"]
 
 [config]
 files = [".dbmate.yml"]
+
+[taxonomy]
+role = ["cli-tool"]
+function = ["database-management"]
+layer = ["data-layer"]

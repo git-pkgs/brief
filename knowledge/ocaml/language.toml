@@ -9,3 +9,6 @@ description = "Functional programming language with type inference"
 [detect]
 files = ["*.ml", "**/*.ml", "*.mli", "**/*.mli", "dune-project"]
 ecosystems = ["ocaml"]
+
+[taxonomy]
+role = ["language"]

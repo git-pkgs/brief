@@ -9,3 +9,8 @@ description = "Python SQL toolkit and ORM"
 [detect]
 dependencies = ["sqlalchemy", "SQLAlchemy"]
 ecosystems = ["python"]
+
+[taxonomy]
+role = ["library"]
+function = ["data-mapping"]
+layer = ["data-layer"]

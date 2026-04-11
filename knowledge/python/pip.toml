@@ -16,3 +16,6 @@ alternatives = ["pip install -e ."]
 
 [config]
 files = ["requirements.txt"]
+
+[taxonomy]
+role = ["package-manager"]

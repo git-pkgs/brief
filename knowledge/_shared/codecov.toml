@@ -10,3 +10,6 @@ files = ["codecov.yml", ".codecov.yml", "codecov.yaml", ".codecov.yaml"]
 
 [config]
 files = ["codecov.yml", ".codecov.yml", "codecov.yaml", ".codecov.yaml"]
+
+[taxonomy]
+function = ["coverage"]

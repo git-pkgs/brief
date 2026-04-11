@@ -17,3 +17,7 @@ alternatives = ["rake"]
 
 [config]
 files = ["Rakefile", "rakefile", "Rakefile.rb", "rakefile.rb"]
+
+[taxonomy]
+role = ["build-tool"]
+function = ["automation"]

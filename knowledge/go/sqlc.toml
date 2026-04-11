@@ -16,3 +16,6 @@ alternatives = ["sqlc compile"]
 
 [config]
 files = ["sqlc.yaml", "sqlc.yml", "sqlc.json"]
+
+[taxonomy]
+function = ["code-generation"]

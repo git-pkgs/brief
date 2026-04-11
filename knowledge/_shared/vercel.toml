@@ -10,3 +10,7 @@ files = ["vercel.json", ".vercel/"]
 
 [config]
 files = ["vercel.json"]
+
+[taxonomy]
+function = ["ci-cd"]
+layer = ["infrastructure"]

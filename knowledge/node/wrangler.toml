@@ -16,3 +16,7 @@ alternatives = ["npx wrangler deploy"]
 
 [config]
 files = ["wrangler.toml", "wrangler.json"]
+
+[taxonomy]
+function = ["ci-cd"]
+layer = ["infrastructure"]

@@ -17,3 +17,6 @@ run = "steep check"
 
 [config]
 files = ["Steepfile"]
+
+[taxonomy]
+function = ["type-checking"]

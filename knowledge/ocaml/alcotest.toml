@@ -15,3 +15,7 @@ ecosystems = ["ocaml"]
 [commands]
 run = "dune test"
 alternatives = ["dune runtest"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

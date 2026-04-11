@@ -11,3 +11,7 @@ files = ["bruno.json", "**/*.bru"]
 
 [config]
 files = ["bruno.json"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

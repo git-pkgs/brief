@@ -9,3 +9,6 @@ description = "Modern, concise programming language for the JVM"
 [detect]
 files = ["*.kt", "**/*.kt", "*.kts", "build.gradle.kts"]
 ecosystems = ["kotlin"]
+
+[taxonomy]
+role = ["language"]

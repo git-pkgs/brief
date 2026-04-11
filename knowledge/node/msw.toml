@@ -15,3 +15,7 @@ ecosystems = ["node"]
 
 [commands]
 run = "npx msw init"
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

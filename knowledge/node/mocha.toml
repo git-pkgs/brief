@@ -16,3 +16,7 @@ run = "npx mocha"
 
 [config]
 files = [".mocharc.js", ".mocharc.json", ".mocharc.yaml"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

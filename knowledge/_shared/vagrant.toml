@@ -14,3 +14,7 @@ run = "vagrant up"
 
 [config]
 files = ["Vagrantfile"]
+
+[taxonomy]
+layer = ["infrastructure"]
+function = ["deployment"]

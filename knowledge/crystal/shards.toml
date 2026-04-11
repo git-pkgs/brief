@@ -15,3 +15,6 @@ run = "shards install"
 [config]
 files = ["shard.yml", "shard.lock"]
 lockfile = "shard.lock"
+
+[taxonomy]
+role = ["package-manager"]

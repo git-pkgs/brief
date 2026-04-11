@@ -16,3 +16,6 @@ alternatives = ["flutter analyze"]
 
 [config]
 files = ["analysis_options.yaml"]
+
+[taxonomy]
+role = ["linter"]

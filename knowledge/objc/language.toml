@@ -8,3 +8,6 @@ description = "Object-oriented superset of C for Apple platforms"
 [detect]
 files = ["*.m", "**/*.m", "*.mm", "**/*.mm", "*.xcodeproj", "*.xcworkspace"]
 ecosystems = ["objc"]
+
+[taxonomy]
+role = ["language"]

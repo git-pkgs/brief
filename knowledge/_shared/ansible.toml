@@ -14,3 +14,7 @@ run = "ansible-playbook"
 
 [config]
 files = ["ansible.cfg"]
+
+[taxonomy]
+layer = ["infrastructure"]
+function = ["deployment"]

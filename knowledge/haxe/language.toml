@@ -9,3 +9,6 @@ description = "Cross-platform multi-paradigm language"
 [detect]
 files = ["haxelib.json", "*.hx", "**/*.hx"]
 ecosystems = ["haxe"]
+
+[taxonomy]
+role = ["language"]

@@ -10,3 +10,6 @@ files = ["sonar-project.properties", ".sonarcloud.properties"]
 
 [config]
 files = ["sonar-project.properties", ".sonarcloud.properties"]
+
+[taxonomy]
+function = ["security-scanning"]

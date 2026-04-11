@@ -16,3 +16,6 @@ alternatives = ["mix format --check-formatted"]
 
 [config]
 files = [".formatter.exs"]
+
+[taxonomy]
+role = ["formatter"]

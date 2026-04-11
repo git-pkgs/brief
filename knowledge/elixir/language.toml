@@ -9,3 +9,6 @@ description = "Dynamic, functional language for building scalable applications"
 [detect]
 files = ["mix.exs", "*.ex", "**/*.ex", "*.exs"]
 ecosystems = ["elixir"]
+
+[taxonomy]
+role = ["language"]

@@ -9,3 +9,6 @@ description = "Internationalization libraries for JavaScript"
 [detect]
 dependencies = ["react-intl", "@formatjs/intl"]
 ecosystems = ["node"]
+
+[taxonomy]
+function = ["internationalization"]

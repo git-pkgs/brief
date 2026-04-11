@@ -17,3 +17,6 @@ alternatives = ["cargo fmt --check"]
 
 [config]
 files = ["rustfmt.toml", ".rustfmt.toml"]
+
+[taxonomy]
+role = ["formatter"]

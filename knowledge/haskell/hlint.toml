@@ -16,3 +16,6 @@ run = "hlint ."
 
 [config]
 files = [".hlint.yaml"]
+
+[taxonomy]
+role = ["linter"]

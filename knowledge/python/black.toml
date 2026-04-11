@@ -20,3 +20,6 @@ alternatives = ["black --check ."]
 
 [config]
 files = ["pyproject.toml"]
+
+[taxonomy]
+role = ["formatter"]

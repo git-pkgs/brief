@@ -16,3 +16,6 @@ run = "swiftformat ."
 
 [config]
 files = [".swiftformat"]
+
+[taxonomy]
+role = ["formatter"]

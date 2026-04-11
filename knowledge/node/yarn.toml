@@ -17,3 +17,6 @@ alternatives = ["yarn"]
 [config]
 files = ["package.json", "yarn.lock", ".yarnrc.yml", ".yarnrc"]
 lockfile = "yarn.lock"
+
+[taxonomy]
+role = ["package-manager"]

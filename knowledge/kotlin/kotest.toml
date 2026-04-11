@@ -12,3 +12,7 @@ ecosystems = ["kotlin"]
 
 [commands]
 run = "gradle test"
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

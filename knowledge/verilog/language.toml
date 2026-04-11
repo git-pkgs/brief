@@ -8,3 +8,6 @@ description = "Hardware description language for digital circuits"
 [detect]
 files = ["*.sv", "**/*.sv", "*.svh", "**/*.svh", "*.v", "**/*.v"]
 ecosystems = ["verilog"]
+
+[taxonomy]
+role = ["language"]

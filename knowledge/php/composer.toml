@@ -17,3 +17,6 @@ alternatives = ["composer update"]
 [config]
 files = ["composer.json", "composer.lock"]
 lockfile = "composer.lock"
+
+[taxonomy]
+role = ["package-manager"]

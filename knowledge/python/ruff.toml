@@ -21,3 +21,6 @@ alternatives = ["ruff check --fix ."]
 
 [config]
 files = ["ruff.toml", ".ruff.toml", "pyproject.toml"]
+
+[taxonomy]
+role = ["linter"]

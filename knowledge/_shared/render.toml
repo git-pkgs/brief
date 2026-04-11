@@ -10,3 +10,7 @@ files = ["render.yaml", "render.yml"]
 
 [config]
 files = ["render.yaml"]
+
+[taxonomy]
+function = ["ci-cd"]
+layer = ["infrastructure"]

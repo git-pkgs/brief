@@ -13,3 +13,6 @@ run = "snyk test"
 
 [config]
 files = [".snyk"]
+
+[taxonomy]
+function = ["security-scanning"]

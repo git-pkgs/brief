@@ -9,3 +9,6 @@ description = "Secure runtime for JavaScript and TypeScript"
 [detect]
 files = ["deno.json", "deno.jsonc", "deno.lock"]
 ecosystems = ["deno"]
+
+[taxonomy]
+role = ["language"]

@@ -12,3 +12,6 @@ ecosystems = ["deno"]
 
 [commands]
 run = "deno doc"
+
+[taxonomy]
+function = ["documentation"]

@@ -12,3 +12,6 @@ ecosystems = ["node"]
 
 [commands]
 run = "npx lingui extract"
+
+[taxonomy]
+function = ["internationalization"]

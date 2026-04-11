@@ -13,3 +13,6 @@ ecosystems = ["node"]
 
 [commands]
 run = "npx conventional-changelog -p angular -i CHANGELOG.md -s"
+
+[taxonomy]
+function = ["deployment"]

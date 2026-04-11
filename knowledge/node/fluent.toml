@@ -9,3 +9,6 @@ description = "Mozilla localization system"
 [detect]
 dependencies = ["@fluent/bundle", "@fluent/react"]
 ecosystems = ["node"]
+
+[taxonomy]
+function = ["internationalization"]

@@ -17,3 +17,6 @@ run = "yard doc"
 
 [config]
 files = [".yardopts"]
+
+[taxonomy]
+function = ["documentation"]

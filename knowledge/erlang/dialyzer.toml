@@ -14,3 +14,6 @@ ecosystems = ["erlang"]
 
 [commands]
 run = "rebar3 dialyzer"
+
+[taxonomy]
+function = ["type-checking"]

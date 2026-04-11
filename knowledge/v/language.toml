@@ -9,3 +9,6 @@ description = "Simple, fast compiled language"
 [detect]
 files = ["v.mod"]
 ecosystems = ["v"]
+
+[taxonomy]
+role = ["language"]

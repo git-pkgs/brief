@@ -13,3 +13,7 @@ ecosystems = ["java", "scala", "kotlin"]
 [commands]
 run = "gradle gatlingRun"
 alternatives = ["mvn gatling:test"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

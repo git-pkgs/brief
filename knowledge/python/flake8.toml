@@ -21,3 +21,6 @@ run = "flake8"
 
 [config]
 files = [".flake8"]
+
+[taxonomy]
+role = ["linter"]

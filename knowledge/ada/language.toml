@@ -8,3 +8,6 @@ description = "Strongly typed language for safety-critical systems"
 [detect]
 files = ["*.adb", "**/*.adb", "*.ads", "**/*.ads", "*.gpr"]
 ecosystems = ["ada"]
+
+[taxonomy]
+role = ["language"]

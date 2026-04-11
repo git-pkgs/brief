@@ -10,3 +10,7 @@ files = [".gitlab-ci.yml"]
 
 [config]
 files = [".gitlab-ci.yml"]
+
+[taxonomy]
+function = ["ci-cd"]
+layer = ["infrastructure"]

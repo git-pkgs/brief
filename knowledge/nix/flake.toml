@@ -16,3 +16,6 @@ alternatives = ["nix build"]
 [config]
 files = ["flake.nix", "flake.lock"]
 lockfile = "flake.lock"
+
+[taxonomy]
+role = ["package-manager"]

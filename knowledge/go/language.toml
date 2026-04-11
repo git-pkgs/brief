@@ -9,3 +9,6 @@ description = "Statically typed, compiled programming language"
 [detect]
 files = ["go.mod", "*.go", "**/*.go"]
 ecosystems = ["go"]
+
+[taxonomy]
+role = ["language"]

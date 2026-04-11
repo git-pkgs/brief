@@ -15,3 +15,6 @@ alternatives = ["elm make"]
 
 [config]
 files = ["elm.json"]
+
+[taxonomy]
+role = ["package-manager"]

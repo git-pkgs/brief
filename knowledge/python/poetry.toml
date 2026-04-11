@@ -20,3 +20,6 @@ alternatives = ["poetry update"]
 [config]
 files = ["pyproject.toml", "poetry.lock"]
 lockfile = "poetry.lock"
+
+[taxonomy]
+role = ["package-manager"]

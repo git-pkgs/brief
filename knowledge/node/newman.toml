@@ -13,3 +13,7 @@ ecosystems = ["node"]
 
 [commands]
 run = "npx newman run"
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

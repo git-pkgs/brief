@@ -9,3 +9,6 @@ description = "General-purpose scripting language for web development"
 [detect]
 files = ["composer.json", "*.php", "**/*.php"]
 ecosystems = ["php"]
+
+[taxonomy]
+role = ["language"]

@@ -12,3 +12,7 @@ ecosystems = ["gleam"]
 
 [commands]
 run = "gleam test"
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

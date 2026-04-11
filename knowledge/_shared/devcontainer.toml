@@ -10,3 +10,7 @@ files = [".devcontainer/devcontainer.json", ".devcontainer.json"]
 
 [config]
 files = [".devcontainer/devcontainer.json", ".devcontainer.json"]
+
+[taxonomy]
+function = ["containerization"]
+layer = ["infrastructure"]

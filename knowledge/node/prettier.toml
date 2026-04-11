@@ -19,3 +19,6 @@ alternatives = ["npx prettier --write ."]
 
 [config]
 files = [".prettierrc", ".prettierrc.json", ".prettierrc.yml", ".prettierrc.yaml", ".prettierrc.js", "prettier.config.js", ".prettierignore"]
+
+[taxonomy]
+role = ["formatter"]

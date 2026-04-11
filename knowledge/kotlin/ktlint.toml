@@ -20,3 +20,6 @@ alternatives = ["ktlint --format"]
 
 [config]
 files = [".editorconfig"]
+
+[taxonomy]
+role = ["formatter"]

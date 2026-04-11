@@ -9,3 +9,6 @@ description = "Scripting language for the Godot game engine"
 [detect]
 files = ["*.gd", "**/*.gd", "project.godot"]
 ecosystems = ["gdscript"]
+
+[taxonomy]
+role = ["language"]

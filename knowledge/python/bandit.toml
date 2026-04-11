@@ -20,3 +20,6 @@ run = "bandit -r ."
 
 [config]
 files = [".bandit"]
+
+[taxonomy]
+function = ["security-scanning"]

@@ -13,3 +13,6 @@ ecosystems = ["python"]
 
 [commands]
 run = "twine upload dist/*"
+
+[taxonomy]
+function = ["deployment"]

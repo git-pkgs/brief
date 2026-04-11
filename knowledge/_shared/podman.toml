@@ -11,3 +11,7 @@ files = ["Containerfile", ".containerignore"]
 
 [commands]
 run = "podman build ."
+
+[taxonomy]
+function = ["containerization"]
+layer = ["infrastructure"]

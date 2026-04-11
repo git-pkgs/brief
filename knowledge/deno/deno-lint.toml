@@ -12,3 +12,6 @@ ecosystems = ["deno"]
 
 [commands]
 run = "deno lint"
+
+[taxonomy]
+role = ["linter"]

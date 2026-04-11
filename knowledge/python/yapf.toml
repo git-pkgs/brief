@@ -21,3 +21,6 @@ run = "yapf -r -i ."
 
 [config]
 files = [".style.yapf"]
+
+[taxonomy]
+role = ["formatter"]

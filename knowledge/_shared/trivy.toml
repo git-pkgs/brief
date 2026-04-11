@@ -14,3 +14,6 @@ run = "trivy fs ."
 
 [config]
 files = [".trivy.yaml", "trivy.yaml"]
+
+[taxonomy]
+function = ["security-scanning"]

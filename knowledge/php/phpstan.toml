@@ -19,3 +19,6 @@ alternatives = ["phpstan analyse"]
 
 [config]
 files = ["phpstan.neon", "phpstan.neon.dist"]
+
+[taxonomy]
+function = ["type-checking"]

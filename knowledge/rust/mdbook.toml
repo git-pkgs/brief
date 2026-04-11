@@ -17,3 +17,6 @@ run = "mdbook build"
 
 [config]
 files = ["book.toml"]
+
+[taxonomy]
+function = ["documentation"]

@@ -10,3 +10,6 @@ files = [".readthedocs.yml", ".readthedocs.yaml", "readthedocs.yml", "readthedoc
 
 [config]
 files = [".readthedocs.yml", ".readthedocs.yaml"]
+
+[taxonomy]
+function = ["documentation"]

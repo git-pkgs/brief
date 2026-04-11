@@ -18,3 +18,6 @@ alternatives = ["gradle checkstyleMain"]
 
 [config]
 files = ["checkstyle.xml", "config/checkstyle/checkstyle.xml"]
+
+[taxonomy]
+role = ["linter"]

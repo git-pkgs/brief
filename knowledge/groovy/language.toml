@@ -9,3 +9,6 @@ description = "Dynamic language for the JVM"
 [detect]
 files = ["*.groovy", "**/*.groovy", "*.gvy", "**/*.gvy", "Jenkinsfile"]
 ecosystems = ["groovy"]
+
+[taxonomy]
+role = ["language"]

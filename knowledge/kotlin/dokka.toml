@@ -16,3 +16,6 @@ ecosystems = ["kotlin"]
 [commands]
 run = "gradle dokkaHtml"
 alternatives = ["./gradlew dokkaHtml"]
+
+[taxonomy]
+function = ["documentation"]

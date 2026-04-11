@@ -8,3 +8,6 @@ description = "Hardware description language for digital circuits"
 [detect]
 files = ["*.vhdl", "**/*.vhdl", "*.vhd", "**/*.vhd"]
 ecosystems = ["vhdl"]
+
+[taxonomy]
+role = ["language"]

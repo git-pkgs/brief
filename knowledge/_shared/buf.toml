@@ -15,3 +15,6 @@ alternatives = ["buf lint", "buf build"]
 
 [config]
 files = ["buf.yaml", "buf.gen.yaml", "buf.work.yaml"]
+
+[taxonomy]
+function = ["code-generation"]

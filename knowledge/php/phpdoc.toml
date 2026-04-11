@@ -17,3 +17,6 @@ run = "vendor/bin/phpdoc"
 
 [config]
 files = ["phpdoc.xml", "phpdoc.dist.xml"]
+
+[taxonomy]
+function = ["documentation"]

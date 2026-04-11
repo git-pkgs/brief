@@ -17,3 +17,6 @@ alternatives = ["cargo clippy -- -D warnings"]
 
 [config]
 files = ["clippy.toml", ".clippy.toml"]
+
+[taxonomy]
+role = ["linter"]

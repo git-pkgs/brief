@@ -9,3 +9,6 @@ description = "Functional language for reliable web apps"
 [detect]
 files = ["elm.json", "elm-package.json", "*.elm", "**/*.elm"]
 ecosystems = ["elm"]
+
+[taxonomy]
+role = ["language"]

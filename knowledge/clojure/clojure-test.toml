@@ -13,3 +13,7 @@ ecosystems = ["clojure"]
 [commands]
 run = "lein test"
 alternatives = ["clojure -X:test"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

@@ -17,3 +17,6 @@ alternatives = ["rebar3 deps"]
 [config]
 files = ["rebar.config"]
 lockfile = "rebar.lock"
+
+[taxonomy]
+role = ["package-manager"]

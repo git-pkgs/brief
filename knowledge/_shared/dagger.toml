@@ -11,3 +11,7 @@ files = ["dagger.json", "dagger/"]
 
 [config]
 files = ["dagger.json"]
+
+[taxonomy]
+function = ["ci-cd"]
+layer = ["infrastructure"]

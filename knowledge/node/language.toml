@@ -8,3 +8,6 @@ description = "Dynamic programming language for the web"
 [detect]
 files = ["package.json", "*.js", "**/*.js", "*.mjs"]
 ecosystems = ["node"]
+
+[taxonomy]
+role = ["language"]

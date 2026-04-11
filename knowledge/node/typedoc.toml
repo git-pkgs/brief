@@ -16,3 +16,6 @@ run = "npx typedoc"
 
 [config]
 files = ["typedoc.json", "typedoc.config.js"]
+
+[taxonomy]
+function = ["documentation"]

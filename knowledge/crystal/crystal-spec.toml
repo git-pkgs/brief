@@ -12,3 +12,7 @@ ecosystems = ["crystal"]
 
 [commands]
 run = "crystal spec"
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

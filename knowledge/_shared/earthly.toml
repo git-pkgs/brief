@@ -14,3 +14,7 @@ run = "earthly +build"
 
 [config]
 files = ["Earthfile"]
+
+[taxonomy]
+function = ["ci-cd"]
+layer = ["infrastructure"]

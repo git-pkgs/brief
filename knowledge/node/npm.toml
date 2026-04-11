@@ -17,3 +17,6 @@ alternatives = ["npm ci"]
 [config]
 files = ["package.json", "package-lock.json", ".npmrc"]
 lockfile = "package-lock.json"
+
+[taxonomy]
+role = ["package-manager"]

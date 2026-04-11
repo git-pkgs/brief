@@ -13,3 +13,7 @@ ecosystems = ["swift"]
 [commands]
 run = "swift test"
 alternatives = ["xcodebuild test"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

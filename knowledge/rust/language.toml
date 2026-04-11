@@ -9,3 +9,6 @@ description = "Systems programming language focused on safety and performance"
 [detect]
 files = ["Cargo.toml", "*.rs", "**/*.rs"]
 ecosystems = ["rust"]
+
+[taxonomy]
+role = ["language"]

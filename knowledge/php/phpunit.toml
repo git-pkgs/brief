@@ -19,3 +19,7 @@ alternatives = ["phpunit"]
 
 [config]
 files = ["phpunit.xml", "phpunit.xml.dist"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

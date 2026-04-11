@@ -20,3 +20,6 @@ run = "pylint"
 
 [config]
 files = [".pylintrc", "pylintrc"]
+
+[taxonomy]
+role = ["linter"]

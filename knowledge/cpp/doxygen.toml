@@ -16,3 +16,6 @@ run = "doxygen"
 
 [config]
 files = ["Doxyfile", "Doxyfile.in"]
+
+[taxonomy]
+function = ["documentation"]

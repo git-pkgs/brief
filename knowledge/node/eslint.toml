@@ -19,3 +19,6 @@ alternatives = ["npm run lint"]
 
 [config]
 files = [".eslintrc", ".eslintrc.js", ".eslintrc.json", ".eslintrc.yml", ".eslintrc.yaml", "eslint.config.js", "eslint.config.mjs", "eslint.config.cjs", ".eslintignore"]
+
+[taxonomy]
+role = ["linter"]

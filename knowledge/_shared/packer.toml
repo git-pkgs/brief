@@ -11,3 +11,7 @@ files = ["**/*.pkr.hcl", "*.pkr.hcl"]
 
 [commands]
 run = "packer build ."
+
+[taxonomy]
+layer = ["infrastructure"]
+function = ["deployment"]

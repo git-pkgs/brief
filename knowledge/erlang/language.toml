@@ -9,3 +9,6 @@ description = "Concurrent functional programming language for distributed system
 [detect]
 files = ["rebar.config", "*.erl", "**/*.erl", "*.hrl", "**/*.hrl"]
 ecosystems = ["erlang"]
+
+[taxonomy]
+role = ["language"]

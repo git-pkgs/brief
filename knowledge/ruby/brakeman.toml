@@ -12,3 +12,6 @@ ecosystems = ["ruby"]
 
 [commands]
 run = "brakeman"
+
+[taxonomy]
+function = ["security-scanning"]

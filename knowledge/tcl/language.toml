@@ -8,3 +8,6 @@ description = "Dynamic scripting language"
 [detect]
 files = ["*.tcl", "**/*.tcl"]
 ecosystems = ["tcl"]
+
+[taxonomy]
+role = ["language"]

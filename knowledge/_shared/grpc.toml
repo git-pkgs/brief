@@ -8,3 +8,6 @@ description = "High performance RPC framework"
 
 [detect]
 dependencies = ["grpc", "@grpc/grpc-js", "google.golang.org/grpc", "grpcio", "tonic"]
+
+[taxonomy]
+function = ["code-generation"]

@@ -9,3 +9,6 @@ description = "Purely functional package manager and build system"
 [detect]
 files = ["flake.nix", "default.nix", "shell.nix", "*.nix", "**/*.nix"]
 ecosystems = ["nix"]
+
+[taxonomy]
+role = ["language"]

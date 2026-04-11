@@ -17,3 +17,6 @@ alternatives = ["pipenv sync"]
 [config]
 files = ["Pipfile", "Pipfile.lock"]
 lockfile = "Pipfile.lock"
+
+[taxonomy]
+role = ["package-manager"]

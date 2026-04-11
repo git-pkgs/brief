@@ -8,3 +8,6 @@ description = "General-purpose, class-based, object-oriented programming languag
 [detect]
 files = ["pom.xml", "build.gradle", "build.gradle.kts", "*.java", "**/*.java"]
 ecosystems = ["java"]
+
+[taxonomy]
+role = ["language"]

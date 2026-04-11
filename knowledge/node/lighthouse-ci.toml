@@ -16,3 +16,7 @@ run = "npx lhci autorun"
 
 [config]
 files = ["lighthouserc.js", ".lighthouserc.js", "lighthouserc.json", ".lighthouserc.json"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

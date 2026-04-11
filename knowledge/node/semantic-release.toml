@@ -16,3 +16,6 @@ run = "npx semantic-release"
 
 [config]
 files = [".releaserc", ".releaserc.json", ".releaserc.yml", ".releaserc.yaml", ".releaserc.js"]
+
+[taxonomy]
+function = ["deployment"]

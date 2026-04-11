@@ -16,3 +16,6 @@ run = "scalafmt"
 
 [config]
 files = [".scalafmt.conf"]
+
+[taxonomy]
+role = ["formatter"]

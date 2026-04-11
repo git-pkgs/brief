@@ -9,3 +9,6 @@ description = "Documentation site framework built on Astro"
 [detect]
 dependencies = ["@astrojs/starlight"]
 ecosystems = ["node"]
+
+[taxonomy]
+function = ["documentation"]

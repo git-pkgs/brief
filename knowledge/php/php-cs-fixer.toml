@@ -19,3 +19,6 @@ alternatives = ["php-cs-fixer fix"]
 
 [config]
 files = [".php-cs-fixer.php", ".php-cs-fixer.dist.php"]
+
+[taxonomy]
+role = ["formatter"]

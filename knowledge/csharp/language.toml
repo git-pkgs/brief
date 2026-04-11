@@ -8,3 +8,6 @@ description = "Modern, object-oriented programming language"
 [detect]
 files = ["*.csproj", "*.sln", "*.cs", "**/*.cs"]
 ecosystems = ["csharp"]
+
+[taxonomy]
+role = ["language"]

@@ -19,3 +19,6 @@ alternatives = ["phpcs"]
 
 [config]
 files = ["phpcs.xml", "phpcs.xml.dist", ".phpcs.xml", ".phpcs.xml.dist"]
+
+[taxonomy]
+role = ["linter"]

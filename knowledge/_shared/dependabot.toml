@@ -10,3 +10,6 @@ files = [".github/dependabot.yml", ".github/dependabot.yaml"]
 
 [config]
 files = [".github/dependabot.yml", ".github/dependabot.yaml"]
+
+[taxonomy]
+function = ["automation"]

@@ -10,3 +10,7 @@ description = "Accessibility testing engine"
 dependencies = ["axe-core", "@axe-core/react", "@axe-core/playwright"]
 dev_dependencies = ["axe-core", "@axe-core/react", "@axe-core/playwright"]
 ecosystems = ["node"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

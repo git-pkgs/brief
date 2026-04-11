@@ -12,3 +12,7 @@ ecosystems = ["erlang"]
 
 [commands]
 run = "rebar3 eunit"
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

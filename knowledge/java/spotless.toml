@@ -16,3 +16,6 @@ ecosystems = ["java", "kotlin", "scala"]
 [commands]
 run = "gradle spotlessApply"
 alternatives = ["gradle spotlessCheck"]
+
+[taxonomy]
+role = ["formatter"]

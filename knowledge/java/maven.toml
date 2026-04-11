@@ -17,3 +17,6 @@ alternatives = ["mvn package", "mvn verify"]
 [config]
 files = ["pom.xml", ".mvn/"]
 lockfile = "pom.xml"
+
+[taxonomy]
+role = ["package-manager"]

@@ -9,3 +9,6 @@ description = "High-level, general-purpose programming language"
 [detect]
 files = ["pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "*.py", "**/*.py"]
 ecosystems = ["python"]
+
+[taxonomy]
+role = ["language"]

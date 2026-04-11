@@ -19,3 +19,6 @@ alternatives = ["standardrb --fix"]
 
 [config]
 files = [".standard.yml"]
+
+[taxonomy]
+role = ["formatter"]

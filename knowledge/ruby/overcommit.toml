@@ -17,3 +17,6 @@ alternatives = ["overcommit --install"]
 
 [config]
 files = [".overcommit.yml"]
+
+[taxonomy]
+role = ["linter"]

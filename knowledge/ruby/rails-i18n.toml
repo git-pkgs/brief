@@ -8,3 +8,6 @@ description = "Rails internationalization framework"
 [detect]
 files = ["config/locales/"]
 ecosystems = ["ruby"]
+
+[taxonomy]
+function = ["internationalization"]

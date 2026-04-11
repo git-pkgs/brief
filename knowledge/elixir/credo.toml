@@ -18,3 +18,6 @@ alternatives = ["mix credo --strict"]
 
 [config]
 files = [".credo.exs"]
+
+[taxonomy]
+role = ["linter"]

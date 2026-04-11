@@ -12,3 +12,6 @@ ecosystems = ["dart"]
 
 [commands]
 run = "dart doc"
+
+[taxonomy]
+function = ["documentation"]

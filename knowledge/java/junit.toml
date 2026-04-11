@@ -15,3 +15,7 @@ ecosystems = ["java"]
 [commands]
 run = "mvn test"
 alternatives = ["gradle test", "./gradlew test"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

@@ -9,3 +9,6 @@ description = "General-purpose programming language from Apple"
 [detect]
 files = ["Package.swift", "*.swift", "**/*.swift"]
 ecosystems = ["swift"]
+
+[taxonomy]
+role = ["language"]

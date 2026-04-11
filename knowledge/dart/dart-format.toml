@@ -13,3 +13,6 @@ ecosystems = ["dart"]
 [commands]
 run = "dart format ."
 alternatives = ["dart format --set-exit-if-changed ."]
+
+[taxonomy]
+role = ["formatter"]

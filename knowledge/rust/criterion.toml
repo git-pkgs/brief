@@ -16,3 +16,7 @@ run = "cargo bench"
 
 [config]
 files = ["benches/"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

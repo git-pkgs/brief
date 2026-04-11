@@ -15,3 +15,6 @@ run = "clang-format -i **/*.cpp **/*.h"
 
 [config]
 files = [".clang-format"]
+
+[taxonomy]
+role = ["formatter"]

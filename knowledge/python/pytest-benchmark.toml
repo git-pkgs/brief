@@ -19,4 +19,4 @@ run = "pytest --benchmark-only"
 
 [taxonomy]
 role = ["testing-framework"]
-function = ["testing"]
+function = ["benchmarking"]

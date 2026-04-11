@@ -19,4 +19,4 @@ alternatives = ["mkdocs build"]
 files = ["mkdocs.yml", "mkdocs.yaml"]
 
 [taxonomy]
-function = ["documentation"]
+function = ["documentation", "site-generation"]

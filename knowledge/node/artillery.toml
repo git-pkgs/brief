@@ -19,4 +19,4 @@ files = ["artillery.yml", "artillery.yaml"]
 
 [taxonomy]
 role = ["testing-framework"]
-function = ["testing"]
+function = ["benchmarking"]

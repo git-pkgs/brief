@@ -19,4 +19,4 @@ run = "cargo tarpaulin"
 alternatives = ["cargo tarpaulin --out html"]
 
 [taxonomy]
-function = ["testing"]
+function = ["coverage"]

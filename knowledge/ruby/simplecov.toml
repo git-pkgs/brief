@@ -16,4 +16,4 @@ ecosystems = ["ruby"]
 run = "bundle exec rake spec"
 
 [taxonomy]
-function = ["testing"]
+function = ["coverage"]

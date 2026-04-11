@@ -19,4 +19,4 @@ run = "mdbook build"
 files = ["book.toml"]
 
 [taxonomy]
-function = ["documentation"]
+function = ["documentation", "site-generation"]

@@ -14,3 +14,4 @@ files = [".tool-versions"]
 
 [taxonomy]
 role = ["cli-tool"]
+function = ["runtime-management"]

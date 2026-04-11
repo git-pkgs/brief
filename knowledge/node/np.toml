@@ -14,4 +14,4 @@ ecosystems = ["node"]
 run = "npx np"
 
 [taxonomy]
-function = ["deployment"]
+function = ["release-management"]

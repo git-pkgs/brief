@@ -20,4 +20,4 @@ alternatives = ["npx docusaurus build"]
 files = ["docusaurus.config.js", "docusaurus.config.ts", "sidebars.js"]
 
 [taxonomy]
-function = ["documentation"]
+function = ["documentation", "site-generation"]

@@ -19,4 +19,4 @@ files = ["locustfile.py", "locust.conf"]
 
 [taxonomy]
 role = ["testing-framework"]
-function = ["testing"]
+function = ["benchmarking"]

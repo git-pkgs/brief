@@ -25,4 +25,4 @@ alternatives = ["pytest --cov"]
 files = [".coveragerc", "pyproject.toml", "setup.cfg"]
 
 [taxonomy]
-function = ["testing"]
+function = ["coverage"]

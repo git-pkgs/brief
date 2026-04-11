@@ -16,4 +16,4 @@ alternatives = ["mvn gatling:test"]
 
 [taxonomy]
 role = ["testing-framework"]
-function = ["testing"]
+function = ["benchmarking"]

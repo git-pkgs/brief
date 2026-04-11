@@ -18,4 +18,4 @@ run = "npx nyc"
 files = [".nycrc", ".nycrc.json"]
 
 [taxonomy]
-function = ["testing"]
+function = ["coverage"]

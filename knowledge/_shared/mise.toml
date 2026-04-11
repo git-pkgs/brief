@@ -17,3 +17,4 @@ files = [".mise.toml", "mise.toml"]
 
 [taxonomy]
 role = ["cli-tool"]
+function = ["runtime-management"]

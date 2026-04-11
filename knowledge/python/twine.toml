@@ -15,4 +15,4 @@ ecosystems = ["python"]
 run = "twine upload dist/*"
 
 [taxonomy]
-function = ["deployment"]
+function = ["release-management"]

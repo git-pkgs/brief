@@ -11,4 +11,4 @@ files = [".sentryclirc", "sentry.properties"]
 dependencies = ["@sentry/node", "@sentry/browser", "@sentry/react", "sentry-sdk", "sentry_sdk"]
 
 [taxonomy]
-function = ["testing"]
+function = ["monitoring", "logging"]

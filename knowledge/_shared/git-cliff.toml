@@ -17,4 +17,4 @@ alternatives = ["git-cliff --bump"]
 files = ["cliff.toml"]
 
 [taxonomy]
-function = ["deployment"]
+function = ["release-management"]

@@ -9,3 +9,142 @@ description = "Statically typed, compiled programming language"
 [detect]
 files = ["go.mod", "*.go", "**/*.go"]
 ecosystems = ["go"]
+
+[[security.sinks]]
+symbol = "exec.Command"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "When args built via fmt.Sprintf or string concat"
+
+[[security.sinks]]
+symbol = "exec.CommandContext"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "syscall.Exec"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "text/template.Template.Execute"
+threat = "xss"
+cwe = "CWE-79"
+note = "text/template does not escape HTML; use html/template for web output"
+
+[[security.sinks]]
+symbol = "template.HTML"
+threat = "xss"
+cwe = "CWE-79"
+note = "html/template type that bypasses escaping"
+
+[[security.sinks]]
+symbol = "template.JS"
+threat = "xss"
+cwe = "CWE-79"
+
+[[security.sinks]]
+symbol = "template.URL"
+threat = "open_redirect"
+cwe = "CWE-601"
+
+[[security.sinks]]
+symbol = "sql.DB.Query"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "When query built via fmt.Sprintf; use parameterized $1, ?"
+
+[[security.sinks]]
+symbol = "sql.DB.Exec"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "sql.DB.QueryRow"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "filepath.Join"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "Does not prevent ../; pair with filepath.Clean and prefix check"
+
+[[security.sinks]]
+symbol = "os.Open"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "os.OpenFile"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "os.ReadFile"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "http.ServeFile"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "encoding/gob.Decoder.Decode"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Less risky than Java/Python serialization but trusts type info"
+
+[[security.sinks]]
+symbol = "xml.Decoder.Decode"
+threat = "xxe"
+cwe = "CWE-611"
+note = "Disable Strict and CharsetReader for untrusted input"
+
+[[security.sinks]]
+symbol = "http.Get"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "http.Post"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "http.Client.Do"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "http.Redirect"
+threat = "open_redirect"
+cwe = "CWE-601"
+
+[[security.sinks]]
+symbol = "unsafe.Pointer"
+threat = "code_injection"
+cwe = "CWE-119"
+note = "Memory safety, not injection per se; flagged for review"
+
+[[security.sinks]]
+symbol = "crypto/md5.New"
+threat = "weak_crypto"
+cwe = "CWE-327"
+
+[[security.sinks]]
+symbol = "crypto/sha1.New"
+threat = "weak_crypto"
+cwe = "CWE-327"
+
+[[security.sinks]]
+symbol = "crypto/des.NewCipher"
+threat = "weak_crypto"
+cwe = "CWE-327"
+
+[[security.sinks]]
+symbol = "math/rand.Intn"
+threat = "weak_crypto"
+cwe = "CWE-338"
+note = "Not cryptographically secure; use crypto/rand for security"

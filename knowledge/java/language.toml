@@ -8,3 +8,157 @@ description = "General-purpose, class-based, object-oriented programming languag
 [detect]
 files = ["pom.xml", "build.gradle", "build.gradle.kts", "*.java", "**/*.java"]
 ecosystems = ["java"]
+
+[[security.sinks]]
+symbol = "Runtime.exec"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "ProcessBuilder"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "When command list built from caller input"
+
+[[security.sinks]]
+symbol = "ObjectInputStream.readObject"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Java native serialization; gadget chains"
+
+[[security.sinks]]
+symbol = "XMLDecoder.readObject"
+threat = "deserialization"
+cwe = "CWE-502"
+
+[[security.sinks]]
+symbol = "Yaml.load"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "SnakeYAML default constructor; use SafeConstructor"
+
+[[security.sinks]]
+symbol = "ScriptEngine.eval"
+threat = "code_injection"
+cwe = "CWE-95"
+note = "javax.script, Nashorn/Graal"
+
+[[security.sinks]]
+symbol = "Class.forName"
+threat = "unsafe_reflection"
+cwe = "CWE-470"
+note = "When class name is caller-controlled"
+
+[[security.sinks]]
+symbol = "Method.invoke"
+threat = "unsafe_reflection"
+cwe = "CWE-470"
+
+[[security.sinks]]
+symbol = "URLClassLoader"
+threat = "code_injection"
+cwe = "CWE-470"
+note = "Loads classes from caller-controlled URLs"
+
+[[security.sinks]]
+symbol = "Statement.execute"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "Use PreparedStatement with parameters"
+
+[[security.sinks]]
+symbol = "Statement.executeQuery"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "Statement.executeUpdate"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "DocumentBuilderFactory.newInstance"
+threat = "xxe"
+cwe = "CWE-611"
+note = "Default settings allow external entities; setFeature to disable"
+
+[[security.sinks]]
+symbol = "SAXParserFactory.newInstance"
+threat = "xxe"
+cwe = "CWE-611"
+
+[[security.sinks]]
+symbol = "XMLInputFactory.newInstance"
+threat = "xxe"
+cwe = "CWE-611"
+
+[[security.sinks]]
+symbol = "TransformerFactory.newInstance"
+threat = "xxe"
+cwe = "CWE-611"
+
+[[security.sinks]]
+symbol = "File"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "When path is caller-controlled; use getCanonicalPath check"
+
+[[security.sinks]]
+symbol = "Files.readAllBytes"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "FileInputStream"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "URL.openStream"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "URL.openConnection"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "HttpClient.send"
+threat = "ssrf"
+cwe = "CWE-918"
+note = "java.net.http"
+
+[[security.sinks]]
+symbol = "HttpServletResponse.sendRedirect"
+threat = "open_redirect"
+cwe = "CWE-601"
+
+[[security.sinks]]
+symbol = "MessageDigest.getInstance"
+threat = "weak_crypto"
+cwe = "CWE-327"
+note = "When algorithm is MD5 or SHA-1"
+
+[[security.sinks]]
+symbol = "Cipher.getInstance"
+threat = "weak_crypto"
+cwe = "CWE-327"
+note = "When algorithm is DES, ECB mode, or no padding spec"
+
+[[security.sinks]]
+symbol = "Random"
+threat = "weak_crypto"
+cwe = "CWE-338"
+note = "java.util.Random; use SecureRandom for security"
+
+[[security.sinks]]
+symbol = "InitialDirContext.search"
+threat = "ldap_injection"
+cwe = "CWE-90"
+
+[[security.sinks]]
+symbol = "Naming.lookup"
+threat = "code_injection"
+cwe = "CWE-470"
+note = "JNDI lookup with caller-controlled name; log4shell-class"

@@ -19,9 +19,77 @@ threat = "code_injection"
 cwe = "CWE-95"
 
 [[security.sinks]]
+symbol = "instance_eval"
+threat = "code_injection"
+cwe = "CWE-95"
+
+[[security.sinks]]
+symbol = "class_eval"
+threat = "code_injection"
+cwe = "CWE-95"
+
+[[security.sinks]]
+symbol = "module_eval"
+threat = "code_injection"
+cwe = "CWE-95"
+
+[[security.sinks]]
+symbol = "binding.eval"
+threat = "code_injection"
+cwe = "CWE-95"
+
+[[security.sinks]]
 symbol = "system"
 threat = "command_injection"
 cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "exec"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "spawn"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "`"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "Backtick operator"
+
+[[security.sinks]]
+symbol = "%x"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "Open3.capture3"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "Open3.popen3"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "IO.popen"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "Kernel.open"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "Filename starting with | spawns a process"
+
+[[security.sinks]]
+symbol = "URI.open"
+threat = "ssrf"
+cwe = "CWE-918"
+note = "open-uri; also command injection via | prefix pre-3.0"
 
 [[security.sinks]]
 symbol = "send"
@@ -29,6 +97,104 @@ threat = "unsafe_reflection"
 cwe = "CWE-470"
 
 [[security.sinks]]
+symbol = "public_send"
+threat = "unsafe_reflection"
+cwe = "CWE-470"
+note = "Restricts to public methods but still dangerous"
+
+[[security.sinks]]
+symbol = "Object.const_get"
+threat = "unsafe_reflection"
+cwe = "CWE-470"
+
+[[security.sinks]]
+symbol = "method"
+threat = "unsafe_reflection"
+cwe = "CWE-470"
+note = "When method name is caller-controlled"
+
+[[security.sinks]]
 symbol = "Marshal.load"
 threat = "deserialization"
 cwe = "CWE-502"
+
+[[security.sinks]]
+symbol = "Marshal.restore"
+threat = "deserialization"
+cwe = "CWE-502"
+
+[[security.sinks]]
+symbol = "YAML.load"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Pre-Psych 4 default; use YAML.safe_load"
+
+[[security.sinks]]
+symbol = "YAML.unsafe_load"
+threat = "deserialization"
+cwe = "CWE-502"
+
+[[security.sinks]]
+symbol = "Psych.load"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Pre-Psych 4; safe by default in Psych 4+"
+
+[[security.sinks]]
+symbol = "JSON.load"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Calls json_create on classes; use JSON.parse"
+
+[[security.sinks]]
+symbol = "File.open"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "File.read"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "File.write"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "IO.read"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "Also command injection via | prefix"
+
+[[security.sinks]]
+symbol = "Net::HTTP.get"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "Net::HTTP.start"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "Digest::MD5"
+threat = "weak_crypto"
+cwe = "CWE-327"
+
+[[security.sinks]]
+symbol = "Digest::SHA1"
+threat = "weak_crypto"
+cwe = "CWE-327"
+
+[[security.sinks]]
+symbol = "OpenSSL::Cipher.new"
+threat = "weak_crypto"
+cwe = "CWE-327"
+note = "When algorithm is DES, RC4, or ECB mode"
+
+[[security.sinks]]
+symbol = "Random.rand"
+threat = "weak_crypto"
+cwe = "CWE-338"
+note = "Not cryptographically secure; use SecureRandom"

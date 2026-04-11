@@ -15,3 +15,21 @@ role = ["library"]
 function = ["templating"]
 layer = ["frontend"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "innerHTML"
+threat = "xss"
+cwe = "CWE-79"
+note = "Prop on JSX elements; renders raw HTML"
+
+[[security.sinks]]
+symbol = "Dynamic"
+threat = "xss"
+cwe = "CWE-79"
+note = "When component prop is caller-controlled"
+
+[[security.sinks]]
+symbol = "createEffect"
+threat = "xss"
+cwe = "CWE-79"
+note = "When setting element.innerHTML in effect"

@@ -23,3 +23,32 @@ role = ["framework"]
 function = ["templating"]
 layer = ["frontend"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "{{{"
+threat = "xss"
+cwe = "CWE-79"
+note = "Triple-stash unescaped in Handlebars templates"
+
+[[security.sinks]]
+symbol = "htmlSafe"
+threat = "xss"
+cwe = "CWE-79"
+note = "Ember.String.htmlSafe marks string as pre-escaped"
+
+[[security.sinks]]
+symbol = "SafeString"
+threat = "xss"
+cwe = "CWE-79"
+note = "Handlebars.SafeString"
+
+[[security.sinks]]
+symbol = "transitionTo"
+threat = "open_redirect"
+cwe = "CWE-601"
+note = "When route/URL is caller-controlled"
+
+[[security.sinks]]
+symbol = "replaceWith"
+threat = "open_redirect"
+cwe = "CWE-601"

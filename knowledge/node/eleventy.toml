@@ -24,3 +24,27 @@ role = ["framework"]
 function = ["templating", "site-generation"]
 layer = ["frontend"]
 domain = ["web-development", "content-management"]
+
+[[security.sinks]]
+symbol = "|safe"
+threat = "xss"
+cwe = "CWE-79"
+note = "Nunjucks filter; Eleventy defaults to Nunjucks"
+
+[[security.sinks]]
+symbol = "{{{"
+threat = "xss"
+cwe = "CWE-79"
+note = "Handlebars triple-stash if using Handlebars engine"
+
+[[security.sinks]]
+symbol = "<%-"
+threat = "xss"
+cwe = "CWE-79"
+note = "EJS unescaped output if using EJS engine"
+
+[[security.sinks]]
+symbol = "addShortcode"
+threat = "ssti"
+cwe = "CWE-1336"
+note = "Shortcodes with raw HTML return; developer-controlled not user-controlled usually"

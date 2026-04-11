@@ -23,3 +23,21 @@ role = ["framework"]
 function = ["templating", "site-generation"]
 layer = ["frontend"]
 domain = ["web-development", "content-management"]
+
+[[security.sinks]]
+symbol = "dangerouslySetInnerHTML"
+threat = "xss"
+cwe = "CWE-79"
+note = "React prop; common in Gatsby for CMS HTML"
+
+[[security.sinks]]
+symbol = "createPage"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "In gatsby-node.js with caller-controlled path"
+
+[[security.sinks]]
+symbol = "graphql"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "When query variables from URL params without validation"

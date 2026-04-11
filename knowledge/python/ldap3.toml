@@ -1,0 +1,27 @@
+[tool]
+name = "ldap3"
+category = "build"
+homepage = "https://ldap3.readthedocs.io"
+docs = "https://ldap3.readthedocs.io"
+repo = "https://github.com/cannatag/ldap3"
+description = "LDAP client library for Python"
+
+[detect]
+dependencies = ["ldap3"]
+ecosystems = ["python"]
+
+[taxonomy]
+role = ["library"]
+function = ["authentication"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "Connection.search"
+threat = "ldap_injection"
+cwe = "CWE-90"
+note = "When search_filter built via string formatting with caller input"
+
+[[security.sinks]]
+symbol = "Connection.extend.standard.modify_password"
+threat = "ldap_injection"
+cwe = "CWE-90"

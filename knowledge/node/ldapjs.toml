@@ -1,0 +1,28 @@
+[tool]
+name = "ldapjs"
+category = "build"
+homepage = "http://ldapjs.org"
+docs = "http://ldapjs.org"
+repo = "https://github.com/ldapjs/node-ldapjs"
+description = "LDAP client and server for Node.js"
+
+[detect]
+dependencies = ["ldapjs"]
+ecosystems = ["node"]
+
+[taxonomy]
+role = ["library"]
+function = ["authentication"]
+layer = ["backend"]
+
+[[security.sinks]]
+symbol = "client.search"
+threat = "ldap_injection"
+cwe = "CWE-90"
+note = "When filter string built from caller input; use ldapjs filter objects"
+
+[[security.sinks]]
+symbol = "client.bind"
+threat = "ldap_injection"
+cwe = "CWE-90"
+note = "When DN built from caller input"

@@ -9,3 +9,6 @@ description = "Compiled language with Ruby-like syntax"
 [detect]
 files = ["shard.yml", "*.cr", "**/*.cr"]
 ecosystems = ["crystal"]
+
+[taxonomy]
+role = ["language"]

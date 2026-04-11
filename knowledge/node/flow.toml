@@ -16,3 +16,6 @@ run = "npx flow"
 
 [config]
 files = [".flowconfig"]
+
+[taxonomy]
+function = ["type-checking"]

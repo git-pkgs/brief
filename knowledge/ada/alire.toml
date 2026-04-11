@@ -16,3 +16,6 @@ alternatives = ["alr get"]
 
 [config]
 files = ["alire.toml"]
+
+[taxonomy]
+role = ["package-manager"]

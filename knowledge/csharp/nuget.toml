@@ -16,3 +16,6 @@ alternatives = ["nuget restore"]
 [config]
 files = ["nuget.config"]
 lockfile = "packages.lock.json"
+
+[taxonomy]
+role = ["package-manager"]

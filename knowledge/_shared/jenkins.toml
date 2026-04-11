@@ -11,3 +11,7 @@ files = ["Jenkinsfile"]
 
 [config]
 files = ["Jenkinsfile"]
+
+[taxonomy]
+function = ["ci-cd"]
+layer = ["infrastructure"]

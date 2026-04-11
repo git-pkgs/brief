@@ -10,3 +10,7 @@ files = ["netlify.toml"]
 
 [config]
 files = ["netlify.toml"]
+
+[taxonomy]
+function = ["ci-cd"]
+layer = ["infrastructure"]

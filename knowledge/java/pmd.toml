@@ -15,3 +15,6 @@ run = "pmd check"
 
 [config]
 files = ["pmd.xml", "pmd-ruleset.xml"]
+
+[taxonomy]
+role = ["linter"]

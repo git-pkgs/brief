@@ -11,3 +11,6 @@ dependencies = ["rhysd/actionlint"]
 
 [commands]
 run = "actionlint"
+
+[taxonomy]
+role = ["linter"]

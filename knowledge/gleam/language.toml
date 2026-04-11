@@ -9,3 +9,6 @@ description = "Type-safe language for the BEAM and JavaScript"
 [detect]
 files = ["gleam.toml", "*.gleam", "**/*.gleam"]
 ecosystems = ["gleam"]
+
+[taxonomy]
+role = ["language"]

@@ -17,3 +17,7 @@ run = "pack build"
 
 [config]
 files = ["project.toml"]
+
+[taxonomy]
+function = ["containerization"]
+layer = ["infrastructure"]

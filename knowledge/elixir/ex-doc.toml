@@ -13,3 +13,6 @@ ecosystems = ["elixir"]
 
 [commands]
 run = "mix docs"
+
+[taxonomy]
+function = ["documentation"]

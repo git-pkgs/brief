@@ -10,3 +10,7 @@ files = ["azure-pipelines.yml", "azure-pipelines.yaml"]
 
 [config]
 files = ["azure-pipelines.yml"]
+
+[taxonomy]
+function = ["ci-cd"]
+layer = ["infrastructure"]

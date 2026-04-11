@@ -15,3 +15,6 @@ alternatives = ["git-cliff --bump"]
 
 [config]
 files = ["cliff.toml"]
+
+[taxonomy]
+function = ["deployment"]

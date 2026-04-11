@@ -10,3 +10,6 @@ files = [".coveralls.yml"]
 
 [config]
 files = [".coveralls.yml"]
+
+[taxonomy]
+function = ["testing"]

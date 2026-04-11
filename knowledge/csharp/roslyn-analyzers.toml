@@ -13,3 +13,6 @@ ecosystems = ["csharp"]
 
 [commands]
 run = "dotnet build /p:TreatWarningsAsErrors=true"
+
+[taxonomy]
+role = ["linter"]

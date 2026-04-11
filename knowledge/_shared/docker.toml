@@ -11,3 +11,7 @@ files = ["Dockerfile", "docker-compose.yml", "docker-compose.yaml", "compose.yml
 
 [config]
 files = ["Dockerfile", ".dockerignore", "docker-compose.yml", "docker-compose.yaml", "compose.yml", "compose.yaml"]
+
+[taxonomy]
+function = ["containerization"]
+layer = ["infrastructure"]

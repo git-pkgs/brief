@@ -10,3 +10,7 @@ description = "BDD testing with Gherkin syntax"
 files = ["**/*.feature", "cucumber.yml", "cucumber.js"]
 dependencies = ["cucumber", "@cucumber/cucumber"]
 dev_dependencies = ["cucumber", "@cucumber/cucumber"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

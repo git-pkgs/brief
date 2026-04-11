@@ -18,3 +18,7 @@ alternatives = ["npx vitest run"]
 
 [config]
 files = ["vitest.config.ts", "vitest.config.js", "vitest.config.mts", "vitest.config.mjs"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

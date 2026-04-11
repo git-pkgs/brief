@@ -15,3 +15,7 @@ alternatives = ["helm upgrade", "helm template"]
 
 [config]
 files = ["Chart.yaml", "Chart.yml", "values.yaml"]
+
+[taxonomy]
+layer = ["infrastructure"]
+function = ["deployment"]

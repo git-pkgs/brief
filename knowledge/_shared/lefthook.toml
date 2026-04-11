@@ -15,3 +15,6 @@ alternatives = ["lefthook install"]
 
 [config]
 files = ["lefthook.yml", "lefthook.yaml", ".lefthook.yml", ".lefthook.yaml"]
+
+[taxonomy]
+role = ["linter"]

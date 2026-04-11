@@ -65,7 +65,6 @@ func TestThreatModelRubyProject(t *testing.T) {
 	}
 
 	// Stack should include Rails (has taxonomy) and Ruby (has sinks)
-	// but not RuboCop (no taxonomy, no security data).
 	stackNames := make(map[string]bool)
 	for _, s := range tr.Stack {
 		stackNames[s.Name] = true
@@ -75,9 +74,6 @@ func TestThreatModelRubyProject(t *testing.T) {
 	}
 	if !stackNames["Ruby"] {
 		t.Error("expected Ruby in stack (has sinks)")
-	}
-	if stackNames["RuboCop"] {
-		t.Error("RuboCop has no taxonomy/security data, should not be in stack")
 	}
 }
 
@@ -237,7 +233,9 @@ func TestThreatModelEmptyMatch(t *testing.T) {
 }
 
 func TestThreatModelGoProjectEmpty(t *testing.T) {
-	// Go fixture has no tools with taxonomy/security data yet.
+	// Go fixture tools have taxonomy but none fire threat mappings:
+	// role:language, role:linter, role:formatter etc don't match any
+	// _threats.toml mapping, and no Go tools carry explicit threats.
 	engine := New(loadKB(t), "../testdata/go-project")
 	r, err := engine.Run()
 	if err != nil {
@@ -246,10 +244,7 @@ func TestThreatModelGoProjectEmpty(t *testing.T) {
 
 	tr := engine.ThreatModel(r)
 	if len(tr.Threats) != 0 {
-		t.Errorf("go-project has no security data, expected 0 threats, got %d", len(tr.Threats))
-	}
-	if len(tr.Stack) != 0 {
-		t.Errorf("go-project has no taxonomy data, expected empty stack, got %v", tr.Stack)
+		t.Errorf("go-project tools fire no threat mappings, expected 0 threats, got %v", tr.Threats)
 	}
 }
 

@@ -9,3 +9,6 @@ description = "Client-optimized language for fast apps"
 [detect]
 files = ["pubspec.yaml", "*.dart", "**/*.dart"]
 ecosystems = ["dart"]
+
+[taxonomy]
+role = ["language"]

@@ -8,3 +8,6 @@ description = "Minimalist dialect of Lisp"
 [detect]
 files = ["*.scm", "**/*.scm", "*.ss", "**/*.ss", "*.sld", "**/*.sld"]
 ecosystems = ["scheme"]
+
+[taxonomy]
+role = ["language"]

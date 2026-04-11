@@ -15,3 +15,7 @@ alternatives = ["pulumi preview"]
 
 [config]
 files = ["Pulumi.yaml", "Pulumi.yml"]
+
+[taxonomy]
+layer = ["infrastructure"]
+function = ["deployment"]

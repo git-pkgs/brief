@@ -16,3 +16,6 @@ alternatives = ["dub build"]
 [config]
 files = ["dub.json", "dub.sdl", "dub.selections.json"]
 lockfile = "dub.selections.json"
+
+[taxonomy]
+role = ["package-manager"]

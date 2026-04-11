@@ -16,3 +16,6 @@ run = "npx husky install"
 
 [config]
 files = [".husky/"]
+
+[taxonomy]
+role = ["linter"]

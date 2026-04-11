@@ -10,3 +10,6 @@ files = [".tx/config"]
 
 [config]
 files = [".tx/config"]
+
+[taxonomy]
+function = ["internationalization"]

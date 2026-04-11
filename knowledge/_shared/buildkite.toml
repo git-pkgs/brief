@@ -10,3 +10,7 @@ files = [".buildkite/pipeline.yml", ".buildkite/pipeline.yaml", "buildkite.yml"]
 
 [config]
 files = [".buildkite/pipeline.yml"]
+
+[taxonomy]
+function = ["ci-cd"]
+layer = ["infrastructure"]

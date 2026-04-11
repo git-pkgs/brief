@@ -16,3 +16,6 @@ ecosystems = ["clojure"]
 [commands]
 run = "lein cljfmt check"
 alternatives = ["lein cljfmt fix"]
+
+[taxonomy]
+role = ["formatter"]

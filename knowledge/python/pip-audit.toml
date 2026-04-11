@@ -15,3 +15,6 @@ ecosystems = ["python"]
 [commands]
 run = "pip-audit"
 alternatives = ["pip-audit -r requirements.txt"]
+
+[taxonomy]
+function = ["security-scanning"]

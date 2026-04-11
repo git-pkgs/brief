@@ -11,3 +11,7 @@ files = ["**/*.hurl"]
 
 [commands]
 run = "hurl --test"
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

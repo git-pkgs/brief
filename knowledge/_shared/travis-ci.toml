@@ -10,3 +10,7 @@ files = [".travis.yml"]
 
 [config]
 files = [".travis.yml"]
+
+[taxonomy]
+function = ["ci-cd"]
+layer = ["infrastructure"]

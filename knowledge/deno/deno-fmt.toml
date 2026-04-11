@@ -13,3 +13,6 @@ ecosystems = ["deno"]
 [commands]
 run = "deno fmt"
 alternatives = ["deno fmt --check"]
+
+[taxonomy]
+role = ["formatter"]

@@ -10,3 +10,6 @@ files = ["crowdin.yml", ".crowdin.yml", "crowdin.yaml"]
 
 [config]
 files = ["crowdin.yml", ".crowdin.yml", "crowdin.yaml"]
+
+[taxonomy]
+function = ["internationalization"]

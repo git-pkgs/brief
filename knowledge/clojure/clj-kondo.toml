@@ -16,3 +16,6 @@ run = "clj-kondo --lint src"
 
 [config]
 files = [".clj-kondo/config.edn"]
+
+[taxonomy]
+role = ["linter"]

@@ -16,3 +16,6 @@ alternatives = ["flutter pub get"]
 [config]
 files = ["pubspec.yaml", "pubspec.lock"]
 lockfile = "pubspec.lock"
+
+[taxonomy]
+role = ["package-manager"]

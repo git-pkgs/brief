@@ -12,3 +12,6 @@ ecosystems = ["go"]
 
 [commands]
 run = "mockgen"
+
+[taxonomy]
+function = ["code-generation"]

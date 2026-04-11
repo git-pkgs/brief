@@ -10,3 +10,7 @@ files = [".circleci/config.yml", ".circleci/config.yaml"]
 
 [config]
 files = [".circleci/config.yml"]
+
+[taxonomy]
+function = ["ci-cd"]
+layer = ["infrastructure"]

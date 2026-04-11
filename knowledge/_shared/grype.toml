@@ -14,3 +14,6 @@ run = "grype dir:."
 
 [config]
 files = [".grype.yaml", ".grype/config.yaml"]
+
+[taxonomy]
+function = ["security-scanning"]

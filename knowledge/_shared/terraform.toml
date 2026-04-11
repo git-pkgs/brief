@@ -18,3 +18,7 @@ alternatives = ["terraform apply", "terraform init"]
 
 [config]
 files = ["terraform.tfvars", ".terraform.lock.hcl"]
+
+[taxonomy]
+layer = ["infrastructure"]
+function = ["deployment"]

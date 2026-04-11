@@ -17,3 +17,6 @@ alternatives = ["bun i"]
 [config]
 files = ["package.json", "bun.lock", "bun.lockb", "bunfig.toml"]
 lockfile = "bun.lock"
+
+[taxonomy]
+role = ["package-manager"]

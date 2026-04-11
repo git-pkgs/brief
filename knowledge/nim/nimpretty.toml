@@ -12,3 +12,6 @@ ecosystems = ["nim"]
 
 [commands]
 run = "nimpretty"
+
+[taxonomy]
+role = ["formatter"]

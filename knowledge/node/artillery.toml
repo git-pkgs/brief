@@ -16,3 +16,7 @@ run = "npx artillery run"
 
 [config]
 files = ["artillery.yml", "artillery.yaml"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

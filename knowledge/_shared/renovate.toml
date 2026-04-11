@@ -11,3 +11,6 @@ files = ["renovate.json", "renovate.json5", ".renovaterc", ".renovaterc.json"]
 
 [config]
 files = ["renovate.json", "renovate.json5", ".renovaterc", ".renovaterc.json"]
+
+[taxonomy]
+function = ["automation"]

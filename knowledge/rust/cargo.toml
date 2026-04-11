@@ -17,3 +17,6 @@ alternatives = ["cargo build --release"]
 [config]
 files = ["Cargo.toml", "Cargo.lock", ".cargo/config.toml"]
 lockfile = "Cargo.lock"
+
+[taxonomy]
+role = ["package-manager"]

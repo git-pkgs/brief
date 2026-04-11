@@ -8,3 +8,6 @@ description = "Multi-paradigm dialect of Lisp"
 [detect]
 files = ["*.lisp", "**/*.lisp", "*.cl", "**/*.cl", "*.asd", "**/*.asd"]
 ecosystems = ["common-lisp"]
+
+[taxonomy]
+role = ["language"]

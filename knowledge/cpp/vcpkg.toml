@@ -15,3 +15,6 @@ run = "vcpkg install"
 
 [config]
 files = ["vcpkg.json", "vcpkg-configuration.json"]
+
+[taxonomy]
+role = ["package-manager"]

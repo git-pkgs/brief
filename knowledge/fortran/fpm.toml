@@ -16,3 +16,6 @@ alternatives = ["fpm test", "fpm run"]
 
 [config]
 files = ["fpm.toml"]
+
+[taxonomy]
+role = ["package-manager"]

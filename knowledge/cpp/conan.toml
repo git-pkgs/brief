@@ -17,3 +17,6 @@ alternatives = ["conan create ."]
 [config]
 files = ["conanfile.txt", "conanfile.py"]
 lockfile = "conan.lock"
+
+[taxonomy]
+role = ["package-manager"]

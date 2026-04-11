@@ -14,3 +14,7 @@ run = "kustomize build ."
 
 [config]
 files = ["kustomization.yaml", "kustomization.yml"]
+
+[taxonomy]
+layer = ["infrastructure"]
+function = ["deployment"]

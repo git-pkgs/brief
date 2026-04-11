@@ -14,3 +14,6 @@ run = "npx cspell"
 
 [config]
 files = ["cspell.json", ".cspell.json", "cspell.config.js", "cspell.config.yaml"]
+
+[taxonomy]
+role = ["linter"]

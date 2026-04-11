@@ -86,15 +86,6 @@ func TestRubyTaxonomyPassesThrough(t *testing.T) {
 	if len(rails.Taxonomy.Layer) == 0 {
 		t.Error("Rails taxonomy.layer should be populated")
 	}
-
-	// RuboCop has no [taxonomy], should be nil not empty struct.
-	for _, d := range r.Tools["lint"] {
-		if d.Name == "RuboCop" {
-			if d.Taxonomy != nil {
-				t.Errorf("RuboCop has no taxonomy in KB but Detection.Taxonomy = %+v", d.Taxonomy)
-			}
-		}
-	}
 }
 
 func TestRubyScripts(t *testing.T) {

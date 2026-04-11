@@ -13,3 +13,7 @@ ecosystems = ["csharp"]
 [commands]
 run = "dotnet test"
 alternatives = ["dotnet test --verbosity normal"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

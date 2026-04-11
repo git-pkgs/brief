@@ -12,3 +12,6 @@ ecosystems = ["node"]
 
 [config]
 files = ["i18next.config.js", "i18next.config.ts"]
+
+[taxonomy]
+function = ["internationalization"]

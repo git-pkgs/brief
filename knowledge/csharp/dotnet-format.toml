@@ -16,3 +16,6 @@ alternatives = ["dotnet format --verify-no-changes"]
 
 [config]
 files = [".editorconfig"]
+
+[taxonomy]
+role = ["formatter"]

@@ -23,3 +23,7 @@ alternatives = ["python -m pytest"]
 
 [config]
 files = ["pytest.ini", "conftest.py", "pyproject.toml", "setup.cfg"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

@@ -11,3 +11,7 @@ files = [".drone.yml", ".drone.yaml"]
 
 [config]
 files = [".drone.yml"]
+
+[taxonomy]
+function = ["ci-cd"]
+layer = ["infrastructure"]

@@ -12,3 +12,6 @@ ecosystems = ["go"]
 
 [commands]
 run = "wire ./..."
+
+[taxonomy]
+function = ["code-generation"]

@@ -9,3 +9,6 @@ description = "Fast, friendly, functional language"
 [detect]
 files = ["*.roc", "**/*.roc"]
 ecosystems = ["roc"]
+
+[taxonomy]
+role = ["language"]

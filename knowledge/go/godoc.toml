@@ -13,3 +13,6 @@ ecosystems = ["go"]
 
 [commands]
 run = "go run golang.org/x/pkgsite/cmd/pkgsite@latest"
+
+[taxonomy]
+function = ["documentation"]

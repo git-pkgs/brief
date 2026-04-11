@@ -11,3 +11,6 @@ ecosystems = ["common-lisp"]
 
 [commands]
 run = "sbcl --load quicklisp.lisp"
+
+[taxonomy]
+role = ["package-manager"]

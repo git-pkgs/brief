@@ -8,3 +8,6 @@ description = "General-purpose programming language"
 [detect]
 files = ["cpanfile", "Makefile.PL", "Build.PL", "META.json", "META.yml", "*.pl", "**/*.pl", "*.pm", "**/*.pm"]
 ecosystems = ["perl"]
+
+[taxonomy]
+role = ["language"]

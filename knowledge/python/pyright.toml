@@ -20,3 +20,6 @@ run = "pyright"
 
 [config]
 files = ["pyrightconfig.json"]
+
+[taxonomy]
+function = ["type-checking"]

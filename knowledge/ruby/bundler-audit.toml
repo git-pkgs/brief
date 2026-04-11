@@ -15,3 +15,6 @@ ecosystems = ["ruby"]
 [commands]
 run = "bundle exec bundler-audit check --update"
 alternatives = ["bundler-audit"]
+
+[taxonomy]
+function = ["security-scanning"]

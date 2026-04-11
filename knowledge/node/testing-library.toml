@@ -12,3 +12,7 @@ ecosystems = ["node"]
 
 [commands]
 run = "npx jest"
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

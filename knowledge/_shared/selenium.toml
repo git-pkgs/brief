@@ -9,3 +9,7 @@ description = "Browser automation and testing framework"
 [detect]
 dependencies = ["selenium-webdriver", "selenium"]
 dev_dependencies = ["selenium-webdriver", "selenium"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

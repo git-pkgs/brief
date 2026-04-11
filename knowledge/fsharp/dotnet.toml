@@ -12,3 +12,6 @@ ecosystems = ["fsharp"]
 [commands]
 run = "dotnet restore"
 alternatives = ["dotnet build"]
+
+[taxonomy]
+role = ["package-manager"]

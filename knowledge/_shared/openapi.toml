@@ -10,3 +10,6 @@ files = ["openapi.yaml", "openapi.yml", "openapi.json", "swagger.yaml", "swagger
 
 [config]
 files = ["openapi.yaml", "openapi.yml", "openapi.json", "swagger.yaml", "swagger.yml", "swagger.json"]
+
+[taxonomy]
+function = ["code-generation"]

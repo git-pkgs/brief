@@ -17,3 +17,7 @@ alternatives = ["rake test", "ruby -Itest"]
 
 [config]
 files = ["test/test_helper.rb"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

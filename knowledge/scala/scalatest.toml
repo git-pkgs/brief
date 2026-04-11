@@ -15,3 +15,7 @@ ecosystems = ["scala"]
 
 [commands]
 run = "sbt test"
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

@@ -8,3 +8,6 @@ description = "Lightweight, embeddable scripting language"
 [detect]
 files = ["*.lua", "**/*.lua", ".luacheckrc"]
 ecosystems = ["lua"]
+
+[taxonomy]
+role = ["language"]

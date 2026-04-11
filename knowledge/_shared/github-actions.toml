@@ -10,3 +10,7 @@ files = [".github/workflows/"]
 
 [config]
 files = [".github/workflows/"]
+
+[taxonomy]
+function = ["ci-cd"]
+layer = ["infrastructure"]

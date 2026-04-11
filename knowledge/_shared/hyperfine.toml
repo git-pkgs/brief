@@ -14,3 +14,7 @@ run = "hyperfine"
 
 [config]
 files = [".hyperfine.toml"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

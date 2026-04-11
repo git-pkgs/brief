@@ -16,3 +16,6 @@ run = "npx commitlint --from HEAD~1"
 
 [config]
 files = ["commitlint.config.js", "commitlint.config.mjs", "commitlint.config.ts", ".commitlintrc", ".commitlintrc.json", ".commitlintrc.yml"]
+
+[taxonomy]
+role = ["linter"]

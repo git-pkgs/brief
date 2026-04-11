@@ -13,3 +13,7 @@ run = "fly deploy"
 
 [config]
 files = ["fly.toml"]
+
+[taxonomy]
+function = ["ci-cd"]
+layer = ["infrastructure"]

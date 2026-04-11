@@ -8,3 +8,6 @@ description = "Lisp dialect for extending Emacs"
 [detect]
 files = ["*.el", "**/*.el", "Cask"]
 ecosystems = ["emacs-lisp"]
+
+[taxonomy]
+role = ["language"]

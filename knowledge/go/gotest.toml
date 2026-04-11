@@ -14,3 +14,7 @@ ecosystems = ["go"]
 [commands]
 run = "go test ./..."
 alternatives = ["go test -v ./..."]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

@@ -15,3 +15,6 @@ alternatives = ["conda install", "mamba env create"]
 
 [config]
 files = ["environment.yml", "environment.yaml"]
+
+[taxonomy]
+role = ["package-manager"]

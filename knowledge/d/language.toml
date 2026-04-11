@@ -9,3 +9,6 @@ description = "Systems programming language with C-like syntax"
 [detect]
 files = ["dub.json", "dub.sdl", "*.d", "**/*.d"]
 ecosystems = ["d"]
+
+[taxonomy]
+role = ["language"]

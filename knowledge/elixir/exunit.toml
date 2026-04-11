@@ -16,3 +16,7 @@ alternatives = ["mix test --trace"]
 
 [config]
 files = ["test/test_helper.exs"]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

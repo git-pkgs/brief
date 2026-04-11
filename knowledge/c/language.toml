@@ -8,3 +8,6 @@ description = "General-purpose systems programming language"
 [detect]
 files = ["*.c", "**/*.c", "*.h", "**/*.h"]
 ecosystems = ["c"]
+
+[taxonomy]
+role = ["language"]

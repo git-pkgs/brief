@@ -17,3 +17,6 @@ alternatives = ["deno cache"]
 [config]
 files = ["deno.json", "deno.jsonc", "deno.lock"]
 lockfile = "deno.lock"
+
+[taxonomy]
+role = ["package-manager"]

@@ -16,3 +16,6 @@ alternatives = ["pod update"]
 [config]
 files = ["Podfile", "Podfile.lock"]
 lockfile = "Podfile.lock"
+
+[taxonomy]
+role = ["package-manager"]

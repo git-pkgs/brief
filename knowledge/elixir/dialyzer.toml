@@ -13,3 +13,6 @@ ecosystems = ["elixir"]
 
 [commands]
 run = "mix dialyzer"
+
+[taxonomy]
+function = ["type-checking"]

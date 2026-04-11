@@ -11,3 +11,89 @@ ecosystems = ["perl"]
 
 [taxonomy]
 role = ["language"]
+
+[[security.sinks]]
+symbol = "eval"
+threat = "code_injection"
+cwe = "CWE-95"
+note = "eval STRING executes arbitrary Perl"
+
+[[security.sinks]]
+symbol = "system"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "exec"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "`"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "Backtick operator"
+
+[[security.sinks]]
+symbol = "qx"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "Same as backticks"
+
+[[security.sinks]]
+symbol = "open"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "Two-arg form or | prefix; use three-arg open"
+
+[[security.sinks]]
+symbol = "do"
+threat = "code_injection"
+cwe = "CWE-95"
+note = "do FILE executes Perl file"
+
+[[security.sinks]]
+symbol = "require"
+threat = "code_injection"
+cwe = "CWE-470"
+note = "When module name is caller-controlled"
+
+[[security.sinks]]
+symbol = "Storable::thaw"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Storable module; arbitrary object instantiation"
+
+[[security.sinks]]
+symbol = "Storable::retrieve"
+threat = "deserialization"
+cwe = "CWE-502"
+
+[[security.sinks]]
+symbol = "YAML::Load"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "YAML.pm; allows blessed objects"
+
+[[security.sinks]]
+symbol = "XML::Simple"
+threat = "xxe"
+cwe = "CWE-611"
+note = "Expat backend resolves entities; use XML::LibXML with no_network"
+
+[[security.sinks]]
+symbol = "DBI->prepare"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "When query built via string interpolation; use placeholders"
+
+[[security.sinks]]
+symbol = "srand"
+threat = "weak_crypto"
+cwe = "CWE-338"
+note = "Predictable seeding"
+
+[[security.sinks]]
+symbol = "rand"
+threat = "weak_crypto"
+cwe = "CWE-338"

@@ -12,3 +12,98 @@ ecosystems = ["elixir"]
 
 [taxonomy]
 role = ["language"]
+
+[[security.sinks]]
+symbol = "Code.eval_string"
+threat = "code_injection"
+cwe = "CWE-95"
+
+[[security.sinks]]
+symbol = "Code.eval_quoted"
+threat = "code_injection"
+cwe = "CWE-95"
+
+[[security.sinks]]
+symbol = "Code.eval_file"
+threat = "code_injection"
+cwe = "CWE-95"
+
+[[security.sinks]]
+symbol = ":os.cmd"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "Erlang interop; passes string to system shell"
+
+[[security.sinks]]
+symbol = "System.cmd"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "Argv form is safer; shell_cmd is not"
+
+[[security.sinks]]
+symbol = "System.shell"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "Invokes system shell"
+
+[[security.sinks]]
+symbol = "Port.open"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "With {:spawn, cmd} or {:spawn_executable, path}"
+
+[[security.sinks]]
+symbol = "String.to_atom"
+threat = "dos"
+cwe = "CWE-400"
+note = "Atoms are never garbage collected; exhaustion at ~1M"
+
+[[security.sinks]]
+symbol = "String.to_existing_atom"
+threat = "dos"
+cwe = "CWE-400"
+note = "Safer but still probes the atom table"
+
+[[security.sinks]]
+symbol = ":erlang.binary_to_term"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Without [:safe]; can create atoms and funs"
+
+[[security.sinks]]
+symbol = ":erlang.list_to_atom"
+threat = "dos"
+cwe = "CWE-400"
+
+[[security.sinks]]
+symbol = "File.read"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "When path is caller-controlled"
+
+[[security.sinks]]
+symbol = "File.read!"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "File.write"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "File.stream!"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = ":httpc.request"
+threat = "ssrf"
+cwe = "CWE-918"
+note = "Erlang HTTP client"
+
+[[security.sinks]]
+symbol = "EEx.eval_string"
+threat = "ssti"
+cwe = "CWE-1336"
+note = "When template string is caller-controlled"

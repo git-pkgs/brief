@@ -11,3 +11,98 @@ ecosystems = ["cpp"]
 
 [taxonomy]
 role = ["language"]
+
+[[security.sinks]]
+symbol = "std::system"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "popen"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "C library function, commonly used in C++"
+
+[[security.sinks]]
+symbol = "gets"
+threat = "code_injection"
+cwe = "CWE-120"
+note = "Removed in C++14"
+
+[[security.sinks]]
+symbol = "strcpy"
+threat = "code_injection"
+cwe = "CWE-120"
+
+[[security.sinks]]
+symbol = "strcat"
+threat = "code_injection"
+cwe = "CWE-120"
+
+[[security.sinks]]
+symbol = "sprintf"
+threat = "code_injection"
+cwe = "CWE-120"
+
+[[security.sinks]]
+symbol = "scanf"
+threat = "code_injection"
+cwe = "CWE-120"
+note = "With %s and no width limit"
+
+[[security.sinks]]
+symbol = "printf"
+threat = "code_injection"
+cwe = "CWE-134"
+note = "Format string with caller input"
+
+[[security.sinks]]
+symbol = "tmpnam"
+threat = "path_traversal"
+cwe = "CWE-377"
+
+[[security.sinks]]
+symbol = "std::tmpnam"
+threat = "path_traversal"
+cwe = "CWE-377"
+
+[[security.sinks]]
+symbol = "rand"
+threat = "weak_crypto"
+cwe = "CWE-338"
+note = "Use std::random_device or platform CSPRNG"
+
+[[security.sinks]]
+symbol = "memcpy"
+threat = "code_injection"
+cwe = "CWE-120"
+note = "When size from caller input"
+
+[[security.sinks]]
+symbol = "alloca"
+threat = "code_injection"
+cwe = "CWE-770"
+
+[[security.sinks]]
+symbol = "reinterpret_cast"
+threat = "code_injection"
+cwe = "CWE-119"
+note = "Bypasses type system"
+
+[[security.sinks]]
+symbol = "const_cast"
+threat = "code_injection"
+cwe = "CWE-119"
+note = "Modifying originally-const data is UB"
+
+[[security.sinks]]
+symbol = "new"
+threat = "code_injection"
+cwe = "CWE-770"
+note = "Without nothrow; unchecked allocation"
+
+[[security.sinks]]
+symbol = "delete"
+threat = "code_injection"
+cwe = "CWE-415"
+note = "Double-delete or delete of stack pointer"

@@ -23,3 +23,25 @@ role = ["framework"]
 function = ["templating"]
 layer = ["frontend"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "bypassSecurityTrustHtml"
+threat = "xss"
+cwe = "CWE-79"
+note = "DomSanitizer"
+
+[[security.sinks]]
+symbol = "bypassSecurityTrustUrl"
+threat = "open_redirect"
+cwe = "CWE-601"
+
+[[security.sinks]]
+symbol = "bypassSecurityTrustScript"
+threat = "xss"
+cwe = "CWE-79"
+
+[[security.sinks]]
+symbol = "innerHTML"
+threat = "xss"
+cwe = "CWE-79"
+note = "[innerHTML] binding; sanitizes by default but bypasses exist"

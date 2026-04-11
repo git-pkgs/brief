@@ -18,3 +18,29 @@ role = ["framework"]
 function = ["api-development", "templating"]
 layer = ["backend"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "erb"
+threat = "ssti"
+cwe = "CWE-1336"
+note = "When template name or body is caller-controlled"
+
+[[security.sinks]]
+symbol = "haml"
+threat = "ssti"
+cwe = "CWE-1336"
+
+[[security.sinks]]
+symbol = "slim"
+threat = "ssti"
+cwe = "CWE-1336"
+
+[[security.sinks]]
+symbol = "redirect"
+threat = "open_redirect"
+cwe = "CWE-601"
+
+[[security.sinks]]
+symbol = "send_file"
+threat = "path_traversal"
+cwe = "CWE-22"

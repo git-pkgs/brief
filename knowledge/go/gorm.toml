@@ -16,3 +16,42 @@ ecosystems = ["go"]
 role = ["library"]
 function = ["data-mapping"]
 layer = ["data-layer"]
+
+[[security.sinks]]
+symbol = "Raw"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "db.Raw with Sprintf; placeholders are safe"
+
+[[security.sinks]]
+symbol = "Exec"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "Where"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "With Sprintf string; struct/map forms are safe"
+
+[[security.sinks]]
+symbol = "Order"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "Column name not parameterizable"
+
+[[security.sinks]]
+symbol = "Select"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "With string from user input"
+
+[[security.sinks]]
+symbol = "Group"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "Having"
+threat = "sql_injection"
+cwe = "CWE-89"

@@ -14,3 +14,37 @@ ecosystems = ["ruby"]
 role = ["library"]
 function = ["data-mapping"]
 layer = ["data-layer"]
+
+[[security.sinks]]
+symbol = "Sequel.lit"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "Marks string as literal SQL"
+
+[[security.sinks]]
+symbol = "[]"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "DB[string] runs raw SQL"
+
+[[security.sinks]]
+symbol = "run"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "execute"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "fetch"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "DB.fetch with interpolated string; placeholders are safe"
+
+[[security.sinks]]
+symbol = "where"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "With Sequel.lit fragment"

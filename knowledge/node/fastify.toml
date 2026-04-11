@@ -15,3 +15,20 @@ role = ["framework"]
 function = ["api-development"]
 layer = ["backend"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "reply.send"
+threat = "xss"
+cwe = "CWE-79"
+note = "When sending HTML with type set to text/html"
+
+[[security.sinks]]
+symbol = "reply.redirect"
+threat = "open_redirect"
+cwe = "CWE-601"
+
+[[security.sinks]]
+symbol = "reply.sendFile"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "Via @fastify/static"

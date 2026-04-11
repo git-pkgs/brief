@@ -14,3 +14,14 @@ ecosystems = ["python"]
 role = ["library"]
 function = ["data-mapping"]
 layer = ["data-layer"]
+
+[[security.sinks]]
+symbol = "execute_query"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "connections.execute_query"
+
+[[security.sinks]]
+symbol = "RawSQL"
+threat = "sql_injection"
+cwe = "CWE-89"

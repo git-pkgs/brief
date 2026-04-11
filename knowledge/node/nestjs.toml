@@ -23,3 +23,15 @@ role = ["framework"]
 function = ["api-development", "dependency-injection"]
 layer = ["backend"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "@Redirect"
+threat = "open_redirect"
+cwe = "CWE-601"
+note = "When url is caller-controlled"
+
+[[security.sinks]]
+symbol = "res.send"
+threat = "xss"
+cwe = "CWE-79"
+note = "Express passthrough"

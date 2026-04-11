@@ -15,3 +15,14 @@ role = ["framework"]
 function = ["api-development"]
 layer = ["backend", "edge"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "c.html"
+threat = "xss"
+cwe = "CWE-79"
+note = "Renders without escaping; use jsx or escape manually"
+
+[[security.sinks]]
+symbol = "c.redirect"
+threat = "open_redirect"
+cwe = "CWE-601"

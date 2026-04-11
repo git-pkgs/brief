@@ -18,3 +18,19 @@ role = ["framework"]
 function = ["api-development", "validation"]
 layer = ["backend"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "HTMLResponse"
+threat = "xss"
+cwe = "CWE-79"
+note = "When content is not pre-escaped"
+
+[[security.sinks]]
+symbol = "RedirectResponse"
+threat = "open_redirect"
+cwe = "CWE-601"
+
+[[security.sinks]]
+symbol = "FileResponse"
+threat = "path_traversal"
+cwe = "CWE-22"

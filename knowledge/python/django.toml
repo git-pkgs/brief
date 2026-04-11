@@ -22,3 +22,73 @@ role = ["framework"]
 function = ["api-development", "templating", "data-mapping", "authentication"]
 layer = ["backend", "full-stack"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "mark_safe"
+threat = "xss"
+cwe = "CWE-79"
+note = "Marks string as safe, bypassing template auto-escaping"
+
+[[security.sinks]]
+symbol = "SafeString"
+threat = "xss"
+cwe = "CWE-79"
+
+[[security.sinks]]
+symbol = "|safe"
+threat = "xss"
+cwe = "CWE-79"
+note = "Template filter that bypasses escaping"
+
+[[security.sinks]]
+symbol = "format_html"
+threat = "xss"
+cwe = "CWE-79"
+note = "When format args are not from format_html_join"
+
+[[security.sinks]]
+symbol = "extra"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "QuerySet.extra() with select/where/tables strings"
+
+[[security.sinks]]
+symbol = "RawSQL"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "django.db.models.expressions.RawSQL"
+
+[[security.sinks]]
+symbol = "raw"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "Manager.raw() with interpolated query"
+
+[[security.sinks]]
+symbol = "cursor.execute"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "connection.cursor() with format string"
+
+[[security.sinks]]
+symbol = "redirect"
+threat = "open_redirect"
+cwe = "CWE-601"
+note = "When target is from request data"
+
+[[security.sinks]]
+symbol = "HttpResponseRedirect"
+threat = "open_redirect"
+cwe = "CWE-601"
+
+[[security.sinks]]
+symbol = "FileResponse"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "When path is built from request data"
+
+[[security.sinks]]
+symbol = "csrf_exempt"
+threat = "csrf"
+cwe = "CWE-352"
+note = "Decorator that disables CSRF protection"

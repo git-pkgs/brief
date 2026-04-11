@@ -23,3 +23,105 @@ role = ["framework"]
 function = ["api-development", "templating", "authentication"]
 layer = ["backend", "full-stack"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "html_safe"
+threat = "xss"
+cwe = "CWE-79"
+note = "Marks string as safe, bypassing ActionView output escaping"
+
+[[security.sinks]]
+symbol = "raw"
+threat = "xss"
+cwe = "CWE-79"
+note = "ActionView helper, equivalent to html_safe"
+
+[[security.sinks]]
+symbol = "safe_join"
+threat = "xss"
+cwe = "CWE-79"
+note = "Joins array with html_safe; safe only if elements are pre-escaped"
+
+[[security.sinks]]
+symbol = "sanitize"
+threat = "xss"
+cwe = "CWE-79"
+note = "With custom :tags or :attributes options; default config is safe"
+
+[[security.sinks]]
+symbol = "render inline:"
+threat = "ssti"
+cwe = "CWE-1336"
+note = "Renders string as ERB template; CVE-2016-0752"
+
+[[security.sinks]]
+symbol = "render text:"
+threat = "xss"
+cwe = "CWE-79"
+note = "Renders without HTML escaping; removed in Rails 5"
+
+[[security.sinks]]
+symbol = "render file:"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "Renders arbitrary file as template"
+
+[[security.sinks]]
+symbol = "redirect_to"
+threat = "open_redirect"
+cwe = "CWE-601"
+note = "When target is from params; use redirect_to with allow_other_host: false"
+
+[[security.sinks]]
+symbol = "redirect_back"
+threat = "open_redirect"
+cwe = "CWE-601"
+note = "Trusts Referer header"
+
+[[security.sinks]]
+symbol = "send_file"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "When path is built from params"
+
+[[security.sinks]]
+symbol = "send_data"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "Less risky than send_file but check filename param"
+
+[[security.sinks]]
+symbol = "constantize"
+threat = "unsafe_reflection"
+cwe = "CWE-470"
+note = "Resolves arbitrary string to a class"
+
+[[security.sinks]]
+symbol = "safe_constantize"
+threat = "unsafe_reflection"
+cwe = "CWE-470"
+note = "Returns nil instead of raising but still resolves any constant"
+
+[[security.sinks]]
+symbol = "permit!"
+threat = "mass_assignment"
+cwe = "CWE-915"
+note = "Permits all params, bypasses strong parameters"
+
+[[security.sinks]]
+symbol = "link_to"
+threat = "xss"
+cwe = "CWE-79"
+note = "When href is from params; javascript: scheme"
+
+[[security.sinks]]
+symbol = "url_for"
+threat = "open_redirect"
+cwe = "CWE-601"
+note = "When :host option is caller-controlled"
+
+[[security.sinks]]
+symbol = "Marshal.load"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Used by Rails session store and cache; CVE-2013-0156 class"

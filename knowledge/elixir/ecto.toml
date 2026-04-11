@@ -20,3 +20,31 @@ run = "mix ecto.migrate"
 role = ["library"]
 function = ["data-mapping", "validation"]
 layer = ["data-layer"]
+
+[[security.sinks]]
+symbol = "Repo.query"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "With interpolation; $1 placeholders are safe"
+
+[[security.sinks]]
+symbol = "Repo.query!"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "fragment"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "With ^ pinned interpolation outside the fragment"
+
+[[security.sinks]]
+symbol = "Ecto.Adapters.SQL.query"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "cast"
+threat = "mass_assignment"
+cwe = "CWE-915"
+note = "Without explicit field allowlist as second arg"

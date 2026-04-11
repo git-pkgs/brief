@@ -18,3 +18,19 @@ role = ["framework"]
 function = ["api-development", "templating"]
 layer = ["backend"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "RawHtml"
+threat = "xss"
+cwe = "CWE-79"
+note = "rocket::response::content::RawHtml"
+
+[[security.sinks]]
+symbol = "Redirect::to"
+threat = "open_redirect"
+cwe = "CWE-601"
+
+[[security.sinks]]
+symbol = "NamedFile::open"
+threat = "path_traversal"
+cwe = "CWE-22"

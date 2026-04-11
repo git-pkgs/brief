@@ -26,3 +26,25 @@ role = ["framework"]
 function = ["api-development", "templating"]
 layer = ["full-stack", "frontend", "backend"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "dangerouslySetInnerHTML"
+threat = "xss"
+cwe = "CWE-79"
+
+[[security.sinks]]
+symbol = "redirect"
+threat = "open_redirect"
+cwe = "CWE-601"
+note = "next/navigation redirect in route handlers"
+
+[[security.sinks]]
+symbol = "NextResponse.redirect"
+threat = "open_redirect"
+cwe = "CWE-601"
+
+[[security.sinks]]
+symbol = "rewrites"
+threat = "ssrf"
+cwe = "CWE-918"
+note = "next.config.js rewrites with caller-controlled destination"

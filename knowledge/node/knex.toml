@@ -21,3 +21,34 @@ files = ["knexfile.js", "knexfile.ts"]
 role = ["library"]
 function = ["data-mapping"]
 layer = ["data-layer"]
+
+[[security.sinks]]
+symbol = "raw"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "knex.raw with interpolation; bindings are safe"
+
+[[security.sinks]]
+symbol = "whereRaw"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "joinRaw"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "havingRaw"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "orderByRaw"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "groupByRaw"
+threat = "sql_injection"
+cwe = "CWE-89"

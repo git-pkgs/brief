@@ -18,3 +18,14 @@ role = ["library"]
 function = ["templating"]
 layer = ["frontend"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "dangerouslySetInnerHTML"
+threat = "xss"
+cwe = "CWE-79"
+
+[[security.sinks]]
+symbol = "href"
+threat = "xss"
+cwe = "CWE-79"
+note = "javascript: URLs in <a href>; React 19+ blocks by default"

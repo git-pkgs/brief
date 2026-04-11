@@ -14,3 +14,26 @@ ecosystems = ["node"]
 role = ["library"]
 function = ["data-mapping", "validation"]
 layer = ["data-layer"]
+
+[[security.sinks]]
+symbol = "$where"
+threat = "nosql_injection"
+cwe = "CWE-943"
+note = "Executes JavaScript on the MongoDB server"
+
+[[security.sinks]]
+symbol = "mapReduce"
+threat = "nosql_injection"
+cwe = "CWE-943"
+
+[[security.sinks]]
+symbol = "find"
+threat = "nosql_injection"
+cwe = "CWE-943"
+note = "When query object built from req.body without sanitization; operator injection"
+
+[[security.sinks]]
+symbol = "aggregate"
+threat = "nosql_injection"
+cwe = "CWE-943"
+note = "With $function or $accumulator stages"

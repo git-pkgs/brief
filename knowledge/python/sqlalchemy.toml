@@ -14,3 +14,26 @@ ecosystems = ["python"]
 role = ["library"]
 function = ["data-mapping"]
 layer = ["data-layer"]
+
+[[security.sinks]]
+symbol = "text"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "sqlalchemy.text() marks raw SQL; bound params are safe"
+
+[[security.sinks]]
+symbol = "execute"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "Connection.execute with f-string"
+
+[[security.sinks]]
+symbol = "exec_driver_sql"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "engine.execute"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "Deprecated in 2.0"

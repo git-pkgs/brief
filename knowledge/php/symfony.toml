@@ -19,3 +19,31 @@ role = ["framework"]
 function = ["api-development", "templating", "dependency-injection"]
 layer = ["backend", "full-stack"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "|raw"
+threat = "xss"
+cwe = "CWE-79"
+note = "Twig filter that bypasses escaping"
+
+[[security.sinks]]
+symbol = "createNativeQuery"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "Doctrine raw SQL"
+
+[[security.sinks]]
+symbol = "RedirectResponse"
+threat = "open_redirect"
+cwe = "CWE-601"
+
+[[security.sinks]]
+symbol = "redirect"
+threat = "open_redirect"
+cwe = "CWE-601"
+note = "AbstractController::redirect"
+
+[[security.sinks]]
+symbol = "BinaryFileResponse"
+threat = "path_traversal"
+cwe = "CWE-22"

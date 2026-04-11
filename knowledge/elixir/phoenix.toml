@@ -23,3 +23,31 @@ role = ["framework"]
 function = ["api-development", "templating"]
 layer = ["backend", "full-stack"]
 domain = ["web-development"]
+
+[[security.sinks]]
+symbol = "raw"
+threat = "xss"
+cwe = "CWE-79"
+note = "Phoenix.HTML.raw bypasses escaping"
+
+[[security.sinks]]
+symbol = "safe_to_string"
+threat = "xss"
+cwe = "CWE-79"
+
+[[security.sinks]]
+symbol = "redirect"
+threat = "open_redirect"
+cwe = "CWE-601"
+note = "With external: target"
+
+[[security.sinks]]
+symbol = "send_file"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "Plug.Conn.send_file"
+
+[[security.sinks]]
+symbol = "send_download"
+threat = "path_traversal"
+cwe = "CWE-22"

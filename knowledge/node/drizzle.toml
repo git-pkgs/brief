@@ -23,3 +23,9 @@ files = ["drizzle.config.ts", "drizzle.config.js"]
 role = ["library"]
 function = ["data-mapping"]
 layer = ["data-layer"]
+
+[[security.sinks]]
+symbol = "sql.raw"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "sql template tag is safe; sql.raw bypasses"

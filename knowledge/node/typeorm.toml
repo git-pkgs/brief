@@ -21,3 +21,15 @@ files = ["ormconfig.json", "ormconfig.yml", "ormconfig.yaml", "ormconfig.js", "o
 role = ["library"]
 function = ["data-mapping"]
 layer = ["data-layer"]
+
+[[security.sinks]]
+symbol = "query"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "EntityManager.query / Repository.query"
+
+[[security.sinks]]
+symbol = "createQueryBuilder"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "When .where/.andWhere take raw fragments"

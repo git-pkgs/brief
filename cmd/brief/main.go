@@ -45,6 +45,12 @@ func main() {
 		case "missing":
 			cmdMissing(os.Args[2:])
 			return
+		case "threat-model":
+			cmdThreatModel(os.Args[2:])
+			return
+		case "sinks":
+			cmdSinks(os.Args[2:])
+			return
 		}
 	}
 

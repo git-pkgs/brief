@@ -351,3 +351,36 @@ func MissingMarkdown(w io.Writer, r *brief.MissingReport) {
 		_, _ = fmt.Fprintf(w, "| %s | %s | %s | %s |\n", m.Label, suggested, cmd, docs)
 	}
 }
+
+// ThreatMarkdown writes the threat report in markdown format.
+func ThreatMarkdown(w io.Writer, r *brief.ThreatReport) {
+	if len(r.Threats) == 0 {
+		_, _ = fmt.Fprintln(w, "No security data available for detected tools.")
+		return
+	}
+
+	if len(r.Ecosystems) > 0 {
+		_, _ = fmt.Fprintf(w, "**Detected:** %s\n\n", strings.Join(r.Ecosystems, ", "))
+	}
+
+	_, _ = fmt.Fprintln(w, "| Threat | CWE | OWASP | Introduced by |")
+	_, _ = fmt.Fprintln(w, "|--------|-----|-------|---------------|")
+	for _, t := range r.Threats {
+		_, _ = fmt.Fprintf(w, "| %s | %s | %s | %s |\n",
+			t.Title, t.CWE, t.OWASP, strings.Join(t.IntroducedBy, ", "))
+	}
+}
+
+// SinksMarkdown writes the sink report in markdown format.
+func SinksMarkdown(w io.Writer, r *brief.SinkReport) {
+	if len(r.Sinks) == 0 {
+		_, _ = fmt.Fprintln(w, "No sink data available for detected tools.")
+		return
+	}
+
+	_, _ = fmt.Fprintln(w, "| Tool | Symbol | Threat | CWE |")
+	_, _ = fmt.Fprintln(w, "|------|--------|--------|-----|")
+	for _, s := range r.Sinks {
+		_, _ = fmt.Fprintf(w, "| %s | `%s` | %s | %s |\n", s.Tool, s.Symbol, s.Threat, s.CWE)
+	}
+}

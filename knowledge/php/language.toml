@@ -9,3 +9,175 @@ description = "General-purpose scripting language for web development"
 [detect]
 files = ["composer.json", "*.php", "**/*.php"]
 ecosystems = ["php"]
+
+[[security.sinks]]
+symbol = "eval"
+threat = "code_injection"
+cwe = "CWE-95"
+
+[[security.sinks]]
+symbol = "assert"
+threat = "code_injection"
+cwe = "CWE-95"
+note = "With string argument; deprecated in 7.2, removed in 8.0"
+
+[[security.sinks]]
+symbol = "create_function"
+threat = "code_injection"
+cwe = "CWE-95"
+note = "Removed in PHP 8.0"
+
+[[security.sinks]]
+symbol = "preg_replace"
+threat = "code_injection"
+cwe = "CWE-95"
+note = "With /e modifier; removed in PHP 7.0"
+
+[[security.sinks]]
+symbol = "exec"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "system"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "shell_exec"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "passthru"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "popen"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "proc_open"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "pcntl_exec"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "unserialize"
+threat = "deserialization"
+cwe = "CWE-502"
+
+[[security.sinks]]
+symbol = "include"
+threat = "code_injection"
+cwe = "CWE-98"
+note = "When path is caller-controlled; LFI/RFI"
+
+[[security.sinks]]
+symbol = "include_once"
+threat = "code_injection"
+cwe = "CWE-98"
+
+[[security.sinks]]
+symbol = "require"
+threat = "code_injection"
+cwe = "CWE-98"
+
+[[security.sinks]]
+symbol = "require_once"
+threat = "code_injection"
+cwe = "CWE-98"
+
+[[security.sinks]]
+symbol = "extract"
+threat = "mass_assignment"
+cwe = "CWE-621"
+note = "Imports array keys as variables; with EXTR_OVERWRITE"
+
+[[security.sinks]]
+symbol = "parse_str"
+threat = "mass_assignment"
+cwe = "CWE-621"
+note = "Without second arg, writes to current symbol table"
+
+[[security.sinks]]
+symbol = "file_get_contents"
+threat = "ssrf"
+cwe = "CWE-918"
+note = "Accepts URLs when allow_url_fopen is on"
+
+[[security.sinks]]
+symbol = "fopen"
+threat = "ssrf"
+cwe = "CWE-918"
+note = "Accepts URLs; also path traversal"
+
+[[security.sinks]]
+symbol = "curl_exec"
+threat = "ssrf"
+cwe = "CWE-918"
+
+[[security.sinks]]
+symbol = "readfile"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "header"
+threat = "open_redirect"
+cwe = "CWE-601"
+note = "With Location: and caller-controlled URL"
+
+[[security.sinks]]
+symbol = "echo"
+threat = "xss"
+cwe = "CWE-79"
+note = "Without htmlspecialchars on user input"
+
+[[security.sinks]]
+symbol = "print"
+threat = "xss"
+cwe = "CWE-79"
+
+[[security.sinks]]
+symbol = "simplexml_load_string"
+threat = "xxe"
+cwe = "CWE-611"
+note = "Without LIBXML_NOENT disabled"
+
+[[security.sinks]]
+symbol = "DOMDocument::loadXML"
+threat = "xxe"
+cwe = "CWE-611"
+
+[[security.sinks]]
+symbol = "mysqli_query"
+threat = "sql_injection"
+cwe = "CWE-89"
+note = "When query built via concatenation; use prepared statements"
+
+[[security.sinks]]
+symbol = "PDO::query"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "PDO::exec"
+threat = "sql_injection"
+cwe = "CWE-89"
+
+[[security.sinks]]
+symbol = "md5"
+threat = "weak_crypto"
+cwe = "CWE-327"
+
+[[security.sinks]]
+symbol = "sha1"
+threat = "weak_crypto"
+cwe = "CWE-327"

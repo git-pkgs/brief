@@ -9,3 +9,136 @@ description = "High-level, general-purpose programming language"
 [detect]
 files = ["pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "*.py", "**/*.py"]
 ecosystems = ["python"]
+
+[[security.sinks]]
+symbol = "eval"
+threat = "code_injection"
+cwe = "CWE-95"
+
+[[security.sinks]]
+symbol = "exec"
+threat = "code_injection"
+cwe = "CWE-95"
+
+[[security.sinks]]
+symbol = "compile"
+threat = "code_injection"
+cwe = "CWE-95"
+
+[[security.sinks]]
+symbol = "__import__"
+threat = "code_injection"
+cwe = "CWE-470"
+note = "Dynamic module loading from string"
+
+[[security.sinks]]
+symbol = "os.system"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "os.popen"
+threat = "command_injection"
+cwe = "CWE-78"
+
+[[security.sinks]]
+symbol = "subprocess.run"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "Only with shell=True"
+
+[[security.sinks]]
+symbol = "subprocess.call"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "Only with shell=True"
+
+[[security.sinks]]
+symbol = "subprocess.Popen"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "Only with shell=True"
+
+[[security.sinks]]
+symbol = "subprocess.check_output"
+threat = "command_injection"
+cwe = "CWE-78"
+note = "Only with shell=True"
+
+[[security.sinks]]
+symbol = "pickle.loads"
+threat = "deserialization"
+cwe = "CWE-502"
+
+[[security.sinks]]
+symbol = "pickle.load"
+threat = "deserialization"
+cwe = "CWE-502"
+
+[[security.sinks]]
+symbol = "marshal.loads"
+threat = "deserialization"
+cwe = "CWE-502"
+
+[[security.sinks]]
+symbol = "shelve.open"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Backed by pickle"
+
+[[security.sinks]]
+symbol = "yaml.load"
+threat = "deserialization"
+cwe = "CWE-502"
+note = "Without SafeLoader; use yaml.safe_load"
+
+[[security.sinks]]
+symbol = "yaml.unsafe_load"
+threat = "deserialization"
+cwe = "CWE-502"
+
+[[security.sinks]]
+symbol = "xml.etree.ElementTree.parse"
+threat = "xxe"
+cwe = "CWE-611"
+note = "Pre-3.8 default resolver; use defusedxml"
+
+[[security.sinks]]
+symbol = "xml.sax.parse"
+threat = "xxe"
+cwe = "CWE-611"
+
+[[security.sinks]]
+symbol = "open"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "When path is caller-controlled"
+
+[[security.sinks]]
+symbol = "tarfile.extractall"
+threat = "path_traversal"
+cwe = "CWE-22"
+note = "Pre-3.12 no filter; CVE-2007-4559"
+
+[[security.sinks]]
+symbol = "zipfile.extractall"
+threat = "path_traversal"
+cwe = "CWE-22"
+
+[[security.sinks]]
+symbol = "tempfile.mktemp"
+threat = "path_traversal"
+cwe = "CWE-377"
+note = "Race condition; use mkstemp or NamedTemporaryFile"
+
+[[security.sinks]]
+symbol = "input"
+threat = "code_injection"
+cwe = "CWE-95"
+note = "Python 2 only; equivalent to eval(raw_input())"
+
+[[security.sinks]]
+symbol = "getattr"
+threat = "unsafe_reflection"
+cwe = "CWE-470"
+note = "When attribute name is caller-controlled"

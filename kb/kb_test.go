@@ -1,12 +1,42 @@
 package kb_test
 
 import (
+	"bufio"
+	"os"
 	"slices"
+	"sort"
 	"testing"
 
 	"github.com/git-pkgs/brief"
 	"github.com/git-pkgs/brief/kb"
 )
+
+// loadTaxonomyTerms reads the vendored oss-taxonomy term list.
+// Source: https://taxonomy.ecosyste.ms/terms.txt
+// Refresh with: curl -s https://taxonomy.ecosyste.ms/terms.txt -o kb/testdata/oss-taxonomy-terms.txt
+func loadTaxonomyTerms(t *testing.T) map[string]bool {
+	t.Helper()
+	f, err := os.Open("testdata/oss-taxonomy-terms.txt")
+	if err != nil {
+		t.Fatalf("opening vendored terms: %v", err)
+	}
+	defer func() { _ = f.Close() }()
+
+	terms := make(map[string]bool)
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		if line := scanner.Text(); line != "" {
+			terms[line] = true
+		}
+	}
+	if err := scanner.Err(); err != nil {
+		t.Fatalf("reading terms: %v", err)
+	}
+	if len(terms) == 0 {
+		t.Fatal("vendored terms file is empty")
+	}
+	return terms
+}
 
 func loadKB(t *testing.T) *kb.KnowledgeBase {
 	t.Helper()
@@ -170,6 +200,42 @@ func TestRailsHasTaxonomy(t *testing.T) {
 	}
 	if !slices.Contains(rails.Taxonomy.Layer, "backend") {
 		t.Errorf("Rails layer should include backend, got %v", rails.Taxonomy.Layer)
+	}
+}
+
+func TestTaxonomyTermsResolve(t *testing.T) {
+	base := loadKB(t)
+	valid := loadTaxonomyTerms(t)
+
+	var unknown []string
+	check := func(source, tag string) {
+		if !valid[tag] {
+			unknown = append(unknown, source+": "+tag)
+		}
+	}
+
+	for _, tool := range base.Tools {
+		if tool.Taxonomy.Empty() {
+			continue
+		}
+		for _, tag := range tool.Taxonomy.Tags() {
+			check(tool.Source, tag)
+		}
+	}
+
+	for _, m := range base.ThreatMappings {
+		for _, tag := range m.Match {
+			check("knowledge/_shared/_threats.toml", tag)
+		}
+	}
+
+	if len(unknown) > 0 {
+		sort.Strings(unknown)
+		t.Errorf("%d taxonomy tag(s) not in vendored oss-taxonomy term list:\n", len(unknown))
+		for _, u := range unknown {
+			t.Errorf("  %s", u)
+		}
+		t.Errorf("If these are new oss-taxonomy terms, refresh the vendored list:\n  curl -s https://taxonomy.ecosyste.ms/terms.txt -o kb/testdata/oss-taxonomy-terms.txt")
 	}
 }
 

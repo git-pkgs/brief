@@ -10,7 +10,7 @@ Create a TOML file in the appropriate ecosystem directory:
 knowledge/ruby/my-tool.toml
 ```
 
-Every tool definition has four sections:
+Every tool definition has four required sections plus two optional:
 
 ```toml
 [tool]
@@ -32,7 +32,18 @@ alternatives = ["my-tool"]
 
 [config]
 files = [".my-tool.yml"]
+
+[taxonomy]                          # optional, oss-taxonomy term IDs
+role = ["framework"]
+function = ["api-development"]
+layer = ["backend"]
+
+[[security.sinks]]                  # optional, dangerous functions
+symbol = "html_safe"
+threat = "xss"                      # must be a threat ID from _threats.toml
 ```
+
+The `[taxonomy]` values are kebab-case term IDs from [oss-taxonomy](https://github.com/ecosyste-ms/oss-taxonomy). The test suite validates them against a vendored copy of the term list at `kb/testdata/oss-taxonomy-terms.txt` — refresh it with `curl -s https://taxonomy.ecosyste.ms/terms.txt -o kb/testdata/oss-taxonomy-terms.txt` when oss-taxonomy adds terms.
 
 ## Detection methods
 

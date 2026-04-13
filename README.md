@@ -31,6 +31,12 @@ To let Claude Code run `brief` without prompting for approval each time, add thi
 ## Install
 
 ```
+brew install git-pkgs/git-pkgs/brief
+```
+
+Or with Go:
+
+```
 go install github.com/git-pkgs/brief/cmd/brief@latest
 ```
 

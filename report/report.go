@@ -279,13 +279,13 @@ func printPlatforms(w io.Writer, platforms *brief.PlatformInfo) {
 }
 
 func printResources(w io.Writer, res *brief.ResourceInfo) {
-	if res == nil {
+	if res == nil || res.Empty() {
 		return
 	}
 	_, _ = fmt.Fprintln(w)
 	printResource(w, res.Readme)
-	printResource(w, res.Contributing)
 	printResource(w, res.Changelog)
+	printResource(w, res.Roadmap)
 	if res.License != "" {
 		label := res.License
 		if res.LicenseType != "" {
@@ -293,7 +293,17 @@ func printResources(w io.Writer, res *brief.ResourceInfo) {
 		}
 		_, _ = fmt.Fprintf(w, "Resources:   %s\n", label)
 	}
-	printResource(w, res.Security)
+	printResource(w, res.Agents)
+	printResourceGroup(w, "Legal", res.Legal)
+	printResourceGroup(w, "Community", res.Community)
+	printResourceGroup(w, "Security", res.Security)
+	printResourceGroup(w, "Metadata", res.Metadata)
+}
+
+func printResourceGroup(w io.Writer, label string, group map[string]string) {
+	for _, k := range sortedKeys(group) {
+		_, _ = fmt.Fprintf(w, "%-12s %s\n", label+":", group[k])
+	}
 }
 
 func printGit(w io.Writer, git *brief.GitInfo) {

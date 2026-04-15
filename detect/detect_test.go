@@ -119,6 +119,114 @@ func TestRubyResources(t *testing.T) {
 	}
 }
 
+func TestResourceGroups(t *testing.T) {
+	dir := t.TempDir()
+	touch := func(p string) {
+		full := filepath.Join(dir, p)
+		if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(full, []byte("x"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	touch("README.md")
+	touch("CHANGELOG.md")
+	touch("AGENTS.md")
+	touch("NOTICE")
+	touch("CONTRIBUTING.md")
+	touch(".github/CODE_OF_CONDUCT.md")
+	touch(".github/CODEOWNERS")
+	touch(".github/FUNDING.yml")
+	touch("docs/SECURITY.md")
+	touch("CITATION.cff")
+
+	engine := New(loadKB(t), dir)
+	r, err := engine.Run()
+	if err != nil {
+		t.Fatalf("Run: %v", err)
+	}
+	res := r.Resources
+	if res == nil {
+		t.Fatal("expected resources")
+	}
+
+	if res.Readme != "README.md" {
+		t.Errorf("readme = %q", res.Readme)
+	}
+	if res.Agents != "AGENTS.md" {
+		t.Errorf("agents = %q", res.Agents)
+	}
+	if res.Legal["notice"] != "NOTICE" {
+		t.Errorf("legal.notice = %q", res.Legal["notice"])
+	}
+	if res.Community["contributing"] != "CONTRIBUTING.md" {
+		t.Errorf("community.contributing = %q", res.Community["contributing"])
+	}
+	if res.Community["code_of_conduct"] != ".github/CODE_OF_CONDUCT.md" {
+		t.Errorf("community.code_of_conduct = %q", res.Community["code_of_conduct"])
+	}
+	if res.Community["codeowners"] != ".github/CODEOWNERS" {
+		t.Errorf("community.codeowners = %q", res.Community["codeowners"])
+	}
+	if res.Security["policy"] != "docs/SECURITY.md" {
+		t.Errorf("security.policy = %q", res.Security["policy"])
+	}
+	if res.Metadata["funding"] != ".github/FUNDING.yml" {
+		t.Errorf("metadata.funding = %q", res.Metadata["funding"])
+	}
+	if res.Metadata["citation"] != "CITATION.cff" {
+		t.Errorf("metadata.citation = %q", res.Metadata["citation"])
+	}
+}
+
+func TestResourceCaseInsensitive(t *testing.T) {
+	dir := t.TempDir()
+	for _, p := range []string{"ReadMe.rst", "Security.MD", ".github/Code_Of_Conduct.md"} {
+		full := filepath.Join(dir, p)
+		_ = os.MkdirAll(filepath.Dir(full), 0o755)
+		if err := os.WriteFile(full, []byte("x"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	engine := New(loadKB(t), dir)
+	r, err := engine.Run()
+	if err != nil {
+		t.Fatalf("Run: %v", err)
+	}
+	if r.Resources == nil {
+		t.Fatal("expected resources")
+	}
+	if r.Resources.Readme != "ReadMe.rst" {
+		t.Errorf("readme = %q", r.Resources.Readme)
+	}
+	if r.Resources.Security["policy"] != "Security.MD" {
+		t.Errorf("security.policy = %q", r.Resources.Security["policy"])
+	}
+	if r.Resources.Community["code_of_conduct"] != ".github/Code_Of_Conduct.md" {
+		t.Errorf("code_of_conduct = %q", r.Resources.Community["code_of_conduct"])
+	}
+}
+
+func TestResourceRootBeatsSubdir(t *testing.T) {
+	dir := t.TempDir()
+	for _, p := range []string{"CONTRIBUTING.md", ".github/CONTRIBUTING.md"} {
+		full := filepath.Join(dir, p)
+		_ = os.MkdirAll(filepath.Dir(full), 0o755)
+		if err := os.WriteFile(full, []byte("x"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	engine := New(loadKB(t), dir)
+	r, err := engine.Run()
+	if err != nil {
+		t.Fatalf("Run: %v", err)
+	}
+	if got := r.Resources.Community["contributing"]; got != "CONTRIBUTING.md" {
+		t.Errorf("expected root CONTRIBUTING.md to win, got %q", got)
+	}
+}
+
 func TestRubyPlatforms(t *testing.T) {
 	r := rubyReport(t)
 	if r.Platforms == nil {

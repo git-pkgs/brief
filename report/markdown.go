@@ -244,24 +244,14 @@ func mdPlatforms(w io.Writer, platforms *brief.PlatformInfo) {
 }
 
 func mdResources(w io.Writer, res *brief.ResourceInfo) {
-	if res == nil {
-		return
-	}
-	hasAny := res.Readme != "" || res.Contributing != "" || res.Changelog != "" || res.License != "" || res.Security != ""
-	if !hasAny {
+	if res == nil || res.Empty() {
 		return
 	}
 	_, _ = fmt.Fprintln(w)
 	_, _ = fmt.Fprintln(w, "**Resources:**")
-	if res.Readme != "" {
-		_, _ = fmt.Fprintf(w, "- %s\n", res.Readme)
-	}
-	if res.Contributing != "" {
-		_, _ = fmt.Fprintf(w, "- %s\n", res.Contributing)
-	}
-	if res.Changelog != "" {
-		_, _ = fmt.Fprintf(w, "- %s\n", res.Changelog)
-	}
+	mdResource(w, res.Readme)
+	mdResource(w, res.Changelog)
+	mdResource(w, res.Roadmap)
 	if res.License != "" {
 		label := res.License
 		if res.LicenseType != "" {
@@ -269,8 +259,26 @@ func mdResources(w io.Writer, res *brief.ResourceInfo) {
 		}
 		_, _ = fmt.Fprintf(w, "- %s\n", label)
 	}
-	if res.Security != "" {
-		_, _ = fmt.Fprintf(w, "- %s\n", res.Security)
+	mdResource(w, res.Agents)
+	mdResourceGroup(w, "Legal", res.Legal)
+	mdResourceGroup(w, "Community", res.Community)
+	mdResourceGroup(w, "Security", res.Security)
+	mdResourceGroup(w, "Metadata", res.Metadata)
+}
+
+func mdResource(w io.Writer, path string) {
+	if path != "" {
+		_, _ = fmt.Fprintf(w, "- %s\n", path)
+	}
+}
+
+func mdResourceGroup(w io.Writer, label string, group map[string]string) {
+	if len(group) == 0 {
+		return
+	}
+	_, _ = fmt.Fprintf(w, "- %s:\n", label)
+	for _, k := range sortedKeys(group) {
+		_, _ = fmt.Fprintf(w, "  - %s\n", group[k])
 	}
 }
 

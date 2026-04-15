@@ -96,8 +96,8 @@ Layout:      cmd/
              OS: ubuntu-latest, macos-latest, windows-latest (CI matrix)
 
 Resources:   README.md
-Resources:   CONTRIBUTING.md
 Resources:   LICENSE (MIT)
+Community:   CONTRIBUTING.md
 
 Git:         branch main  71 commits
              origin: git@github.com:user/myproject.git

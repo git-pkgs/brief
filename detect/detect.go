@@ -158,6 +158,7 @@ func (e *Engine) Run() (*brief.Report, error) {
 	report.PackageManagers = e.detectCategory("package_manager")
 	report.Scripts = e.detectScripts()
 	e.detectTools(report)
+	e.detectSelf(abs, report)
 
 	report.Style = e.detectStyle()
 	report.Layout = e.detectLayout()
@@ -196,6 +197,39 @@ func (e *Engine) Run() (*brief.Report, error) {
 	}
 
 	return report, nil
+}
+
+const selfModulePath = "github.com/git-pkgs/brief"
+
+func (e *Engine) detectSelf(root string, report *brief.Report) {
+	data, err := os.ReadFile(filepath.Join(root, "go.mod"))
+	if err != nil {
+		return
+	}
+	for line := range strings.SplitSeq(string(data), "\n") {
+		mod, ok := strings.CutPrefix(strings.TrimSpace(line), "module ")
+		if !ok {
+			continue
+		}
+		if strings.TrimSpace(mod) != selfModulePath {
+			return
+		}
+		report.Tools["introspection"] = append(report.Tools["introspection"], brief.Detection{
+			Name:        "brief",
+			Category:    "introspection",
+			Confidence:  brief.ConfidenceHigh,
+			ConfigFiles: []string{"go.mod"},
+			Homepage:    "https://" + selfModulePath,
+			Repo:        "https://" + selfModulePath,
+			Description: "Describes a project's toolchain. You're looking at it.",
+			Command: &brief.Command{
+				Run:    "brief .",
+				Source: brief.SourceKnowledgeBase,
+			},
+		})
+		e.toolsMatched++
+		return
+	}
 }
 
 // buildEcosystemSet populates detectedEcosystems from language results to filter

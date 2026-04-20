@@ -1,6 +1,8 @@
 package detect
 
 import (
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/git-pkgs/brief"
@@ -410,6 +412,31 @@ func TestShouldSkipDir(t *testing.T) {
 		if got := engine.shouldSkipDir(tt.name); got != tt.skip {
 			t.Errorf("shouldSkipDir(%q) = %v, want %v", tt.name, got, tt.skip)
 		}
+	}
+}
+
+func TestDetectSelf(t *testing.T) {
+	dir := t.TempDir()
+	gomod := "module github.com/git-pkgs/brief\n\ngo 1.22.0\n"
+	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte(gomod), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	r, err := New(loadKB(t), dir).Run()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	assertToolDetected(t, r, "introspection", "brief")
+}
+
+func TestDetectSelfNotTriggeredOnOtherGoProjects(t *testing.T) {
+	r, err := New(loadKB(t), "../testdata/go-project").Run()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if _, ok := r.Tools["introspection"]; ok {
+		t.Error("introspection category should not appear for non-brief go projects")
 	}
 }
 

@@ -156,9 +156,23 @@ The knowledge base is validated on every test run. Malformed TOML will fail the 
 Files prefixed with `_` in ecosystem directories are shared config, not tool definitions:
 
 - `_shared/_scripts.toml` - script source definitions (Makefile, package.json)
-- `_shared/_resources.toml` - project resource file patterns (README, LICENSE, etc.)
+- `_shared/_resources.toml` - repository document patterns (README, LICENSE, CODEOWNERS, FUNDING, etc.)
 - `_shared/_layout.toml` - source and test directory patterns
 - `_shared/_style.toml` - style config files and inference settings
 - `_shared/_runtimes.toml` - runtime version file patterns
 - `_shared/_manifests.toml` - manifest file list for dependency detection
 - `_shared/_ci.toml` - CI matrix parsing configuration
+
+A resource entry in `_resources.toml` looks like this:
+
+```toml
+[[resources]]
+[resources.resource]
+name = "Contributing"
+field = "contributing"
+group = "community"
+patterns = ["contributing", "contributing.md", "contributing.txt", "contributing.rst"]
+dirs = ["docs", ".github", ".gitlab"]
+```
+
+`field` is the JSON key the path is written to. `group` places it under one of `legal`, `community`, `security`, or `metadata`; omit it for top-level fields like `readme` and `license`. `patterns` are matched case-insensitively against directory listings, so list each pattern once in lowercase. List explicit extensions rather than a trailing glob for prose files so `support.md` matches but `docs/Support-Tiers.md` does not. `dirs` lists extra directories to search after the repo root; root always wins on a tie.

@@ -6,6 +6,42 @@ import (
 	"github.com/git-pkgs/brief"
 )
 
+func TestFilterResources(t *testing.T) {
+	res := &brief.ResourceInfo{
+		Readme:    "README.md",
+		Changelog: "CHANGELOG.md",
+		License:   "LICENSE",
+		Community: map[string]string{
+			"contributing": "CONTRIBUTING.md",
+			"codeowners":   ".github/CODEOWNERS",
+		},
+		Metadata: map[string]string{
+			"funding": ".github/FUNDING.yml",
+		},
+	}
+	fc := &filterContext{}
+	out := fc.filterResources(res, []string{"README.md", ".github/FUNDING.yml"})
+	if out == nil {
+		t.Fatal("expected filtered resources")
+	}
+	if out.Readme != "README.md" {
+		t.Errorf("readme = %q", out.Readme)
+	}
+	if out.Changelog != "" {
+		t.Errorf("changelog should be filtered out, got %q", out.Changelog)
+	}
+	if len(out.Community) != 0 {
+		t.Errorf("community should be empty, got %v", out.Community)
+	}
+	if out.Metadata["funding"] != ".github/FUNDING.yml" {
+		t.Errorf("metadata.funding = %q", out.Metadata["funding"])
+	}
+
+	if fc.filterResources(res, []string{"main.go"}) != nil {
+		t.Error("expected nil when no resources changed")
+	}
+}
+
 func TestFilterByChangedFiles_Languages(t *testing.T) {
 	knowledgeBase := loadKB(t)
 

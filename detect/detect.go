@@ -8,6 +8,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"path"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -47,6 +48,7 @@ type Engine struct {
 
 	// Lazily populated caches
 	fileExts    map[string]int // cached file extension counts in the project
+	dirCache    map[string][]string
 	depsLoaded  bool
 	runtimeDeps map[string]bool // all runtime/unscoped dependency names
 	devDeps     map[string]bool // development/test/build dependency names
@@ -1002,36 +1004,84 @@ func (e *Engine) detectResources() *brief.ResourceInfo {
 	}
 
 	res := &brief.ResourceInfo{}
-	found := false
 
 	for _, rd := range e.KB.Resources {
-		for _, pattern := range rd.Resource.Patterns {
-			if matches := e.globMatch(pattern); len(matches) > 0 {
-				found = true
-				match := filepath.Base(matches[0])
-				switch rd.Resource.Field {
-				case "readme":
-					res.Readme = match
-				case "contributing":
-					res.Contributing = match
-				case "changelog":
-					res.Changelog = match
-				case "license":
-					res.License = match
-					res.LicenseType = detectLicenseType(matches[0])
-				case "security":
-					res.Security = match
-				}
-				break
+		abs, rel := e.findResource(rd.Resource)
+		if rel == "" {
+			continue
+		}
+		if rd.Resource.Group != "" {
+			if g := res.Group(rd.Resource.Group); g != nil {
+				g[rd.Resource.Field] = rel
 			}
+			continue
+		}
+		switch rd.Resource.Field {
+		case "readme":
+			res.Readme = rel
+		case "changelog":
+			res.Changelog = rel
+		case "roadmap":
+			res.Roadmap = rel
+		case "license":
+			res.License = rel
+			res.LicenseType = detectLicenseType(abs)
+		case "agents":
+			res.Agents = rel
 		}
 	}
 
-	if !found {
+	if res.Empty() {
 		return nil
 	}
-
 	return res
+}
+
+// findResource searches for the first file matching any of the resource's
+// patterns, in the repo root and then each configured subdirectory. Matching
+// is case-insensitive. It returns the absolute path and the path relative to
+// the repo root.
+func (e *Engine) findResource(r kb.ResourceInfo) (abs, rel string) {
+	dirs := append([]string{"."}, r.Dirs...)
+	for _, dir := range dirs {
+		entries := e.dirFiles(dir)
+		for _, pattern := range r.Patterns {
+			lp := strings.ToLower(pattern)
+			for _, name := range entries {
+				if ok, _ := filepath.Match(lp, strings.ToLower(name)); !ok {
+					continue
+				}
+				relPath := name
+				if dir != "." {
+					relPath = path.Join(dir, name)
+				}
+				return filepath.Join(e.Root, filepath.FromSlash(relPath)), relPath
+			}
+		}
+	}
+	return "", ""
+}
+
+// dirFiles returns the regular file names in dir (relative to e.Root),
+// caching results per directory.
+func (e *Engine) dirFiles(dir string) []string {
+	if e.dirCache == nil {
+		e.dirCache = map[string][]string{}
+	}
+	if cached, ok := e.dirCache[dir]; ok {
+		return cached
+	}
+	var names []string
+	entries, err := os.ReadDir(filepath.Join(e.Root, filepath.FromSlash(dir)))
+	if err == nil {
+		for _, ent := range entries {
+			if !ent.IsDir() {
+				names = append(names, ent.Name())
+			}
+		}
+	}
+	e.dirCache[dir] = names
+	return names
 }
 
 // detectPlatforms checks for runtime version files and CI matrices.
@@ -1159,15 +1209,6 @@ func toStringSlice(v any) []string {
 	default:
 		return []string{fmt.Sprint(val)}
 	}
-}
-
-// globMatch returns files matching a glob pattern relative to the project root.
-func (e *Engine) globMatch(pattern string) []string {
-	matches, err := filepath.Glob(filepath.Join(e.Root, pattern))
-	if err != nil {
-		return nil
-	}
-	return matches
 }
 
 // detectGit extracts git repository metadata by shelling out to git.

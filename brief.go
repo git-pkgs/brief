@@ -99,14 +99,56 @@ type PlatformInfo struct {
 	CIMatrixOS          []string            `json:"ci_matrix_os,omitempty"`
 }
 
-// ResourceInfo describes project resource files.
+// ResourceInfo describes project resource files. Paths are relative to the
+// repository root.
 type ResourceInfo struct {
-	Readme       string `json:"readme,omitempty"`
-	Contributing string `json:"contributing,omitempty"`
-	Changelog    string `json:"changelog,omitempty"`
-	License      string `json:"license,omitempty"`
-	LicenseType  string `json:"license_type,omitempty"`
-	Security     string `json:"security,omitempty"`
+	Readme      string `json:"readme,omitempty"`
+	Changelog   string `json:"changelog,omitempty"`
+	Roadmap     string `json:"roadmap,omitempty"`
+	License     string `json:"license,omitempty"`
+	LicenseType string `json:"license_type,omitempty"`
+	Agents      string `json:"agents,omitempty"`
+
+	Legal     map[string]string `json:"legal,omitempty"`
+	Community map[string]string `json:"community,omitempty"`
+	Security  map[string]string `json:"security,omitempty"`
+	Metadata  map[string]string `json:"metadata,omitempty"`
+}
+
+// Group returns the map for the named resource group, creating it if needed.
+// Returns nil for unknown group names.
+func (r *ResourceInfo) Group(name string) map[string]string {
+	switch name {
+	case "legal":
+		if r.Legal == nil {
+			r.Legal = map[string]string{}
+		}
+		return r.Legal
+	case "community":
+		if r.Community == nil {
+			r.Community = map[string]string{}
+		}
+		return r.Community
+	case "security":
+		if r.Security == nil {
+			r.Security = map[string]string{}
+		}
+		return r.Security
+	case "metadata":
+		if r.Metadata == nil {
+			r.Metadata = map[string]string{}
+		}
+		return r.Metadata
+	}
+	return nil
+}
+
+// Empty reports whether no resources were found.
+func (r *ResourceInfo) Empty() bool {
+	return r.Readme == "" && r.Changelog == "" && r.Roadmap == "" &&
+		r.License == "" && r.Agents == "" &&
+		len(r.Legal) == 0 && len(r.Community) == 0 &&
+		len(r.Security) == 0 && len(r.Metadata) == 0
 }
 
 // GitInfo describes the git repository state.

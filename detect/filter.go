@@ -156,33 +156,44 @@ func (fc *filterContext) filterResources(res *brief.ResourceInfo, changedFiles [
 	if res == nil {
 		return nil
 	}
-	out := &brief.ResourceInfo{}
-	found := false
+	changed := make(map[string]bool, len(changedFiles))
 	for _, f := range changedFiles {
-		baseLower := strings.ToLower(filepath.Base(f))
-		if res.Readme != "" && strings.ToLower(res.Readme) == baseLower {
-			out.Readme = res.Readme
-			found = true
-		}
-		if res.Contributing != "" && strings.ToLower(res.Contributing) == baseLower {
-			out.Contributing = res.Contributing
-			found = true
-		}
-		if res.Changelog != "" && strings.ToLower(res.Changelog) == baseLower {
-			out.Changelog = res.Changelog
-			found = true
-		}
-		if res.License != "" && strings.ToLower(res.License) == baseLower {
-			out.License = res.License
-			out.LicenseType = res.LicenseType
-			found = true
-		}
-		if res.Security != "" && strings.ToLower(res.Security) == baseLower {
-			out.Security = res.Security
-			found = true
+		changed[strings.ToLower(filepath.ToSlash(f))] = true
+	}
+	hit := func(p string) bool {
+		return p != "" && changed[strings.ToLower(p)]
+	}
+
+	out := &brief.ResourceInfo{}
+	if hit(res.Readme) {
+		out.Readme = res.Readme
+	}
+	if hit(res.Changelog) {
+		out.Changelog = res.Changelog
+	}
+	if hit(res.Roadmap) {
+		out.Roadmap = res.Roadmap
+	}
+	if hit(res.License) {
+		out.License = res.License
+		out.LicenseType = res.LicenseType
+	}
+	if hit(res.Agents) {
+		out.Agents = res.Agents
+	}
+	filterGroup := func(name string, in map[string]string) {
+		for k, v := range in {
+			if hit(v) {
+				out.Group(name)[k] = v
+			}
 		}
 	}
-	if !found {
+	filterGroup("legal", res.Legal)
+	filterGroup("community", res.Community)
+	filterGroup("security", res.Security)
+	filterGroup("metadata", res.Metadata)
+
+	if out.Empty() {
 		return nil
 	}
 	return out

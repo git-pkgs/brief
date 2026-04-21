@@ -1,29 +1,197 @@
+# Resource patterns are matched case-insensitively against file names in the
+# repo root and any listed dirs. First match wins; root is checked before dirs.
+
+# Top-level resources
+
 [[resources]]
 [resources.resource]
 name = "README"
 field = "readme"
-patterns = ["README*", "readme*", "Readme*"]
-
-[[resources]]
-[resources.resource]
-name = "Contributing"
-field = "contributing"
-patterns = ["CONTRIBUTING*", "contributing*"]
+patterns = ["readme*"]
+dirs = ["docs", ".github", ".gitlab"]
 
 [[resources]]
 [resources.resource]
 name = "Changelog"
 field = "changelog"
-patterns = ["CHANGELOG*", "changelog*", "CHANGES*", "HISTORY*"]
+patterns = ["changelog*", "changes*", "history*", "news*"]
+
+[[resources]]
+[resources.resource]
+name = "Roadmap"
+field = "roadmap"
+patterns = ["roadmap", "roadmap.md", "roadmap.txt", "roadmap.rst", "roadmap.adoc"]
+dirs = ["docs", ".github", ".gitlab"]
 
 [[resources]]
 [resources.resource]
 name = "License"
 field = "license"
-patterns = ["LICENSE*", "LICENCE*", "license*", "licence*"]
+patterns = ["license*", "licence*", "copying*", "mit-license*"]
 
 [[resources]]
 [resources.resource]
-name = "Security"
-field = "security"
-patterns = ["SECURITY*", "security*"]
+name = "Agents"
+field = "agents"
+patterns = ["agents.md"]
+dirs = ["docs", ".github", ".gitlab"]
+
+# Legal
+
+[[resources]]
+[resources.resource]
+name = "Copyright"
+field = "copyright"
+group = "legal"
+patterns = ["copyright", "copyright.md", "copyright.txt"]
+
+[[resources]]
+[resources.resource]
+name = "Notice"
+field = "notice"
+group = "legal"
+patterns = ["notice", "notice.md", "notice.txt"]
+dirs = ["docs", ".github", ".gitlab"]
+
+[[resources]]
+[resources.resource]
+name = "DCO"
+field = "dco"
+group = "legal"
+patterns = ["dco", "dco.md", "dco.txt"]
+dirs = ["docs", ".github", ".gitlab"]
+
+[[resources]]
+[resources.resource]
+name = "CLA"
+field = "cla"
+group = "legal"
+patterns = ["cla", "cla.md", "cla.txt", "contributor_license_agreement*", "contributor-license-agreement*"]
+dirs = ["docs", ".github", ".gitlab"]
+
+# Community
+
+[[resources]]
+[resources.resource]
+name = "Contributing"
+field = "contributing"
+group = "community"
+patterns = ["contributing", "contributing.md", "contributing.txt", "contributing.rst", "contributing.adoc"]
+dirs = ["docs", ".github", ".gitlab"]
+
+[[resources]]
+[resources.resource]
+name = "Code of Conduct"
+field = "code_of_conduct"
+group = "community"
+patterns = ["code_of_conduct", "code_of_conduct.md", "code_of_conduct.txt", "code_of_conduct.rst", "code-of-conduct", "code-of-conduct.md"]
+dirs = ["docs", ".github", ".gitlab"]
+
+[[resources]]
+[resources.resource]
+name = "Support"
+field = "support"
+group = "community"
+patterns = ["support", "support.md", "support.txt", "support.rst", "support.adoc"]
+dirs = ["docs", ".github", ".gitlab"]
+
+[[resources]]
+[resources.resource]
+name = "Governance"
+field = "governance"
+group = "community"
+patterns = ["governance", "governance.md", "governance.txt", "governance.rst", "governance.adoc"]
+dirs = ["docs", ".github", ".gitlab"]
+
+[[resources]]
+[resources.resource]
+name = "Maintainers"
+field = "maintainers"
+group = "community"
+patterns = ["maintainers", "maintainers.md", "maintainers.txt"]
+dirs = ["docs", ".github", ".gitlab"]
+
+[[resources]]
+[resources.resource]
+name = "Authors"
+field = "authors"
+group = "community"
+patterns = ["authors", "authors.md", "authors.txt"]
+
+[[resources]]
+[resources.resource]
+name = "Codeowners"
+field = "codeowners"
+group = "community"
+patterns = ["codeowners"]
+dirs = [".github", ".gitlab", "docs"]
+
+[[resources]]
+[resources.resource]
+name = "DEI"
+field = "dei"
+group = "community"
+patterns = ["dei", "dei.md", "dei.txt"]
+dirs = ["docs", ".github", ".gitlab"]
+
+# Security
+
+[[resources]]
+[resources.resource]
+name = "Security Policy"
+field = "policy"
+group = "security"
+patterns = ["security", "security.md", "security.txt", "security.rst", "security.adoc"]
+dirs = ["docs", ".github", ".gitlab"]
+
+[[resources]]
+[resources.resource]
+name = "Threat Model"
+field = "threat_model"
+group = "security"
+patterns = ["threat_model", "threat_model.md", "threat_model.txt", "threat-model", "threat-model.md"]
+
+[[resources]]
+[resources.resource]
+name = "Audit"
+field = "audit"
+group = "security"
+patterns = ["audit", "audit.md", "audit.txt", "audit.rst"]
+
+# Metadata (machine-readable)
+
+[[resources]]
+[resources.resource]
+name = "Funding"
+field = "funding"
+group = "metadata"
+patterns = ["funding.yml", "funding.yaml", "funding.json"]
+dirs = [".github", ".gitlab", "docs"]
+
+[[resources]]
+[resources.resource]
+name = "Citation"
+field = "citation"
+group = "metadata"
+patterns = ["citation.cff", "citation", "citation.bib", "citation.md", "citation.txt"]
+
+[[resources]]
+[resources.resource]
+name = "publiccode"
+field = "publiccode"
+group = "metadata"
+patterns = ["publiccode.yml", "publiccode.yaml"]
+
+[[resources]]
+[resources.resource]
+name = "codemeta"
+field = "codemeta"
+group = "metadata"
+patterns = ["codemeta.json"]
+
+[[resources]]
+[resources.resource]
+name = "Zenodo"
+field = "zenodo"
+group = "metadata"
+patterns = [".zenodo.json"]

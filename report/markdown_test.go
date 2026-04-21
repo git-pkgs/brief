@@ -141,6 +141,12 @@ func TestMarkdownResources(t *testing.T) {
 		Resources: &brief.ResourceInfo{
 			Readme:  "README.md",
 			License: "LICENSE",
+			Community: map[string]string{
+				"contributing": "CONTRIBUTING.md",
+			},
+			Metadata: map[string]string{
+				"funding": ".github/FUNDING.yml",
+			},
 		},
 	}
 
@@ -156,6 +162,12 @@ func TestMarkdownResources(t *testing.T) {
 	}
 	if !strings.Contains(out, "- LICENSE") {
 		t.Errorf("missing license\ngot:\n%s", out)
+	}
+	if !strings.Contains(out, "- Community:\n  - CONTRIBUTING.md") {
+		t.Errorf("missing community group\ngot:\n%s", out)
+	}
+	if !strings.Contains(out, "- Metadata:\n  - .github/FUNDING.yml") {
+		t.Errorf("missing metadata group\ngot:\n%s", out)
 	}
 }
 

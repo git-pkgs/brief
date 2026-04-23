@@ -1,0 +1,23 @@
+[tool]
+name = "Zensical"
+category = "docs"
+homepage = "https://zensical.org/"
+docs = "https://zensical.org/docs/get-started"
+repo = "https://github.com/zensical/zensical"
+description = "Project documentation with Markdown"
+
+[detect]
+files = ["zensical.toml"]
+dependencies = ["zensical"]
+ecosystems = ["python"]
+
+[commands]
+run = "zensical serve"
+alternatives = ["zensical build"]
+
+[config]
+files = ["zensical.toml"]
+
+[taxonomy]
+function = ["documentation", "site-generation"]
+

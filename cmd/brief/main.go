@@ -51,6 +51,9 @@ func main() {
 		case "sinks":
 			cmdSinks(os.Args[2:])
 			return
+		case "outline":
+			cmdOutline(os.Args[2:])
+			return
 		}
 	}
 

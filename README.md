@@ -51,6 +51,7 @@ brief missing [flags] [path]      Show recommended tooling gaps
 brief threat-model [flags] [path] Threat categories implied by detected stack
 brief sinks [flags] [path]        Dangerous functions in detected tools
 brief enrich [flags] [path]       Detect and enrich with external data
+brief outline [flags] [path|url]  Pack source tree into one document for an LLM
 brief list tools                  All tools in the knowledge base
 brief list ecosystems             Supported ecosystems
 brief schema                      JSON output schema
@@ -228,6 +229,20 @@ Ruby:
 Language definitions carry stdlib sinks (eval, system, pickle.loads, etc). Frameworks carry their own (html_safe, dangerouslySetInnerHTML, redirect_to). ORMs carry raw query escape hatches (find_by_sql, $queryRawUnsafe, Arel.sql). Notes indicate when only some forms of a method are dangerous.
 
 The sink data covers 17 languages, 28 web frameworks, 17 ORMs, 15 HTTP clients, 13 template engines, 10 auth libraries, and more. The knowledge base carries over 700 sinks total.
+
+## Outline
+
+`brief outline` produces a token-friendly summary of a codebase for handing to an LLM. It packs the source tree into a single markdown document: a directory tree followed by each file's content, with function and method bodies stripped so only signatures, types, comments and imports remain. The result is typically a quarter the size of the raw source while keeping enough structure for a model to reason about the code. Files in unsupported languages are included verbatim. Body stripping uses tree-sitter via [git-pkgs/outline](https://github.com/git-pkgs/outline) and currently covers 35 languages.
+
+```
+brief outline .
+brief outline -xml .
+brief outline -full .                          Keep full bodies
+brief outline -ignore "docs/,*.md" .
+brief outline github.com/git-pkgs/gitignore
+```
+
+`.gitignore` is honoured at every level along with a built-in skip list (vendored deps, build output, lockfiles). Binary files and files over 1MB are listed in the tree but omitted from the body; tune with `-max-file-size` and `-max-files`.
 
 ## Enrichment
 

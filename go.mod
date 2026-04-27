@@ -8,6 +8,7 @@ require (
 	github.com/git-pkgs/forge v0.4.0
 	github.com/git-pkgs/licensecheck v0.4.0
 	github.com/git-pkgs/manifests v0.4.3
+	github.com/git-pkgs/outline v0.1.1
 	github.com/git-pkgs/purl v0.1.10
 	github.com/git-pkgs/registries v0.4.1
 	github.com/git-pkgs/spdx v0.1.2
@@ -78,6 +79,7 @@ require (
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/fzipp/gocyclo v0.6.0 // indirect
 	github.com/ghostiam/protogetter v0.3.20 // indirect
+	github.com/git-pkgs/gitignore v1.1.2 // indirect
 	github.com/git-pkgs/packageurl-go v0.3.1 // indirect
 	github.com/git-pkgs/vers v0.2.4 // indirect
 	github.com/github/go-spdx/v2 v2.4.0 // indirect
@@ -158,6 +160,7 @@ require (
 	github.com/nishanths/predeclared v0.2.2 // indirect
 	github.com/nunnatsa/ginkgolinter v0.23.0 // indirect
 	github.com/oapi-codegen/runtime v1.1.2 // indirect
+	github.com/odvcencio/gotreesitter v0.15.3 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.4 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect

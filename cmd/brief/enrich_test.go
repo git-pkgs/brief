@@ -186,6 +186,117 @@ func TestProductFromFile(t *testing.T) {
 	}
 }
 
+func TestSafeReadManifest_RejectsSymlink(t *testing.T) {
+	dir := t.TempDir()
+	real := filepath.Join(dir, "real.txt")
+	if err := os.WriteFile(real, []byte("secret"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	link := filepath.Join(dir, "link.txt")
+	if err := os.Symlink(real, link); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err := safeReadManifest(link)
+	if err == nil {
+		t.Fatal("expected error reading symlink, got nil")
+	}
+}
+
+func TestSafeReadManifest_AllowsRegularFile(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "regular.txt")
+	if err := os.WriteFile(path, []byte("hello"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	data, err := safeReadManifest(path)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if string(data) != "hello" {
+		t.Errorf("got %q, want %q", string(data), "hello")
+	}
+}
+
+func TestGoModulePURL_SymlinkRejected(t *testing.T) {
+	dir := t.TempDir()
+	real := t.TempDir()
+	writeFile(t, real, "go.mod", "module github.com/evil/pkg\n\ngo 1.22.0\n")
+	if err := os.Symlink(filepath.Join(real, "go.mod"), filepath.Join(dir, "go.mod")); err != nil {
+		t.Fatal(err)
+	}
+
+	if got := goModulePURL(dir); got != "" {
+		t.Errorf("expected empty string for symlinked go.mod, got %q", got)
+	}
+}
+
+func TestNpmPackagePURL_SymlinkRejected(t *testing.T) {
+	dir := t.TempDir()
+	real := t.TempDir()
+	writeFile(t, real, "package.json", `{"name": "evil-pkg"}`)
+	if err := os.Symlink(filepath.Join(real, "package.json"), filepath.Join(dir, "package.json")); err != nil {
+		t.Fatal(err)
+	}
+
+	if got := npmPackagePURL(dir); got != "" {
+		t.Errorf("expected empty string for symlinked package.json, got %q", got)
+	}
+}
+
+func TestPythonPackagePURL_SymlinkRejected(t *testing.T) {
+	dir := t.TempDir()
+	real := t.TempDir()
+	writeFile(t, real, "pyproject.toml", "[project]\nname = \"evil\"\n")
+	if err := os.Symlink(filepath.Join(real, "pyproject.toml"), filepath.Join(dir, "pyproject.toml")); err != nil {
+		t.Fatal(err)
+	}
+
+	if got := pythonPackagePURL(dir); got != "" {
+		t.Errorf("expected empty string for symlinked pyproject.toml, got %q", got)
+	}
+}
+
+func TestPythonPackagePURL_SetupCfg_SymlinkRejected(t *testing.T) {
+	dir := t.TempDir()
+	real := t.TempDir()
+	writeFile(t, real, "setup.cfg", "[metadata]\nname = evil\n")
+	if err := os.Symlink(filepath.Join(real, "setup.cfg"), filepath.Join(dir, "setup.cfg")); err != nil {
+		t.Fatal(err)
+	}
+
+	if got := pythonPackagePURL(dir); got != "" {
+		t.Errorf("expected empty string for symlinked setup.cfg, got %q", got)
+	}
+}
+
+func TestGemPURL_SymlinkRejected(t *testing.T) {
+	dir := t.TempDir()
+	real := t.TempDir()
+	writeFile(t, real, "evil.gemspec", "Gem::Specification.new do |s|\n  s.name = \"evil\"\nend\n")
+	if err := os.Symlink(filepath.Join(real, "evil.gemspec"), filepath.Join(dir, "evil.gemspec")); err != nil {
+		t.Fatal(err)
+	}
+
+	if got := gemPURL(dir); got != "" {
+		t.Errorf("expected empty string for symlinked gemspec, got %q", got)
+	}
+}
+
+func TestCratePURL_SymlinkRejected(t *testing.T) {
+	dir := t.TempDir()
+	real := t.TempDir()
+	writeFile(t, real, "Cargo.toml", "[package]\nname = \"evil\"\nversion = \"0.1.0\"\n")
+	if err := os.Symlink(filepath.Join(real, "Cargo.toml"), filepath.Join(dir, "Cargo.toml")); err != nil {
+		t.Fatal(err)
+	}
+
+	if got := cratePURL(dir); got != "" {
+		t.Errorf("expected empty string for symlinked Cargo.toml, got %q", got)
+	}
+}
+
 func writeFile(t *testing.T, dir, name, content string) {
 	t.Helper()
 	if err := os.WriteFile(filepath.Join(dir, name), []byte(content), 0o644); err != nil {

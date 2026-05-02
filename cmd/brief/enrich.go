@@ -164,8 +164,26 @@ func detectPublishedPURLs(root string) []string {
 	return purls
 }
 
+// isSymlink returns true if path is a symbolic link.
+func isSymlink(path string) bool {
+	info, err := os.Lstat(path)
+	if err != nil {
+		return false
+	}
+	return info.Mode()&os.ModeSymlink != 0
+}
+
+// safeReadManifest reads a manifest file, rejecting symlinks to prevent
+// file disclosure when extracted content is sent to external services.
+func safeReadManifest(path string) ([]byte, error) {
+	if isSymlink(path) {
+		return nil, fmt.Errorf("refusing to read symlink: %s", path)
+	}
+	return os.ReadFile(path)
+}
+
 func goModulePURL(root string) string {
-	data, err := os.ReadFile(filepath.Join(root, "go.mod"))
+	data, err := safeReadManifest(filepath.Join(root, "go.mod"))
 	if err != nil {
 		return ""
 	}
@@ -181,7 +199,7 @@ func goModulePURL(root string) string {
 }
 
 func npmPackagePURL(root string) string {
-	data, err := os.ReadFile(filepath.Join(root, "package.json"))
+	data, err := safeReadManifest(filepath.Join(root, "package.json"))
 	if err != nil {
 		return ""
 	}
@@ -198,7 +216,7 @@ func npmPackagePURL(root string) string {
 
 func pythonPackagePURL(root string) string {
 	// Try pyproject.toml [project] name
-	data, err := os.ReadFile(filepath.Join(root, "pyproject.toml"))
+	data, err := safeReadManifest(filepath.Join(root, "pyproject.toml"))
 	if err == nil {
 		var pyproject struct {
 			Project struct {
@@ -211,7 +229,7 @@ func pythonPackagePURL(root string) string {
 	}
 
 	// Try setup.cfg [metadata] name
-	data, err = os.ReadFile(filepath.Join(root, "setup.cfg"))
+	data, err = safeReadManifest(filepath.Join(root, "setup.cfg"))
 	if err == nil {
 		for _, line := range strings.Split(string(data), "\n") {
 			line = strings.TrimSpace(line)
@@ -231,7 +249,7 @@ func gemPURL(root string) string {
 	// Look for *.gemspec
 	matches, _ := filepath.Glob(filepath.Join(root, "*.gemspec"))
 	if len(matches) > 0 {
-		data, err := os.ReadFile(matches[0])
+		data, err := safeReadManifest(matches[0])
 		if err == nil {
 			for _, line := range strings.Split(string(data), "\n") {
 				line = strings.TrimSpace(line)
@@ -253,7 +271,7 @@ func gemPURL(root string) string {
 }
 
 func cratePURL(root string) string {
-	data, err := os.ReadFile(filepath.Join(root, "Cargo.toml"))
+	data, err := safeReadManifest(filepath.Join(root, "Cargo.toml"))
 	if err != nil {
 		return ""
 	}

@@ -233,13 +233,13 @@ func mdPlatforms(w io.Writer, platforms *brief.PlatformInfo) {
 	}
 	_, _ = fmt.Fprintln(w)
 	for _, name := range sortedKeys(platforms.CIMatrixVersions) {
-		_, _ = fmt.Fprintf(w, "**Platforms:** %s %s (CI matrix)\n", name, strings.Join(platforms.CIMatrixVersions[name], ", "))
+		_, _ = fmt.Fprintf(w, "**Platforms:** %s %s (CI matrix)\n", name, sanitize(strings.Join(platforms.CIMatrixVersions[name], ", ")))
 	}
 	for _, file := range sortedKeys(platforms.RuntimeVersionFiles) {
 		_, _ = fmt.Fprintf(w, "- %s: %s\n", sanitize(file), sanitize(platforms.RuntimeVersionFiles[file]))
 	}
 	if len(platforms.CIMatrixOS) > 0 {
-		_, _ = fmt.Fprintf(w, "- OS: %s (CI matrix)\n", strings.Join(platforms.CIMatrixOS, ", "))
+		_, _ = fmt.Fprintf(w, "- OS: %s (CI matrix)\n", sanitize(strings.Join(platforms.CIMatrixOS, ", ")))
 	}
 }
 
@@ -268,7 +268,7 @@ func mdResources(w io.Writer, res *brief.ResourceInfo) {
 
 func mdResource(w io.Writer, path string) {
 	if path != "" {
-		_, _ = fmt.Fprintf(w, "- %s\n", path)
+		_, _ = fmt.Fprintf(w, "- %s\n", sanitize(path))
 	}
 }
 
@@ -278,7 +278,7 @@ func mdResourceGroup(w io.Writer, label string, group map[string]string) {
 	}
 	_, _ = fmt.Fprintf(w, "- %s:\n", label)
 	for _, k := range sortedKeys(group) {
-		_, _ = fmt.Fprintf(w, "  - %s\n", group[k])
+		_, _ = fmt.Fprintf(w, "  - %s\n", sanitize(group[k]))
 	}
 }
 

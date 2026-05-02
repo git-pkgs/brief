@@ -171,6 +171,52 @@ func TestMarkdownResources(t *testing.T) {
 	}
 }
 
+func TestMarkdownSanitizesCIMatrix(t *testing.T) {
+	r := &brief.Report{
+		Version: "dev",
+		Path:    "/tmp/test",
+		Platforms: &brief.PlatformInfo{
+			CIMatrixVersions: map[string][]string{
+				"node": {"\x1b[31mRED\x1b[0m"},
+			},
+			CIMatrixOS:          []string{"\x1b]0;PWNED\x07-ubuntu"},
+			RuntimeVersionFiles: map[string]string{},
+		},
+	}
+
+	var buf bytes.Buffer
+	Markdown(&buf, r, false)
+	out := buf.String()
+
+	if strings.Contains(out, "\x1b") {
+		t.Errorf("output contains ESC byte\ngot:\n%q", out)
+	}
+	if strings.Contains(out, "\x07") {
+		t.Errorf("output contains BEL byte\ngot:\n%q", out)
+	}
+}
+
+func TestMarkdownSanitizesResources(t *testing.T) {
+	r := &brief.Report{
+		Version: "dev",
+		Path:    "/tmp/test",
+		Resources: &brief.ResourceInfo{
+			Readme: "README\x1b[31mRED\x1b[0m.md",
+			Community: map[string]string{
+				"contributing": "CONTRIBUTING\x1b[31m.md",
+			},
+		},
+	}
+
+	var buf bytes.Buffer
+	Markdown(&buf, r, false)
+	out := buf.String()
+
+	if strings.Contains(out, "\x1b") {
+		t.Errorf("output contains ESC byte\ngot:\n%q", out)
+	}
+}
+
 func TestMarkdownGit(t *testing.T) {
 	r := &brief.Report{
 		Version: "dev",

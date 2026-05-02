@@ -268,13 +268,13 @@ func printPlatforms(w io.Writer, platforms *brief.PlatformInfo) {
 	}
 	_, _ = fmt.Fprintln(w)
 	for _, name := range sortedKeys(platforms.CIMatrixVersions) {
-		_, _ = fmt.Fprintf(w, "Platforms:   %s %s (CI matrix)\n", name, strings.Join(platforms.CIMatrixVersions[name], ", "))
+		_, _ = fmt.Fprintf(w, "Platforms:   %s %s (CI matrix)\n", name, sanitize(strings.Join(platforms.CIMatrixVersions[name], ", ")))
 	}
 	for _, file := range sortedKeys(platforms.RuntimeVersionFiles) {
 		_, _ = fmt.Fprintf(w, "             %s: %s\n", sanitize(file), sanitize(platforms.RuntimeVersionFiles[file]))
 	}
 	if len(platforms.CIMatrixOS) > 0 {
-		_, _ = fmt.Fprintf(w, "             OS: %s (CI matrix)\n", strings.Join(platforms.CIMatrixOS, ", "))
+		_, _ = fmt.Fprintf(w, "             OS: %s (CI matrix)\n", sanitize(strings.Join(platforms.CIMatrixOS, ", ")))
 	}
 }
 
@@ -302,7 +302,7 @@ func printResources(w io.Writer, res *brief.ResourceInfo) {
 
 func printResourceGroup(w io.Writer, label string, group map[string]string) {
 	for _, k := range sortedKeys(group) {
-		_, _ = fmt.Fprintf(w, "%-12s %s\n", label+":", group[k])
+		_, _ = fmt.Fprintf(w, "%-12s %s\n", label+":", sanitize(group[k]))
 	}
 }
 
@@ -467,7 +467,7 @@ func MissingHuman(w io.Writer, r *brief.MissingReport) {
 
 func printResource(w io.Writer, value string) {
 	if value != "" {
-		_, _ = fmt.Fprintf(w, "Resources:   %s\n", value)
+		_, _ = fmt.Fprintf(w, "Resources:   %s\n", sanitize(value))
 	}
 }
 

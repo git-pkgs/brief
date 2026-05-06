@@ -1,19 +1,29 @@
 [tool]
 name = "Invoke"
-category = "library"
+category = "build"
 homepage = "https://www.pyinvoke.org"
-docs = "https://www.pyinvoke.org"
+docs = "https://docs.pyinvoke.org"
 repo = "https://github.com/pyinvoke/invoke"
-description = "Task execution and command running"
+description = "Pythonic task execution, like Make or Rake"
 
 [detect]
+files = ["invoke.yaml", "invoke.yml", "invoke.json"]
 dependencies = ["invoke"]
 ecosystems = ["python"]
+[detect.file_contains]
+"tasks.py" = ["from invoke", "import invoke"]
+"tasks/__init__.py" = ["from invoke", "import invoke"]
+
+[commands]
+run = "invoke --list"
+alternatives = ["inv --list"]
+
+[config]
+files = ["tasks.py", "invoke.yaml", "invoke.yml", "invoke.json"]
 
 [taxonomy]
-role = ["library"]
-function = ["process-execution", "automation"]
-layer = ["backend"]
+role = ["build-tool"]
+function = ["automation", "process-execution"]
 
 [[security.sinks]]
 symbol = "Context.run"

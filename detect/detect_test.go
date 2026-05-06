@@ -733,6 +733,46 @@ func TestTaskRunnerDetection(t *testing.T) {
 	}
 }
 
+func TestInvokeDetection(t *testing.T) {
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, "foo.py"), []byte("x = 1\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	tasks := "from invoke import task\n\n@task\ndef build(c):\n    c.run('true')\n"
+	if err := os.WriteFile(filepath.Join(dir, "tasks.py"), []byte(tasks), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	r, err := New(loadKB(t), dir).Run()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	assertToolDetected(t, r, "build", "Invoke")
+	for _, d := range r.Tools["build"] {
+		if d.Name == "Invoke" {
+			if d.Command == nil || d.Command.Run != "invoke --list" {
+				t.Errorf("expected 'invoke --list' command, got %v", d.Command)
+			}
+		}
+	}
+
+	// A tasks.py that doesn't import invoke should not trigger detection.
+	celery := "from celery import shared_task\n\n@shared_task\ndef foo():\n    pass\n"
+	if err := os.WriteFile(filepath.Join(dir, "tasks.py"), []byte(celery), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	r, err = New(loadKB(t), dir).Run()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	for _, d := range r.Tools["build"] {
+		if d.Name == "Invoke" {
+			t.Error("tasks.py without invoke import should not trigger Invoke detection")
+		}
+	}
+}
+
 func assertToolDetected(t *testing.T, r *brief.Report, category, name string) {
 	t.Helper()
 	tools, ok := r.Tools[category]

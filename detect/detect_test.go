@@ -773,6 +773,46 @@ func TestInvokeDetection(t *testing.T) {
 	}
 }
 
+func TestGlobIgnoresDirectories(t *testing.T) {
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, "main.go"), []byte("package main\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	for _, d := range []string{"NEWS.d", "scratch.js"} {
+		if err := os.Mkdir(filepath.Join(dir, d), 0o755); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	r, err := New(loadKB(t), dir).Run()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	for _, lang := range r.Languages {
+		if lang.Name == "D" || lang.Name == "JavaScript" {
+			t.Errorf("directory with source extension should not trigger %s detection", lang.Name)
+		}
+	}
+	if len(r.Languages) == 0 || r.Languages[0].Name != "Go" {
+		t.Errorf("expected Go as primary language, got %v", r.Languages)
+	}
+}
+
+func TestDirectoryGlobPattern(t *testing.T) {
+	dir := t.TempDir()
+	if err := os.Mkdir(filepath.Join(dir, "Foo.xcodeproj"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+
+	engine := New(loadKB(t), dir)
+	if !engine.exists("*.xcodeproj/") {
+		t.Error("expected *.xcodeproj/ to match Foo.xcodeproj directory")
+	}
+	if engine.exists("*.xcodeproj") {
+		t.Error("*.xcodeproj without trailing slash should not match a directory")
+	}
+}
+
 func assertToolDetected(t *testing.T, r *brief.Report, category, name string) {
 	t.Helper()
 	tools, ok := r.Tools[category]

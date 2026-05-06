@@ -414,11 +414,17 @@ func (e *Engine) matchTool(tool *kb.ToolDef) brief.Confidence {
 }
 
 // exists checks if a file, directory, or glob pattern matches something at the project root.
+// A trailing "/" means the pattern must match a directory. Glob patterns without
+// a trailing "/" only match regular files so that a NEWS.d/ directory does not
+// register as D source.
 func (e *Engine) exists(pattern string) bool {
 	e.filesChecked++
 
-	if strings.HasSuffix(pattern, "/") {
-		info, err := os.Stat(filepath.Join(e.Root, pattern))
+	if dir, ok := strings.CutSuffix(pattern, "/"); ok {
+		if kb.HasGlobPattern(dir) {
+			return e.globMatches(dir, true)
+		}
+		info, err := os.Stat(filepath.Join(e.Root, dir))
 		return err == nil && info.IsDir()
 	}
 
@@ -428,12 +434,27 @@ func (e *Engine) exists(pattern string) bool {
 	}
 
 	if kb.HasGlobPattern(pattern) {
-		matches, err := filepath.Glob(filepath.Join(e.Root, pattern))
-		return err == nil && len(matches) > 0
+		return e.globMatches(pattern, false)
 	}
 
 	_, err := os.Stat(filepath.Join(e.Root, pattern))
 	return err == nil
+}
+
+// globMatches reports whether a root-level glob pattern matches at least one
+// entry of the requested kind.
+func (e *Engine) globMatches(pattern string, wantDir bool) bool {
+	matches, err := filepath.Glob(filepath.Join(e.Root, pattern))
+	if err != nil {
+		return false
+	}
+	for _, m := range matches {
+		info, err := os.Stat(m)
+		if err == nil && info.IsDir() == wantDir {
+			return true
+		}
+	}
+	return false
 }
 
 // recursiveGlob handles ** patterns by checking against the cached file extension set.

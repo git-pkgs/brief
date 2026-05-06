@@ -6,7 +6,7 @@ docs = "https://developer.apple.com/library/archive/documentation/Cocoa/Conceptu
 description = "Object-oriented superset of C for Apple platforms"
 
 [detect]
-files = ["*.m", "**/*.m", "*.mm", "**/*.mm", "*.xcodeproj", "*.xcworkspace"]
+files = ["*.m", "**/*.m", "*.mm", "**/*.mm", "*.xcodeproj/", "*.xcworkspace/"]
 ecosystems = ["objc"]
 
 [taxonomy]

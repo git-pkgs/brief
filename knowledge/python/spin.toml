@@ -1,0 +1,26 @@
+[tool]
+name = "Spin"
+category = "build"
+homepage = "https://github.com/scientific-python/spin"
+docs = "https://github.com/scientific-python/spin#readme"
+repo = "https://github.com/scientific-python/spin"
+description = "Developer tool wrapper for scientific Python projects"
+
+[detect]
+files = [".spin.toml"]
+dependencies = ["spin"]
+dev_dependencies = ["spin"]
+ecosystems = ["python"]
+[detect.key_exists]
+"pyproject.toml" = ["tool.spin"]
+
+[commands]
+run = "spin"
+alternatives = ["python -m spin"]
+
+[config]
+files = [".spin.toml", "pyproject.toml"]
+
+[taxonomy]
+role = ["build-tool"]
+function = ["automation"]

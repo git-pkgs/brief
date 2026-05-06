@@ -548,6 +548,66 @@ func TestDetectSelfNotTriggeredOnOtherGoProjects(t *testing.T) {
 	}
 }
 
+func TestTaskRunnerDetection(t *testing.T) {
+	cases := []struct {
+		name     string
+		files    map[string]string
+		category string
+		command  string
+	}{
+		{
+			name:     "Just",
+			files:    map[string]string{"justfile": "default:\n\techo hi\n"},
+			category: "build",
+			command:  "just --list",
+		},
+		{
+			name:     "Task",
+			files:    map[string]string{"Taskfile.yml": "version: '3'\ntasks:\n  hello:\n    cmds: [echo hi]\n"},
+			category: "build",
+			command:  "task --list-all",
+		},
+		{
+			name:     "Pixi",
+			files:    map[string]string{"pixi.toml": "[project]\nname = \"x\"\n"},
+			category: "environment",
+			command:  "pixi install",
+		},
+		{
+			name: "Spin",
+			files: map[string]string{
+				"x.py":           "x = 1\n",
+				"pyproject.toml": "[project]\nname = \"x\"\n[tool.spin]\npackage = \"x\"\n",
+			},
+			category: "build",
+			command:  "spin",
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			dir := t.TempDir()
+			for name, body := range tc.files {
+				if err := os.WriteFile(filepath.Join(dir, name), []byte(body), 0o644); err != nil {
+					t.Fatal(err)
+				}
+			}
+			r, err := New(loadKB(t), dir).Run()
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			assertToolDetected(t, r, tc.category, tc.name)
+			for _, d := range r.Tools[tc.category] {
+				if d.Name == tc.name {
+					if d.Command == nil || d.Command.Run != tc.command {
+						t.Errorf("expected command %q, got %v", tc.command, d.Command)
+					}
+				}
+			}
+		})
+	}
+}
+
 func assertToolDetected(t *testing.T, r *brief.Report, category, name string) {
 	t.Helper()
 	tools, ok := r.Tools[category]

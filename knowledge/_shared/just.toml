@@ -1,0 +1,21 @@
+[tool]
+name = "Just"
+category = "build"
+homepage = "https://just.systems"
+docs = "https://just.systems/man/en/"
+repo = "https://github.com/casey/just"
+description = "Command runner with Make-like syntax"
+
+[detect]
+files = ["justfile", "Justfile", ".justfile", "JUSTFILE"]
+
+[commands]
+run = "just --list"
+alternatives = ["just"]
+
+[config]
+files = ["justfile", "Justfile", ".justfile"]
+
+[taxonomy]
+role = ["build-tool"]
+function = ["automation"]

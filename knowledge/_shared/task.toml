@@ -1,0 +1,21 @@
+[tool]
+name = "Task"
+category = "build"
+homepage = "https://taskfile.dev"
+docs = "https://taskfile.dev/usage/"
+repo = "https://github.com/go-task/task"
+description = "Task runner and build tool configured via YAML"
+
+[detect]
+files = ["Taskfile.yml", "Taskfile.yaml", "Taskfile.dist.yml", "Taskfile.dist.yaml"]
+
+[commands]
+run = "task --list-all"
+alternatives = ["task"]
+
+[config]
+files = ["Taskfile.yml", "Taskfile.yaml", "Taskfile.dist.yml", "Taskfile.dist.yaml"]
+
+[taxonomy]
+role = ["build-tool"]
+function = ["automation"]

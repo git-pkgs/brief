@@ -1,0 +1,24 @@
+[tool]
+name = "Pixi"
+category = "environment"
+homepage = "https://pixi.sh"
+docs = "https://pixi.sh/latest/"
+repo = "https://github.com/prefix-dev/pixi"
+description = "Conda-based package and environment manager with a task runner"
+
+[detect]
+files = ["pixi.toml", "pixi.lock"]
+[detect.key_exists]
+"pyproject.toml" = ["tool.pixi"]
+
+[commands]
+run = "pixi install"
+alternatives = ["pixi task list", "pixi run"]
+
+[config]
+files = ["pixi.toml", "pixi.lock"]
+lockfile = "pixi.lock"
+
+[taxonomy]
+role = ["build-tool"]
+function = ["runtime-management", "automation"]

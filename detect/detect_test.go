@@ -2,6 +2,7 @@ package detect
 
 import (
 	"os"
+	"os/exec"
 	"path/filepath"
 	"testing"
 
@@ -811,6 +812,111 @@ func TestDirectoryGlobPattern(t *testing.T) {
 	if engine.exists("*.xcodeproj") {
 		t.Error("*.xcodeproj without trailing slash should not match a directory")
 	}
+}
+
+func TestTrackedOnly(t *testing.T) {
+	if _, err := exec.LookPath("git"); err != nil {
+		t.Skip("git not installed")
+	}
+
+	dir := t.TempDir()
+	gitCmd := func(args ...string) {
+		cmd := exec.Command("git", args...)
+		cmd.Dir = dir
+		cmd.Env = append(os.Environ(),
+			"GIT_AUTHOR_NAME=t", "GIT_AUTHOR_EMAIL=t@t",
+			"GIT_COMMITTER_NAME=t", "GIT_COMMITTER_EMAIL=t@t",
+		)
+		if out, err := cmd.CombinedOutput(); err != nil {
+			t.Fatalf("git %v: %v\n%s", args, err, out)
+		}
+	}
+	write := func(name, body string) {
+		p := filepath.Join(dir, name)
+		if err := os.MkdirAll(filepath.Dir(p), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(p, []byte(body), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	gitCmd("init", "-q")
+	write("main.go", "package main\n")
+	write("go.mod", "module example.com/m\n\ngo 1.22\n")
+	gitCmd("add", "main.go", "go.mod")
+	gitCmd("commit", "-q", "-m", "init")
+
+	// Untracked noise that would normally trigger npm/JS detection.
+	write("package.json", `{"name":"x"}`)
+	write("package-lock.json", `{"name":"x","lockfileVersion":3}`)
+	write("htmlcov/index.html", "<html></html>")
+	write("htmlcov/app.js", "var x = 1;")
+
+	engine := New(loadKB(t), dir)
+	engine.TrackedOnly = true
+	r, err := engine.Run()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	for _, lang := range r.Languages {
+		if lang.Name == "JavaScript" {
+			t.Errorf("untracked .js files should not trigger JavaScript detection, got languages: %v", langNames(r))
+		}
+	}
+	for _, pm := range r.PackageManagers {
+		if pm.Name == "npm" {
+			t.Errorf("untracked package.json should not trigger npm detection, got package managers: %v", pmNames(r))
+		}
+	}
+	if len(r.Languages) == 0 || r.Languages[0].Name != "Go" {
+		t.Errorf("expected Go as primary language, got %v", langNames(r))
+	}
+
+	// Without TrackedOnly the untracked files should be picked up.
+	engine = New(loadKB(t), dir)
+	r, err = engine.Run()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	sawNpm := false
+	for _, pm := range r.PackageManagers {
+		if pm.Name == "npm" {
+			sawNpm = true
+		}
+	}
+	if !sawNpm {
+		t.Errorf("expected npm to be detected without -tracked, got %v", pmNames(r))
+	}
+}
+
+func TestTrackedOnlyNotARepo(t *testing.T) {
+	if _, err := exec.LookPath("git"); err != nil {
+		t.Skip("git not installed")
+	}
+	dir := t.TempDir()
+	engine := New(loadKB(t), dir)
+	engine.TrackedOnly = true
+	if _, err := engine.Run(); err == nil {
+		t.Error("expected error when -tracked is used outside a git repository")
+	}
+}
+
+func langNames(r *brief.Report) []string {
+	names := make([]string, len(r.Languages))
+	for i, l := range r.Languages {
+		names[i] = l.Name
+	}
+	return names
+}
+
+func pmNames(r *brief.Report) []string {
+	names := make([]string, len(r.PackageManagers))
+	for i, p := range r.PackageManagers {
+		names[i] = p.Name
+	}
+	return names
 }
 
 func assertToolDetected(t *testing.T, r *brief.Report, category, name string) {

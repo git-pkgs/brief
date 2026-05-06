@@ -69,6 +69,7 @@ func cmdScan(args []string) {
 	dir := fs.String("dir", "", "Directory to clone remote source into")
 	scanDepth := fs.Int("scan-depth", 0, "Max directory depth for language detection (default 4)")
 	skip := fs.String("skip", "", "Additional directories to skip, comma-separated")
+	tracked := fs.Bool("tracked", false, "Only consider files tracked by git")
 	version := fs.Bool("version", false, "Print version and exit")
 	_ = fs.Parse(args)
 
@@ -93,12 +94,12 @@ func cmdScan(args []string) {
 		os.Exit(1)
 	}
 
-	code := runScan(src.Dir, *scanDepth, *skip, *category, *jsonFlag, *humanFlag, *markdownFlag, *verbose)
+	code := runScan(src.Dir, *scanDepth, *skip, *category, *tracked, *jsonFlag, *humanFlag, *markdownFlag, *verbose)
 	src.Cleanup()
 	os.Exit(code)
 }
 
-func runScan(dir string, scanDepth int, skip, category string, jsonFlag, humanFlag, markdownFlag, verbose bool) int {
+func runScan(dir string, scanDepth int, skip, category string, tracked, jsonFlag, humanFlag, markdownFlag, verbose bool) int {
 	knowledgeBase, err := kb.Load(brief.KnowledgeFS)
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "error loading knowledge base: %v\n", err)
@@ -107,6 +108,7 @@ func runScan(dir string, scanDepth int, skip, category string, jsonFlag, humanFl
 
 	engine := detect.New(knowledgeBase, dir)
 	engine.ScanDepth = scanDepth
+	engine.TrackedOnly = tracked
 	if skip != "" {
 		engine.SkipDirs = strings.Split(skip, ",")
 	}

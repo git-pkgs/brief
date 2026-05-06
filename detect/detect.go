@@ -42,6 +42,7 @@ type Engine struct {
 	Root         string
 	ScanDepth    int      // max directory depth for recursive detection (0 = default 4)
 	SkipDirs     []string // additional directories to skip during walks
+	TrackedOnly  bool     // only consider files tracked by git
 	filesChecked int
 	toolsChecked int
 	toolsMatched int
@@ -49,7 +50,9 @@ type Engine struct {
 	detectedEcosystems map[string]bool // ecosystems whose language was detected
 
 	// Lazily populated caches
-	fileExts    map[string]int // cached file extension counts in the project
+	tracked     map[string]bool // git-tracked files relative to Root, nil when TrackedOnly is off
+	trackedDirs map[string]bool // directories that contain at least one tracked file
+	fileExts    map[string]int  // cached file extension counts in the project
 	dirCache    map[string][]string
 	depsLoaded  bool
 	runtimeDeps map[string]bool // all runtime/unscoped dependency names
@@ -111,6 +114,43 @@ var skipDirs = map[string]bool{
 	"coverage":     true,
 }
 
+// loadTracked populates the set of git-tracked files under Root by running
+// git ls-files once. Paths are stored relative to Root using the OS separator.
+func (e *Engine) loadTracked(abs string) error {
+	out, err := e.git(abs, "ls-files", "-z")
+	if err != nil {
+		return fmt.Errorf("-tracked: %s is not a git repository (or git is not installed)", abs)
+	}
+	e.tracked = make(map[string]bool)
+	e.trackedDirs = make(map[string]bool)
+	for p := range strings.SplitSeq(string(out), "\x00") {
+		if p == "" {
+			continue
+		}
+		p = filepath.FromSlash(p)
+		e.tracked[p] = true
+		for d := filepath.Dir(p); d != "."; d = filepath.Dir(d) {
+			if e.trackedDirs[d] {
+				break
+			}
+			e.trackedDirs[d] = true
+		}
+	}
+	return nil
+}
+
+// isTracked reports whether a path relative to Root should be considered.
+// Always true when TrackedOnly is off. The root itself is always allowed.
+func (e *Engine) isTracked(rel string) bool {
+	if e.tracked == nil {
+		return true
+	}
+	if rel == "" || rel == "." {
+		return true
+	}
+	return e.tracked[rel] || e.trackedDirs[rel]
+}
+
 // shouldSkipDir returns true if a directory should be skipped during walks.
 func (e *Engine) shouldSkipDir(name string) bool {
 	if strings.HasPrefix(name, ".") {
@@ -147,6 +187,12 @@ func (e *Engine) Run() (*brief.Report, error) {
 	}
 	if !info.IsDir() {
 		return nil, fmt.Errorf("path is not a directory: %s", abs)
+	}
+
+	if e.TrackedOnly {
+		if err := e.loadTracked(abs); err != nil {
+			return nil, err
+		}
 	}
 
 	report := &brief.Report{
@@ -425,7 +471,7 @@ func (e *Engine) exists(pattern string) bool {
 			return e.globMatches(dir, true)
 		}
 		info, err := os.Stat(filepath.Join(e.Root, dir))
-		return err == nil && info.IsDir()
+		return err == nil && info.IsDir() && e.isTracked(filepath.FromSlash(dir))
 	}
 
 	// Handle recursive glob patterns like "**/*.py"
@@ -438,7 +484,7 @@ func (e *Engine) exists(pattern string) bool {
 	}
 
 	_, err := os.Stat(filepath.Join(e.Root, pattern))
-	return err == nil
+	return err == nil && e.isTracked(filepath.FromSlash(pattern))
 }
 
 // globMatches reports whether a root-level glob pattern matches at least one
@@ -450,7 +496,14 @@ func (e *Engine) globMatches(pattern string, wantDir bool) bool {
 	}
 	for _, m := range matches {
 		info, err := os.Stat(m)
-		if err == nil && info.IsDir() == wantDir {
+		if err != nil || info.IsDir() != wantDir {
+			continue
+		}
+		rel, err := filepath.Rel(e.Root, m)
+		if err != nil {
+			continue
+		}
+		if e.isTracked(rel) {
 			return true
 		}
 	}
@@ -482,14 +535,21 @@ func (e *Engine) recursiveGlob(pattern string) bool {
 		if err != nil {
 			return nil
 		}
+		rel, _ := filepath.Rel(e.Root, path)
 		if d.IsDir() {
 			name := d.Name()
 			if name != "." && e.shouldSkipDir(name) {
 				return filepath.SkipDir
 			}
+			if !e.isTracked(rel) {
+				return filepath.SkipDir
+			}
 			return nil
 		}
 		if d.Type()&os.ModeSymlink != 0 {
+			return nil
+		}
+		if !e.isTracked(rel) {
 			return nil
 		}
 		matched, _ := filepath.Match(suffix, d.Name())
@@ -530,9 +590,15 @@ func (e *Engine) loadFileExts() {
 			if depth > maxDepth {
 				return filepath.SkipDir
 			}
+			if !e.isTracked(strings.TrimPrefix(rel, string(filepath.Separator))) {
+				return filepath.SkipDir
+			}
 			return nil
 		}
 		if d.Type()&os.ModeSymlink != 0 {
+			return nil
+		}
+		if !e.isTracked(strings.TrimPrefix(path[rootLen:], string(filepath.Separator))) {
 			return nil
 		}
 		ext := filepath.Ext(d.Name())

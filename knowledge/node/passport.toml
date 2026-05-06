@@ -1,6 +1,6 @@
 [tool]
 name = "Passport"
-category = "build"
+category = "library"
 homepage = "https://www.passportjs.org"
 docs = "https://www.passportjs.org"
 repo = "https://github.com/jaredhanson/passport"

@@ -1,6 +1,6 @@
 [tool]
 name = "HTTParty"
-category = "build"
+category = "library"
 homepage = "https://github.com/jnunemaker/httparty"
 docs = "https://github.com/jnunemaker/httparty"
 repo = "https://github.com/jnunemaker/httparty"

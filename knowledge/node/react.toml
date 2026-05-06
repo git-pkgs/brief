@@ -1,6 +1,6 @@
 [tool]
 name = "React"
-category = "build"
+category = "library"
 homepage = "https://react.dev"
 docs = "https://react.dev/learn"
 repo = "https://github.com/facebook/react"

@@ -1,6 +1,6 @@
 [tool]
 name = "ldapjs"
-category = "build"
+category = "library"
 homepage = "http://ldapjs.org"
 docs = "http://ldapjs.org"
 repo = "https://github.com/ldapjs/node-ldapjs"

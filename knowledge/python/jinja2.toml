@@ -1,6 +1,6 @@
 [tool]
 name = "Jinja2"
-category = "build"
+category = "library"
 homepage = "https://jinja.palletsprojects.com"
 docs = "https://jinja.palletsprojects.com"
 repo = "https://github.com/pallets/jinja"

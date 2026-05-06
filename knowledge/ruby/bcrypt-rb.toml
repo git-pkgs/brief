@@ -1,6 +1,6 @@
 [tool]
 name = "bcrypt-ruby"
-category = "build"
+category = "library"
 homepage = "https://github.com/bcrypt-ruby/bcrypt-ruby"
 docs = "https://github.com/bcrypt-ruby/bcrypt-ruby"
 repo = "https://github.com/bcrypt-ruby/bcrypt-ruby"

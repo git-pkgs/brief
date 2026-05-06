@@ -1,6 +1,6 @@
 [tool]
 name = "urllib3"
-category = "build"
+category = "library"
 homepage = "https://urllib3.readthedocs.io"
 docs = "https://urllib3.readthedocs.io"
 repo = "https://github.com/urllib3/urllib3"

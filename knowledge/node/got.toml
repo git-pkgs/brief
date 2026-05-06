@@ -1,6 +1,6 @@
 [tool]
 name = "got"
-category = "build"
+category = "library"
 homepage = "https://github.com/sindresorhus/got"
 docs = "https://github.com/sindresorhus/got"
 repo = "https://github.com/sindresorhus/got"

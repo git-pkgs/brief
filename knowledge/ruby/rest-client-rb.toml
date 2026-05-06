@@ -1,6 +1,6 @@
 [tool]
 name = "RestClient"
-category = "build"
+category = "library"
 homepage = "https://github.com/rest-client/rest-client"
 docs = "https://github.com/rest-client/rest-client"
 repo = "https://github.com/rest-client/rest-client"

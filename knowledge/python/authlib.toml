@@ -1,6 +1,6 @@
 [tool]
 name = "Authlib"
-category = "build"
+category = "library"
 homepage = "https://authlib.org"
 docs = "https://authlib.org"
 repo = "https://github.com/lepture/authlib"

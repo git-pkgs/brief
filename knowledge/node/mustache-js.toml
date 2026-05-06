@@ -1,6 +1,6 @@
 [tool]
 name = "Mustache"
-category = "build"
+category = "library"
 homepage = "https://github.com/janl/mustache.js"
 docs = "https://github.com/janl/mustache.js"
 repo = "https://github.com/janl/mustache.js"

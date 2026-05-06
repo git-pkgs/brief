@@ -1,6 +1,6 @@
 [tool]
 name = "Guzzle"
-category = "build"
+category = "library"
 homepage = "https://docs.guzzlephp.org"
 docs = "https://docs.guzzlephp.org"
 repo = "https://github.com/guzzle/guzzle"

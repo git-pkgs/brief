@@ -1,6 +1,6 @@
 [tool]
 name = "FreeMarker"
-category = "build"
+category = "library"
 homepage = "https://freemarker.apache.org"
 docs = "https://freemarker.apache.org"
 repo = "https://github.com/apache/freemarker"

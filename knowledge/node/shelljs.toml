@@ -1,6 +1,6 @@
 [tool]
 name = "ShellJS"
-category = "build"
+category = "library"
 homepage = "https://github.com/shelljs/shelljs"
 docs = "https://github.com/shelljs/shelljs"
 repo = "https://github.com/shelljs/shelljs"

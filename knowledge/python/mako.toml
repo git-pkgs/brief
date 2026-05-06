@@ -1,6 +1,6 @@
 [tool]
 name = "Mako"
-category = "build"
+category = "library"
 homepage = "https://www.makotemplates.org"
 docs = "https://www.makotemplates.org"
 repo = "https://github.com/sqlalchemy/mako"

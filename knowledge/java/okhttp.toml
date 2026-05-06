@@ -1,6 +1,6 @@
 [tool]
 name = "OkHttp"
-category = "build"
+category = "library"
 homepage = "https://square.github.io/okhttp"
 docs = "https://square.github.io/okhttp"
 repo = "https://github.com/square/okhttp"

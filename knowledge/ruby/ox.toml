@@ -1,6 +1,6 @@
 [tool]
 name = "Ox"
-category = "build"
+category = "library"
 homepage = "https://github.com/ohler55/ox"
 docs = "https://github.com/ohler55/ox"
 repo = "https://github.com/ohler55/ox"

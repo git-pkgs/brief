@@ -1,6 +1,6 @@
 [tool]
 name = "aiohttp"
-category = "build"
+category = "library"
 homepage = "https://docs.aiohttp.org"
 docs = "https://docs.aiohttp.org"
 repo = "https://github.com/aio-libs/aiohttp"

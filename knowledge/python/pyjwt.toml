@@ -1,6 +1,6 @@
 [tool]
 name = "PyJWT"
-category = "build"
+category = "library"
 homepage = "https://pyjwt.readthedocs.io"
 docs = "https://pyjwt.readthedocs.io"
 repo = "https://github.com/jpadilla/pyjwt"

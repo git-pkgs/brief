@@ -1,6 +1,6 @@
 [tool]
 name = "Shrine"
-category = "build"
+category = "library"
 homepage = "https://shrinerb.com"
 docs = "https://shrinerb.com"
 repo = "https://github.com/shrinerb/shrine"

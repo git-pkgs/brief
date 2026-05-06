@@ -1,6 +1,6 @@
 [tool]
 name = "Devise"
-category = "build"
+category = "library"
 homepage = "https://github.com/heartcombo/devise"
 docs = "https://github.com/heartcombo/devise"
 repo = "https://github.com/heartcombo/devise"

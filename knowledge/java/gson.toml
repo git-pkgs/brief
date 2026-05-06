@@ -1,6 +1,6 @@
 [tool]
 name = "Gson"
-category = "build"
+category = "library"
 homepage = "https://github.com/google/gson"
 docs = "https://github.com/google/gson"
 repo = "https://github.com/google/gson"

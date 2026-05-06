@@ -1,6 +1,6 @@
 [tool]
 name = "python-jose"
-category = "build"
+category = "library"
 homepage = "https://github.com/mpdavis/python-jose"
 docs = "https://github.com/mpdavis/python-jose"
 repo = "https://github.com/mpdavis/python-jose"

@@ -1,6 +1,6 @@
 [tool]
 name = "Resty"
-category = "build"
+category = "library"
 homepage = "https://resty.dev"
 docs = "https://resty.dev"
 repo = "https://github.com/go-resty/resty"

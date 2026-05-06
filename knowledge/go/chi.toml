@@ -1,6 +1,6 @@
 [tool]
 name = "Chi"
-category = "build"
+category = "library"
 homepage = "https://go-chi.io"
 docs = "https://go-chi.io/#/README"
 repo = "https://github.com/go-chi/chi"

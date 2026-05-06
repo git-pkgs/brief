@@ -1,6 +1,6 @@
 [tool]
 name = "XStream"
-category = "build"
+category = "library"
 homepage = "https://x-stream.github.io"
 docs = "https://x-stream.github.io"
 repo = "https://github.com/x-stream/xstream"

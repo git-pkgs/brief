@@ -1,6 +1,6 @@
 [tool]
 name = "reqwest"
-category = "build"
+category = "library"
 homepage = "https://docs.rs/reqwest"
 docs = "https://docs.rs/reqwest"
 repo = "https://github.com/seanmonstar/reqwest"

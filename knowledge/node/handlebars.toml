@@ -1,6 +1,6 @@
 [tool]
 name = "Handlebars"
-category = "build"
+category = "library"
 homepage = "https://handlebarsjs.com"
 docs = "https://handlebarsjs.com"
 repo = "https://github.com/handlebars-lang/handlebars.js"

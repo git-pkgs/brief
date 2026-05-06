@@ -1,6 +1,6 @@
 [tool]
 name = "SnakeYAML"
-category = "build"
+category = "library"
 homepage = "https://bitbucket.org/snakeyaml/snakeyaml"
 docs = "https://bitbucket.org/snakeyaml/snakeyaml"
 repo = "https://bitbucket.org/snakeyaml/snakeyaml"

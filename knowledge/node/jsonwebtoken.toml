@@ -1,6 +1,6 @@
 [tool]
 name = "jsonwebtoken"
-category = "build"
+category = "library"
 homepage = "https://github.com/auth0/node-jsonwebtoken"
 docs = "https://github.com/auth0/node-jsonwebtoken"
 repo = "https://github.com/auth0/node-jsonwebtoken"

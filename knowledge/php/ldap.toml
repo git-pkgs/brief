@@ -1,6 +1,6 @@
 [tool]
 name = "PHP LDAP"
-category = "build"
+category = "library"
 homepage = "https://www.php.net/manual/en/book.ldap.php"
 docs = "https://www.php.net/manual/en/book.ldap.php"
 description = "LDAP extension for PHP"

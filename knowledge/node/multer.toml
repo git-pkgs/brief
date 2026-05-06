@@ -1,6 +1,6 @@
 [tool]
 name = "Multer"
-category = "build"
+category = "library"
 homepage = "https://github.com/expressjs/multer"
 docs = "https://github.com/expressjs/multer"
 repo = "https://github.com/expressjs/multer"

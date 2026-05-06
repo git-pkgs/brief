@@ -1,6 +1,6 @@
 [tool]
 name = "Nunjucks"
-category = "build"
+category = "library"
 homepage = "https://mozilla.github.io/nunjucks"
 docs = "https://mozilla.github.io/nunjucks"
 repo = "https://github.com/mozilla/nunjucks"

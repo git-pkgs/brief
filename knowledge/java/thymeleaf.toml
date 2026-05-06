@@ -1,6 +1,6 @@
 [tool]
 name = "Thymeleaf"
-category = "build"
+category = "library"
 homepage = "https://www.thymeleaf.org"
 docs = "https://www.thymeleaf.org"
 repo = "https://github.com/thymeleaf/thymeleaf"

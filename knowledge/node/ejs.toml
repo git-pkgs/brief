@@ -1,6 +1,6 @@
 [tool]
 name = "EJS"
-category = "build"
+category = "library"
 homepage = "https://ejs.co"
 docs = "https://ejs.co"
 repo = "https://github.com/mde/ejs"

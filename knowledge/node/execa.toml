@@ -1,6 +1,6 @@
 [tool]
 name = "execa"
-category = "build"
+category = "library"
 homepage = "https://github.com/sindresorhus/execa"
 docs = "https://github.com/sindresorhus/execa"
 repo = "https://github.com/sindresorhus/execa"

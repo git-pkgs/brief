@@ -1,6 +1,6 @@
 [tool]
 name = "axios"
-category = "build"
+category = "library"
 homepage = "https://axios-http.com"
 docs = "https://axios-http.com"
 repo = "https://github.com/axios/axios"

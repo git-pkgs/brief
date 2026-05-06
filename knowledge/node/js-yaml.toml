@@ -1,6 +1,6 @@
 [tool]
 name = "js-yaml"
-category = "build"
+category = "library"
 homepage = "https://github.com/nodeca/js-yaml"
 docs = "https://github.com/nodeca/js-yaml"
 repo = "https://github.com/nodeca/js-yaml"

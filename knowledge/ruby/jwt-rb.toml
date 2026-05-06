@@ -1,6 +1,6 @@
 [tool]
 name = "ruby-jwt"
-category = "build"
+category = "library"
 homepage = "https://github.com/jwt/ruby-jwt"
 docs = "https://github.com/jwt/ruby-jwt"
 repo = "https://github.com/jwt/ruby-jwt"

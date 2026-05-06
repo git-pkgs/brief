@@ -1,6 +1,6 @@
 [tool]
 name = "PyYAML"
-category = "build"
+category = "library"
 homepage = "https://pyyaml.org"
 docs = "https://pyyaml.org"
 repo = "https://github.com/yaml/pyyaml"

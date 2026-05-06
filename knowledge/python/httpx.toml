@@ -1,6 +1,6 @@
 [tool]
 name = "httpx"
-category = "build"
+category = "library"
 homepage = "https://www.python-httpx.org"
 docs = "https://www.python-httpx.org"
 repo = "https://github.com/encode/httpx"

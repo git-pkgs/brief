@@ -1,6 +1,6 @@
 [tool]
 name = "cryptography"
-category = "build"
+category = "library"
 homepage = "https://cryptography.io"
 docs = "https://cryptography.io"
 repo = "https://github.com/pyca/cryptography"

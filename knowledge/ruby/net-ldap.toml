@@ -1,6 +1,6 @@
 [tool]
 name = "net-ldap"
-category = "build"
+category = "library"
 homepage = "https://github.com/ruby-ldap/ruby-net-ldap"
 docs = "https://www.rubydoc.info/gems/net-ldap"
 repo = "https://github.com/ruby-ldap/ruby-net-ldap"

@@ -1,6 +1,6 @@
 [tool]
 name = "CarrierWave"
-category = "build"
+category = "library"
 homepage = "https://github.com/carrierwaveuploader/carrierwave"
 docs = "https://github.com/carrierwaveuploader/carrierwave"
 repo = "https://github.com/carrierwaveuploader/carrierwave"

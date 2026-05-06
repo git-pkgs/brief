@@ -1,6 +1,6 @@
 [tool]
 name = "Formidable"
-category = "build"
+category = "library"
 homepage = "https://github.com/node-formidable/formidable"
 docs = "https://github.com/node-formidable/formidable"
 repo = "https://github.com/node-formidable/formidable"

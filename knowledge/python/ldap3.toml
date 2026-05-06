@@ -1,6 +1,6 @@
 [tool]
 name = "ldap3"
-category = "build"
+category = "library"
 homepage = "https://ldap3.readthedocs.io"
 docs = "https://ldap3.readthedocs.io"
 repo = "https://github.com/cannatag/ldap3"

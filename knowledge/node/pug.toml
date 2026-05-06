@@ -1,6 +1,6 @@
 [tool]
 name = "Pug"
-category = "build"
+category = "library"
 homepage = "https://pugjs.org"
 docs = "https://pugjs.org"
 repo = "https://github.com/pugjs/pug"

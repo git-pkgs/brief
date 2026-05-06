@@ -1,6 +1,6 @@
 [tool]
 name = "Tailwind CSS"
-category = "build"
+category = "library"
 homepage = "https://tailwindcss.com"
 docs = "https://tailwindcss.com/docs"
 repo = "https://github.com/tailwindlabs/tailwindcss"

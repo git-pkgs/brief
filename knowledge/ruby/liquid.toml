@@ -1,6 +1,6 @@
 [tool]
 name = "Liquid"
-category = "build"
+category = "library"
 homepage = "https://shopify.github.io/liquid"
 docs = "https://shopify.github.io/liquid"
 repo = "https://github.com/Shopify/liquid"

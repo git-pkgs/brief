@@ -1,6 +1,6 @@
 [tool]
 name = "NextAuth.js"
-category = "build"
+category = "library"
 homepage = "https://next-auth.js.org"
 docs = "https://next-auth.js.org"
 repo = "https://github.com/nextauthjs/next-auth"

@@ -1,6 +1,6 @@
 [tool]
 name = "Faraday"
-category = "build"
+category = "library"
 homepage = "https://lostisland.github.io/faraday"
 docs = "https://lostisland.github.io/faraday"
 repo = "https://github.com/lostisland/faraday"

@@ -1,6 +1,6 @@
 [tool]
 name = "Haml"
-category = "build"
+category = "library"
 homepage = "https://haml.info"
 docs = "https://haml.info"
 repo = "https://github.com/haml/haml"

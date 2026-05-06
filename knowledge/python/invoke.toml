@@ -1,6 +1,6 @@
 [tool]
 name = "Invoke"
-category = "build"
+category = "library"
 homepage = "https://www.pyinvoke.org"
 docs = "https://www.pyinvoke.org"
 repo = "https://github.com/pyinvoke/invoke"

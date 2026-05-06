@@ -1,6 +1,6 @@
 [tool]
 name = "node-fetch"
-category = "build"
+category = "library"
 homepage = "https://github.com/node-fetch/node-fetch"
 docs = "https://github.com/node-fetch/node-fetch"
 repo = "https://github.com/node-fetch/node-fetch"

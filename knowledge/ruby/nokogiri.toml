@@ -1,6 +1,6 @@
 [tool]
 name = "Nokogiri"
-category = "build"
+category = "library"
 homepage = "https://nokogiri.org"
 docs = "https://nokogiri.org"
 repo = "https://github.com/sparklemotion/nokogiri"

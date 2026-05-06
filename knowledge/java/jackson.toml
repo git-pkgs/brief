@@ -1,6 +1,6 @@
 [tool]
 name = "Jackson"
-category = "build"
+category = "library"
 homepage = "https://github.com/FasterXML/jackson"
 docs = "https://github.com/FasterXML/jackson"
 repo = "https://github.com/FasterXML/jackson-databind"

@@ -1,6 +1,6 @@
 [tool]
 name = "lxml"
-category = "build"
+category = "library"
 homepage = "https://lxml.de"
 docs = "https://lxml.de"
 repo = "https://github.com/lxml/lxml"

@@ -1,6 +1,6 @@
 [tool]
 name = "Twig"
-category = "build"
+category = "library"
 homepage = "https://twig.symfony.com"
 docs = "https://twig.symfony.com"
 repo = "https://github.com/twigphp/Twig"

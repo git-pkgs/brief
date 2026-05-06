@@ -1,6 +1,6 @@
 [tool]
 name = "crypto-js"
-category = "build"
+category = "library"
 homepage = "https://github.com/brix/crypto-js"
 docs = "https://github.com/brix/crypto-js"
 repo = "https://github.com/brix/crypto-js"

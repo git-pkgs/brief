@@ -1,6 +1,6 @@
 [tool]
 name = "Newtonsoft.Json"
-category = "build"
+category = "library"
 homepage = "https://www.newtonsoft.com/json"
 docs = "https://www.newtonsoft.com/json"
 repo = "https://github.com/JamesNK/Newtonsoft.Json"

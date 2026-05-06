@@ -1,6 +1,6 @@
 [tool]
 name = "fast-xml-parser"
-category = "build"
+category = "library"
 homepage = "https://github.com/NaturalIntelligence/fast-xml-parser"
 docs = "https://github.com/NaturalIntelligence/fast-xml-parser"
 repo = "https://github.com/NaturalIntelligence/fast-xml-parser"

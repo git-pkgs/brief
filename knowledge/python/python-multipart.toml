@@ -1,6 +1,6 @@
 [tool]
 name = "python-multipart"
-category = "build"
+category = "library"
 homepage = "https://github.com/Kludex/python-multipart"
 docs = "https://github.com/Kludex/python-multipart"
 repo = "https://github.com/Kludex/python-multipart"

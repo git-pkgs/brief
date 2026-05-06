@@ -1,6 +1,6 @@
 [tool]
 name = "golang-jwt"
-category = "build"
+category = "library"
 homepage = "https://golang-jwt.github.io/jwt"
 docs = "https://golang-jwt.github.io/jwt"
 repo = "https://github.com/golang-jwt/jwt"

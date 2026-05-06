@@ -1,6 +1,6 @@
 [tool]
 name = "defusedxml"
-category = "build"
+category = "library"
 homepage = "https://github.com/tiran/defusedxml"
 docs = "https://github.com/tiran/defusedxml"
 repo = "https://github.com/tiran/defusedxml"

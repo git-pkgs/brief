@@ -1,6 +1,6 @@
 [tool]
 name = "ruamel.yaml"
-category = "build"
+category = "library"
 homepage = "https://yaml.readthedocs.io"
 docs = "https://yaml.readthedocs.io"
 repo = "https://sourceforge.net/projects/ruamel-yaml"

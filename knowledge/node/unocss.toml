@@ -1,6 +1,6 @@
 [tool]
 name = "UnoCSS"
-category = "build"
+category = "library"
 homepage = "https://unocss.dev"
 docs = "https://unocss.dev/guide/"
 repo = "https://github.com/unocss/unocss"

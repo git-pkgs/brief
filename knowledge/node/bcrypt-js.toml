@@ -1,6 +1,6 @@
 [tool]
 name = "bcrypt"
-category = "build"
+category = "library"
 homepage = "https://github.com/kelektiv/node.bcrypt.js"
 docs = "https://github.com/kelektiv/node.bcrypt.js"
 repo = "https://github.com/kelektiv/node.bcrypt.js"

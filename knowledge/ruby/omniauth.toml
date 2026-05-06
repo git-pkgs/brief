@@ -1,6 +1,6 @@
 [tool]
 name = "OmniAuth"
-category = "build"
+category = "library"
 homepage = "https://github.com/omniauth/omniauth"
 docs = "https://github.com/omniauth/omniauth"
 repo = "https://github.com/omniauth/omniauth"

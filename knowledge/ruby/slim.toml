@@ -1,6 +1,6 @@
 [tool]
 name = "Slim"
-category = "build"
+category = "library"
 homepage = "https://slim-template.github.io"
 docs = "https://slim-template.github.io"
 repo = "https://github.com/slim-template/slim"

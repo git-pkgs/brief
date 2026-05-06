@@ -1,6 +1,6 @@
 [tool]
 name = "requests"
-category = "build"
+category = "library"
 homepage = "https://requests.readthedocs.io"
 docs = "https://requests.readthedocs.io"
 repo = "https://github.com/psf/requests"

@@ -1,6 +1,6 @@
 [tool]
 name = "xml2js"
-category = "build"
+category = "library"
 homepage = "https://github.com/Leonidas-from-XIV/node-xml2js"
 docs = "https://github.com/Leonidas-from-XIV/node-xml2js"
 repo = "https://github.com/Leonidas-from-XIV/node-xml2js"

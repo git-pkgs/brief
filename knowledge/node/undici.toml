@@ -1,6 +1,6 @@
 [tool]
 name = "undici"
-category = "build"
+category = "library"
 homepage = "https://undici.nodejs.org"
 docs = "https://undici.nodejs.org"
 repo = "https://github.com/nodejs/undici"

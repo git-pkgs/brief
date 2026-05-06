@@ -1,6 +1,6 @@
 [tool]
 name = "sh"
-category = "build"
+category = "library"
 homepage = "https://sh.readthedocs.io"
 docs = "https://sh.readthedocs.io"
 repo = "https://github.com/amoffat/sh"

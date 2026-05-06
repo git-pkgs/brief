@@ -1,0 +1,24 @@
+[tool]
+name = "setuptools"
+category = "package_manager"
+homepage = "https://setuptools.pypa.io"
+docs = "https://setuptools.pypa.io/en/latest/"
+repo = "https://github.com/pypa/setuptools"
+description = "Python build backend for setup.py/setup.cfg and PEP 517 projects"
+
+[detect]
+files = ["setup.py", "setup.cfg"]
+[detect.file_contains]
+"pyproject.toml" = ["setuptools"]
+
+ecosystems = ["python"]
+
+[commands]
+run = "pip install -e ."
+alternatives = ["pip install ."]
+
+[config]
+files = ["setup.py", "setup.cfg", "pyproject.toml"]
+
+[taxonomy]
+role = ["package-manager"]

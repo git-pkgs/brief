@@ -1,0 +1,24 @@
+[tool]
+name = "Hatch"
+category = "package_manager"
+homepage = "https://hatch.pypa.io"
+docs = "https://hatch.pypa.io/latest/"
+repo = "https://github.com/pypa/hatch"
+description = "Modern Python project manager and build backend"
+
+[detect]
+files = ["hatch.toml"]
+[detect.file_contains]
+"pyproject.toml" = ["[tool.hatch", "hatchling"]
+
+ecosystems = ["python"]
+
+[commands]
+run = "hatch env create"
+alternatives = ["pip install -e ."]
+
+[config]
+files = ["pyproject.toml", "hatch.toml"]
+
+[taxonomy]
+role = ["package-manager"]

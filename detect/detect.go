@@ -165,7 +165,7 @@ func (e *Engine) Run() (*brief.Report, error) {
 	e.detectSelf(abs, report)
 
 	report.Style = e.detectStyle()
-	report.Layout = e.detectLayout()
+	report.Layout = e.detectLayout(report.Languages)
 	report.Platforms = e.detectPlatforms()
 
 	// Run slow detections concurrently.
@@ -973,7 +973,7 @@ func (e *Engine) inferStyle() *brief.StyleInfo {
 }
 
 // detectLayout checks for source and test directory patterns from the knowledge base.
-func (e *Engine) detectLayout() *brief.LayoutInfo {
+func (e *Engine) detectLayout(languages []brief.Detection) *brief.LayoutInfo {
 	if e.KB.Layouts == nil {
 		return nil
 	}
@@ -992,11 +992,96 @@ func (e *Engine) detectLayout() *brief.LayoutInfo {
 		}
 	}
 
+	if len(layout.SourceDirs) == 0 {
+		layout.SourceDirs = e.inferFlatLayout(languages, layout.TestDirs)
+	}
+
 	if len(layout.SourceDirs) == 0 && len(layout.TestDirs) == 0 {
 		return nil
 	}
 
 	return layout
+}
+
+// inferFlatLayout finds top-level directories that hold source for the primary
+// detected language when no conventional source directory (src/, lib/, etc.)
+// exists. This covers projects where the package directory is named after the
+// project rather than a generic name.
+func (e *Engine) inferFlatLayout(languages []brief.Detection, testDirs []string) []string {
+	if len(languages) == 0 {
+		return nil
+	}
+
+	exts := e.languageExtensions(languages[0].Name)
+	if len(exts) == 0 {
+		return nil
+	}
+
+	skip := make(map[string]bool)
+	for _, d := range e.KB.Layouts.Layout.ExcludeDirs {
+		skip[d] = true
+	}
+	for _, d := range e.KB.Layouts.Layout.TestDirs {
+		skip[d] = true
+	}
+	for _, d := range testDirs {
+		skip[d] = true
+	}
+
+	entries, err := os.ReadDir(e.Root)
+	if err != nil {
+		return nil
+	}
+
+	var found []string
+	for _, ent := range entries {
+		if !ent.IsDir() {
+			continue
+		}
+		name := ent.Name()
+		if e.shouldSkipDir(name) || skip[name] {
+			continue
+		}
+		if e.dirHasExtension(name, exts) {
+			found = append(found, name)
+		}
+	}
+	return found
+}
+
+// languageExtensions returns the file extensions a language tool definition
+// matches on, derived from its "*.ext" detection patterns.
+func (e *Engine) languageExtensions(name string) []string {
+	tool := e.KB.ByName[name]
+	if tool == nil {
+		return nil
+	}
+	seen := make(map[string]bool)
+	var exts []string
+	for _, pattern := range tool.Detect.Files {
+		if idx := strings.LastIndex(pattern, "*."); idx >= 0 {
+			ext := pattern[idx+1:]
+			if !seen[ext] {
+				seen[ext] = true
+				exts = append(exts, ext)
+			}
+		}
+	}
+	return exts
+}
+
+// dirHasExtension reports whether dir directly contains a file with one of the
+// given extensions.
+func (e *Engine) dirHasExtension(dir string, exts []string) bool {
+	for _, name := range e.dirFiles(dir) {
+		ext := filepath.Ext(name)
+		for _, want := range exts {
+			if ext == want {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 // detectResources checks for project resource files defined in the knowledge base.

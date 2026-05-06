@@ -1,3 +1,13 @@
 [layout]
 source_dirs = ["src", "lib", "app", "pkg", "internal", "cmd"]
 test_dirs = ["test", "tests", "spec", "__tests__", "t"]
+exclude_dirs = [
+  "docs", "doc", "documentation",
+  "examples", "example", "samples", "sample", "demo", "demos",
+  "scripts", "script", "bin", "tools", "tool", "utils", "util",
+  "dev", "ci", "etc", "config", "configs", "conf",
+  "assets", "static", "public", "resources", "res",
+  "fixtures", "stubs", "mocks", "benchmark", "benchmarks", "bench",
+  "man", "share", "data", "migrations", "db",
+  "requires", "requirements", "deps",
+]

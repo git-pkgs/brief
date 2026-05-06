@@ -1,0 +1,23 @@
+[tool]
+name = "Flit"
+category = "package_manager"
+homepage = "https://flit.pypa.io"
+docs = "https://flit.pypa.io/en/stable/"
+repo = "https://github.com/pypa/flit"
+description = "Simple Python build backend for pure-Python packages"
+
+[detect]
+[detect.file_contains]
+"pyproject.toml" = ["[tool.flit", "flit_core"]
+
+ecosystems = ["python"]
+
+[commands]
+run = "flit install"
+alternatives = ["pip install -e ."]
+
+[config]
+files = ["pyproject.toml"]
+
+[taxonomy]
+role = ["package-manager"]

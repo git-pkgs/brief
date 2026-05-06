@@ -374,6 +374,131 @@ func TestPythonProject(t *testing.T) {
 	}
 }
 
+func writeProjectFile(t *testing.T, dir, path, content string) {
+	t.Helper()
+	full := filepath.Join(dir, path)
+	if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(full, []byte(content), 0o644); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func runOn(t *testing.T, dir string) *brief.Report {
+	t.Helper()
+	r, err := New(loadKB(t), dir).Run()
+	if err != nil {
+		t.Fatalf("Run: %v", err)
+	}
+	return r
+}
+
+func packageManagerNames(r *brief.Report) []string {
+	names := make([]string, 0, len(r.PackageManagers))
+	for _, pm := range r.PackageManagers {
+		names = append(names, pm.Name)
+	}
+	return names
+}
+
+func TestPythonPackageManagerManifests(t *testing.T) {
+	cases := []struct {
+		name    string
+		file    string
+		content string
+		want    string
+	}{
+		{"setup.py", "setup.py", "from setuptools import setup\nsetup()\n", "setuptools"},
+		{"setup.cfg", "setup.cfg", "[metadata]\nname = x\n", "setuptools"},
+		{"pyproject setuptools", "pyproject.toml", "[build-system]\nrequires = [\"setuptools\"]\n", "setuptools"},
+		{"pyproject hatchling", "pyproject.toml", "[build-system]\nbuild-backend = \"hatchling.build\"\n", "Hatch"},
+		{"pyproject flit", "pyproject.toml", "[build-system]\nrequires = [\"flit_core\"]\n", "Flit"},
+		{"Pipfile", "Pipfile", "[packages]\n", "Pipenv"},
+		{"requirements.txt", "requirements.txt", "requests\n", "pip"},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			dir := t.TempDir()
+			writeProjectFile(t, dir, "main.py", "")
+			writeProjectFile(t, dir, tc.file, tc.content)
+			r := runOn(t, dir)
+			got := packageManagerNames(r)
+			found := false
+			for _, n := range got {
+				if n == tc.want {
+					found = true
+				}
+			}
+			if !found {
+				t.Errorf("manifest %s: want %q in package managers, got %v", tc.file, tc.want, got)
+			}
+		})
+	}
+}
+
+func TestPythonFlatLayout(t *testing.T) {
+	dir := t.TempDir()
+	writeProjectFile(t, dir, "setup.py", "")
+	writeProjectFile(t, dir, "mypkg/__init__.py", "")
+	writeProjectFile(t, dir, "mypkg/core.py", "")
+	writeProjectFile(t, dir, "tests/test_core.py", "")
+	writeProjectFile(t, dir, "docs/index.md", "")
+	writeProjectFile(t, dir, "scripts/release.py", "")
+
+	r := runOn(t, dir)
+	if r.Layout == nil {
+		t.Fatal("expected layout info")
+	}
+	if got := r.Layout.SourceDirs; len(got) != 1 || got[0] != "mypkg" {
+		t.Errorf("source_dirs = %v, want [mypkg]", got)
+	}
+	for _, d := range r.Layout.SourceDirs {
+		if d == "docs" || d == "scripts" || d == "tests" {
+			t.Errorf("source_dirs should not include %q", d)
+		}
+	}
+	foundTests := false
+	for _, d := range r.Layout.TestDirs {
+		if d == "tests" {
+			foundTests = true
+		}
+	}
+	if !foundTests {
+		t.Error("expected tests/ in test_dirs")
+	}
+}
+
+func TestFlatLayoutSkippedWhenSrcExists(t *testing.T) {
+	dir := t.TempDir()
+	writeProjectFile(t, dir, "src/mypkg/__init__.py", "")
+	writeProjectFile(t, dir, "helper/tool.py", "")
+
+	r := runOn(t, dir)
+	if r.Layout == nil {
+		t.Fatal("expected layout info")
+	}
+	if got := r.Layout.SourceDirs; len(got) != 1 || got[0] != "src" {
+		t.Errorf("source_dirs = %v, want [src]", got)
+	}
+}
+
+func TestFlatLayoutNonPython(t *testing.T) {
+	dir := t.TempDir()
+	writeProjectFile(t, dir, "Gemfile", "source 'https://rubygems.org'\n")
+	writeProjectFile(t, dir, "mygem/version.rb", "VERSION = '1.0'\n")
+	writeProjectFile(t, dir, "examples/demo.rb", "")
+	writeProjectFile(t, dir, "spec/mygem_spec.rb", "")
+
+	r := runOn(t, dir)
+	if r.Layout == nil {
+		t.Fatal("expected layout info")
+	}
+	if got := r.Layout.SourceDirs; len(got) != 1 || got[0] != "mygem" {
+		t.Errorf("source_dirs = %v, want [mygem]", got)
+	}
+}
+
 func TestEmptyProject(t *testing.T) {
 	engine := New(loadKB(t), "../testdata/empty-project")
 	r, err := engine.Run()

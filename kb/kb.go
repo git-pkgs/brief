@@ -161,8 +161,9 @@ type LayoutDef struct {
 
 // LayoutRules holds the layout detection rules.
 type LayoutRules struct {
-	SourceDirs []string `toml:"source_dirs"` // directories that indicate source
-	TestDirs   []string `toml:"test_dirs"`   // directories that indicate tests
+	SourceDirs  []string `toml:"source_dirs"`  // directories that indicate source
+	TestDirs    []string `toml:"test_dirs"`    // directories that indicate tests
+	ExcludeDirs []string `toml:"exclude_dirs"` // directories to skip during flat-layout inference
 }
 
 // StyleConfigDef defines style configuration files to check.

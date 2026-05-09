@@ -228,6 +228,93 @@ func TestResourceRootBeatsSubdir(t *testing.T) {
 	}
 }
 
+func writeFile(t *testing.T, dir, p, content string) {
+	t.Helper()
+	full := filepath.Join(dir, filepath.FromSlash(p))
+	if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(full, []byte(content), 0o644); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestDetectSkills(t *testing.T) {
+	dir := t.TempDir()
+	writeFile(t, dir, "skills/pdf/SKILL.md", `---
+name: pdf
+description: Read and fill PDF forms
+---
+
+Body here.
+`)
+	writeFile(t, dir, ".claude/skills/excel/SKILL.md", `---
+name: excel-tools
+description: Generate spreadsheets
+---
+`)
+	writeFile(t, dir, "skills/empty/SKILL.md", "no frontmatter\n")
+
+	engine := New(loadKB(t), dir)
+	r, err := engine.Run()
+	if err != nil {
+		t.Fatalf("Run: %v", err)
+	}
+	if len(r.Skills) != 3 {
+		t.Fatalf("expected 3 skills, got %d: %+v", len(r.Skills), r.Skills)
+	}
+
+	byPath := map[string]brief.Skill{}
+	for _, s := range r.Skills {
+		byPath[s.Path] = s
+	}
+
+	pdf := byPath["skills/pdf/SKILL.md"]
+	if pdf.Name != "pdf" || pdf.Description != "Read and fill PDF forms" || pdf.Format != "claude" {
+		t.Errorf("pdf skill = %+v", pdf)
+	}
+	excel := byPath[".claude/skills/excel/SKILL.md"]
+	if excel.Name != "excel-tools" || excel.Description != "Generate spreadsheets" {
+		t.Errorf("excel skill = %+v", excel)
+	}
+	empty := byPath["skills/empty/SKILL.md"]
+	if empty.Name != "empty" || empty.Description != "" {
+		t.Errorf("empty skill should fall back to dir name, got %+v", empty)
+	}
+}
+
+func TestDetectSkillsMalformedFrontmatter(t *testing.T) {
+	dir := t.TempDir()
+	writeFile(t, dir, "skills/broken/SKILL.md", `---
+name: [unclosed
+---
+`)
+	engine := New(loadKB(t), dir)
+	r, err := engine.Run()
+	if err != nil {
+		t.Fatalf("Run: %v", err)
+	}
+	if len(r.Skills) != 1 {
+		t.Fatalf("expected 1 skill, got %d", len(r.Skills))
+	}
+	if r.Skills[0].Name != "broken" {
+		t.Errorf("expected fallback to dir name, got %q", r.Skills[0].Name)
+	}
+}
+
+func TestDetectSkillsNone(t *testing.T) {
+	dir := t.TempDir()
+	writeFile(t, dir, "README.md", "x")
+	engine := New(loadKB(t), dir)
+	r, err := engine.Run()
+	if err != nil {
+		t.Fatalf("Run: %v", err)
+	}
+	if r.Skills != nil {
+		t.Errorf("expected nil skills, got %+v", r.Skills)
+	}
+}
+
 func TestRubyPlatforms(t *testing.T) {
 	r := rubyReport(t)
 	if r.Platforms == nil {

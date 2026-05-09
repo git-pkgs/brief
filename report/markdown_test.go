@@ -134,6 +134,27 @@ func TestMarkdownStyle(t *testing.T) {
 	}
 }
 
+func TestMarkdownSkills(t *testing.T) {
+	r := &brief.Report{
+		Version: "dev",
+		Path:    "/tmp/test",
+		Skills: []brief.Skill{
+			{Name: "pdf", Description: "Read PDF forms", Path: "skills/pdf/SKILL.md", Format: "claude"},
+		},
+	}
+
+	var buf bytes.Buffer
+	Markdown(&buf, r, false)
+	out := buf.String()
+
+	if !strings.Contains(out, "**Skills:**") {
+		t.Errorf("missing skills header\ngot:\n%s", out)
+	}
+	if !strings.Contains(out, "- pdf — Read PDF forms `skills/pdf/SKILL.md`") {
+		t.Errorf("missing skill line\ngot:\n%s", out)
+	}
+}
+
 func TestMarkdownResources(t *testing.T) {
 	r := &brief.Report{
 		Version: "dev",

@@ -27,6 +27,7 @@ func Markdown(w io.Writer, r *brief.Report, verbose bool) {
 	mdLayout(w, r.Layout)
 	mdPlatforms(w, r.Platforms)
 	mdResources(w, r.Resources)
+	mdSkills(w, r.Skills)
 	mdGit(w, r.Git)
 	mdLines(w, r.Lines)
 	mdEnrichment(w, r.Enrichment)
@@ -279,6 +280,21 @@ func mdResourceGroup(w io.Writer, label string, group map[string]string) {
 	_, _ = fmt.Fprintf(w, "- %s:\n", label)
 	for _, k := range sortedKeys(group) {
 		_, _ = fmt.Fprintf(w, "  - %s\n", sanitize(group[k]))
+	}
+}
+
+func mdSkills(w io.Writer, skills []brief.Skill) {
+	if len(skills) == 0 {
+		return
+	}
+	_, _ = fmt.Fprintln(w)
+	_, _ = fmt.Fprintln(w, "**Skills:**")
+	for _, s := range skills {
+		line := s.Name
+		if s.Description != "" {
+			line += " — " + s.Description
+		}
+		_, _ = fmt.Fprintf(w, "- %s `%s`\n", sanitize(line), sanitize(s.Path))
 	}
 }
 

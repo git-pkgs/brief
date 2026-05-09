@@ -85,6 +85,7 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 	printLayout(w, r.Layout)
 	printPlatforms(w, r.Platforms)
 	printResources(w, r.Resources)
+	printSkills(w, r.Skills)
 	printGit(w, r.Git)
 	printLines(w, r.Lines)
 	printEnrichment(w, r.Enrichment)
@@ -304,6 +305,20 @@ func printResources(w io.Writer, res *brief.ResourceInfo) {
 func printResourceGroup(w io.Writer, label string, group map[string]string) {
 	for _, k := range sortedKeys(group) {
 		_, _ = fmt.Fprintf(w, "%-12s %s\n", label+":", sanitize(group[k]))
+	}
+}
+
+func printSkills(w io.Writer, skills []brief.Skill) {
+	if len(skills) == 0 {
+		return
+	}
+	_, _ = fmt.Fprintln(w)
+	for _, s := range skills {
+		line := s.Name
+		if s.Description != "" {
+			line += " — " + s.Description
+		}
+		_, _ = fmt.Fprintf(w, "Skills:      %s  [%s]\n", sanitize(line), sanitize(s.Path))
 	}
 }
 

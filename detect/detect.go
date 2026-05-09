@@ -2,6 +2,7 @@
 package detect
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -213,6 +214,7 @@ func (e *Engine) Run() (*brief.Report, error) {
 	report.Style = e.detectStyle()
 	report.Layout = e.detectLayout(report.Languages)
 	report.Platforms = e.detectPlatforms()
+	report.Skills = e.detectSkills()
 
 	// Run slow detections concurrently.
 	var wg sync.WaitGroup
@@ -1234,6 +1236,65 @@ func (e *Engine) findResource(r kb.ResourceInfo) (abs, rel string) {
 		}
 	}
 	return "", ""
+}
+
+var skillFrontmatterDelim = []byte("---")
+
+type skillFrontmatter struct {
+	Name        string `yaml:"name"`
+	Description string `yaml:"description"`
+}
+
+// detectSkills looks for agent skill definitions the project provides.
+func (e *Engine) detectSkills() []brief.Skill {
+	var skills []brief.Skill
+	for _, glob := range []string{"skills/*/SKILL.md", ".claude/skills/*/SKILL.md"} {
+		matches, err := filepath.Glob(filepath.Join(e.Root, filepath.FromSlash(glob)))
+		if err != nil {
+			continue
+		}
+		sort.Strings(matches)
+		for _, abs := range matches {
+			rel, err := filepath.Rel(e.Root, abs)
+			if err != nil {
+				continue
+			}
+			rel = filepath.ToSlash(rel)
+			skills = append(skills, e.parseSkill(rel))
+		}
+	}
+	return skills
+}
+
+// parseSkill reads a SKILL.md file and extracts name/description from its
+// YAML frontmatter. Falls back to the parent directory name if frontmatter is
+// missing or unparseable.
+func (e *Engine) parseSkill(rel string) brief.Skill {
+	skill := brief.Skill{
+		Name:   path.Base(path.Dir(rel)),
+		Path:   rel,
+		Format: "claude",
+	}
+	data, err := e.safeReadFile(rel)
+	if err != nil {
+		return skill
+	}
+	if !bytes.HasPrefix(data, skillFrontmatterDelim) {
+		return skill
+	}
+	rest := bytes.TrimLeft(data[len(skillFrontmatterDelim):], "\r\n")
+	end := bytes.Index(rest, []byte("\n---"))
+	if end == -1 {
+		return skill
+	}
+	var fm skillFrontmatter
+	if yaml.Unmarshal(rest[:end], &fm) == nil {
+		if fm.Name != "" {
+			skill.Name = fm.Name
+		}
+		skill.Description = fm.Description
+	}
+	return skill
 }
 
 // dirFiles returns the regular file names in dir (relative to e.Root),

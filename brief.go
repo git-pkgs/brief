@@ -151,6 +151,15 @@ func (r *ResourceInfo) Empty() bool {
 		len(r.Security) == 0 && len(r.Metadata) == 0
 }
 
+// Skill is an agent skill the project provides: packaged instructions an AI
+// coding agent can load on demand. Path is relative to the repository root.
+type Skill struct {
+	Name        string `json:"name"`
+	Description string `json:"description,omitempty"`
+	Path        string `json:"path"`
+	Format      string `json:"format"`
+}
+
 // GitInfo describes the git repository state.
 type GitInfo struct {
 	Branch        string            `json:"branch,omitempty"`
@@ -297,6 +306,7 @@ type Report struct {
 	Layout          *LayoutInfo            `json:"layout,omitempty"`
 	Platforms       *PlatformInfo          `json:"platforms,omitempty"`
 	Resources       *ResourceInfo          `json:"resources,omitempty"`
+	Skills          []Skill                `json:"skills,omitempty"`
 	Git             *GitInfo               `json:"git,omitempty"`
 	Lines           *LineCount             `json:"lines,omitempty"`
 	Dependencies    []DepInfo              `json:"dependencies,omitempty"`

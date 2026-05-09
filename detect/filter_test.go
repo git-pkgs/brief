@@ -42,6 +42,28 @@ func TestFilterResources(t *testing.T) {
 	}
 }
 
+func TestFilterSkills(t *testing.T) {
+	skills := []brief.Skill{
+		{Name: "pdf", Path: "skills/pdf/SKILL.md", Format: "claude"},
+		{Name: "excel", Path: ".claude/skills/excel/SKILL.md", Format: "claude"},
+	}
+	fc := &filterContext{}
+
+	out := fc.filterSkills(skills, []string{"skills/pdf/helper.py", "main.go"})
+	if len(out) != 1 || out[0].Name != "pdf" {
+		t.Errorf("expected only pdf skill, got %+v", out)
+	}
+
+	out = fc.filterSkills(skills, []string{".claude/skills/excel/SKILL.md"})
+	if len(out) != 1 || out[0].Name != "excel" {
+		t.Errorf("expected only excel skill, got %+v", out)
+	}
+
+	if got := fc.filterSkills(skills, []string{"main.go"}); got != nil {
+		t.Errorf("expected nil when no skills changed, got %+v", got)
+	}
+}
+
 func TestFilterByChangedFiles_Languages(t *testing.T) {
 	knowledgeBase := loadKB(t)
 

@@ -227,6 +227,28 @@ func TestHumanSanitizesCIMatrix(t *testing.T) {
 	}
 }
 
+func TestHumanSkills(t *testing.T) {
+	r := &brief.Report{
+		Version: "dev",
+		Path:    "/tmp/test",
+		Skills: []brief.Skill{
+			{Name: "pdf", Description: "Read PDF forms", Path: "skills/pdf/SKILL.md", Format: "claude"},
+			{Name: "excel", Path: ".claude/skills/excel/SKILL.md", Format: "claude"},
+		},
+	}
+
+	var buf bytes.Buffer
+	Human(&buf, r, false)
+	out := buf.String()
+
+	if !strings.Contains(out, "Skills:      pdf — Read PDF forms  [skills/pdf/SKILL.md]") {
+		t.Errorf("missing pdf skill line\ngot:\n%s", out)
+	}
+	if !strings.Contains(out, "Skills:      excel  [.claude/skills/excel/SKILL.md]") {
+		t.Errorf("missing excel skill line\ngot:\n%s", out)
+	}
+}
+
 func TestHumanSanitizesResources(t *testing.T) {
 	r := &brief.Report{
 		Version: "dev",

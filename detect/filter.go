@@ -1,6 +1,7 @@
 package detect
 
 import (
+	"path"
 	"path/filepath"
 	"slices"
 	"strings"
@@ -69,6 +70,7 @@ func FilterByChangedFiles(r *brief.Report, knowledgeBase *kb.KnowledgeBase, chan
 	filtered.Style = fc.filterStyle(r.Style)
 	filtered.Resources = fc.filterResources(r.Resources, changedFiles)
 	filtered.Platforms = fc.filterPlatforms(r.Platforms, changedFiles)
+	filtered.Skills = fc.filterSkills(r.Skills, changedFiles)
 
 	if fc.manifestChanged {
 		filtered.Dependencies = r.Dependencies
@@ -150,6 +152,20 @@ func (fc *filterContext) filterStyle(style *brief.StyleInfo) *brief.StyleInfo {
 		}
 	}
 	return nil
+}
+
+func (fc *filterContext) filterSkills(skills []brief.Skill, changedFiles []string) []brief.Skill {
+	var out []brief.Skill
+	for _, s := range skills {
+		dir := path.Dir(s.Path) + "/"
+		for _, f := range changedFiles {
+			if strings.HasPrefix(filepath.ToSlash(f), dir) {
+				out = append(out, s)
+				break
+			}
+		}
+	}
+	return out
 }
 
 func (fc *filterContext) filterResources(res *brief.ResourceInfo, changedFiles []string) *brief.ResourceInfo {

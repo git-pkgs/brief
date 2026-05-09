@@ -260,11 +260,11 @@ func mdResources(w io.Writer, res *brief.ResourceInfo) {
 		}
 		_, _ = fmt.Fprintf(w, "- %s\n", label)
 	}
-	mdResource(w, res.Agents)
 	mdResourceGroup(w, "Legal", res.Legal)
 	mdResourceGroup(w, "Community", res.Community)
 	mdResourceGroup(w, "Security", res.Security)
 	mdResourceGroup(w, "Metadata", res.Metadata)
+	mdResourceGroup(w, "Agents", res.Agents)
 	mdTemplates(w, res.Templates)
 }
 

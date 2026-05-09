@@ -168,6 +168,9 @@ func TestMarkdownResources(t *testing.T) {
 			Metadata: map[string]string{
 				"funding": ".github/FUNDING.yml",
 			},
+			Agents: map[string]string{
+				"claude": "CLAUDE.md",
+			},
 		},
 	}
 
@@ -189,6 +192,9 @@ func TestMarkdownResources(t *testing.T) {
 	}
 	if !strings.Contains(out, "- Metadata:\n  - .github/FUNDING.yml") {
 		t.Errorf("missing metadata group\ngot:\n%s", out)
+	}
+	if !strings.Contains(out, "- Agents:\n  - CLAUDE.md") {
+		t.Errorf("missing agents group\ngot:\n%s", out)
 	}
 }
 

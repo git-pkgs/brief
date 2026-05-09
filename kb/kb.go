@@ -149,7 +149,7 @@ type ResourceDef struct {
 type ResourceInfo struct {
 	Name     string   `toml:"name"`
 	Field    string   `toml:"field"`    // JSON field name in output
-	Group    string   `toml:"group"`    // optional group: legal, community, security, metadata
+	Group    string   `toml:"group"`    // optional group: legal, community, security, metadata, agents
 	Patterns []string `toml:"patterns"` // file patterns to match
 	Dirs     []string `toml:"dirs"`     // additional subdirectories to search (root is always searched first)
 }

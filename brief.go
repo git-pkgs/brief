@@ -107,12 +107,12 @@ type ResourceInfo struct {
 	Roadmap     string `json:"roadmap,omitempty"`
 	License     string `json:"license,omitempty"`
 	LicenseType string `json:"license_type,omitempty"`
-	Agents      string `json:"agents,omitempty"`
 
 	Legal     map[string]string `json:"legal,omitempty"`
 	Community map[string]string `json:"community,omitempty"`
 	Security  map[string]string `json:"security,omitempty"`
 	Metadata  map[string]string `json:"metadata,omitempty"`
+	Agents    map[string]string `json:"agents,omitempty"`
 
 	Templates *TemplateInfo `json:"templates,omitempty"`
 }
@@ -155,6 +155,11 @@ func (r *ResourceInfo) Group(name string) map[string]string {
 			r.Metadata = map[string]string{}
 		}
 		return r.Metadata
+	case "agents":
+		if r.Agents == nil {
+			r.Agents = map[string]string{}
+		}
+		return r.Agents
 	}
 	return nil
 }
@@ -162,10 +167,10 @@ func (r *ResourceInfo) Group(name string) map[string]string {
 // Empty reports whether no resources were found.
 func (r *ResourceInfo) Empty() bool {
 	return r.Readme == "" && r.Changelog == "" && r.Roadmap == "" &&
-		r.License == "" && r.Agents == "" &&
+		r.License == "" &&
 		len(r.Legal) == 0 && len(r.Community) == 0 &&
 		len(r.Security) == 0 && len(r.Metadata) == 0 &&
-		r.Templates.Empty()
+		len(r.Agents) == 0 && r.Templates.Empty()
 }
 
 // Skill is an agent skill the project provides: packaged instructions an AI

@@ -175,4 +175,4 @@ patterns = ["contributing", "contributing.md", "contributing.txt", "contributing
 dirs = ["docs", ".github", ".gitlab"]
 ```
 
-`field` is the JSON key the path is written to. `group` places it under one of `legal`, `community`, `security`, or `metadata`; omit it for top-level fields like `readme` and `license`. `patterns` are matched case-insensitively against directory listings, so list each pattern once in lowercase. List explicit extensions rather than a trailing glob for prose files so `support.md` matches but `docs/Support-Tiers.md` does not. `dirs` lists extra directories to search after the repo root; root always wins on a tie.
+`field` is the JSON key the path is written to. `group` places it under one of `legal`, `community`, `security`, `metadata`, or `agents`; omit it for top-level fields like `readme` and `license`. `patterns` are matched case-insensitively against directory listings, so list each pattern once in lowercase. List explicit extensions rather than a trailing glob for prose files so `support.md` matches but `docs/Support-Tiers.md` does not. `dirs` lists extra directories to search after the repo root; root always wins on a tie.

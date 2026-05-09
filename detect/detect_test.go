@@ -156,8 +156,8 @@ func TestResourceGroups(t *testing.T) {
 	if res.Readme != "README.md" {
 		t.Errorf("readme = %q", res.Readme)
 	}
-	if res.Agents != "AGENTS.md" {
-		t.Errorf("agents = %q", res.Agents)
+	if res.Agents["agents"] != "AGENTS.md" {
+		t.Errorf("agents.agents = %q", res.Agents["agents"])
 	}
 	if res.Legal["notice"] != "NOTICE" {
 		t.Errorf("legal.notice = %q", res.Legal["notice"])
@@ -300,6 +300,89 @@ func writeFile(t *testing.T, dir, p, content string) {
 	}
 	if err := os.WriteFile(full, []byte(content), 0o644); err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestResourceAgents(t *testing.T) {
+	dir := t.TempDir()
+	touch := func(p string) {
+		full := filepath.Join(dir, p)
+		if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(full, []byte("x"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	touch("AGENTS.md")
+	touch("CLAUDE.md")
+	touch("GEMINI.md")
+	touch(".cursorrules")
+	touch(".windsurfrules")
+	touch(".github/copilot-instructions.md")
+	touch(".aider.conf.yml")
+	touch(".clinerules")
+	touch(".rules")
+	touch(".junie/guidelines.md")
+	touch("replit.md")
+	touch(".continuerules")
+	touch(".augment-guidelines")
+	touch(".roorules")
+
+	engine := New(loadKB(t), dir)
+	r, err := engine.Run()
+	if err != nil {
+		t.Fatalf("Run: %v", err)
+	}
+	if r.Resources == nil {
+		t.Fatal("expected resources")
+	}
+	want := map[string]string{
+		"agents":   "AGENTS.md",
+		"claude":   "CLAUDE.md",
+		"gemini":   "GEMINI.md",
+		"cursor":   ".cursorrules",
+		"windsurf": ".windsurfrules",
+		"copilot":  ".github/copilot-instructions.md",
+		"aider":    ".aider.conf.yml",
+		"cline":    ".clinerules",
+		"zed":      ".rules",
+		"junie":    ".junie/guidelines.md",
+		"replit":   "replit.md",
+		"continue": ".continuerules",
+		"augment":  ".augment-guidelines",
+		"roo":      ".roorules",
+	}
+	for field, path := range want {
+		if got := r.Resources.Agents[field]; got != path {
+			t.Errorf("agents.%s = %q, want %q", field, got, path)
+		}
+	}
+	if len(r.Resources.Agents) != len(want) {
+		t.Errorf("agents has %d entries, want %d: %v", len(r.Resources.Agents), len(want), r.Resources.Agents)
+	}
+}
+
+func TestResourceAgentsCursorRulesDir(t *testing.T) {
+	dir := t.TempDir()
+	full := filepath.Join(dir, ".cursor", "rules", "general.mdc")
+	if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(full, []byte("x"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	engine := New(loadKB(t), dir)
+	r, err := engine.Run()
+	if err != nil {
+		t.Fatalf("Run: %v", err)
+	}
+	if r.Resources == nil {
+		t.Fatal("expected resources")
+	}
+	if got := r.Resources.Agents["cursor"]; got != ".cursor/rules/general.mdc" {
+		t.Errorf("agents.cursor = %q", got)
 	}
 }
 

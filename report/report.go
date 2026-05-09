@@ -295,11 +295,11 @@ func printResources(w io.Writer, res *brief.ResourceInfo) {
 		}
 		_, _ = fmt.Fprintf(w, "Resources:   %s\n", label)
 	}
-	printResource(w, res.Agents)
 	printResourceGroup(w, "Legal", res.Legal)
 	printResourceGroup(w, "Community", res.Community)
 	printResourceGroup(w, "Security", res.Security)
 	printResourceGroup(w, "Metadata", res.Metadata)
+	printResourceGroup(w, "Agents", res.Agents)
 	printTemplates(w, res.Templates)
 }
 

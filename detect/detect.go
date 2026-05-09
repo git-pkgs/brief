@@ -1202,8 +1202,6 @@ func (e *Engine) detectResources() *brief.ResourceInfo {
 		case "license":
 			res.License = rel
 			res.LicenseType = detectLicenseType(abs)
-		case "agents":
-			res.Agents = rel
 		}
 	}
 

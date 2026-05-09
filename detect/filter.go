@@ -194,9 +194,6 @@ func (fc *filterContext) filterResources(res *brief.ResourceInfo, changedFiles [
 		out.License = res.License
 		out.LicenseType = res.LicenseType
 	}
-	if hit(res.Agents) {
-		out.Agents = res.Agents
-	}
 	filterGroup := func(name string, in map[string]string) {
 		for k, v := range in {
 			if hit(v) {
@@ -208,6 +205,7 @@ func (fc *filterContext) filterResources(res *brief.ResourceInfo, changedFiles [
 	filterGroup("community", res.Community)
 	filterGroup("security", res.Security)
 	filterGroup("metadata", res.Metadata)
+	filterGroup("agents", res.Agents)
 
 	if t := res.Templates; t != nil {
 		ft := &brief.TemplateInfo{}

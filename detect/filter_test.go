@@ -18,9 +18,13 @@ func TestFilterResources(t *testing.T) {
 		Metadata: map[string]string{
 			"funding": ".github/FUNDING.yml",
 		},
+		Agents: map[string]string{
+			"agents": "AGENTS.md",
+			"claude": "CLAUDE.md",
+		},
 	}
 	fc := &filterContext{}
-	out := fc.filterResources(res, []string{"README.md", ".github/FUNDING.yml"})
+	out := fc.filterResources(res, []string{"README.md", ".github/FUNDING.yml", "CLAUDE.md"})
 	if out == nil {
 		t.Fatal("expected filtered resources")
 	}
@@ -35,6 +39,12 @@ func TestFilterResources(t *testing.T) {
 	}
 	if out.Metadata["funding"] != ".github/FUNDING.yml" {
 		t.Errorf("metadata.funding = %q", out.Metadata["funding"])
+	}
+	if out.Agents["claude"] != "CLAUDE.md" {
+		t.Errorf("agents.claude = %q", out.Agents["claude"])
+	}
+	if _, ok := out.Agents["agents"]; ok {
+		t.Errorf("agents.agents should be filtered out, got %v", out.Agents)
 	}
 
 	if fc.filterResources(res, []string{"main.go"}) != nil {

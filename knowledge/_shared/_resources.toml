@@ -29,13 +29,6 @@ name = "License"
 field = "license"
 patterns = ["license*", "licence*", "copying*", "mit-license*"]
 
-[[resources]]
-[resources.resource]
-name = "Agents"
-field = "agents"
-patterns = ["agents.md"]
-dirs = ["docs", ".github", ".gitlab"]
-
 # Legal
 
 [[resources]]
@@ -195,3 +188,107 @@ name = "Zenodo"
 field = "zenodo"
 group = "metadata"
 patterns = [".zenodo.json"]
+
+# Agents (AI coding tool instruction files)
+
+[[resources]]
+[resources.resource]
+name = "Agents"
+field = "agents"
+group = "agents"
+patterns = ["agents.md", "agent.md"]
+dirs = ["docs", ".github", ".gitlab"]
+
+[[resources]]
+[resources.resource]
+name = "Claude Code"
+field = "claude"
+group = "agents"
+patterns = ["claude.md"]
+
+[[resources]]
+[resources.resource]
+name = "Gemini CLI"
+field = "gemini"
+group = "agents"
+patterns = ["gemini.md"]
+
+[[resources]]
+[resources.resource]
+name = "Cursor"
+field = "cursor"
+group = "agents"
+patterns = [".cursorrules", "*.mdc"]
+dirs = [".cursor/rules"]
+
+[[resources]]
+[resources.resource]
+name = "Windsurf"
+field = "windsurf"
+group = "agents"
+patterns = [".windsurfrules"]
+
+[[resources]]
+[resources.resource]
+name = "GitHub Copilot"
+field = "copilot"
+group = "agents"
+patterns = ["copilot-instructions.md"]
+dirs = [".github"]
+
+[[resources]]
+[resources.resource]
+name = "Aider"
+field = "aider"
+group = "agents"
+patterns = [".aider.conf.yml", "conventions.md"]
+
+[[resources]]
+[resources.resource]
+name = "Cline"
+field = "cline"
+group = "agents"
+patterns = [".clinerules"]
+
+[[resources]]
+[resources.resource]
+name = "Zed"
+field = "zed"
+group = "agents"
+patterns = [".rules"]
+
+[[resources]]
+[resources.resource]
+name = "Junie"
+field = "junie"
+group = "agents"
+patterns = ["guidelines.md"]
+dirs = [".junie"]
+
+[[resources]]
+[resources.resource]
+name = "Replit"
+field = "replit"
+group = "agents"
+patterns = ["replit.md"]
+
+[[resources]]
+[resources.resource]
+name = "Continue"
+field = "continue"
+group = "agents"
+patterns = [".continuerules"]
+
+[[resources]]
+[resources.resource]
+name = "Augment"
+field = "augment"
+group = "agents"
+patterns = [".augment-guidelines"]
+
+[[resources]]
+[resources.resource]
+name = "Roo Code"
+field = "roo"
+group = "agents"
+patterns = [".roorules"]

@@ -300,6 +300,22 @@ func printResources(w io.Writer, res *brief.ResourceInfo) {
 	printResourceGroup(w, "Community", res.Community)
 	printResourceGroup(w, "Security", res.Security)
 	printResourceGroup(w, "Metadata", res.Metadata)
+	printTemplates(w, res.Templates)
+}
+
+func printTemplates(w io.Writer, t *brief.TemplateInfo) {
+	if t.Empty() {
+		return
+	}
+	for _, p := range t.Issue {
+		_, _ = fmt.Fprintf(w, "Templates:   issue        %s\n", sanitize(p))
+	}
+	for _, p := range t.PullRequest {
+		_, _ = fmt.Fprintf(w, "Templates:   pull request %s\n", sanitize(p))
+	}
+	if t.Config != "" {
+		_, _ = fmt.Fprintf(w, "Templates:   config       %s\n", sanitize(t.Config))
+	}
 }
 
 func printResourceGroup(w io.Writer, label string, group map[string]string) {

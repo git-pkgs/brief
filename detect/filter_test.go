@@ -42,6 +42,38 @@ func TestFilterResources(t *testing.T) {
 	}
 }
 
+func TestFilterTemplates(t *testing.T) {
+	res := &brief.ResourceInfo{
+		Templates: &brief.TemplateInfo{
+			Issue: []string{
+				".github/ISSUE_TEMPLATE/bug.md",
+				".github/ISSUE_TEMPLATE/feature.yml",
+			},
+			PullRequest: []string{".github/PULL_REQUEST_TEMPLATE.md"},
+			Config:      ".github/ISSUE_TEMPLATE/config.yml",
+		},
+	}
+	fc := &filterContext{}
+
+	out := fc.filterResources(res, []string{".github/ISSUE_TEMPLATE/bug.md"})
+	if out == nil || out.Templates == nil {
+		t.Fatal("expected filtered templates")
+	}
+	if len(out.Templates.Issue) != 1 || out.Templates.Issue[0] != ".github/ISSUE_TEMPLATE/bug.md" {
+		t.Errorf("issue = %v", out.Templates.Issue)
+	}
+	if len(out.Templates.PullRequest) != 0 {
+		t.Errorf("pull_request should be empty, got %v", out.Templates.PullRequest)
+	}
+	if out.Templates.Config != "" {
+		t.Errorf("config should be empty, got %q", out.Templates.Config)
+	}
+
+	if fc.filterResources(res, []string{"main.go"}) != nil {
+		t.Error("expected nil when no templates changed")
+	}
+}
+
 func TestFilterSkills(t *testing.T) {
 	skills := []brief.Skill{
 		{Name: "pdf", Path: "skills/pdf/SKILL.md", Format: "claude"},

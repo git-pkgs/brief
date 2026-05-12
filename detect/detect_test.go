@@ -4,6 +4,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"slices"
 	"testing"
 
 	"github.com/git-pkgs/brief"
@@ -206,6 +207,69 @@ func TestResourceCaseInsensitive(t *testing.T) {
 	}
 	if r.Resources.Community["code_of_conduct"] != ".github/Code_Of_Conduct.md" {
 		t.Errorf("code_of_conduct = %q", r.Resources.Community["code_of_conduct"])
+	}
+}
+
+func TestDetectTemplates(t *testing.T) {
+	dir := t.TempDir()
+	for _, p := range []string{
+		".github/ISSUE_TEMPLATE/bug_report.md",
+		".github/ISSUE_TEMPLATE/feature.yml",
+		".github/ISSUE_TEMPLATE/config.yml",
+		".github/ISSUE_TEMPLATE/ignore.png",
+		".github/PULL_REQUEST_TEMPLATE.md",
+		".gitlab/merge_request_templates/Default.md",
+		".gitlab/issue_templates/Bug.md",
+		".forgejo/pull_request_template.yaml",
+		"docs/issue_template.md",
+	} {
+		writeFile(t, dir, p, "x")
+	}
+
+	engine := New(loadKB(t), dir)
+	r, err := engine.Run()
+	if err != nil {
+		t.Fatalf("Run: %v", err)
+	}
+	tpl := r.Resources.Templates
+	if tpl == nil {
+		t.Fatal("expected templates")
+	}
+
+	wantIssue := []string{
+		".github/ISSUE_TEMPLATE/bug_report.md",
+		".github/ISSUE_TEMPLATE/feature.yml",
+		".gitlab/issue_templates/Bug.md",
+		"docs/issue_template.md",
+	}
+	if !slices.Equal(tpl.Issue, wantIssue) {
+		t.Errorf("issue = %v, want %v", tpl.Issue, wantIssue)
+	}
+
+	wantPR := []string{
+		".forgejo/pull_request_template.yaml",
+		".github/PULL_REQUEST_TEMPLATE.md",
+		".gitlab/merge_request_templates/Default.md",
+	}
+	if !slices.Equal(tpl.PullRequest, wantPR) {
+		t.Errorf("pull_request = %v, want %v", tpl.PullRequest, wantPR)
+	}
+
+	if tpl.Config != ".github/ISSUE_TEMPLATE/config.yml" {
+		t.Errorf("config = %q", tpl.Config)
+	}
+}
+
+func TestDetectTemplatesNone(t *testing.T) {
+	dir := t.TempDir()
+	writeFile(t, dir, "README.md", "x")
+	engine := New(loadKB(t), dir)
+	r, err := engine.Run()
+	if err != nil {
+		t.Fatalf("Run: %v", err)
+	}
+	if r.Resources.Templates != nil {
+		t.Errorf("expected nil templates, got %+v", r.Resources.Templates)
 	}
 }
 

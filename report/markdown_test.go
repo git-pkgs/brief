@@ -192,6 +192,32 @@ func TestMarkdownResources(t *testing.T) {
 	}
 }
 
+func TestMarkdownTemplates(t *testing.T) {
+	r := &brief.Report{
+		Version: "dev",
+		Path:    "/tmp/test",
+		Resources: &brief.ResourceInfo{
+			Templates: &brief.TemplateInfo{
+				Issue:       []string{".github/ISSUE_TEMPLATE/bug.md"},
+				PullRequest: []string{".github/PULL_REQUEST_TEMPLATE.md"},
+				Config:      ".github/ISSUE_TEMPLATE/config.yml",
+			},
+		},
+	}
+
+	var buf bytes.Buffer
+	Markdown(&buf, r, false)
+	out := buf.String()
+
+	want := "- Templates:\n" +
+		"  - issue: .github/ISSUE_TEMPLATE/bug.md\n" +
+		"  - pull request: .github/PULL_REQUEST_TEMPLATE.md\n" +
+		"  - config: .github/ISSUE_TEMPLATE/config.yml\n"
+	if !strings.Contains(out, want) {
+		t.Errorf("missing templates section\ngot:\n%s", out)
+	}
+}
+
 func TestMarkdownSanitizesCIMatrix(t *testing.T) {
 	r := &brief.Report{
 		Version: "dev",

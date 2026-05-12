@@ -113,6 +113,22 @@ type ResourceInfo struct {
 	Community map[string]string `json:"community,omitempty"`
 	Security  map[string]string `json:"security,omitempty"`
 	Metadata  map[string]string `json:"metadata,omitempty"`
+
+	Templates *TemplateInfo `json:"templates,omitempty"`
+}
+
+// TemplateInfo lists issue and pull request templates the project provides so
+// that contributors (and agents) can follow them. Paths are relative to the
+// repository root. PullRequest also covers GitLab merge request templates.
+type TemplateInfo struct {
+	Issue       []string `json:"issue,omitempty"`
+	PullRequest []string `json:"pull_request,omitempty"`
+	Config      string   `json:"config,omitempty"`
+}
+
+// Empty reports whether no templates were found.
+func (t *TemplateInfo) Empty() bool {
+	return t == nil || (len(t.Issue) == 0 && len(t.PullRequest) == 0 && t.Config == "")
 }
 
 // Group returns the map for the named resource group, creating it if needed.
@@ -148,7 +164,8 @@ func (r *ResourceInfo) Empty() bool {
 	return r.Readme == "" && r.Changelog == "" && r.Roadmap == "" &&
 		r.License == "" && r.Agents == "" &&
 		len(r.Legal) == 0 && len(r.Community) == 0 &&
-		len(r.Security) == 0 && len(r.Metadata) == 0
+		len(r.Security) == 0 && len(r.Metadata) == 0 &&
+		r.Templates.Empty()
 }
 
 // Skill is an agent skill the project provides: packaged instructions an AI

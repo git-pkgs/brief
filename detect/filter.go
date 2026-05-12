@@ -209,6 +209,26 @@ func (fc *filterContext) filterResources(res *brief.ResourceInfo, changedFiles [
 	filterGroup("security", res.Security)
 	filterGroup("metadata", res.Metadata)
 
+	if t := res.Templates; t != nil {
+		ft := &brief.TemplateInfo{}
+		for _, p := range t.Issue {
+			if hit(p) {
+				ft.Issue = append(ft.Issue, p)
+			}
+		}
+		for _, p := range t.PullRequest {
+			if hit(p) {
+				ft.PullRequest = append(ft.PullRequest, p)
+			}
+		}
+		if hit(t.Config) {
+			ft.Config = t.Config
+		}
+		if !ft.Empty() {
+			out.Templates = ft
+		}
+	}
+
 	if out.Empty() {
 		return nil
 	}

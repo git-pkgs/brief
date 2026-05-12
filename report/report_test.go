@@ -249,6 +249,34 @@ func TestHumanSkills(t *testing.T) {
 	}
 }
 
+func TestHumanTemplates(t *testing.T) {
+	r := &brief.Report{
+		Version: "dev",
+		Path:    "/tmp/test",
+		Resources: &brief.ResourceInfo{
+			Templates: &brief.TemplateInfo{
+				Issue:       []string{".github/ISSUE_TEMPLATE/bug.md"},
+				PullRequest: []string{".github/PULL_REQUEST_TEMPLATE.md"},
+				Config:      ".github/ISSUE_TEMPLATE/config.yml",
+			},
+		},
+	}
+
+	var buf bytes.Buffer
+	Human(&buf, r, false)
+	out := buf.String()
+
+	if !strings.Contains(out, "Templates:   issue        .github/ISSUE_TEMPLATE/bug.md") {
+		t.Errorf("missing issue template line\ngot:\n%s", out)
+	}
+	if !strings.Contains(out, "Templates:   pull request .github/PULL_REQUEST_TEMPLATE.md") {
+		t.Errorf("missing pr template line\ngot:\n%s", out)
+	}
+	if !strings.Contains(out, "Templates:   config       .github/ISSUE_TEMPLATE/config.yml") {
+		t.Errorf("missing config line\ngot:\n%s", out)
+	}
+}
+
 func TestHumanSanitizesResources(t *testing.T) {
 	r := &brief.Report{
 		Version: "dev",

@@ -1207,10 +1207,92 @@ func (e *Engine) detectResources() *brief.ResourceInfo {
 		}
 	}
 
+	res.Templates = e.detectTemplates()
+
 	if res.Empty() {
 		return nil
 	}
 	return res
+}
+
+var (
+	templateBaseDirs = []string{".", ".github", ".gitea", ".forgejo", ".gitlab", "docs"}
+	templateExts     = map[string]bool{".md": true, ".yaml": true, ".yml": true, ".txt": true}
+)
+
+// detectTemplates finds issue and pull/merge request templates across the
+// locations recognised by GitHub, GitLab, Gitea and Forgejo. Both single-file
+// templates and template directories are checked.
+func (e *Engine) detectTemplates() *brief.TemplateInfo {
+	t := &brief.TemplateInfo{}
+	for _, base := range templateBaseDirs {
+		entries, err := os.ReadDir(filepath.Join(e.Root, filepath.FromSlash(base)))
+		if err != nil {
+			continue
+		}
+		for _, ent := range entries {
+			name := ent.Name()
+			lower := strings.ToLower(name)
+			rel := name
+			if base != "." {
+				rel = path.Join(base, name)
+			}
+			if ent.IsDir() {
+				switch lower {
+				case "issue_template", "issue_templates":
+					e.collectTemplates(rel, &t.Issue, &t.Config)
+				case "pull_request_template", "merge_request_templates":
+					e.collectTemplates(rel, &t.PullRequest, nil)
+				}
+				continue
+			}
+			if !templateExts[path.Ext(lower)] || !e.isTracked(rel) {
+				continue
+			}
+			switch strings.TrimSuffix(lower, path.Ext(lower)) {
+			case "issue_template":
+				t.Issue = append(t.Issue, rel)
+			case "pull_request_template":
+				t.PullRequest = append(t.PullRequest, rel)
+			}
+		}
+	}
+	sort.Strings(t.Issue)
+	sort.Strings(t.PullRequest)
+	if t.Empty() {
+		return nil
+	}
+	return t
+}
+
+// collectTemplates lists template files in dir, separating the issue chooser
+// config.yml from actual templates.
+func (e *Engine) collectTemplates(dir string, into *[]string, config *string) {
+	entries, err := os.ReadDir(filepath.Join(e.Root, filepath.FromSlash(dir)))
+	if err != nil {
+		return
+	}
+	for _, ent := range entries {
+		if ent.IsDir() {
+			continue
+		}
+		name := ent.Name()
+		lower := strings.ToLower(name)
+		if !templateExts[path.Ext(lower)] {
+			continue
+		}
+		rel := path.Join(dir, name)
+		if !e.isTracked(rel) {
+			continue
+		}
+		if config != nil && (lower == "config.yml" || lower == "config.yaml") {
+			if *config == "" {
+				*config = rel
+			}
+			continue
+		}
+		*into = append(*into, rel)
+	}
 }
 
 // findResource searches for the first file matching any of the resource's

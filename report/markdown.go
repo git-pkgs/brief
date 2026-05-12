@@ -265,6 +265,23 @@ func mdResources(w io.Writer, res *brief.ResourceInfo) {
 	mdResourceGroup(w, "Community", res.Community)
 	mdResourceGroup(w, "Security", res.Security)
 	mdResourceGroup(w, "Metadata", res.Metadata)
+	mdTemplates(w, res.Templates)
+}
+
+func mdTemplates(w io.Writer, t *brief.TemplateInfo) {
+	if t.Empty() {
+		return
+	}
+	_, _ = fmt.Fprintln(w, "- Templates:")
+	for _, p := range t.Issue {
+		_, _ = fmt.Fprintf(w, "  - issue: %s\n", sanitize(p))
+	}
+	for _, p := range t.PullRequest {
+		_, _ = fmt.Fprintf(w, "  - pull request: %s\n", sanitize(p))
+	}
+	if t.Config != "" {
+		_, _ = fmt.Fprintf(w, "  - config: %s\n", sanitize(t.Config))
+	}
 }
 
 func mdResource(w io.Writer, path string) {

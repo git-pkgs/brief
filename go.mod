@@ -9,7 +9,7 @@ require (
 	github.com/git-pkgs/licensecheck v0.4.1
 	github.com/git-pkgs/manifests v0.4.3
 	github.com/git-pkgs/purl v0.1.12
-	github.com/git-pkgs/registries v0.5.1
+	github.com/git-pkgs/registries v0.6.0
 	github.com/git-pkgs/spdx v0.1.3
 	golang.org/x/term v0.43.0
 	gopkg.in/yaml.v3 v3.0.1

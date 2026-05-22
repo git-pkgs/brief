@@ -324,7 +324,7 @@ func cmdSchema() {
 // Named struct types are emitted as $ref pointers into the $defs map.
 func schemaForType(t reflect.Type, defs map[string]any) map[string]any {
 	// Unwrap pointers.
-	for t.Kind() == reflect.Ptr {
+	for t.Kind() == reflect.Pointer {
 		t = t.Elem()
 	}
 

@@ -609,6 +609,59 @@ func TestPythonProject(t *testing.T) {
 	}
 }
 
+func TestGradleJavaKotlinDSL(t *testing.T) {
+	// Regression for #84: a Java project that uses the Kotlin DSL for its
+	// Gradle build scripts must be reported as Java, not Kotlin.
+	r := runOn(t, "../testdata/gradle-java-kotlin-dsl")
+
+	if len(r.Languages) != 1 || r.Languages[0].Name != "Java" {
+		t.Fatalf("expected only Java language, got %v", languageNames(r))
+	}
+	if !slices.Contains(packageManagerNames(r), "Gradle") {
+		t.Errorf("expected Gradle package manager, got %v", packageManagerNames(r))
+	}
+}
+
+func TestGradleJavaGroovyDSL(t *testing.T) {
+	// Regression for #84: with build.gradle in app/ and source under
+	// app/src/main/java/<pkg>/, both Java and Gradle must be detected.
+	r := runOn(t, "../testdata/gradle-java-groovy-dsl")
+
+	if len(r.Languages) == 0 || r.Languages[0].Name != "Java" {
+		t.Fatalf("expected Java language, got %v", languageNames(r))
+	}
+	for _, l := range r.Languages {
+		if l.Name == "Groovy" {
+			t.Errorf("did not expect Groovy language for build script only, got %v", languageNames(r))
+		}
+	}
+	if !slices.Contains(packageManagerNames(r), "Gradle") {
+		t.Errorf("expected Gradle package manager, got %v", packageManagerNames(r))
+	}
+}
+
+func TestScanDepthOverride(t *testing.T) {
+	engine := New(loadKB(t), "../testdata/gradle-java-groovy-dsl")
+	engine.ScanDepth = 2
+	r, err := engine.Run()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	for _, l := range r.Languages {
+		if l.Name == "Java" {
+			t.Errorf("expected ScanDepth=2 to miss app/src/main/java/..., got %v", languageNames(r))
+		}
+	}
+}
+
+func languageNames(r *brief.Report) []string {
+	names := make([]string, 0, len(r.Languages))
+	for _, l := range r.Languages {
+		names = append(names, l.Name)
+	}
+	return names
+}
+
 func writeProjectFile(t *testing.T, dir, path, content string) {
 	t.Helper()
 	full := filepath.Join(dir, path)

@@ -7,7 +7,7 @@ repo = "https://github.com/JetBrains/kotlin"
 description = "Modern, concise programming language for the JVM"
 
 [detect]
-files = ["*.kt", "**/*.kt", "*.kts", "build.gradle.kts"]
+files = ["*.kt", "**/*.kt"]
 ecosystems = ["kotlin"]
 
 [taxonomy]

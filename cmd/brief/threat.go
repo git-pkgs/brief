@@ -30,7 +30,7 @@ func runDetection(name string, args []string) (*detect.Engine, *brief.Report, ou
 	jsonFlag := fs.Bool("json", false, "Force JSON output")
 	humanFlag := fs.Bool("human", false, "Force human-readable output")
 	markdownFlag := fs.Bool("markdown", false, "Force markdown output")
-	scanDepth := fs.Int("scan-depth", 0, "Max directory depth for language detection (default 4)")
+	scanDepth := fs.Int("scan-depth", 0, "Max directory depth for language detection (0 = unlimited)")
 	skip := fs.String("skip", "", "Additional directories to skip, comma-separated")
 	_ = fs.Parse(args)
 

@@ -6,7 +6,7 @@ docs = "https://docs.oracle.com/en/java/"
 description = "General-purpose, class-based, object-oriented programming language"
 
 [detect]
-files = ["pom.xml", "build.gradle", "build.gradle.kts", "*.java", "**/*.java"]
+files = ["pom.xml", "*.java", "**/*.java"]
 ecosystems = ["java"]
 
 [taxonomy]

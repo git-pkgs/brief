@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	defaultScanDepth = 4      // max directory depth for language detection
+	extScanFileLimit = 10000  // max files to visit when collecting extensions
 	microsPerMS      = 1000.0 // microseconds per millisecond
 	globSplitParts   = 2      // expected parts when splitting "**/" patterns
 
@@ -41,7 +41,7 @@ const (
 type Engine struct {
 	KB           *kb.KnowledgeBase
 	Root         string
-	ScanDepth    int      // max directory depth for recursive detection (0 = default 4)
+	ScanDepth    int      // optional max directory depth for recursive detection (0 = unlimited)
 	SkipDirs     []string // additional directories to skip during walks
 	TrackedOnly  bool     // only consider files tracked by git
 	filesChecked int
@@ -109,6 +109,7 @@ var skipDirs = map[string]bool{
 	"third_party":  true,
 	"thirdparty":   true,
 	"external":     true,
+	"testdata":     true,
 	"tmp":          true,
 	"temp":         true,
 	"cache":        true,
@@ -564,35 +565,34 @@ func (e *Engine) recursiveGlob(pattern string) bool {
 	return found
 }
 
-// loadFileExts walks the project to a bounded depth to collect file extensions.
-// Cached for the lifetime of the engine. Default depth of 4 covers most layouts
-// (src/main/java/*.java, lib/something/*.rb).
+// loadFileExts walks the project to collect file extension counts. Cached for
+// the lifetime of the engine. The walk is bounded by extScanFileLimit rather
+// than directory depth so that deep source layouts such as
+// app/src/main/java/<package>/ are reached; skipDirs already prunes the
+// expensive vendor/build directories.
 // Uses WalkDir instead of Walk to avoid following symlinks into directories.
 func (e *Engine) loadFileExts() {
 	if e.fileExts != nil {
 		return
 	}
 	e.fileExts = make(map[string]int)
-	maxDepth := e.ScanDepth
-	if maxDepth == 0 {
-		maxDepth = defaultScanDepth
-	}
 	rootLen := len(e.Root)
+	seen := 0
+	errDone := errors.New("done")
 	_ = filepath.WalkDir(e.Root, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
 			return nil
 		}
+		rel := strings.TrimPrefix(path[rootLen:], string(filepath.Separator))
 		if d.IsDir() {
 			name := d.Name()
 			if name != "." && e.shouldSkipDir(name) {
 				return filepath.SkipDir
 			}
-			rel := path[rootLen:]
-			depth := strings.Count(rel, string(filepath.Separator))
-			if depth > maxDepth {
+			if e.ScanDepth > 0 && strings.Count(rel, string(filepath.Separator))+1 > e.ScanDepth {
 				return filepath.SkipDir
 			}
-			if !e.isTracked(strings.TrimPrefix(rel, string(filepath.Separator))) {
+			if !e.isTracked(rel) {
 				return filepath.SkipDir
 			}
 			return nil
@@ -600,12 +600,16 @@ func (e *Engine) loadFileExts() {
 		if d.Type()&os.ModeSymlink != 0 {
 			return nil
 		}
-		if !e.isTracked(strings.TrimPrefix(path[rootLen:], string(filepath.Separator))) {
+		if !e.isTracked(rel) {
 			return nil
 		}
 		ext := filepath.Ext(d.Name())
 		if ext != "" {
 			e.fileExts[ext]++
+		}
+		seen++
+		if seen >= extScanFileLimit {
+			return errDone
 		}
 		return nil
 	})

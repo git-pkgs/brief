@@ -54,6 +54,9 @@ func main() {
 		case "outline":
 			cmdOutline(os.Args[2:])
 			return
+		case "html":
+			cmdHTML(os.Args[2:])
+			return
 		}
 	}
 

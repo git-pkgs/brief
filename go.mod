@@ -4,7 +4,7 @@ go 1.26
 
 require (
 	github.com/BurntSushi/toml v1.6.0
-	github.com/git-pkgs/enrichment v0.3.0
+	github.com/git-pkgs/enrichment v0.4.0
 	github.com/git-pkgs/forge v0.5.1
 	github.com/git-pkgs/licensecheck v0.4.1
 	github.com/git-pkgs/manifests v0.5.0
@@ -71,7 +71,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/denis-tingaikin/go-header v0.5.0 // indirect
 	github.com/dlclark/regexp2 v1.11.5 // indirect
-	github.com/ecosyste-ms/ecosystems-go v0.1.1 // indirect
+	github.com/ecosyste-ms/ecosystems-go v0.2.0 // indirect
 	github.com/ettle/strcase v0.2.0 // indirect
 	github.com/fatih/color v1.18.0 // indirect
 	github.com/fatih/structtag v1.2.0 // indirect
@@ -160,7 +160,7 @@ require (
 	github.com/nishanths/exhaustive v0.12.0 // indirect
 	github.com/nishanths/predeclared v0.2.2 // indirect
 	github.com/nunnatsa/ginkgolinter v0.23.0 // indirect
-	github.com/oapi-codegen/runtime v1.1.2 // indirect
+	github.com/oapi-codegen/runtime v1.4.1 // indirect
 	github.com/odvcencio/gotreesitter v0.20.2 // indirect
 	github.com/package-url/packageurl-go v0.1.6 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect

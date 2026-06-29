@@ -4,13 +4,13 @@ go 1.26
 
 require (
 	github.com/BurntSushi/toml v1.6.0
-	github.com/git-pkgs/enrichment v0.4.0
-	github.com/git-pkgs/forge v0.5.1
+	github.com/git-pkgs/enrichment v0.4.1
+	github.com/git-pkgs/forge v0.6.0
 	github.com/git-pkgs/licensecheck v0.4.1
-	github.com/git-pkgs/manifests v0.5.0
+	github.com/git-pkgs/manifests v0.5.1
 	github.com/git-pkgs/outline v0.1.5
-	github.com/git-pkgs/purl v0.1.12
-	github.com/git-pkgs/registries v0.6.1
+	github.com/git-pkgs/purl v0.1.13
+	github.com/git-pkgs/registries v0.6.2
 	github.com/git-pkgs/spdx v0.1.4
 	golang.org/x/term v0.44.0
 	gopkg.in/yaml.v3 v3.0.1
@@ -45,7 +45,7 @@ require (
 	github.com/ashanbrown/forbidigo/v2 v2.3.0 // indirect
 	github.com/ashanbrown/makezero/v2 v2.1.0 // indirect
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
-	github.com/bazelbuild/buildtools v0.0.0-20260319080235-05d2ebe49b0f // indirect
+	github.com/bazelbuild/buildtools v0.0.0-20260622120422-77b9b380c0a4 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bkielbasa/cyclop v1.2.3 // indirect
 	github.com/blizzy78/varnamelen v0.8.0 // indirect
@@ -81,7 +81,7 @@ require (
 	github.com/ghostiam/protogetter v0.3.20 // indirect
 	github.com/git-pkgs/gitignore v1.2.0 // indirect
 	github.com/git-pkgs/packageurl-go v0.3.1 // indirect
-	github.com/git-pkgs/pom v0.1.4 // indirect
+	github.com/git-pkgs/pom v0.1.5 // indirect
 	github.com/git-pkgs/vers v0.2.6 // indirect
 	github.com/github/go-spdx/v2 v2.7.0 // indirect
 	github.com/go-critic/go-critic v0.14.3 // indirect
@@ -224,11 +224,11 @@ require (
 	go.uber.org/zap v1.27.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	golang.org/x/exp/typeparams v0.0.0-20260209203927-2842357ff358 // indirect
-	golang.org/x/mod v0.35.0 // indirect
-	golang.org/x/sync v0.20.0 // indirect
+	golang.org/x/mod v0.36.0 // indirect
+	golang.org/x/sync v0.21.0 // indirect
 	golang.org/x/sys v0.46.0 // indirect
-	golang.org/x/text v0.37.0 // indirect
-	golang.org/x/tools v0.44.0 // indirect
+	golang.org/x/text v0.38.0 // indirect
+	golang.org/x/tools v0.45.0 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

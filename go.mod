@@ -8,7 +8,7 @@ require (
 	github.com/git-pkgs/forge v0.6.0
 	github.com/git-pkgs/licensecheck v0.4.1
 	github.com/git-pkgs/manifests v0.5.1
-	github.com/git-pkgs/outline v0.1.5
+	github.com/git-pkgs/outline v0.1.6
 	github.com/git-pkgs/purl v0.1.13
 	github.com/git-pkgs/registries v0.6.2
 	github.com/git-pkgs/spdx v0.1.4
@@ -161,7 +161,7 @@ require (
 	github.com/nishanths/predeclared v0.2.2 // indirect
 	github.com/nunnatsa/ginkgolinter v0.23.0 // indirect
 	github.com/oapi-codegen/runtime v1.4.1 // indirect
-	github.com/odvcencio/gotreesitter v0.20.6 // indirect
+	github.com/odvcencio/gotreesitter v0.20.7 // indirect
 	github.com/package-url/packageurl-go v0.1.6 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.4 // indirect

@@ -200,8 +200,8 @@ github.com/git-pkgs/licensecheck v0.4.1 h1:b5ilmpIpgeeewBFjdhJ4W7jvwPIFsYQ7ujZma
 github.com/git-pkgs/licensecheck v0.4.1/go.mod h1:cfFO7yHHPeuXsoODHBWyevajH2yWcbfkIFELyG3ZpU0=
 github.com/git-pkgs/manifests v0.5.1 h1:c2IF1RMKvrT7gD9JhjLHgViZ7dTejn5JnBhtrW9dRdE=
 github.com/git-pkgs/manifests v0.5.1/go.mod h1:ngooeMMKiS3YtTJGx3RstMV0dQlFh5Wj0S47YG9n95g=
-github.com/git-pkgs/outline v0.1.5 h1:5JC6zS+DRCc9a/0sBodvyGu53q+LXOTlpueqlO68lk8=
-github.com/git-pkgs/outline v0.1.5/go.mod h1:sMPQQf59eAQXEC2x4gTO3fau8IRE2WjyEeB3Xln3+LA=
+github.com/git-pkgs/outline v0.1.6 h1:4aw2gLbwXcPV6NrT9fLEudhX526vettJji3k/8bgGUA=
+github.com/git-pkgs/outline v0.1.6/go.mod h1:Z4AQmwDwVBbRfKzNL9tuk9E7tG4gCCio51BUcKRrEeE=
 github.com/git-pkgs/packageurl-go v0.3.1 h1:WM3RBABQZLaRBxgKyYughc3cVBE8KyQxbSC6Jt5ak7M=
 github.com/git-pkgs/packageurl-go v0.3.1/go.mod h1:rcIxiG37BlQLB6FZfgdj9Fm7yjhRQd3l+5o7J0QPAk4=
 github.com/git-pkgs/pom v0.1.5 h1:TGT8Az2OMxGWsXnSagtUMGzZm7Oax8HrSCteA+mi0qY=
@@ -489,8 +489,8 @@ github.com/oapi-codegen/nullable v1.1.0 h1:eAh8JVc5430VtYVnq00Hrbpag9PFRGWLjxR1/
 github.com/oapi-codegen/nullable v1.1.0/go.mod h1:KUZ3vUzkmEKY90ksAmit2+5juDIhIZhfDl+0PwOQlFY=
 github.com/oapi-codegen/runtime v1.4.1 h1:9nwLoI+KrWxzbBcp0jO/R8uXqbik/HUyCvPeU68Y/qo=
 github.com/oapi-codegen/runtime v1.4.1/go.mod h1:GwV7hC2hviaMzj+ITfHVRESK5J2W/GefVwIND/bMGvU=
-github.com/odvcencio/gotreesitter v0.20.6 h1:tGq0vJwlpprxf5/2cfSVSo58dtvAj6/3Y39CjXtohbY=
-github.com/odvcencio/gotreesitter v0.20.6/go.mod h1:hBVkghd0paaYAVwd2087vfwdeU984bQbMo9LvpE0moo=
+github.com/odvcencio/gotreesitter v0.20.7 h1:jHFHEt7z2tJ+XLXqFrl/cnmjDkJQWy+9OljYc5HE+a8=
+github.com/odvcencio/gotreesitter v0.20.7/go.mod h1:hBVkghd0paaYAVwd2087vfwdeU984bQbMo9LvpE0moo=
 github.com/onsi/ginkgo/v2 v2.28.1 h1:S4hj+HbZp40fNKuLUQOYLDgZLwNUVn19N3Atb98NCyI=
 github.com/onsi/ginkgo/v2 v2.28.1/go.mod h1:CLtbVInNckU3/+gC8LzkGUb9oF+e8W8TdUsxPwvdOgE=
 github.com/onsi/gomega v1.39.1 h1:1IJLAad4zjPn2PsnhH70V4DKRFlrCzGBNrNaru+Vf28=

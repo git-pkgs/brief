@@ -198,8 +198,8 @@ github.com/git-pkgs/gitignore v1.2.0 h1:7vdR8/SvF31dvXqIdC1bKgCvyySefXuN8aY3xJLu
 github.com/git-pkgs/gitignore v1.2.0/go.mod h1:Lr0XwhbvP071rZF/zIIhkY1gEhFDoWHH91lngwLpeUg=
 github.com/git-pkgs/licensecheck v0.4.1 h1:b5ilmpIpgeeewBFjdhJ4W7jvwPIFsYQ7ujZma7sli6k=
 github.com/git-pkgs/licensecheck v0.4.1/go.mod h1:cfFO7yHHPeuXsoODHBWyevajH2yWcbfkIFELyG3ZpU0=
-github.com/git-pkgs/manifests v0.5.1 h1:c2IF1RMKvrT7gD9JhjLHgViZ7dTejn5JnBhtrW9dRdE=
-github.com/git-pkgs/manifests v0.5.1/go.mod h1:ngooeMMKiS3YtTJGx3RstMV0dQlFh5Wj0S47YG9n95g=
+github.com/git-pkgs/manifests v0.6.0 h1:9FpVsHWtXvRo/uGTv2KPFQ3Ijl7ucfIXmmLi/r7cxOU=
+github.com/git-pkgs/manifests v0.6.0/go.mod h1:ngooeMMKiS3YtTJGx3RstMV0dQlFh5Wj0S47YG9n95g=
 github.com/git-pkgs/outline v0.1.6 h1:4aw2gLbwXcPV6NrT9fLEudhX526vettJji3k/8bgGUA=
 github.com/git-pkgs/outline v0.1.6/go.mod h1:Z4AQmwDwVBbRfKzNL9tuk9E7tG4gCCio51BUcKRrEeE=
 github.com/git-pkgs/packageurl-go v0.3.1 h1:WM3RBABQZLaRBxgKyYughc3cVBE8KyQxbSC6Jt5ak7M=

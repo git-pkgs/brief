@@ -16,5 +16,12 @@ ecosystems = ["python"]
 "setup.py" = ["Extension(", "ext_modules"]
 "pyproject.toml" = ["[tool.setuptools.ext-modules]", "ext-modules"]
 
+[commands]
+run = "python setup.py build_ext --inplace"
+alternatives = ["pip install -e .", "python -m build"]
+
+[config]
+files = ["setup.py", "pyproject.toml", "setup.cfg"]
+
 [taxonomy]
 role = ["native-extension"]

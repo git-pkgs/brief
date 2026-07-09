@@ -16,10 +16,11 @@ files = ["extconf.rb", "ext/**/extconf.rb", "ext/extconf.rb"]
 ecosystems = ["ruby"]
 
 [commands]
-run = "ruby extconf.rb && make"
+run = "rake compile"
+alternatives = ["bundle exec rake compile", "gem build *.gemspec"]
 
 [config]
-files = ["extconf.rb"]
+files = ["extconf.rb", "ext/extconf.rb", "ext/**/extconf.rb", "Rakefile"]
 
 [taxonomy]
 role = ["native-extension"]

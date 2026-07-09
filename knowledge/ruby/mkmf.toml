@@ -1,0 +1,25 @@
+[tool]
+name = "mkmf"
+category = "native_extension"
+homepage = "https://docs.ruby-lang.org/en/master/MakeMakefile.html"
+docs = "https://docs.ruby-lang.org/en/master/MakeMakefile.html"
+repo = "https://github.com/ruby/ruby"
+description = "Ruby native extension build via extconf.rb"
+
+# extconf.rb at the repo root or anywhere under ext/ is RubyGems' convention
+# for a C (or Rust via rb-sys) extension. rb-sys/magnus gems also ship an
+# extconf.rb, so this catches those too. spec.extensions in the gemspec is
+# the authoritative signal but file_contains does not glob, so that check
+# lives with the consumer for now.
+[detect]
+files = ["extconf.rb", "ext/**/extconf.rb", "ext/extconf.rb"]
+ecosystems = ["ruby"]
+
+[commands]
+run = "ruby extconf.rb && make"
+
+[config]
+files = ["extconf.rb"]
+
+[taxonomy]
+role = ["build-tool"]

@@ -1,0 +1,27 @@
+[tool]
+name = "phpize"
+category = "native_extension"
+homepage = "https://www.php.net/manual/en/install.pecl.phpize.php"
+docs = "https://www.php.net/manual/en/install.pecl.phpize.php"
+repo = "https://github.com/php/php-src"
+description = "PHP native extension build via config.m4"
+
+# config.m4 is common to any autoconf project; PHP_ARG_WITH/PHP_ARG_ENABLE are
+# the phpize-specific macros that mark it as a PHP extension. A PECL extension
+# repo is C source with a config.m4 and often no .php files or composer.json,
+# so this is gated on c/cpp as well as php; the PHP_ARG_ content check is the
+# real discriminator.
+[detect]
+ecosystems = ["php", "c", "cpp"]
+
+[detect.file_contains]
+"config.m4" = ["PHP_ARG_", "PHP_NEW_EXTENSION"]
+
+[commands]
+run = "phpize && ./configure && make"
+
+[config]
+files = ["config.m4", "config.w32"]
+
+[taxonomy]
+role = ["build-tool"]

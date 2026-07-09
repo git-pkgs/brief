@@ -700,6 +700,38 @@ func TestPythonProject(t *testing.T) {
 	}
 }
 
+func TestPerlProject(t *testing.T) {
+	r := runOn(t, "../testdata/perl-project")
+
+	if !slices.ContainsFunc(r.Languages, func(d brief.Detection) bool { return d.Name == "Perl" }) {
+		t.Fatalf("expected Perl language, got %v", languageNames(r))
+	}
+	// Perl repos should get a package_managers entry so consumers that key
+	// on package_managers[].name (rather than languages) see the ecosystem.
+	if !slices.ContainsFunc(r.PackageManagers, func(d brief.Detection) bool { return d.Name == "cpanm" }) {
+		t.Errorf("expected cpanm package manager, got %v", r.PackageManagers)
+	}
+}
+
+func TestNativeExtensionProject(t *testing.T) {
+	r := runOn(t, "../testdata/native-ext-project")
+
+	// One fixture with markers for each ecosystem's native-extension build
+	// tool: extconf.rb under ext/, setup.py declaring Extension(), config.m4
+	// with PHP_ARG_, and binding.gyp.
+	assertToolDetected(t, r, "native_extension", "mkmf")
+	assertToolDetected(t, r, "native_extension", "setuptools Extension")
+	assertToolDetected(t, r, "native_extension", "phpize")
+	assertToolDetected(t, r, "native_extension", "node-gyp")
+
+	// The plain ruby-project fixture has no ext/ so must NOT report a
+	// native extension: guards against an over-broad detect.files pattern.
+	rr := runOn(t, "../testdata/ruby-project")
+	if got := rr.Tools["native_extension"]; len(got) != 0 {
+		t.Errorf("ruby-project should not detect native_extension, got %v", got)
+	}
+}
+
 func TestGradleJavaKotlinDSL(t *testing.T) {
 	// Regression for #84: a Java project that uses the Kotlin DSL for its
 	// Gradle build scripts must be reported as Java, not Kotlin.

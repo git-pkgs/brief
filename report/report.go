@@ -36,29 +36,30 @@ func JSON(w io.Writer, r *brief.Report) error {
 const maxDisplayItems = 20 // max items to show before truncating
 
 // CategoryOrder defines the stable display order for tool categories.
-var CategoryOrder = []string{"test", "lint", "format", "typecheck", "docs", "build", "library", "codegen", "database", "security", "ci", "container", "infrastructure", "monorepo", "environment", "i18n", "release", "coverage", "dependency_bot"}
+var CategoryOrder = []string{"test", "lint", "format", "typecheck", "docs", "build", "native_extension", "library", "codegen", "database", "security", "ci", "container", "infrastructure", "monorepo", "environment", "i18n", "release", "coverage", "dependency_bot"}
 
 // CategoryLabels maps category keys to human-readable labels.
 var CategoryLabels = map[string]string{
-	"test":           "Test",
-	"lint":           "Lint",
-	"format":         "Format",
-	"typecheck":      "Typecheck",
-	"docs":           "Docs",
-	"build":          "Build",
-	"library":        "Library",
-	"codegen":        "Codegen",
-	"database":       "Database",
-	"security":       "Security",
-	"ci":             "CI",
-	"container":      "Container",
-	"infrastructure": "Infra",
-	"monorepo":       "Monorepo",
-	"environment":    "Environment",
-	"i18n":           "i18n",
-	"release":        "Release",
-	"coverage":       "Coverage",
-	"dependency_bot": "Dep Updates",
+	"test":             "Test",
+	"lint":             "Lint",
+	"format":           "Format",
+	"typecheck":        "Typecheck",
+	"docs":             "Docs",
+	"build":            "Build",
+	"native_extension": "Native Ext",
+	"library":          "Library",
+	"codegen":          "Codegen",
+	"database":         "Database",
+	"security":         "Security",
+	"ci":               "CI",
+	"container":        "Container",
+	"infrastructure":   "Infra",
+	"monorepo":         "Monorepo",
+	"environment":      "Environment",
+	"i18n":             "i18n",
+	"release":          "Release",
+	"coverage":         "Coverage",
+	"dependency_bot":   "Dep Updates",
 }
 
 // Human writes the report in human-readable format.

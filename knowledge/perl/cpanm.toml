@@ -1,0 +1,22 @@
+[tool]
+name = "cpanm"
+category = "package_manager"
+homepage = "https://metacpan.org/pod/App::cpanminus"
+docs = "https://metacpan.org/pod/App::cpanminus"
+repo = "https://github.com/miyagawa/cpanminus"
+description = "CPAN module installer"
+
+[detect]
+files = ["cpanfile", "Makefile.PL", "Build.PL", "META.json", "META.yml", "dist.ini"]
+ecosystems = ["perl"]
+
+[commands]
+run = "cpanm --installdeps ."
+alternatives = ["cpan .", "carton install"]
+
+[config]
+files = ["cpanfile", "cpanfile.snapshot", "Makefile.PL", "Build.PL", "META.json"]
+lockfile = "cpanfile.snapshot"
+
+[taxonomy]
+role = ["package-manager"]

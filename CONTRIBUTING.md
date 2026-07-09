@@ -117,6 +117,7 @@ Shared tools that work across languages (Docker, GitHub Actions, Dependabot) sho
 | `typecheck` | Type checker |
 | `docs` | Documentation generator |
 | `build` | Build tool, framework, or application platform |
+| `native_extension` | Native/FFI extension build (extconf.rb, binding.gyp, phpize, setuptools Extension) |
 | `library` | Detection-only library or runtime dependency |
 | `codegen` | Code generator or schema-driven tooling |
 | `database` | Database, ORM, migration, or query tooling |

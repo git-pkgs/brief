@@ -1,0 +1,20 @@
+[tool]
+name = "setuptools Extension"
+category = "native_extension"
+homepage = "https://setuptools.pypa.io/en/latest/userguide/ext_modules.html"
+docs = "https://setuptools.pypa.io/en/latest/userguide/ext_modules.html"
+repo = "https://github.com/pypa/setuptools"
+description = "Python C extension declared via setuptools Extension/ext_modules"
+
+# Cython .pyx files also indicate compiled code; the setup.py content check is
+# the higher-confidence signal since it's the build declaration itself.
+[detect]
+files = ["*.pyx", "**/*.pyx"]
+ecosystems = ["python"]
+
+[detect.file_contains]
+"setup.py" = ["Extension(", "ext_modules"]
+"pyproject.toml" = ["[tool.setuptools.ext-modules]", "ext-modules"]
+
+[taxonomy]
+role = ["build-tool"]

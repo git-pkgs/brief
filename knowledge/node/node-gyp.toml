@@ -1,0 +1,21 @@
+[tool]
+name = "node-gyp"
+category = "native_extension"
+homepage = "https://github.com/nodejs/node-gyp"
+docs = "https://github.com/nodejs/node-gyp#readme"
+repo = "https://github.com/nodejs/node-gyp"
+description = "Node.js native addon build tool"
+
+[detect]
+files = ["binding.gyp"]
+dependencies = ["node-gyp", "node-addon-api", "nan", "bindings"]
+ecosystems = ["node"]
+
+[commands]
+run = "node-gyp rebuild"
+
+[config]
+files = ["binding.gyp"]
+
+[taxonomy]
+role = ["build-tool"]

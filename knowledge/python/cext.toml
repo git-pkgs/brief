@@ -17,4 +17,4 @@ ecosystems = ["python"]
 "pyproject.toml" = ["[tool.setuptools.ext-modules]", "ext-modules"]
 
 [taxonomy]
-role = ["build-tool"]
+role = ["native-extension"]

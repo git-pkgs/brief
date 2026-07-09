@@ -24,4 +24,4 @@ run = "phpize && ./configure && make"
 files = ["config.m4", "config.w32"]
 
 [taxonomy]
-role = ["build-tool"]
+role = ["native-extension"]

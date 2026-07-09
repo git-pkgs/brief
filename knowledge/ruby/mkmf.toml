@@ -22,4 +22,4 @@ run = "ruby extconf.rb && make"
 files = ["extconf.rb"]
 
 [taxonomy]
-role = ["build-tool"]
+role = ["native-extension"]

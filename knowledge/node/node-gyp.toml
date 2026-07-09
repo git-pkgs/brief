@@ -18,4 +18,4 @@ run = "node-gyp rebuild"
 files = ["binding.gyp"]
 
 [taxonomy]
-role = ["build-tool"]
+role = ["native-extension"]

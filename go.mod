@@ -12,7 +12,7 @@ require (
 	github.com/git-pkgs/purl v0.1.13
 	github.com/git-pkgs/registries v0.6.2
 	github.com/git-pkgs/spdx v0.1.4
-	golang.org/x/term v0.44.0
+	golang.org/x/term v0.45.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
@@ -30,6 +30,6 @@ require (
 	github.com/oapi-codegen/runtime v1.4.1 // indirect
 	github.com/odvcencio/gotreesitter v0.20.7 // indirect
 	github.com/package-url/packageurl-go v0.1.6 // indirect
-	golang.org/x/sys v0.46.0 // indirect
+	golang.org/x/sys v0.47.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 )

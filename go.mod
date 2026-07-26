@@ -4,7 +4,7 @@ go 1.26
 
 require (
 	github.com/BurntSushi/toml v1.6.0
-	github.com/git-pkgs/enrichment v0.6.0
+	github.com/git-pkgs/enrichment v0.6.3
 	github.com/git-pkgs/forge v0.6.0
 	github.com/git-pkgs/licensecheck v0.4.1
 	github.com/git-pkgs/manifests v0.6.0
@@ -24,7 +24,7 @@ require (
 	github.com/git-pkgs/packageurl-go v0.3.1 // indirect
 	github.com/git-pkgs/pom v0.1.5 // indirect
 	github.com/git-pkgs/vers v0.3.0 // indirect
-	github.com/git-pkgs/vulns v0.1.5 // indirect
+	github.com/git-pkgs/vulns v0.2.1 // indirect
 	github.com/github/go-spdx/v2 v2.7.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/kr/text v0.2.0 // indirect

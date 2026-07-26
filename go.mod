@@ -10,7 +10,7 @@ require (
 	github.com/git-pkgs/manifests v0.6.0
 	github.com/git-pkgs/outline v0.1.6
 	github.com/git-pkgs/purl v0.1.15
-	github.com/git-pkgs/registries v0.6.2
+	github.com/git-pkgs/registries v0.6.3
 	github.com/git-pkgs/spdx v0.1.4
 	golang.org/x/term v0.45.0
 	gopkg.in/yaml.v3 v3.0.1

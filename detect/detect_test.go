@@ -141,6 +141,7 @@ func TestResourceGroups(t *testing.T) {
 	touch(".github/CODEOWNERS")
 	touch(".github/FUNDING.yml")
 	touch("docs/SECURITY.md")
+	touch("DISCLOSURE")
 	touch("CITATION.cff")
 
 	engine := New(loadKB(t), dir)
@@ -173,6 +174,9 @@ func TestResourceGroups(t *testing.T) {
 	}
 	if res.Security["policy"] != "docs/SECURITY.md" {
 		t.Errorf("security.policy = %q", res.Security["policy"])
+	}
+	if res.Security["disclosure"] != "DISCLOSURE" {
+		t.Errorf("security.disclosure = %q", res.Security["disclosure"])
 	}
 	if res.Metadata["funding"] != ".github/FUNDING.yml" {
 		t.Errorf("metadata.funding = %q", res.Metadata["funding"])

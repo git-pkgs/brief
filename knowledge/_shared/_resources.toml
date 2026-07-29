@@ -151,6 +151,13 @@ field = "audit"
 group = "security"
 patterns = ["audit", "audit.md", "audit.txt", "audit.rst"]
 
+[[resources]]
+[resources.resource]
+name = "Disclosure"
+field = "disclosure"
+group = "security"
+patterns = ["disclosure", "disclosure.md", "disclosure.txt"]
+
 # Metadata (machine-readable)
 
 [[resources]]

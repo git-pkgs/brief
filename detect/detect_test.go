@@ -69,28 +69,14 @@ func TestRubyTools(t *testing.T) {
 }
 
 func TestRubyAndBEAMRustIntegrations(t *testing.T) {
-	assertHighConfidence := func(t *testing.T, r *brief.Report, category, name string) {
-		t.Helper()
-		for _, tool := range r.Tools[category] {
-			if tool.Name != name {
-				continue
-			}
-			if tool.Confidence != brief.ConfidenceHigh {
-				t.Errorf("%s confidence = %q, want %q", name, tool.Confidence, brief.ConfidenceHigh)
-			}
-			return
-		}
-		t.Errorf("expected %s in %s category", name, category)
-	}
-
 	t.Run("projects", func(t *testing.T) {
 		ruby := runOn(t, "../testdata/ruby-rust-project")
-		assertHighConfidence(t, ruby, "native_extension", "rb-sys")
-		assertHighConfidence(t, ruby, "library", "Magnus")
+		assertToolDetectedWithConfidence(t, ruby, "native_extension", "rb-sys", brief.ConfidenceHigh)
+		assertToolDetectedWithConfidence(t, ruby, "library", "Magnus", brief.ConfidenceHigh)
 		assertToolDetected(t, ruby, "native_extension", "mkmf")
 
 		elixir := runOn(t, "../testdata/rustler-project")
-		assertHighConfidence(t, elixir, "native_extension", "Rustler")
+		assertToolDetectedWithConfidence(t, elixir, "native_extension", "Rustler", brief.ConfidenceHigh)
 	})
 
 	t.Run("signals", func(t *testing.T) {
@@ -151,7 +137,7 @@ func TestRubyAndBEAMRustIntegrations(t *testing.T) {
 				for path, content := range tt.files {
 					writeProjectFile(t, dir, path, content)
 				}
-				assertHighConfidence(t, runOn(t, dir), tt.category, tt.tool)
+				assertToolDetectedWithConfidence(t, runOn(t, dir), tt.category, tt.tool, brief.ConfidenceHigh)
 			})
 		}
 	})

@@ -12,7 +12,7 @@ description = "Builds safe Erlang NIFs written in Rust"
 ecosystems = ["elixir"]
 
 [detect.file_contains]
-"mix.exs" = ["{:rustler,", "{:rustler ,"]
+"mix.exs" = ["{:rustler,"]
 "Cargo.toml" = ["\nrustler =", "\nrustler=", "[dependencies.rustler]"]
 
 [commands]

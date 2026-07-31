@@ -14,6 +14,7 @@ ecosystems = ["elixir"]
 [detect.file_contains]
 "mix.exs" = ["{:rustler,"]
 "Cargo.toml" = ["\nrustler =", "\nrustler=", "[dependencies.rustler]"]
+"native/*/Cargo.toml" = ["\nrustler =", "\nrustler=", "[dependencies.rustler]"]
 
 [commands]
 run = "mix compile"

@@ -13,9 +13,10 @@ ecosystems = ["ruby"]
 
 [detect.file_contains]
 "Cargo.toml" = ["\nmagnus =", "\nmagnus=", "[dependencies.magnus]"]
+"ext/*/Cargo.toml" = ["\nmagnus =", "\nmagnus=", "[dependencies.magnus]"]
 
 [config]
-files = ["Cargo.toml"]
+files = ["Cargo.toml", "ext/*/Cargo.toml"]
 
 [taxonomy]
 role = ["library"]

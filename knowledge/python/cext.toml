@@ -13,8 +13,8 @@ files = ["*.pyx", "**/*.pyx"]
 ecosystems = ["python"]
 
 [detect.file_contains]
-"setup.py" = ["Extension(", "ext_modules"]
-"pyproject.toml" = ["[tool.setuptools.ext-modules]", "ext-modules"]
+"setup.py" = ["ext_modules"]
+"pyproject.toml" = ["[tool.setuptools.ext-modules]"]
 
 [commands]
 run = "python setup.py build_ext --inplace"

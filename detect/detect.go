@@ -661,6 +661,10 @@ func (e *Engine) contains(file string, patterns []string) bool {
 }
 
 func (e *Engine) globContains(pattern string, contentPatterns []string) bool {
+	if !strings.Contains(pattern, "**") {
+		return e.shallowGlobContains(pattern, contentPatterns)
+	}
+
 	found := false
 	errFound := errors.New("found")
 	_ = filepath.WalkDir(e.Root, func(filePath string, d os.DirEntry, err error) error {
@@ -702,6 +706,30 @@ func (e *Engine) globContains(pattern string, contentPatterns []string) bool {
 		return errFound
 	})
 	return found
+}
+
+// shallowGlobContains resolves a non-recursive glob (no **) directly with
+// filepath.Glob so we avoid walking the whole tree for e.g. ext/*/Cargo.toml.
+func (e *Engine) shallowGlobContains(pattern string, contentPatterns []string) bool {
+	matches, err := filepath.Glob(filepath.Join(e.Root, filepath.FromSlash(pattern)))
+	if err != nil {
+		return false
+	}
+	for _, m := range matches {
+		info, err := os.Stat(m)
+		if err != nil || !info.Mode().IsRegular() {
+			continue
+		}
+		rel, err := filepath.Rel(e.Root, m)
+		if err != nil || !e.isTracked(rel) {
+			continue
+		}
+		data, err := e.safeReadFile(rel)
+		if err == nil && containsAny(string(data), contentPatterns) {
+			return true
+		}
+	}
+	return false
 }
 
 func containsAny(content string, patterns []string) bool {

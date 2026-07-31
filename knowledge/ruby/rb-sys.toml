@@ -14,6 +14,7 @@ ecosystems = ["ruby"]
 
 [detect.file_contains]
 "Cargo.toml" = ["\nrb-sys =", "\nrb-sys=", "[dependencies.rb-sys]"]
+"ext/*/Cargo.toml" = ["\nrb-sys =", "\nrb-sys=", "[dependencies.rb-sys]"]
 
 [commands]
 run = "bundle exec rake compile"

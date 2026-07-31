@@ -129,6 +129,15 @@ func TestRubyAndBEAMRustIntegrations(t *testing.T) {
 				category: "native_extension",
 				tool:     "Rustler",
 			},
+			{
+				name: "Rustler nested Cargo dependency",
+				files: map[string]string{
+					"mix.exs":                   "defmodule Example.MixProject do\n  use Mix.Project\n  def project, do: [deps: []]\nend\n",
+					"native/example/Cargo.toml": "[package]\nname = \"example\"\nversion = \"0.1.0\"\n[dependencies]\nrustler = \"0.38\"\n",
+				},
+				category: "native_extension",
+				tool:     "Rustler",
+			},
 		}
 
 		for _, tt := range tests {
@@ -1021,6 +1030,12 @@ func TestPythonRustNativeExtensionSignals(t *testing.T) {
 			writeProjectFile(t, dir, tt.path, tt.content)
 			r := runOn(t, dir)
 			assertToolDetectedWithConfidence(t, r, "native_extension", tt.tool, brief.ConfidenceHigh)
+			// setuptools-rust signals must not co-detect the C-extension
+			// definition: RustExtension( contains Extension( and
+			// [[tool.setuptools-rust.ext-modules]] contains ext-modules.
+			if tt.tool == "setuptools-rust" {
+				assertToolNotDetected(t, r, "native_extension", "setuptools Extension")
+			}
 		})
 	}
 }
@@ -1570,6 +1585,25 @@ func TestFileContainsGlob(t *testing.T) {
 		}
 	})
 
+	t.Run("shallow glob", func(t *testing.T) {
+		dir := t.TempDir()
+		writeProjectFile(t, dir, "ext/foo/Cargo.toml", marker)
+		writeProjectFile(t, dir, "ext/bar/Cargo.toml", "no match")
+		writeProjectFile(t, dir, "ext/foo/nested/Cargo.toml", marker)
+
+		e := New(loadKB(t), dir)
+		if !e.contains("ext/*/Cargo.toml", []string{marker}) {
+			t.Error("expected ext/*/Cargo.toml to inspect a nested file")
+		}
+		if e.contains("ext/*/Cargo.toml", []string{"absent"}) {
+			t.Error("shallow glob should not match when no file contains the pattern")
+		}
+		// A single * must not descend into deeper directories.
+		if e.contains("other/*/Cargo.toml", []string{marker}) {
+			t.Error("shallow glob should not match files outside the pattern")
+		}
+	})
+
 	t.Run("multiple matches", func(t *testing.T) {
 		dir := t.TempDir()
 		writeProjectFile(t, dir, "src/a.rs", "near miss")
@@ -1759,6 +1793,16 @@ func assertToolDetected(t *testing.T, r *brief.Report, category, name string) {
 		}
 	}
 	t.Errorf("expected %s in %s category", name, category)
+}
+
+func assertToolNotDetected(t *testing.T, r *brief.Report, category, name string) {
+	t.Helper()
+	for _, tool := range r.Tools[category] {
+		if tool.Name == name {
+			t.Errorf("did not expect %s in %s category", name, category)
+			return
+		}
+	}
 }
 
 func assertToolDetectedWithConfidence(

@@ -1213,6 +1213,83 @@ func TestGlobIgnoresDirectories(t *testing.T) {
 	}
 }
 
+func TestFileContainsGlob(t *testing.T) {
+	const marker = "native extension marker"
+
+	t.Run("root file", func(t *testing.T) {
+		dir := t.TempDir()
+		writeProjectFile(t, dir, "example.gemspec", marker)
+
+		if !New(loadKB(t), dir).contains("**/*.gemspec", []string{marker}) {
+			t.Error("expected **/*.gemspec to inspect a root file")
+		}
+	})
+
+	t.Run("nested file", func(t *testing.T) {
+		dir := t.TempDir()
+		writeProjectFile(t, dir, "lib/example.ex", marker)
+
+		if !New(loadKB(t), dir).contains("**/*.ex", []string{marker}) {
+			t.Error("expected **/*.ex to inspect a nested file")
+		}
+	})
+
+	t.Run("multiple matches", func(t *testing.T) {
+		dir := t.TempDir()
+		writeProjectFile(t, dir, "src/a.rs", "near miss")
+		writeProjectFile(t, dir, "src/b.rs", marker)
+
+		engine := New(loadKB(t), dir)
+		tool := &kb.ToolDef{
+			Detect: kb.DetectInfo{
+				FileContains: map[string][]string{"**/*.rs": {marker}},
+			},
+		}
+		if got := engine.matchTool(tool); got != brief.ConfidenceHigh {
+			t.Errorf("glob-backed file_contains confidence = %q, want %q", got, brief.ConfidenceHigh)
+		}
+	})
+
+	t.Run("skipped directory", func(t *testing.T) {
+		dir := t.TempDir()
+		writeProjectFile(t, dir, "vendor/native.rs", marker)
+
+		if New(loadKB(t), dir).contains("**/*.rs", []string{marker}) {
+			t.Error("file_contains glob should not inspect skipped directories")
+		}
+	})
+
+	t.Run("regular files only", func(t *testing.T) {
+		dir := t.TempDir()
+		if err := os.Mkdir(filepath.Join(dir, "native.rs"), 0o755); err != nil {
+			t.Fatal(err)
+		}
+
+		if New(loadKB(t), dir).contains("**/*.rs", []string{marker}) {
+			t.Error("file_contains glob should not inspect directories")
+		}
+	})
+
+	t.Run("near miss", func(t *testing.T) {
+		dir := t.TempDir()
+		writeProjectFile(t, dir, "src/native.rs", "no matching content")
+		writeProjectFile(t, dir, "notes.txt", marker)
+
+		if New(loadKB(t), dir).contains("**/*.rs", []string{marker}) {
+			t.Error("content in a non-matching file should not satisfy file_contains")
+		}
+	})
+
+	t.Run("exact path", func(t *testing.T) {
+		dir := t.TempDir()
+		writeProjectFile(t, dir, "config/tool.toml", marker)
+
+		if !New(loadKB(t), dir).contains("config/tool.toml", []string{marker}) {
+			t.Error("exact file_contains path should retain its existing behavior")
+		}
+	})
+}
+
 func TestDirectoryGlobPattern(t *testing.T) {
 	dir := t.TempDir()
 	if err := os.Mkdir(filepath.Join(dir, "Foo.xcodeproj"), 0o755); err != nil {

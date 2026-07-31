@@ -646,19 +646,96 @@ func (e *Engine) safeReadFile(file string) ([]byte, error) {
 	return io.ReadAll(f)
 }
 
-// contains checks if a file contains any of the given strings.
+// contains checks if an exact file or any regular file matching a glob contains
+// one of the given strings.
 func (e *Engine) contains(file string, patterns []string) bool {
+	if kb.HasGlobPattern(file) {
+		return e.globContains(file, patterns)
+	}
+
 	data, err := e.safeReadFile(file)
 	if err != nil {
 		return false
 	}
-	content := string(data)
+	return containsAny(string(data), patterns)
+}
+
+func (e *Engine) globContains(pattern string, contentPatterns []string) bool {
+	found := false
+	errFound := errors.New("found")
+	_ = filepath.WalkDir(e.Root, func(filePath string, d os.DirEntry, err error) error {
+		if err != nil {
+			return nil
+		}
+
+		rel, err := filepath.Rel(e.Root, filePath)
+		if err != nil {
+			return nil
+		}
+		if d.IsDir() {
+			if rel != "." && e.shouldSkipDir(d.Name()) {
+				return filepath.SkipDir
+			}
+			if e.ScanDepth > 0 && rel != "." &&
+				strings.Count(rel, string(filepath.Separator))+1 > e.ScanDepth {
+				return filepath.SkipDir
+			}
+			if !e.isTracked(rel) {
+				return filepath.SkipDir
+			}
+			return nil
+		}
+
+		if !e.isTracked(rel) || !matchPathPattern(pattern, filepath.ToSlash(rel)) {
+			return nil
+		}
+		info, err := d.Info()
+		if err != nil || !info.Mode().IsRegular() {
+			return nil
+		}
+
+		data, err := e.safeReadFile(rel)
+		if err != nil || !containsAny(string(data), contentPatterns) {
+			return nil
+		}
+		found = true
+		return errFound
+	})
+	return found
+}
+
+func containsAny(content string, patterns []string) bool {
 	for _, p := range patterns {
 		if strings.Contains(content, p) {
 			return true
 		}
 	}
 	return false
+}
+
+// matchPathPattern matches slash-separated paths and treats ** as zero or more
+// complete path segments.
+func matchPathPattern(pattern, name string) bool {
+	pattern = filepath.ToSlash(pattern)
+	name = filepath.ToSlash(name)
+	return matchPathSegments(strings.Split(pattern, "/"), strings.Split(name, "/"))
+}
+
+func matchPathSegments(pattern, name []string) bool {
+	if len(pattern) == 0 {
+		return len(name) == 0
+	}
+	if pattern[0] == "**" {
+		if matchPathSegments(pattern[1:], name) {
+			return true
+		}
+		return len(name) > 0 && matchPathSegments(pattern, name[1:])
+	}
+	if len(name) == 0 {
+		return false
+	}
+	matched, err := path.Match(pattern[0], name[0])
+	return err == nil && matched && matchPathSegments(pattern[1:], name[1:])
 }
 
 // loadDeps parses all manifest files in the project using the manifests library

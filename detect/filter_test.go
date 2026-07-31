@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/git-pkgs/brief"
+	"github.com/git-pkgs/brief/kb"
 )
 
 func TestFilterResources(t *testing.T) {
@@ -160,6 +161,37 @@ func TestFilterByChangedFiles_Tools(t *testing.T) {
 	}
 	if !found {
 		t.Error("expected golangci-lint when its config file changed")
+	}
+}
+
+func TestToolMatchesChangedFiles_FileContainsGlob(t *testing.T) {
+	tool := &kb.ToolDef{
+		Detect: kb.DetectInfo{
+			FileContains: map[string][]string{
+				"**/*.rs":          {"native extension marker"},
+				"config/tool.toml": {"enabled = true"},
+			},
+		},
+	}
+
+	tests := []struct {
+		name    string
+		changed string
+		want    bool
+	}{
+		{name: "root glob match", changed: "lib.rs", want: true},
+		{name: "nested glob match", changed: "native/example/src/lib.rs", want: true},
+		{name: "exact path", changed: "config/tool.toml", want: true},
+		{name: "near miss", changed: "native/example/src/lib.go", want: false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			changed := map[string]bool{tt.changed: true}
+			if got := toolMatchesChangedFiles(tool, changed, nil); got != tt.want {
+				t.Errorf("toolMatchesChangedFiles(%q) = %v, want %v", tt.changed, got, tt.want)
+			}
+		})
 	}
 }
 

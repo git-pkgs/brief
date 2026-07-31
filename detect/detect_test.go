@@ -659,20 +659,6 @@ func TestNodeProject(t *testing.T) {
 }
 
 func TestNodeRustNativeExtensions(t *testing.T) {
-	assertHighConfidence := func(t *testing.T, r *brief.Report, name string) {
-		t.Helper()
-		for _, tool := range r.Tools["native_extension"] {
-			if tool.Name != name {
-				continue
-			}
-			if tool.Confidence != brief.ConfidenceHigh {
-				t.Errorf("%s confidence = %q, want %q", name, tool.Confidence, brief.ConfidenceHigh)
-			}
-			return
-		}
-		t.Errorf("expected %s in native_extension category", name)
-	}
-
 	t.Run("projects", func(t *testing.T) {
 		tests := []struct {
 			name    string
@@ -686,7 +672,7 @@ func TestNodeRustNativeExtensions(t *testing.T) {
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
 				r := runOn(t, tt.fixture)
-				assertHighConfidence(t, r, tt.tool)
+				assertToolDetectedWithConfidence(t, r, "native_extension", tt.tool, brief.ConfidenceHigh)
 			})
 		}
 	})
@@ -759,7 +745,7 @@ func TestNodeRustNativeExtensions(t *testing.T) {
 					writeProjectFile(t, dir, path, content)
 				}
 				r := runOn(t, dir)
-				assertHighConfidence(t, r, tt.tool)
+				assertToolDetectedWithConfidence(t, r, "native_extension", tt.tool, brief.ConfidenceHigh)
 			})
 		}
 	})

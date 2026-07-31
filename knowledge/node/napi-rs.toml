@@ -27,8 +27,8 @@ ecosystems = ["node"]
 ]
 
 [commands]
-run = "napi build --platform --release"
-alternatives = ["napi build"]
+run = "npx napi build --platform --release"
+alternatives = ["npx napi build"]
 
 [config]
 files = ["package.json", "Cargo.toml", "build.rs"]

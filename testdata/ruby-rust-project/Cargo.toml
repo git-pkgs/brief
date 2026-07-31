@@ -1,0 +1,11 @@
+[package]
+name = "ruby-rust-project"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+magnus = "0.8"
+rb-sys = "0.9"

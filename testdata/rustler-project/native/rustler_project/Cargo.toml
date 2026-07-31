@@ -1,0 +1,10 @@
+[package]
+name = "rustler_project"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+rustler = "0.38"

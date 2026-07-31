@@ -1,0 +1,26 @@
+[tool]
+name = "Rustler"
+category = "native_extension"
+homepage = "https://github.com/rusterlium/rustler"
+docs = "https://hexdocs.pm/rustler/"
+repo = "https://github.com/rusterlium/rustler"
+description = "Builds safe Erlang NIFs written in Rust"
+
+# Match the Mix package in mix.exs and the Cargo crate in Cargo.toml rather than
+# relying on the global dependency cache shared by all manifest ecosystems.
+[detect]
+ecosystems = ["elixir"]
+
+[detect.file_contains]
+"mix.exs" = ["{:rustler,", "{:rustler ,"]
+"Cargo.toml" = ["\nrustler =", "\nrustler=", "[dependencies.rustler]"]
+
+[commands]
+run = "mix compile"
+alternatives = ["mix compile --force"]
+
+[config]
+files = ["mix.exs", "Cargo.toml", "native/**/Cargo.toml"]
+
+[taxonomy]
+role = ["native-extension"]

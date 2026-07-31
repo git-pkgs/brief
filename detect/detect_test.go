@@ -68,6 +68,143 @@ func TestRubyTools(t *testing.T) {
 	assertToolDetected(t, r, "lint", "RuboCop")
 }
 
+func TestRubyAndBEAMRustIntegrations(t *testing.T) {
+	assertHighConfidence := func(t *testing.T, r *brief.Report, category, name string) {
+		t.Helper()
+		for _, tool := range r.Tools[category] {
+			if tool.Name != name {
+				continue
+			}
+			if tool.Confidence != brief.ConfidenceHigh {
+				t.Errorf("%s confidence = %q, want %q", name, tool.Confidence, brief.ConfidenceHigh)
+			}
+			return
+		}
+		t.Errorf("expected %s in %s category", name, category)
+	}
+
+	t.Run("projects", func(t *testing.T) {
+		ruby := runOn(t, "../testdata/ruby-rust-project")
+		assertHighConfidence(t, ruby, "native_extension", "rb-sys")
+		assertHighConfidence(t, ruby, "library", "Magnus")
+		assertToolDetected(t, ruby, "native_extension", "mkmf")
+
+		elixir := runOn(t, "../testdata/rustler-project")
+		assertHighConfidence(t, elixir, "native_extension", "Rustler")
+	})
+
+	t.Run("signals", func(t *testing.T) {
+		tests := []struct {
+			name     string
+			files    map[string]string
+			category string
+			tool     string
+		}{
+			{
+				name: "rb-sys Ruby dependency",
+				files: map[string]string{
+					"Gemfile": "source \"https://rubygems.org\"\ngem \"rb_sys\"\n",
+				},
+				category: "native_extension",
+				tool:     "rb-sys",
+			},
+			{
+				name: "rb-sys Cargo dependency",
+				files: map[string]string{
+					"Gemfile":    "source \"https://rubygems.org\"\n",
+					"Cargo.toml": "[package]\nname = \"example\"\nversion = \"0.1.0\"\n[dependencies.rb-sys]\nversion = \"0.9\"\n",
+				},
+				category: "native_extension",
+				tool:     "rb-sys",
+			},
+			{
+				name: "Magnus Cargo dependency",
+				files: map[string]string{
+					"Gemfile":    "source \"https://rubygems.org\"\n",
+					"Cargo.toml": "[package]\nname = \"example\"\nversion = \"0.1.0\"\n[dependencies]\nmagnus = \"0.8\"\n",
+				},
+				category: "library",
+				tool:     "Magnus",
+			},
+			{
+				name: "Rustler Mix dependency",
+				files: map[string]string{
+					"mix.exs": "defmodule Example.MixProject do\n  use Mix.Project\n  def project, do: [deps: [{:rustler, \"~> 0.38\"}]]\nend\n",
+				},
+				category: "native_extension",
+				tool:     "Rustler",
+			},
+			{
+				name: "Rustler Cargo dependency",
+				files: map[string]string{
+					"mix.exs":    "defmodule Example.MixProject do\n  use Mix.Project\n  def project, do: [deps: []]\nend\n",
+					"Cargo.toml": "[package]\nname = \"example\"\nversion = \"0.1.0\"\n[dependencies.rustler]\nversion = \"0.38\"\n",
+				},
+				category: "native_extension",
+				tool:     "Rustler",
+			},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				dir := t.TempDir()
+				for path, content := range tt.files {
+					writeProjectFile(t, dir, path, content)
+				}
+				assertHighConfidence(t, runOn(t, dir), tt.category, tt.tool)
+			})
+		}
+	})
+
+	t.Run("plain extconf", func(t *testing.T) {
+		dir := t.TempDir()
+		writeProjectFile(t, dir, "Gemfile", "source \"https://rubygems.org\"\n")
+		writeProjectFile(t, dir, "ext/example/extconf.rb", "require \"mkmf\"\ncreate_makefile(\"example\")\n")
+		writeProjectFile(
+			t,
+			dir,
+			"Cargo.toml",
+			"[package]\nname = \"near-miss\"\nversion = \"0.1.0\"\n[dependencies]\nother-rb-sys = \"1\"\nsuper-magnus = \"1\"\n",
+		)
+
+		r := runOn(t, dir)
+		assertToolDetected(t, r, "native_extension", "mkmf")
+		if slices.ContainsFunc(r.Tools["native_extension"], func(d brief.Detection) bool {
+			return d.Name == "rb-sys"
+		}) {
+			t.Error("plain extconf.rb should not detect rb-sys")
+		}
+		if slices.ContainsFunc(r.Tools["library"], func(d brief.Detection) bool {
+			return d.Name == "Magnus"
+		}) {
+			t.Error("plain extconf.rb should not detect Magnus")
+		}
+	})
+
+	t.Run("plain Mix project", func(t *testing.T) {
+		dir := t.TempDir()
+		writeProjectFile(
+			t,
+			dir,
+			"mix.exs",
+			"defmodule Example.MixProject do\n  use Mix.Project\n  def project, do: [deps: []]\nend\n",
+		)
+		writeProjectFile(
+			t,
+			dir,
+			"README.md",
+			"Rustler can be added later if this project needs a native extension.\n",
+		)
+
+		r := runOn(t, dir)
+		if slices.ContainsFunc(r.Tools["native_extension"], func(d brief.Detection) bool {
+			return d.Name == "Rustler"
+		}) {
+			t.Error("plain Mix project should not detect Rustler")
+		}
+	})
+}
+
 func TestRubyTaxonomyPassesThrough(t *testing.T) {
 	r := rubyReport(t)
 

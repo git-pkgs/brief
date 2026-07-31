@@ -1,0 +1,26 @@
+[tool]
+name = "rb-sys"
+category = "native_extension"
+homepage = "https://oxidize-rb.github.io/rb-sys/"
+docs = "https://oxidize-rb.github.io/rb-sys/"
+repo = "https://github.com/oxidize-rb/rb-sys"
+description = "Builds Ruby native extensions written in Rust"
+
+# Match the Cargo crate in Cargo.toml rather than through the global dependency
+# cache so a same-named dependency from another ecosystem does not trigger it.
+[detect]
+dependencies = ["rb_sys"]
+ecosystems = ["ruby"]
+
+[detect.file_contains]
+"Cargo.toml" = ["\nrb-sys =", "\nrb-sys=", "[dependencies.rb-sys]"]
+
+[commands]
+run = "bundle exec rake compile"
+alternatives = ["rake compile"]
+
+[config]
+files = ["Gemfile", "Cargo.toml", "extconf.rb", "ext/**/extconf.rb"]
+
+[taxonomy]
+role = ["native-extension"]

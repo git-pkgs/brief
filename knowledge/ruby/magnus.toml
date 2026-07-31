@@ -1,0 +1,21 @@
+[tool]
+name = "Magnus"
+category = "library"
+homepage = "https://github.com/matsadler/magnus"
+docs = "https://docs.rs/magnus/"
+repo = "https://github.com/matsadler/magnus"
+description = "Rust bindings for the Ruby API"
+
+# Match the Cargo crate in Cargo.toml rather than through the global dependency
+# cache so a same-named dependency from another ecosystem does not trigger it.
+[detect]
+ecosystems = ["ruby"]
+
+[detect.file_contains]
+"Cargo.toml" = ["\nmagnus =", "\nmagnus=", "[dependencies.magnus]"]
+
+[config]
+files = ["Cargo.toml"]
+
+[taxonomy]
+role = ["library"]

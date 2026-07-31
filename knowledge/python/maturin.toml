@@ -1,0 +1,24 @@
+[tool]
+name = "Maturin"
+category = "native_extension"
+homepage = "https://www.maturin.rs/"
+docs = "https://www.maturin.rs/"
+repo = "https://github.com/PyO3/maturin"
+description = "Builds Python packages containing Rust extensions or executables"
+
+[detect]
+dependencies = ["maturin"]
+ecosystems = ["python"]
+
+[detect.file_contains]
+"pyproject.toml" = ["build-backend = \"maturin\"", "[tool.maturin]"]
+
+[commands]
+run = "maturin develop"
+alternatives = ["maturin build", "python -m build"]
+
+[config]
+files = ["pyproject.toml", "Cargo.toml"]
+
+[taxonomy]
+role = ["native-extension"]

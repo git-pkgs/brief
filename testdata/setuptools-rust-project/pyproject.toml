@@ -1,0 +1,11 @@
+[build-system]
+requires = ["setuptools>=77", "setuptools-rust>=1.10"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "setuptools-rust-project"
+version = "0.1.0"
+
+[[tool.setuptools-rust.ext-modules]]
+target = "setuptools_rust_project._lib"
+path = "Cargo.toml"

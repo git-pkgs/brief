@@ -1,0 +1,28 @@
+[tool]
+name = "setuptools-rust"
+category = "native_extension"
+homepage = "https://setuptools-rust.readthedocs.io/"
+docs = "https://setuptools-rust.readthedocs.io/"
+repo = "https://github.com/PyO3/setuptools-rust"
+description = "Setuptools plugin for building Python extensions and executables written in Rust"
+
+[detect]
+dependencies = ["setuptools-rust"]
+ecosystems = ["python"]
+
+[detect.file_contains]
+"pyproject.toml" = [
+  "[[tool.setuptools-rust.ext-modules]]",
+  "[[tool.setuptools-rust.bins]]",
+]
+"setup.py" = ["RustExtension("]
+
+[commands]
+run = "python -m build"
+alternatives = ["pip install -e ."]
+
+[config]
+files = ["pyproject.toml", "setup.py", "Cargo.toml"]
+
+[taxonomy]
+role = ["native-extension"]

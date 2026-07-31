@@ -704,6 +704,100 @@ func TestPythonProject(t *testing.T) {
 	}
 }
 
+func TestPythonRustNativeExtensionProjects(t *testing.T) {
+	tests := []struct {
+		name    string
+		fixture string
+		tool    string
+	}{
+		{name: "Maturin", fixture: "../testdata/maturin-project", tool: "Maturin"},
+		{name: "setuptools-rust", fixture: "../testdata/setuptools-rust-project", tool: "setuptools-rust"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := runOn(t, tt.fixture)
+			assertToolDetectedWithConfidence(t, r, "native_extension", tt.tool, brief.ConfidenceHigh)
+		})
+	}
+}
+
+func TestPythonRustNativeExtensionSignals(t *testing.T) {
+	tests := []struct {
+		name    string
+		path    string
+		content string
+		tool    string
+	}{
+		{
+			name:    "Maturin build backend",
+			path:    "pyproject.toml",
+			content: "[build-system]\nbuild-backend = \"maturin\"\n",
+			tool:    "Maturin",
+		},
+		{
+			name:    "Maturin tool table",
+			path:    "pyproject.toml",
+			content: "[tool.maturin]\nbindings = \"pyo3\"\n",
+			tool:    "Maturin",
+		},
+		{
+			name:    "Maturin parsed dependency",
+			path:    "pyproject.toml",
+			content: "[project]\nname = \"example\"\nversion = \"0.1.0\"\ndependencies = [\"maturin>=1.0\"]\n",
+			tool:    "Maturin",
+		},
+		{
+			name:    "setuptools-rust parsed dependency",
+			path:    "pyproject.toml",
+			content: "[project]\nname = \"example\"\nversion = \"0.1.0\"\ndependencies = [\"setuptools-rust>=1.10\"]\n",
+			tool:    "setuptools-rust",
+		},
+		{
+			name:    "setuptools-rust extension table",
+			path:    "pyproject.toml",
+			content: "[[tool.setuptools-rust.ext-modules]]\ntarget = \"example._lib\"\n",
+			tool:    "setuptools-rust",
+		},
+		{
+			name:    "setuptools-rust binary table",
+			path:    "pyproject.toml",
+			content: "[[tool.setuptools-rust.bins]]\ntarget = \"example\"\n",
+			tool:    "setuptools-rust",
+		},
+		{
+			name:    "setuptools-rust setup.py",
+			path:    "setup.py",
+			content: "from setuptools_rust import RustExtension\n\nextension = RustExtension(\"example._lib\")\n",
+			tool:    "setuptools-rust",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			dir := t.TempDir()
+			writeProjectFile(t, dir, tt.path, tt.content)
+			r := runOn(t, dir)
+			assertToolDetectedWithConfidence(t, r, "native_extension", tt.tool, brief.ConfidenceHigh)
+		})
+	}
+}
+
+func TestPythonRustNativeExtensionNearMiss(t *testing.T) {
+	dir := t.TempDir()
+	writeProjectFile(t, dir, "pyproject.toml", "[project]\nname = \"near-miss\"\nversion = \"0.1.0\"\n")
+	writeProjectFile(t, dir, "README.md", "This compares maturin with setuptools-rust.\n")
+
+	r := runOn(t, dir)
+	for _, name := range []string{"Maturin", "setuptools-rust"} {
+		if slices.ContainsFunc(r.Tools["native_extension"], func(d brief.Detection) bool {
+			return d.Name == name
+		}) {
+			t.Errorf("README mention should not detect %s", name)
+		}
+	}
+}
+
 func TestPerlProject(t *testing.T) {
 	r := runOn(t, "../testdata/perl-project")
 
@@ -1344,6 +1438,26 @@ func assertToolDetected(t *testing.T, r *brief.Report, category, name string) {
 		if tool.Name == name {
 			return
 		}
+	}
+	t.Errorf("expected %s in %s category", name, category)
+}
+
+func assertToolDetectedWithConfidence(
+	t *testing.T,
+	r *brief.Report,
+	category string,
+	name string,
+	confidence brief.Confidence,
+) {
+	t.Helper()
+	for _, tool := range r.Tools[category] {
+		if tool.Name != name {
+			continue
+		}
+		if tool.Confidence != confidence {
+			t.Errorf("%s confidence = %q, want %q", name, tool.Confidence, confidence)
+		}
+		return
 	}
 	t.Errorf("expected %s in %s category", name, category)
 }

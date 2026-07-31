@@ -1,0 +1,37 @@
+[tool]
+name = "napi-rs"
+category = "native_extension"
+homepage = "https://napi.rs/"
+docs = "https://napi.rs/docs/introduction/getting-started"
+repo = "https://github.com/napi-rs/napi-rs"
+description = "Builds Node-API addons written in Rust"
+
+# Match the Cargo crates in Cargo.toml rather than through the global dependency
+# cache so same-named npm packages do not trigger this definition.
+[detect]
+dependencies = ["@napi-rs/cli"]
+ecosystems = ["node"]
+
+[detect.file_contains]
+"package.json" = ["napi build"]
+"Cargo.toml" = [
+  "\nnapi =",
+  "\nnapi=",
+  "\nnapi-derive =",
+  "\nnapi-derive=",
+  "\nnapi-build =",
+  "\nnapi-build=",
+  "[dependencies.napi]",
+  "[dependencies.napi-derive]",
+  "[build-dependencies.napi-build]",
+]
+
+[commands]
+run = "napi build --platform --release"
+alternatives = ["napi build"]
+
+[config]
+files = ["package.json", "Cargo.toml", "build.rs"]
+
+[taxonomy]
+role = ["native-extension"]

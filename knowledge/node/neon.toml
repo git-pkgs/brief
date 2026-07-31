@@ -1,0 +1,26 @@
+[tool]
+name = "Neon"
+category = "native_extension"
+homepage = "https://neon-rs.dev/"
+docs = "https://neon-rs.dev/docs/hello-world/"
+repo = "https://github.com/neon-bindings/neon"
+description = "Builds Node.js native addons written in Rust"
+
+# Match the Cargo crate in Cargo.toml rather than through the global dependency
+# cache so a same-named npm package does not trigger this definition.
+[detect]
+dependencies = ["@neon-rs/cli"]
+ecosystems = ["node"]
+
+[detect.file_contains]
+"Cargo.toml" = ["\nneon =", "\nneon=", "[dependencies.neon]"]
+
+[commands]
+run = "npm run build"
+alternatives = ["npm run build -- --release"]
+
+[config]
+files = ["package.json", "Cargo.toml"]
+
+[taxonomy]
+role = ["native-extension"]

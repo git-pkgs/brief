@@ -658,6 +658,139 @@ func TestNodeProject(t *testing.T) {
 	}
 }
 
+func TestNodeRustNativeExtensions(t *testing.T) {
+	assertHighConfidence := func(t *testing.T, r *brief.Report, name string) {
+		t.Helper()
+		for _, tool := range r.Tools["native_extension"] {
+			if tool.Name != name {
+				continue
+			}
+			if tool.Confidence != brief.ConfidenceHigh {
+				t.Errorf("%s confidence = %q, want %q", name, tool.Confidence, brief.ConfidenceHigh)
+			}
+			return
+		}
+		t.Errorf("expected %s in native_extension category", name)
+	}
+
+	t.Run("projects", func(t *testing.T) {
+		tests := []struct {
+			name    string
+			fixture string
+			tool    string
+		}{
+			{name: "napi-rs", fixture: "../testdata/napi-rs-project", tool: "napi-rs"},
+			{name: "Neon", fixture: "../testdata/neon-project", tool: "Neon"},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				r := runOn(t, tt.fixture)
+				assertHighConfidence(t, r, tt.tool)
+			})
+		}
+	})
+
+	t.Run("signals", func(t *testing.T) {
+		tests := []struct {
+			name  string
+			files map[string]string
+			tool  string
+		}{
+			{
+				name: "napi-rs npm dependency",
+				files: map[string]string{
+					"package.json": `{"name":"example","devDependencies":{"@napi-rs/cli":"^3.0.0"}}`,
+				},
+				tool: "napi-rs",
+			},
+			{
+				name: "napi-rs build script",
+				files: map[string]string{
+					"package.json": `{"name":"example","scripts":{"build":"napi build --platform --release"}}`,
+				},
+				tool: "napi-rs",
+			},
+			{
+				name: "napi crate",
+				files: map[string]string{
+					"package.json": `{"name":"example"}`,
+					"Cargo.toml":   "[package]\nname = \"example\"\nversion = \"0.1.0\"\n[dependencies]\nnapi = \"3\"\n",
+				},
+				tool: "napi-rs",
+			},
+			{
+				name: "napi-derive crate",
+				files: map[string]string{
+					"package.json": `{"name":"example"}`,
+					"Cargo.toml":   "[package]\nname = \"example\"\nversion = \"0.1.0\"\n[dependencies]\nnapi-derive = \"3\"\n",
+				},
+				tool: "napi-rs",
+			},
+			{
+				name: "napi-build crate",
+				files: map[string]string{
+					"package.json": `{"name":"example"}`,
+					"Cargo.toml":   "[package]\nname = \"example\"\nversion = \"0.1.0\"\n[build-dependencies]\nnapi-build = \"2\"\n",
+				},
+				tool: "napi-rs",
+			},
+			{
+				name: "Neon npm dependency",
+				files: map[string]string{
+					"package.json": `{"name":"example","devDependencies":{"@neon-rs/cli":"^0.1.82"}}`,
+				},
+				tool: "Neon",
+			},
+			{
+				name: "Neon Cargo dependency",
+				files: map[string]string{
+					"package.json": `{"name":"example"}`,
+					"Cargo.toml":   "[package]\nname = \"example\"\nversion = \"0.1.0\"\n[dependencies.neon]\nversion = \"1.1\"\n",
+				},
+				tool: "Neon",
+			},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				dir := t.TempDir()
+				for path, content := range tt.files {
+					writeProjectFile(t, dir, path, content)
+				}
+				r := runOn(t, dir)
+				assertHighConfidence(t, r, tt.tool)
+			})
+		}
+	})
+
+	t.Run("near miss", func(t *testing.T) {
+		dir := t.TempDir()
+		writeProjectFile(
+			t,
+			dir,
+			"package.json",
+			`{"name":"near-miss","dependencies":{"napi":"1","neon":"1"},"scripts":{"palette":"echo neon"}}`,
+		)
+		writeProjectFile(
+			t,
+			dir,
+			"Cargo.toml",
+			"[package]\nname = \"near-miss\"\nversion = \"0.1.0\"\n[dependencies]\nother-napi = \"1\"\nultraviolet-neon = \"1\"\n",
+		)
+		writeProjectFile(t, dir, "README.md", "napi-rs uses the napi build command.\n")
+
+		r := runOn(t, dir)
+		for _, name := range []string{"napi-rs", "Neon"} {
+			if slices.ContainsFunc(r.Tools["native_extension"], func(d brief.Detection) bool {
+				return d.Name == name
+			}) {
+				t.Errorf("prose mention should not detect %s", name)
+			}
+		}
+	})
+}
+
 func TestPythonProject(t *testing.T) {
 	engine := New(loadKB(t), "../testdata/python-project")
 	r, err := engine.Run()

@@ -1,0 +1,10 @@
+{
+  "name": "napi-rs-project",
+  "version": "0.1.0",
+  "scripts": {
+    "build": "napi build --platform --release"
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "^3.0.0"
+  }
+}

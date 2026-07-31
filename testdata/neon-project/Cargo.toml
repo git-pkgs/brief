@@ -1,0 +1,11 @@
+[package]
+name = "neon-project"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies.neon]
+version = "1.1"
+features = ["napi-8"]

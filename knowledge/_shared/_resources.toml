@@ -43,7 +43,7 @@ patterns = ["copyright", "copyright.md", "copyright.txt"]
 name = "Notice"
 field = "notice"
 group = "legal"
-patterns = ["notice*"]
+patterns = ["notice", "notice.md", "notice.txt", "notices", "notices.md", "notices.txt"]
 dirs = ["docs", ".github", ".gitlab"]
 
 [[resources]]

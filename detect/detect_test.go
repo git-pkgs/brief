@@ -258,7 +258,7 @@ func TestResourceGroups(t *testing.T) {
 	touch("README.md")
 	touch("CHANGELOG.md")
 	touch("AGENTS.md")
-	touch("NOTICE")
+	touch("NOTICES.md")
 	touch("CONTRIBUTING.md")
 	touch(".github/CODE_OF_CONDUCT.md")
 	touch(".github/CODEOWNERS")
@@ -283,7 +283,7 @@ func TestResourceGroups(t *testing.T) {
 	if res.Agents["agents"] != "AGENTS.md" {
 		t.Errorf("agents.agents = %q", res.Agents["agents"])
 	}
-	if res.Legal["notice"] != "NOTICE" {
+	if res.Legal["notice"] != "NOTICES.md" {
 		t.Errorf("legal.notice = %q", res.Legal["notice"])
 	}
 	if res.Community["contributing"] != "CONTRIBUTING.md" {

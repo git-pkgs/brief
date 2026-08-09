@@ -11,7 +11,7 @@ require (
 	github.com/git-pkgs/outline v0.1.8
 	github.com/git-pkgs/purl v0.1.15
 	github.com/git-pkgs/registries v0.6.4
-	github.com/git-pkgs/spdx v0.1.4
+	github.com/git-pkgs/spdx v0.3.0
 	golang.org/x/term v0.45.0
 	gopkg.in/yaml.v3 v3.0.1
 )

@@ -388,6 +388,52 @@ func printEnrichment(w io.Writer, e *brief.EnrichmentInfo) {
 	}
 }
 
+// ArtifactJSON writes the artifact report as JSON.
+func ArtifactJSON(w io.Writer, a *brief.Artifact) error {
+	enc := json.NewEncoder(w)
+	enc.SetIndent("", "  ")
+	return enc.Encode(a)
+}
+
+// ArtifactHuman writes the artifact report in human-readable format.
+func ArtifactHuman(w io.Writer, a *brief.Artifact) {
+	_, _ = fmt.Fprintf(w, "brief %s — %s\n\n", a.Version, sanitize(a.Path))
+	_, _ = fmt.Fprintf(w, "Format:      %s\n", a.Format)
+	if a.SHA256 != "" {
+		_, _ = fmt.Fprintf(w, "SHA256:      %s\n", a.SHA256)
+	}
+	if a.Entries > 0 {
+		_, _ = fmt.Fprintf(w, "Entries:     %d files, %d native objects\n", a.Entries, len(a.NativeObjects))
+	}
+
+	for _, obj := range a.NativeObjects {
+		_, _ = fmt.Fprintln(w)
+		_, _ = fmt.Fprintf(w, "Object:      %s\n", sanitize(obj.Path))
+		_, _ = fmt.Fprintf(w, "  Format:    %s %s\n", obj.Format, obj.Arch)
+		if obj.SOName != "" {
+			_, _ = fmt.Fprintf(w, "  SOName:    %s\n", sanitize(obj.SOName))
+		}
+		for _, p := range obj.Producer {
+			_, _ = fmt.Fprintf(w, "  Producer:  %s\n", sanitize(p))
+		}
+		for _, n := range obj.Needed {
+			_, _ = fmt.Fprintf(w, "  Needed:    %s\n", sanitize(n))
+		}
+		if obj.Go != nil {
+			_, _ = fmt.Fprintf(w, "  Go:        %s %s\n", obj.Go.Version, sanitize(obj.Go.Main))
+		}
+		for _, h := range obj.Static {
+			label := h.Library
+			if h.Version != "" {
+				label += " " + h.Version
+			}
+			_, _ = fmt.Fprintf(w, "  Static:    %s  (low confidence: %q)\n", sanitize(label), sanitize(h.Match))
+		}
+	}
+
+	_, _ = fmt.Fprintf(w, "\n%.1fms\n", a.DurationMS)
+}
+
 // MissingJSON writes the missing report as JSON.
 func MissingJSON(w io.Writer, r *brief.MissingReport) error {
 	enc := json.NewEncoder(w)

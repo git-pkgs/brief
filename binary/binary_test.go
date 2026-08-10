@@ -126,6 +126,106 @@ func TestInspectMachOUniversal(t *testing.T) {
 	}
 }
 
+func TestInspectMachOUniversalAggregatesSlices(t *testing.T) {
+	if runtime.GOOS != "darwin" {
+		t.Skip("Mach-O linker tools are only available on darwin")
+	}
+	lipo, err := exec.LookPath("lipo")
+	if err != nil {
+		t.Skip("lipo not available")
+	}
+	clang, err := exec.LookPath("clang")
+	if err != nil {
+		t.Skip("clang not available")
+	}
+
+	dir := t.TempDir()
+	plainSource := filepath.Join(dir, "plain.c")
+	linkedSource := filepath.Join(dir, "linked.c")
+	if err := os.WriteFile(plainSource, []byte("int main(void) { return 0; }\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	linked := "#include <stdio.h>\n#include <zlib.h>\n" +
+		"int main(void) { puts(zlibVersion()); puts(\"OpenSSL 3.0.13\"); return 0; }\n"
+	if err := os.WriteFile(linkedSource, []byte(linked), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	amd64 := filepath.Join(dir, "plain-amd64")
+	cmd := exec.Command(clang, "-arch", "x86_64", "-mmacosx-version-min=10.14", plainSource, "-o", amd64)
+	if b, err := cmd.CombinedOutput(); err != nil {
+		t.Fatalf("build amd64 fixture: %v\n%s", err, b)
+	}
+	arm64 := filepath.Join(dir, "linked-arm64")
+	cmd = exec.Command(clang, "-arch", "arm64", "-mmacosx-version-min=11.0", linkedSource, "-lz", "-o", arm64)
+	if b, err := cmd.CombinedOutput(); err != nil {
+		t.Fatalf("build arm64 fixture: %v\n%s", err, b)
+	}
+
+	out := filepath.Join(dir, "universal")
+	if b, err := exec.Command(lipo, "-create", "-output", out, amd64, arm64).CombinedOutput(); err != nil {
+		t.Fatalf("lipo: %v\n%s", err, b)
+	}
+	amd64Obj, err := Inspect(amd64)
+	if err != nil {
+		t.Fatal(err)
+	}
+	arm64Obj, err := Inspect(arm64)
+	if err != nil {
+		t.Fatal(err)
+	}
+	obj, err := Inspect(out)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var arm64OnlyDependency string
+	for _, needed := range arm64Obj.Needed {
+		if !slices.Contains(amd64Obj.Needed, needed) {
+			arm64OnlyDependency = needed
+			break
+		}
+	}
+	if arm64OnlyDependency == "" {
+		t.Fatal("arm64 fixture has no slice-specific dependency")
+	}
+	if !slices.Contains(obj.Needed, arm64OnlyDependency) {
+		t.Fatalf("Needed = %v, want dependency %q from arm64 slice", obj.Needed, arm64OnlyDependency)
+	}
+	var arm64OnlyProducer string
+	for _, producer := range arm64Obj.Producer {
+		if !slices.Contains(amd64Obj.Producer, producer) {
+			arm64OnlyProducer = producer
+			break
+		}
+	}
+	if arm64OnlyProducer == "" {
+		t.Fatal("arm64 fixture has no slice-specific producer")
+	}
+	if !slices.Contains(obj.Producer, arm64OnlyProducer) {
+		t.Fatalf("Producer = %v, want producer %q from arm64 slice", obj.Producer, arm64OnlyProducer)
+	}
+	if !slices.ContainsFunc(arm64Obj.Static, func(h Hint) bool { return h.Library == "openssl" }) {
+		t.Fatal("arm64 fixture has no openssl static hint")
+	}
+	if !slices.ContainsFunc(obj.Static, func(h Hint) bool { return h.Library == "openssl" }) {
+		t.Fatalf("Static = %v, want openssl hint from arm64 slice", obj.Static)
+	}
+
+	goArm64 := buildFixture(t, "darwin", "arm64")
+	goOut := filepath.Join(dir, "universal-go-second")
+	if b, err := exec.Command(lipo, "-create", "-output", goOut, amd64, goArm64).CombinedOutput(); err != nil {
+		t.Fatalf("lipo Go fixture: %v\n%s", err, b)
+	}
+	goObj, err := Inspect(goOut)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if goObj.Go == nil || goObj.Go.Path != "github.com/git-pkgs/brief/binary/testdata/hello" {
+		t.Fatalf("Go = %+v, want build info from arm64 slice", goObj.Go)
+	}
+}
+
 func TestInspectMachOFatRejectsMalformed(t *testing.T) {
 	// Zero-arch fat header.
 	empty := []byte("\xca\xfe\xba\xbe\x00\x00\x00\x00")

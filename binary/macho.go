@@ -73,35 +73,56 @@ func inspectMachOFat(r io.ReaderAt, size int64, head [4]byte) (*Object, []byte, 
 		return nil, nil, err
 	}
 
-	first, err := macho.NewFile(slices[0])
-	if err != nil {
-		return nil, nil, fmt.Errorf("mach-o fat slice 0: %w", err)
-	}
-	defer func() { _ = first.Close() }()
-
-	// Report the first slice's dependencies and producer; list all
-	// architectures in Arch.
-	obj, rodata := machOFromFile(first, "mach-o-universal")
+	obj := &Object{Format: "mach-o-universal"}
 	arches := make([]string, 0, len(slices))
-	arches = append(arches, obj.Arch)
-	for i, sr := range slices[1:] {
+	neededSeen := make(map[string]bool)
+	producerSeen := make(map[string]bool)
+	var rodata bytes.Buffer
+
+	for i, sr := range slices {
 		f, err := macho.NewFile(sr)
 		if err != nil {
-			return nil, nil, fmt.Errorf("mach-o fat slice %d: %w", i+1, err)
+			return nil, nil, fmt.Errorf("mach-o fat slice %d: %w", i, err)
 		}
-		arches = append(arches, machOArch(f.Cpu, f.SubCpu))
+		sliceObj, sliceROData := machOFromFile(f, "mach-o")
 		_ = f.Close()
+
+		arches = append(arches, sliceObj.Arch)
+		if obj.SOName == "" {
+			obj.SOName = sliceObj.SOName
+		}
+		for _, needed := range sliceObj.Needed {
+			if !neededSeen[needed] {
+				neededSeen[needed] = true
+				obj.Needed = append(obj.Needed, needed)
+			}
+		}
+		for _, producer := range sliceObj.Producer {
+			if !producerSeen[producer] {
+				producerSeen[producer] = true
+				obj.Producer = append(obj.Producer, producer)
+			}
+		}
+		if len(sliceROData) > 0 {
+			if rodata.Len() > 0 {
+				rodata.WriteByte(0)
+			}
+			rodata.Write(sliceROData)
+		}
+
+		if bi, err := buildinfo.Read(sr); err == nil {
+			if obj.Go == nil {
+				obj.Go = goBuildFrom(bi)
+			}
+			if !producerSeen[bi.GoVersion] {
+				producerSeen[bi.GoVersion] = true
+				obj.Producer = append(obj.Producer, bi.GoVersion)
+			}
+		}
 	}
 	obj.Arch = strings.Join(arches, "/")
 
-	// debug/buildinfo cannot open fat containers of either width, so read
-	// build metadata from the first slice directly.
-	if bi, err := buildinfo.Read(slices[0]); err == nil {
-		obj.Go = goBuildFrom(bi)
-		obj.Producer = append(obj.Producer, bi.GoVersion)
-	}
-
-	return obj, rodata, nil
+	return obj, rodata.Bytes(), nil
 }
 
 var errEmptyFat = errors.New("mach-o fat header has zero architectures")

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"flag"
 	"fmt"
 	"io"
@@ -76,6 +78,7 @@ func inspectPath(path string) (*brief.Artifact, error) {
 			return nil, err
 		}
 		art.NativeObjects = []binary.Object{*obj}
+		art.SHA256 = hashFile(f)
 
 	case isArchive(head.Format):
 		if err := inspectArchive(f, art); err != nil {
@@ -166,6 +169,18 @@ func collectNativeObjects(root string, art *brief.Artifact) error {
 	return nil
 }
 
+// hashFile returns the hex SHA-256 of f from offset 0, or "" on error.
+func hashFile(f *os.File) string {
+	if _, err := f.Seek(0, io.SeekStart); err != nil {
+		return ""
+	}
+	h := sha256.New()
+	if _, err := io.Copy(h, f); err != nil {
+		return ""
+	}
+	return hex.EncodeToString(h.Sum(nil))
+}
+
 // sniff reads up to magicSniffLen bytes from f and returns the magic
 // classification. The file position is left at the end of the sniffed prefix.
 func sniff(f *os.File) (magic.Result, error) {
@@ -180,14 +195,14 @@ func sniff(f *os.File) (magic.Result, error) {
 // inspectAutoArgs builds the argument slice for an auto-routed inspect call
 // from cmdScan's already-parsed shared flags.
 func inspectAutoArgs(jsonFlag, humanFlag bool, path string) []string {
-	args := make([]string, 0, 3)
+	var args []string
 	if jsonFlag {
 		args = append(args, "-json")
 	}
 	if humanFlag {
 		args = append(args, "-human")
 	}
-	return append(args, path)
+	return append(args, "--", path)
 }
 
 // shouldAutoInspect reports whether the default command should route path to

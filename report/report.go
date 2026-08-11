@@ -420,7 +420,7 @@ func ArtifactHuman(w io.Writer, a *brief.Artifact) {
 			_, _ = fmt.Fprintf(w, "  Needed:    %s\n", sanitize(n))
 		}
 		if obj.Go != nil {
-			_, _ = fmt.Fprintf(w, "  Go:        %s %s\n", obj.Go.Version, sanitize(obj.Go.Main))
+			_, _ = fmt.Fprintf(w, "  Go:        %s %s\n", sanitize(obj.Go.Version), sanitize(obj.Go.Main))
 		}
 		for _, h := range obj.Static {
 			label := h.Library

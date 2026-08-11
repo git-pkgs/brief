@@ -30,6 +30,9 @@ func TestInspectPathBareObject(t *testing.T) {
 	if art.Entries != 0 {
 		t.Fatalf("Entries = %d, want 0 for bare object", art.Entries)
 	}
+	if art.SHA256 == "" {
+		t.Fatal("SHA256 not set for bare object")
+	}
 	if len(art.NativeObjects) != 1 {
 		t.Fatalf("NativeObjects = %d, want 1", len(art.NativeObjects))
 	}
@@ -148,6 +151,7 @@ func TestArtifactHumanSanitizesObjectFields(t *testing.T) {
 			SOName:   "lib" + esc + "red.so",
 			Needed:   []string{"lib" + esc + ".so"},
 			Producer: []string{"GCC" + esc},
+			Go:       &binary.GoBuild{Version: "go1" + esc, Main: "m" + esc},
 			Static:   []binary.Hint{{Library: "z" + esc, Match: esc}},
 		}},
 	}

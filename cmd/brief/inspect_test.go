@@ -4,13 +4,18 @@ import (
 	"archive/zip"
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"runtime/debug"
 	"strings"
 	"testing"
+
+	"github.com/git-pkgs/archives"
 
 	"github.com/git-pkgs/brief"
 	"github.com/git-pkgs/brief/binary"
@@ -100,6 +105,67 @@ func TestInspectPathArchive(t *testing.T) {
 	}
 }
 
+func TestInspectPathUsesDetectedArchiveFormat(t *testing.T) {
+	archive := writeZip(t, map[string]string{
+		"README.txt": "zip content\n",
+	})
+	mislabeled := filepath.Join(filepath.Dir(archive), "fixture.tar.gz")
+	if err := os.Rename(archive, mislabeled); err != nil {
+		t.Fatal(err)
+	}
+
+	art, err := inspectPath(mislabeled)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if art.Format != "zip" {
+		t.Fatalf("Format = %q, want zip", art.Format)
+	}
+	if art.Entries != 1 {
+		t.Fatalf("Entries = %d, want 1", art.Entries)
+	}
+}
+
+func TestArchiveLimits(t *testing.T) {
+	t.Run("input bytes", func(t *testing.T) {
+		err := checkArchiveInputSize(maxArchiveInputBytes + 1)
+		if !errors.Is(err, errArchiveLimit) {
+			t.Fatalf("checkArchiveInputSize error = %v, want errArchiveLimit", err)
+		}
+	})
+
+	t.Run("entry count", func(t *testing.T) {
+		r := &fakeArchiveReader{entries: []archives.FileInfo{
+			{Path: "a", Size: 1},
+			{Path: "b", Size: 1},
+		}}
+		if _, err := newArchiveLimitReader(r, 1, 10); !errors.Is(err, errArchiveLimit) {
+			t.Fatalf("newArchiveLimitReader error = %v, want errArchiveLimit", err)
+		}
+	})
+
+	t.Run("declared bytes", func(t *testing.T) {
+		r := &fakeArchiveReader{entries: []archives.FileInfo{{Path: "a", Size: 4}}}
+		if _, err := newArchiveLimitReader(r, 1, 3); !errors.Is(err, errArchiveLimit) {
+			t.Fatalf("newArchiveLimitReader error = %v, want errArchiveLimit", err)
+		}
+	})
+
+	t.Run("actual bytes", func(t *testing.T) {
+		r := &fakeArchiveReader{
+			entries:  []archives.FileInfo{{Path: "a", Size: 1}},
+			contents: map[string][]byte{"a": []byte("1234")},
+		}
+		limited, err := newArchiveLimitReader(r, 1, 3)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err := archives.ExtractAll(limited, t.TempDir()); !errors.Is(err, errArchiveLimit) {
+			t.Fatalf("ExtractAll error = %v, want errArchiveLimit", err)
+		}
+	})
+}
+
 func TestInspectPathNotAnArtifact(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "plain.txt")
 	if err := os.WriteFile(path, []byte("hello world\n"), 0o644); err != nil {
@@ -137,28 +203,45 @@ func TestShouldAutoInspect(t *testing.T) {
 	}
 }
 
+func TestEnableInspectGC(t *testing.T) {
+	original := debug.SetGCPercent(-1)
+	t.Cleanup(func() { debug.SetGCPercent(original) })
+
+	enableInspectGC()
+	got := debug.SetGCPercent(-1)
+	debug.SetGCPercent(got)
+	if got != inspectGCPercent {
+		t.Fatalf("GC percent = %d, want %d", got, inspectGCPercent)
+	}
+}
+
 func TestArtifactHumanSanitizesObjectFields(t *testing.T) {
 	// A malicious archive could carry ANSI escapes in a soname or dylib
-	// path; the human formatter must strip them.
+	// path, or line breaks in any field; the human formatter must strip them.
 	esc := "\x1b[31m"
+	injected := "\nInjected: yes\t"
 	art := &brief.Artifact{
 		Version: "test",
-		Path:    "x",
+		Path:    "x" + injected,
 		Format:  "elf",
 		NativeObjects: []binary.Object{{
-			Path:     "evil" + esc,
+			Path:     "evil" + esc + injected,
 			Format:   "elf",
-			SOName:   "lib" + esc + "red.so",
-			Needed:   []string{"lib" + esc + ".so"},
-			Producer: []string{"GCC" + esc},
-			Go:       &binary.GoBuild{Version: "go1" + esc, Main: "m" + esc},
-			Static:   []binary.Hint{{Library: "z" + esc, Match: esc}},
+			SOName:   "lib" + esc + injected + "red.so",
+			Needed:   []string{"lib" + esc + injected + ".so"},
+			Producer: []string{"GCC" + esc + injected},
+			Go:       &binary.GoBuild{Version: "go1" + esc + injected, Main: "m" + esc + injected},
+			Static:   []binary.Hint{{Library: "z" + esc + injected, Match: esc + injected}},
 		}},
 	}
 	var buf bytes.Buffer
 	report.ArtifactHuman(&buf, art)
-	if strings.Contains(buf.String(), "\x1b") {
-		t.Fatalf("ANSI escape leaked into human output:\n%s", buf.String())
+	out := buf.String()
+	if strings.Contains(out, "\x1b") {
+		t.Fatalf("ANSI escape leaked into human output:\n%s", out)
+	}
+	if strings.Contains(out, "\nInjected:") || strings.Contains(out, "\t") {
+		t.Fatalf("line-breaking whitespace leaked into human output:\n%s", out)
 	}
 }
 
@@ -260,4 +343,33 @@ func hostObjectFormat() string {
 	default:
 		return "elf"
 	}
+}
+
+type fakeArchiveReader struct {
+	entries  []archives.FileInfo
+	contents map[string][]byte
+}
+
+func (r *fakeArchiveReader) List() ([]archives.FileInfo, error) {
+	return r.entries, nil
+}
+
+func (r *fakeArchiveReader) ListDir(string) ([]archives.FileInfo, error) {
+	return nil, nil
+}
+
+func (r *fakeArchiveReader) Extract(path string) (io.ReadCloser, error) {
+	content, ok := r.contents[path]
+	if !ok {
+		return nil, fmt.Errorf("file not found: %s", path)
+	}
+	return io.NopCloser(bytes.NewReader(content)), nil
+}
+
+func (r *fakeArchiveReader) Hash(string) (string, error) {
+	return "", nil
+}
+
+func (r *fakeArchiveReader) Close() error {
+	return nil
 }

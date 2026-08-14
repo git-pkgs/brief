@@ -3,13 +3,16 @@ package main
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"errors"
 	"flag"
 	"fmt"
 	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
+	"runtime/debug"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/git-pkgs/archives"
@@ -20,12 +23,23 @@ import (
 	"github.com/git-pkgs/brief/report"
 )
 
-// magicSniffLen is enough for every native-object and archive prefix that
-// git-pkgs/magic recognises, including the PE header-offset indirection at
-// 0x3c and the tar checksum at offset 148.
-const magicSniffLen = 512
+const (
+	// magicSniffLen is enough for every native-object and archive prefix that
+	// git-pkgs/magic recognises, including the PE header-offset indirection at
+	// 0x3c and the tar checksum at offset 148.
+	magicSniffLen = 512
+
+	inspectGCPercent         = 100
+	maxArchiveEntries        = 100_000
+	maxArchiveInputBytes     = 512 << 20
+	maxArchiveExtractedBytes = 512 << 20
+)
+
+var errArchiveLimit = errors.New("archive resource limit exceeded")
 
 func cmdInspect(args []string) {
+	enableInspectGC()
+
 	fs := flag.NewFlagSet("brief inspect", flag.ExitOnError)
 	jsonFlag := fs.Bool("json", false, "Force JSON output")
 	humanFlag := fs.Bool("human", false, "Force human-readable output")
@@ -47,6 +61,10 @@ func cmdInspect(args []string) {
 	} else {
 		report.ArtifactHuman(os.Stdout, art)
 	}
+}
+
+func enableInspectGC() {
+	debug.SetGCPercent(inspectGCPercent)
 }
 
 // inspectPath opens path, decides whether it is a bare native object or an
@@ -97,12 +115,20 @@ func inspectPath(path string) (*brief.Artifact, error) {
 // inspectArchive opens f as an archive, extracts it to a temp directory, and
 // walks the tree collecting native objects into art.
 func inspectArchive(f *os.File, art *brief.Artifact) error {
+	info, err := f.Stat()
+	if err != nil {
+		return err
+	}
+	if err := checkArchiveInputSize(info.Size()); err != nil {
+		return err
+	}
+
 	if _, err := f.Seek(0, io.SeekStart); err != nil {
 		return err
 	}
-	r, err := archives.Open(filepath.Base(art.Path), f)
+	r, err := openArtifactArchive(f, art.Path, art.Format)
 	if err != nil {
-		return fmt.Errorf("opening archive: %w", err)
+		return err
 	}
 	defer func() { _ = r.Close() }()
 
@@ -121,6 +147,120 @@ func inspectArchive(f *os.File, art *brief.Artifact) error {
 	}
 
 	return collectNativeObjects(dir, art)
+}
+
+func checkArchiveInputSize(size int64) error {
+	if size < 0 || size > maxArchiveInputBytes {
+		return fmt.Errorf("%w: input is %d bytes, limit is %d",
+			errArchiveLimit, size, maxArchiveInputBytes)
+	}
+	return nil
+}
+
+// openArtifactArchive uses the sniffed physical format instead of trusting a
+// possibly misleading filename extension. Gems need their filename for the
+// archives package to unwrap data.tar.gz; malformed gems fall back to plain
+// tar inspection.
+func openArtifactArchive(f *os.File, path, format string) (*archiveLimitReader, error) {
+	var r archives.Reader
+	var err error
+	if format == magic.FormatTAR && strings.EqualFold(filepath.Ext(path), ".gem") {
+		r, err = archives.Open(filepath.Base(path), f)
+		if err != nil {
+			r = nil
+			if _, seekErr := f.Seek(0, io.SeekStart); seekErr != nil {
+				return nil, seekErr
+			}
+		}
+	}
+	if r == nil {
+		r, err = archives.Open("", f)
+		if err != nil {
+			return nil, fmt.Errorf("opening archive: %w", err)
+		}
+	}
+
+	limited, err := newArchiveLimitReader(r, maxArchiveEntries, maxArchiveExtractedBytes)
+	if err != nil {
+		_ = r.Close()
+		return nil, err
+	}
+	return limited, nil
+}
+
+type archiveLimitReader struct {
+	archives.Reader
+	entries   []archives.FileInfo
+	remaining int64
+}
+
+func newArchiveLimitReader(r archives.Reader, maxEntries int, maxBytes int64) (*archiveLimitReader, error) {
+	entries, err := r.List()
+	if err != nil {
+		return nil, err
+	}
+	if len(entries) > maxEntries {
+		return nil, fmt.Errorf("%w: %d entries exceeds limit of %d",
+			errArchiveLimit, len(entries), maxEntries)
+	}
+
+	var total int64
+	for _, entry := range entries {
+		if entry.IsDir || fs.FileMode(entry.Mode)&fs.ModeType != 0 {
+			continue
+		}
+		if entry.Size < 0 || entry.Size > maxBytes-total {
+			return nil, fmt.Errorf("%w: declared content exceeds %d bytes",
+				errArchiveLimit, maxBytes)
+		}
+		total += entry.Size
+	}
+
+	return &archiveLimitReader{
+		Reader:    r,
+		entries:   entries,
+		remaining: maxBytes,
+	}, nil
+}
+
+func (r *archiveLimitReader) List() ([]archives.FileInfo, error) {
+	return r.entries, nil
+}
+
+func (r *archiveLimitReader) Extract(path string) (io.ReadCloser, error) {
+	content, err := r.Reader.Extract(path)
+	if err != nil {
+		return nil, err
+	}
+	return &archiveLimitReadCloser{
+		ReadCloser: content,
+		remaining:  &r.remaining,
+	}, nil
+}
+
+type archiveLimitReadCloser struct {
+	io.ReadCloser
+	remaining *int64
+}
+
+func (r *archiveLimitReadCloser) Read(p []byte) (int, error) {
+	if len(p) == 0 {
+		return 0, nil
+	}
+	if *r.remaining == 0 {
+		var probe [1]byte
+		n, err := r.ReadCloser.Read(probe[:])
+		if n > 0 {
+			return 0, errArchiveLimit
+		}
+		return 0, err
+	}
+	if int64(len(p)) > *r.remaining {
+		p = p[:int(*r.remaining)]
+	}
+	n, err := r.ReadCloser.Read(p)
+	*r.remaining -= int64(n)
+	return n, err
 }
 
 // collectNativeObjects walks root and appends a binary.Object to art for each

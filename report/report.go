@@ -26,6 +26,20 @@ func sanitize(s string) string {
 	}, s)
 }
 
+// sanitizeLine strips terminal control characters and replaces line-breaking
+// whitespace so untrusted values cannot add fields to line-oriented output.
+func sanitizeLine(s string) string {
+	return strings.Map(func(r rune) rune {
+		if r == '\n' || r == '\t' {
+			return ' '
+		}
+		if unicode.IsControl(r) {
+			return -1
+		}
+		return r
+	}, s)
+}
+
 // JSON writes the report as JSON.
 func JSON(w io.Writer, r *brief.Report) error {
 	enc := json.NewEncoder(w)
@@ -397,7 +411,7 @@ func ArtifactJSON(w io.Writer, a *brief.Artifact) error {
 
 // ArtifactHuman writes the artifact report in human-readable format.
 func ArtifactHuman(w io.Writer, a *brief.Artifact) {
-	_, _ = fmt.Fprintf(w, "brief %s — %s\n\n", a.Version, sanitize(a.Path))
+	_, _ = fmt.Fprintf(w, "brief %s — %s\n\n", a.Version, sanitizeLine(a.Path))
 	_, _ = fmt.Fprintf(w, "Format:      %s\n", a.Format)
 	if a.SHA256 != "" {
 		_, _ = fmt.Fprintf(w, "SHA256:      %s\n", a.SHA256)
@@ -408,26 +422,26 @@ func ArtifactHuman(w io.Writer, a *brief.Artifact) {
 
 	for _, obj := range a.NativeObjects {
 		_, _ = fmt.Fprintln(w)
-		_, _ = fmt.Fprintf(w, "Object:      %s\n", sanitize(obj.Path))
+		_, _ = fmt.Fprintf(w, "Object:      %s\n", sanitizeLine(obj.Path))
 		_, _ = fmt.Fprintf(w, "  Format:    %s %s\n", obj.Format, obj.Arch)
 		if obj.SOName != "" {
-			_, _ = fmt.Fprintf(w, "  SOName:    %s\n", sanitize(obj.SOName))
+			_, _ = fmt.Fprintf(w, "  SOName:    %s\n", sanitizeLine(obj.SOName))
 		}
 		for _, p := range obj.Producer {
-			_, _ = fmt.Fprintf(w, "  Producer:  %s\n", sanitize(p))
+			_, _ = fmt.Fprintf(w, "  Producer:  %s\n", sanitizeLine(p))
 		}
 		for _, n := range obj.Needed {
-			_, _ = fmt.Fprintf(w, "  Needed:    %s\n", sanitize(n))
+			_, _ = fmt.Fprintf(w, "  Needed:    %s\n", sanitizeLine(n))
 		}
 		if obj.Go != nil {
-			_, _ = fmt.Fprintf(w, "  Go:        %s %s\n", sanitize(obj.Go.Version), sanitize(obj.Go.Main))
+			_, _ = fmt.Fprintf(w, "  Go:        %s %s\n", sanitizeLine(obj.Go.Version), sanitizeLine(obj.Go.Main))
 		}
 		for _, h := range obj.Static {
 			label := h.Library
 			if h.Version != "" {
 				label += " " + h.Version
 			}
-			_, _ = fmt.Fprintf(w, "  Static:    %s  (low confidence: %q)\n", sanitize(label), sanitize(h.Match))
+			_, _ = fmt.Fprintf(w, "  Static:    %s  (low confidence: %q)\n", sanitizeLine(label), sanitizeLine(h.Match))
 		}
 	}
 

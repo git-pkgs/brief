@@ -1,8 +1,10 @@
 package main
 
 import (
+	"archive/tar"
 	"archive/zip"
 	"bytes"
+	stdbin "encoding/binary"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -16,6 +18,7 @@ import (
 	"testing"
 
 	"github.com/git-pkgs/archives"
+	"github.com/git-pkgs/magic"
 
 	"github.com/git-pkgs/brief"
 	"github.com/git-pkgs/brief/binary"
@@ -60,6 +63,24 @@ func TestInspectPathBareObject(t *testing.T) {
 	}
 	if back.NativeObjects[0].Arch != obj.Arch {
 		t.Fatalf("round-trip Arch = %q, want %q", back.NativeObjects[0].Arch, obj.Arch)
+	}
+}
+
+func TestInspectPathPEHeaderBeyondMagicPrefix(t *testing.T) {
+	path := writeLargeStubPE(t)
+	if !shouldAutoInspect(path) {
+		t.Fatal("PE with a large DOS stub should auto-inspect")
+	}
+
+	art, err := inspectPath(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if art.Format != magic.FormatPE {
+		t.Fatalf("Format = %q, want %q", art.Format, magic.FormatPE)
+	}
+	if len(art.NativeObjects) != 1 || art.NativeObjects[0].Format != magic.FormatPE {
+		t.Fatalf("NativeObjects = %+v, want one PE object", art.NativeObjects)
 	}
 }
 
@@ -126,11 +147,76 @@ func TestInspectPathUsesDetectedArchiveFormat(t *testing.T) {
 	}
 }
 
+func TestInspectPathRejectsDuplicateArchivePaths(t *testing.T) {
+	archive := writeDuplicateZip(t)
+	if _, err := inspectPath(archive); !errors.Is(err, errArchiveDuplicatePath) {
+		t.Fatalf("inspectPath error = %v, want errArchiveDuplicatePath", err)
+	}
+}
+
 func TestArchiveLimits(t *testing.T) {
 	t.Run("input bytes", func(t *testing.T) {
 		err := checkArchiveInputSize(maxArchiveInputBytes + 1)
 		if !errors.Is(err, errArchiveLimit) {
 			t.Fatalf("checkArchiveInputSize error = %v, want errArchiveLimit", err)
+		}
+	})
+
+	t.Run("streamed input bytes", func(t *testing.T) {
+		r := newArchiveInputLimitReader(strings.NewReader("1234"), 3)
+		if _, err := io.ReadAll(r); !errors.Is(err, errArchiveLimit) {
+			t.Fatalf("ReadAll error = %v, want errArchiveLimit", err)
+		}
+	})
+
+	t.Run("zip entry preflight", func(t *testing.T) {
+		archive := writeZip(t, map[string]string{"a": "one", "b": "two"})
+		data, err := os.ReadFile(archive)
+		if err != nil {
+			t.Fatal(err)
+		}
+		end := bytes.LastIndex(data, []byte{'P', 'K', 0x05, 0x06})
+		if end < 0 {
+			t.Fatal("zip end record not found")
+		}
+		// Advertise one record even though the central directory contains two.
+		// The preflight must scan headers instead of trusting this count.
+		stdbin.LittleEndian.PutUint16(data[end+8:end+10], 1)
+		stdbin.LittleEndian.PutUint16(data[end+10:end+12], 1)
+		if err := os.WriteFile(archive, data, 0o644); err != nil {
+			t.Fatal(err)
+		}
+		f, err := os.Open(archive)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer func() { _ = f.Close() }()
+		if err := preflightArtifactArchive(f, archive, magic.FormatZIP, 1, 10); !errors.Is(err, errArchiveLimit) {
+			t.Fatalf("preflightArtifactArchive error = %v, want errArchiveLimit", err)
+		}
+	})
+
+	t.Run("empty zip preflight", func(t *testing.T) {
+		archive := writeZip(t, map[string]string{})
+		f, err := os.Open(archive)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer func() { _ = f.Close() }()
+		if err := preflightArtifactArchive(f, archive, magic.FormatZIP, 1, 10); err != nil {
+			t.Fatal(err)
+		}
+	})
+
+	t.Run("tar entry preflight", func(t *testing.T) {
+		archive := writeTar(t, map[string]string{"a": "one", "b": "two"})
+		f, err := os.Open(archive)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer func() { _ = f.Close() }()
+		if err := preflightArtifactArchive(f, archive, magic.FormatTAR, 1, 10); !errors.Is(err, errArchiveLimit) {
+			t.Fatalf("preflightArtifactArchive error = %v, want errArchiveLimit", err)
 		}
 	})
 
@@ -141,6 +227,16 @@ func TestArchiveLimits(t *testing.T) {
 		}}
 		if _, err := newArchiveLimitReader(r, 1, 10); !errors.Is(err, errArchiveLimit) {
 			t.Fatalf("newArchiveLimitReader error = %v, want errArchiveLimit", err)
+		}
+	})
+
+	t.Run("normalized duplicate paths", func(t *testing.T) {
+		r := &fakeArchiveReader{entries: []archives.FileInfo{
+			{Path: "entry", Size: 1},
+			{Path: "./entry", Size: 1},
+		}}
+		if _, err := newArchiveLimitReader(r, 2, 10); !errors.Is(err, errArchiveDuplicatePath) {
+			t.Fatalf("newArchiveLimitReader error = %v, want errArchiveDuplicatePath", err)
 		}
 	})
 
@@ -299,6 +395,76 @@ func buildHello(tb testing.TB, goos, goarch string) string {
 		tb.Skipf("cross-compile %s/%s: %v\n%s", goos, goarch, err, b)
 	}
 	return out
+}
+
+func writeLargeStubPE(tb testing.TB) string {
+	tb.Helper()
+	const headerOffset = 0x400
+	data := make([]byte, headerOffset+24)
+	copy(data[:2], "MZ")
+	stdbin.LittleEndian.PutUint32(data[peHeaderOffsetAt:], headerOffset)
+	copy(data[headerOffset:], []byte{'P', 'E', 0, 0})
+	coff := data[headerOffset+peSignatureLen:]
+	stdbin.LittleEndian.PutUint16(coff[0:2], 0x8664) // IMAGE_FILE_MACHINE_AMD64
+	stdbin.LittleEndian.PutUint16(coff[18:20], 0x0002)
+
+	path := filepath.Join(tb.TempDir(), "large-stub.exe")
+	if err := os.WriteFile(path, data, 0o644); err != nil {
+		tb.Fatal(err)
+	}
+	return path
+}
+
+func writeDuplicateZip(tb testing.TB) string {
+	tb.Helper()
+	path := filepath.Join(tb.TempDir(), "duplicate.zip")
+	f, err := os.Create(path)
+	if err != nil {
+		tb.Fatal(err)
+	}
+	zw := zip.NewWriter(f)
+	for _, content := range []string{"plain text\n", "second entry\n"} {
+		w, err := zw.Create("entry")
+		if err != nil {
+			tb.Fatal(err)
+		}
+		if _, err := io.WriteString(w, content); err != nil {
+			tb.Fatal(err)
+		}
+	}
+	if err := zw.Close(); err != nil {
+		tb.Fatal(err)
+	}
+	if err := f.Close(); err != nil {
+		tb.Fatal(err)
+	}
+	return path
+}
+
+func writeTar(tb testing.TB, entries map[string]string) string {
+	tb.Helper()
+	path := filepath.Join(tb.TempDir(), "fixture.tar")
+	f, err := os.Create(path)
+	if err != nil {
+		tb.Fatal(err)
+	}
+	tw := tar.NewWriter(f)
+	for name, content := range entries {
+		header := &tar.Header{Name: name, Mode: 0o644, Size: int64(len(content))}
+		if err := tw.WriteHeader(header); err != nil {
+			tb.Fatal(err)
+		}
+		if _, err := io.WriteString(tw, content); err != nil {
+			tb.Fatal(err)
+		}
+	}
+	if err := tw.Close(); err != nil {
+		tb.Fatal(err)
+	}
+	if err := f.Close(); err != nil {
+		tb.Fatal(err)
+	}
+	return path
 }
 
 // writeZip creates a zip at a temp path. For each entry, if the value names an

@@ -1,7 +1,12 @@
 package main
 
 import (
+	"archive/tar"
+	"bytes"
+	"compress/bzip2"
+	"compress/gzip"
 	"crypto/sha256"
+	stdbin "encoding/binary"
 	"encoding/hex"
 	"errors"
 	"flag"
@@ -9,7 +14,9 @@ import (
 	"io"
 	"io/fs"
 	"os"
+	pathpkg "path"
 	"path/filepath"
+	"runtime"
 	"runtime/debug"
 	"sort"
 	"strings"
@@ -17,6 +24,7 @@ import (
 
 	"github.com/git-pkgs/archives"
 	"github.com/git-pkgs/magic"
+	"github.com/ulikunitz/xz"
 
 	"github.com/git-pkgs/brief"
 	"github.com/git-pkgs/brief/binary"
@@ -33,9 +41,27 @@ const (
 	maxArchiveEntries        = 100_000
 	maxArchiveInputBytes     = 512 << 20
 	maxArchiveExtractedBytes = 512 << 20
+
+	peHeaderOffsetAt = 0x3c
+	peSignatureLen   = 4
+
+	zipDirectoryHeaderSignature = 0x02014b50
+	zipDirectoryEndSignature    = 0x06054b50
+	zipDirectory64EndSignature  = 0x06064b50
+	zipDirectory64LocSignature  = 0x07064b50
+	zipDirectoryHeaderLen       = 46
+	zipDirectoryEndLen          = 22
+	zipDirectory64EndLen        = 56
+	zipDirectory64LocLen        = 20
+	zipDirectorySearchLen       = 65 << 10
+	zipUint16Max                = 1<<16 - 1
+	zipUint32Max                = 1<<32 - 1
 )
 
-var errArchiveLimit = errors.New("archive resource limit exceeded")
+var (
+	errArchiveLimit         = errors.New("archive resource limit exceeded")
+	errArchiveDuplicatePath = errors.New("archive contains duplicate file path")
+)
 
 func cmdInspect(args []string) {
 	enableInspectGC()
@@ -82,6 +108,13 @@ func inspectPath(path string) (*brief.Artifact, error) {
 	if err != nil {
 		return nil, err
 	}
+	info, err := f.Stat()
+	if err != nil {
+		return nil, err
+	}
+	if head.Format == "" && isPEFile(f, info.Size()) {
+		head.Format = magic.FormatPE
+	}
 
 	art := &brief.Artifact{
 		Version: brief.Version,
@@ -91,10 +124,11 @@ func inspectPath(path string) (*brief.Artifact, error) {
 
 	switch {
 	case isNativeObject(head.Format):
-		obj, err := binary.Inspect(path)
+		obj, err := binary.InspectReader(f, info.Size())
 		if err != nil {
 			return nil, err
 		}
+		obj.Path = path
 		art.NativeObjects = []binary.Object{*obj}
 		art.SHA256 = hashFile(f)
 
@@ -120,6 +154,9 @@ func inspectArchive(f *os.File, art *brief.Artifact) error {
 		return err
 	}
 	if err := checkArchiveInputSize(info.Size()); err != nil {
+		return err
+	}
+	if err := preflightArtifactArchive(f, art.Path, art.Format, maxArchiveEntries, maxArchiveExtractedBytes); err != nil {
 		return err
 	}
 
@@ -157,6 +194,291 @@ func checkArchiveInputSize(size int64) error {
 	return nil
 }
 
+type archiveInputLimitReader struct {
+	io.Reader
+	remaining int64
+}
+
+func newArchiveInputLimitReader(r io.Reader, maxBytes int64) *archiveInputLimitReader {
+	return &archiveInputLimitReader{Reader: r, remaining: maxBytes}
+}
+
+func (r *archiveInputLimitReader) Read(p []byte) (int, error) {
+	return readWithArchiveLimit(r.Reader, &r.remaining, p)
+}
+
+// preflightArtifactArchive counts entries before archives.Open eagerly reads
+// and indexes them. This keeps the entry cap effective for hostile archives
+// with a small payload and a very large number of headers.
+func preflightArtifactArchive(f *os.File, filePath, format string, maxEntries int, maxBytes int64) error {
+	if _, err := f.Seek(0, io.SeekStart); err != nil {
+		return err
+	}
+
+	switch format {
+	case magic.FormatZIP:
+		info, err := f.Stat()
+		if err != nil {
+			return err
+		}
+		return preflightZIP(f, info.Size(), maxEntries)
+	case magic.FormatTAR:
+		r := newArchiveInputLimitReader(f, maxArchiveInputBytes)
+		if strings.EqualFold(filepath.Ext(filePath), ".gem") {
+			return preflightGem(r, maxEntries, maxBytes)
+		}
+		return preflightTAR(r, maxEntries, maxBytes)
+	case magic.FormatGZIP:
+		gz, err := gzip.NewReader(newArchiveInputLimitReader(f, maxArchiveInputBytes))
+		if err != nil {
+			return fmt.Errorf("opening gzip: %w", err)
+		}
+		defer func() { _ = gz.Close() }()
+		return preflightTAR(gz, maxEntries, maxBytes)
+	case magic.FormatBZIP2:
+		return preflightTAR(bzip2.NewReader(newArchiveInputLimitReader(f, maxArchiveInputBytes)), maxEntries, maxBytes)
+	case magic.FormatXZ:
+		xzReader, err := xz.NewReader(newArchiveInputLimitReader(f, maxArchiveInputBytes))
+		if err != nil {
+			return fmt.Errorf("opening xz: %w", err)
+		}
+		return preflightTAR(xzReader, maxEntries, maxBytes)
+	default:
+		return nil
+	}
+}
+
+func preflightTAR(r io.Reader, maxEntries int, maxBytes int64) error {
+	tr := tar.NewReader(r)
+	entries := 0
+	var total int64
+	for {
+		header, err := tr.Next()
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			return fmt.Errorf("reading tar: %w", err)
+		}
+		if err := checkTARHeader(header, &entries, &total, maxEntries, maxBytes); err != nil {
+			return err
+		}
+	}
+}
+
+func checkTARHeader(header *tar.Header, entries *int, total *int64, maxEntries int, maxBytes int64) error {
+	(*entries)++
+	if *entries > maxEntries {
+		return fmt.Errorf("%w: more than %d entries", errArchiveLimit, maxEntries)
+	}
+
+	mode := header.FileInfo().Mode()
+	if header.Typeflag == tar.TypeLink {
+		mode |= fs.ModeIrregular
+	}
+	if header.Typeflag == tar.TypeDir || mode&fs.ModeType != 0 {
+		return nil
+	}
+	if header.Size < 0 || header.Size > maxBytes-(*total) {
+		return fmt.Errorf("%w: declared content exceeds %d bytes", errArchiveLimit, maxBytes)
+	}
+	*total += header.Size
+	return nil
+}
+
+// preflightGem checks the nested data.tar.gz that archives.Open exposes. If
+// the nested payload is malformed, the caller retains the existing behaviour
+// of treating the outer file as a plain tar archive.
+func preflightGem(r io.Reader, maxEntries int, maxBytes int64) error {
+	tr := tar.NewReader(r)
+	entries := 0
+	var total int64
+	for {
+		header, err := tr.Next()
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			return fmt.Errorf("reading gem tar: %w", err)
+		}
+		if err := checkTARHeader(header, &entries, &total, maxEntries, maxBytes); err != nil {
+			return err
+		}
+		if header.Name != "data.tar.gz" {
+			continue
+		}
+
+		gz, err := gzip.NewReader(tr)
+		if err != nil {
+			continue
+		}
+		innerErr := preflightTAR(gz, maxEntries, maxBytes)
+		_ = gz.Close()
+		if innerErr == nil || errors.Is(innerErr, errArchiveLimit) {
+			return innerErr
+		}
+	}
+}
+
+type zipDirectoryEnd struct {
+	offset           int64
+	directoryRecords uint64
+	directorySize    uint64
+	directoryOffset  uint64
+}
+
+func preflightZIP(r io.ReaderAt, size int64, maxEntries int) error {
+	end, err := readZIPDirectoryEnd(r, size)
+	if err != nil {
+		return fmt.Errorf("reading zip directory: %w", err)
+	}
+	if end.directoryRecords > uint64(maxEntries) {
+		return fmt.Errorf("%w: %d entries exceeds limit of %d",
+			errArchiveLimit, end.directoryRecords, maxEntries)
+	}
+
+	maxInt64 := uint64(1<<63 - 1)
+	if end.directorySize > maxInt64 || end.directoryOffset > maxInt64 {
+		return errors.New("zip directory offset exceeds supported size")
+	}
+	if end.directorySize > uint64(end.offset) {
+		return errors.New("zip directory size exceeds the archive")
+	}
+	start := end.offset - int64(end.directorySize)
+	if start < 0 || start >= size && end.directorySize != 0 {
+		return errors.New("zip directory offset is outside the archive")
+	}
+
+	// Match archive/zip's compatibility path for files whose end record gives
+	// a spurious positive base offset but whose raw directory offset is valid.
+	if end.directoryOffset < uint64(start) && int64(end.directoryOffset) < size {
+		var signature [4]byte
+		if _, readErr := r.ReadAt(signature[:], int64(end.directoryOffset)); readErr == nil &&
+			stdbin.LittleEndian.Uint32(signature[:]) == zipDirectoryHeaderSignature {
+			start = int64(end.directoryOffset)
+		}
+	}
+
+	var header [zipDirectoryHeaderLen]byte
+	entries := 0
+	for pos := start; pos+zipDirectoryHeaderLen <= size; {
+		if _, err := r.ReadAt(header[:], pos); err != nil {
+			return fmt.Errorf("reading zip directory entry: %w", err)
+		}
+		if stdbin.LittleEndian.Uint32(header[:4]) != zipDirectoryHeaderSignature {
+			break
+		}
+		entries++
+		if entries > maxEntries {
+			return fmt.Errorf("%w: more than %d entries", errArchiveLimit, maxEntries)
+		}
+
+		nameLen := int64(stdbin.LittleEndian.Uint16(header[28:30]))
+		extraLen := int64(stdbin.LittleEndian.Uint16(header[30:32]))
+		commentLen := int64(stdbin.LittleEndian.Uint16(header[32:34]))
+		next := pos + zipDirectoryHeaderLen + nameLen + extraLen + commentLen
+		if next <= pos || next > size {
+			return errors.New("zip directory entry extends beyond the archive")
+		}
+		pos = next
+	}
+	return nil
+}
+
+func readZIPDirectoryEnd(r io.ReaderAt, size int64) (zipDirectoryEnd, error) {
+	if size < zipDirectoryEndLen {
+		return zipDirectoryEnd{}, io.ErrUnexpectedEOF
+	}
+	searchLen := int64(zipDirectorySearchLen + zipDirectoryEndLen)
+	if searchLen > size {
+		searchLen = size
+	}
+	buf := make([]byte, int(searchLen))
+	if _, err := r.ReadAt(buf, size-searchLen); err != nil && err != io.EOF {
+		return zipDirectoryEnd{}, err
+	}
+
+	index := -1
+	for i := len(buf) - zipDirectoryEndLen; i >= 0; i-- {
+		if stdbin.LittleEndian.Uint32(buf[i:i+4]) != zipDirectoryEndSignature {
+			continue
+		}
+		commentLen := int(stdbin.LittleEndian.Uint16(buf[i+20 : i+22]))
+		if i+zipDirectoryEndLen+commentLen <= len(buf) {
+			index = i
+			break
+		}
+	}
+	if index < 0 {
+		return zipDirectoryEnd{}, errors.New("zip end record not found")
+	}
+
+	record := buf[index : index+zipDirectoryEndLen]
+	if stdbin.LittleEndian.Uint16(record[4:6]) != 0 || stdbin.LittleEndian.Uint16(record[6:8]) != 0 {
+		return zipDirectoryEnd{}, errors.New("multi-disk zip archives are unsupported")
+	}
+	end := zipDirectoryEnd{
+		offset:           size - searchLen + int64(index),
+		directoryRecords: uint64(stdbin.LittleEndian.Uint16(record[10:12])),
+		directorySize:    uint64(stdbin.LittleEndian.Uint32(record[12:16])),
+		directoryOffset:  uint64(stdbin.LittleEndian.Uint32(record[16:20])),
+	}
+
+	needsZIP64 := end.directoryRecords == zipUint16Max || end.directorySize == zipUint32Max || end.directoryOffset == zipUint32Max
+	if !needsZIP64 {
+		return end, nil
+	}
+	zip64End, found, err := readZIP64DirectoryEnd(r, end)
+	if err != nil {
+		return zipDirectoryEnd{}, err
+	}
+	if found {
+		return zip64End, nil
+	}
+	if end.directorySize == zipUint32Max || end.directoryOffset == zipUint32Max {
+		return zipDirectoryEnd{}, errors.New("zip64 locator not found")
+	}
+	return end, nil
+}
+
+func readZIP64DirectoryEnd(r io.ReaderAt, end zipDirectoryEnd) (zipDirectoryEnd, bool, error) {
+	locatorOffset := end.offset - zipDirectory64LocLen
+	if locatorOffset < 0 {
+		return end, false, nil
+	}
+	var locator [zipDirectory64LocLen]byte
+	if _, err := r.ReadAt(locator[:], locatorOffset); err != nil {
+		return zipDirectoryEnd{}, false, err
+	}
+	if stdbin.LittleEndian.Uint32(locator[:4]) != zipDirectory64LocSignature {
+		return end, false, nil
+	}
+	if stdbin.LittleEndian.Uint32(locator[4:8]) != 0 ||
+		stdbin.LittleEndian.Uint32(locator[16:20]) != 1 {
+		return zipDirectoryEnd{}, false, errors.New("invalid zip64 locator")
+	}
+
+	zip64Offset := stdbin.LittleEndian.Uint64(locator[8:16])
+	if zip64Offset > uint64(1<<63-1) {
+		return zipDirectoryEnd{}, false, errors.New("zip64 directory offset exceeds supported size")
+	}
+	var record [zipDirectory64EndLen]byte
+	if _, err := r.ReadAt(record[:], int64(zip64Offset)); err != nil {
+		return zipDirectoryEnd{}, false, err
+	}
+	if stdbin.LittleEndian.Uint32(record[:4]) != zipDirectory64EndSignature ||
+		stdbin.LittleEndian.Uint32(record[16:20]) != 0 ||
+		stdbin.LittleEndian.Uint32(record[20:24]) != 0 {
+		return zipDirectoryEnd{}, false, errors.New("invalid zip64 end record")
+	}
+
+	end.offset = int64(zip64Offset)
+	end.directoryRecords = stdbin.LittleEndian.Uint64(record[32:40])
+	end.directorySize = stdbin.LittleEndian.Uint64(record[40:48])
+	end.directoryOffset = stdbin.LittleEndian.Uint64(record[48:56])
+	return end, true, nil
+}
+
 // openArtifactArchive uses the sniffed physical format instead of trusting a
 // possibly misleading filename extension. Gems need their filename for the
 // archives package to unwrap data.tar.gz; malformed gems fall back to plain
@@ -165,7 +487,7 @@ func openArtifactArchive(f *os.File, path, format string) (*archiveLimitReader, 
 	var r archives.Reader
 	var err error
 	if format == magic.FormatTAR && strings.EqualFold(filepath.Ext(path), ".gem") {
-		r, err = archives.Open(filepath.Base(path), f)
+		r, err = archives.Open(filepath.Base(path), newArchiveInputLimitReader(f, maxArchiveInputBytes))
 		if err != nil {
 			r = nil
 			if _, seekErr := f.Seek(0, io.SeekStart); seekErr != nil {
@@ -174,7 +496,7 @@ func openArtifactArchive(f *os.File, path, format string) (*archiveLimitReader, 
 		}
 	}
 	if r == nil {
-		r, err = archives.Open("", f)
+		r, err = archives.Open("", newArchiveInputLimitReader(f, maxArchiveInputBytes))
 		if err != nil {
 			return nil, fmt.Errorf("opening archive: %w", err)
 		}
@@ -203,6 +525,9 @@ func newArchiveLimitReader(r archives.Reader, maxEntries int, maxBytes int64) (*
 		return nil, fmt.Errorf("%w: %d entries exceeds limit of %d",
 			errArchiveLimit, len(entries), maxEntries)
 	}
+	if err := checkDuplicateArchivePaths(entries); err != nil {
+		return nil, err
+	}
 
 	var total int64
 	for _, entry := range entries {
@@ -221,6 +546,34 @@ func newArchiveLimitReader(r archives.Reader, maxEntries int, maxBytes int64) (*
 		entries:   entries,
 		remaining: maxBytes,
 	}, nil
+}
+
+func checkDuplicateArchivePaths(entries []archives.FileInfo) error {
+	seen := make(map[string]string)
+	for _, entry := range entries {
+		if entry.IsDir || fs.FileMode(entry.Mode)&fs.ModeType != 0 {
+			continue
+		}
+		name := pathpkg.Clean(strings.TrimSuffix(entry.Path, "/"))
+		if name == "." || name == "" {
+			continue
+		}
+		local, err := filepath.Localize(name)
+		if err != nil {
+			// ExtractAll reports the unsafe path with its established error.
+			continue
+		}
+		key := filepath.Clean(local)
+		if runtime.GOOS == "windows" {
+			key = strings.ToLower(key)
+		}
+		if previous, ok := seen[key]; ok {
+			return fmt.Errorf("%w: %q conflicts with %q",
+				errArchiveDuplicatePath, entry.Path, previous)
+		}
+		seen[key] = entry.Path
+	}
+	return nil
 }
 
 func (r *archiveLimitReader) List() ([]archives.FileInfo, error) {
@@ -244,22 +597,26 @@ type archiveLimitReadCloser struct {
 }
 
 func (r *archiveLimitReadCloser) Read(p []byte) (int, error) {
+	return readWithArchiveLimit(r.ReadCloser, r.remaining, p)
+}
+
+func readWithArchiveLimit(r io.Reader, remaining *int64, p []byte) (int, error) {
 	if len(p) == 0 {
 		return 0, nil
 	}
-	if *r.remaining == 0 {
+	if *remaining == 0 {
 		var probe [1]byte
-		n, err := r.ReadCloser.Read(probe[:])
+		n, err := r.Read(probe[:])
 		if n > 0 {
 			return 0, errArchiveLimit
 		}
 		return 0, err
 	}
-	if int64(len(p)) > *r.remaining {
-		p = p[:int(*r.remaining)]
+	if int64(len(p)) > *remaining {
+		p = p[:int(*remaining)]
 	}
-	n, err := r.ReadCloser.Read(p)
-	*r.remaining -= int64(n)
+	n, err := r.Read(p)
+	*remaining -= int64(n)
 	return n, err
 }
 
@@ -322,7 +679,8 @@ func hashFile(f *os.File) string {
 }
 
 // sniff reads up to magicSniffLen bytes from f and returns the magic
-// classification. The file position is left at the end of the sniffed prefix.
+// classification. PE files whose header falls beyond this prefix are handled
+// separately by isPEFile. The file position is left at the end of the prefix.
 func sniff(f *os.File) (magic.Result, error) {
 	var head [magicSniffLen]byte
 	n, err := io.ReadFull(f, head[:])
@@ -330,6 +688,28 @@ func sniff(f *os.File) (magic.Result, error) {
 		return magic.Result{}, err
 	}
 	return magic.DetectPrefix(head[:n]), nil
+}
+
+func isPEFile(f *os.File, size int64) bool {
+	if size < peHeaderOffsetAt+4 {
+		return false
+	}
+	var dos [peHeaderOffsetAt + 4]byte
+	if _, err := f.ReadAt(dos[:], 0); err != nil {
+		return false
+	}
+	if dos[0] != 'M' || dos[1] != 'Z' {
+		return false
+	}
+	offset := int64(stdbin.LittleEndian.Uint32(dos[peHeaderOffsetAt:]))
+	if offset < peHeaderOffsetAt+4 || offset > size-peSignatureLen {
+		return false
+	}
+	var signature [peSignatureLen]byte
+	if _, err := f.ReadAt(signature[:], offset); err != nil {
+		return false
+	}
+	return bytes.Equal(signature[:], []byte{'P', 'E', 0, 0})
 }
 
 // inspectAutoArgs builds the argument slice for an auto-routed inspect call
@@ -357,11 +737,13 @@ func shouldAutoInspect(path string) bool {
 		return false
 	}
 	head, err := sniff(f)
-	_ = f.Close()
 	if err != nil {
+		_ = f.Close()
 		return false
 	}
-	return isNativeObject(head.Format) || isArchive(head.Format)
+	isArtifact := isNativeObject(head.Format) || isArchive(head.Format) || isPEFile(f, info.Size())
+	_ = f.Close()
+	return isArtifact
 }
 
 func isNativeObject(format string) bool {

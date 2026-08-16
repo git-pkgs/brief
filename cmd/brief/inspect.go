@@ -16,7 +16,6 @@ import (
 	"os"
 	pathpkg "path"
 	"path/filepath"
-	"runtime"
 	"runtime/debug"
 	"sort"
 	"strings"
@@ -159,11 +158,20 @@ func inspectArchive(f *os.File, art *brief.Artifact) error {
 	if err := preflightArtifactArchive(f, art.Path, art.Format, maxArchiveEntries, maxArchiveExtractedBytes); err != nil {
 		return err
 	}
+	dir, err := os.MkdirTemp("", "brief-inspect-*")
+	if err != nil {
+		return err
+	}
+	defer func() { _ = os.RemoveAll(dir) }()
+	caseInsensitive, err := filesystemCaseInsensitive(dir)
+	if err != nil {
+		return err
+	}
 
 	if _, err := f.Seek(0, io.SeekStart); err != nil {
 		return err
 	}
-	r, err := openArtifactArchive(f, art.Path, art.Format)
+	r, err := openArtifactArchive(f, art.Path, art.Format, caseInsensitive)
 	if err != nil {
 		return err
 	}
@@ -173,14 +181,11 @@ func inspectArchive(f *os.File, art *brief.Artifact) error {
 		art.SHA256 = h
 	}
 
-	dir, err := os.MkdirTemp("", "brief-inspect-*")
-	if err != nil {
-		return err
-	}
-	defer func() { _ = os.RemoveAll(dir) }()
-
 	if err := archives.ExtractAll(r, dir); err != nil {
 		return fmt.Errorf("extracting archive: %w", err)
+	}
+	if err := makeExtractedTreeAccessible(dir); err != nil {
+		return fmt.Errorf("preparing extracted archive: %w", err)
 	}
 
 	return collectNativeObjects(dir, art)
@@ -238,6 +243,12 @@ func preflightArtifactArchive(f *os.File, filePath, format string, maxEntries in
 	case magic.FormatBZIP2:
 		return preflightTAR(bzip2.NewReader(newArchiveInputLimitReader(f, maxArchiveInputBytes)), maxEntries, maxBytes)
 	case magic.FormatXZ:
+		if err := preflightXZ(newArchiveInputLimitReader(f, maxArchiveInputBytes), maxXZDictionaryBytes); err != nil {
+			return err
+		}
+		if _, err := f.Seek(0, io.SeekStart); err != nil {
+			return err
+		}
 		xzReader, err := xz.NewReader(newArchiveInputLimitReader(f, maxArchiveInputBytes))
 		if err != nil {
 			return fmt.Errorf("opening xz: %w", err)
@@ -483,7 +494,7 @@ func readZIP64DirectoryEnd(r io.ReaderAt, end zipDirectoryEnd) (zipDirectoryEnd,
 // possibly misleading filename extension. Gems need their filename for the
 // archives package to unwrap data.tar.gz; malformed gems fall back to plain
 // tar inspection.
-func openArtifactArchive(f *os.File, path, format string) (*archiveLimitReader, error) {
+func openArtifactArchive(f *os.File, path, format string, caseInsensitive bool) (*archiveLimitReader, error) {
 	var r archives.Reader
 	var err error
 	if format == magic.FormatTAR && strings.EqualFold(filepath.Ext(path), ".gem") {
@@ -502,7 +513,7 @@ func openArtifactArchive(f *os.File, path, format string) (*archiveLimitReader, 
 		}
 	}
 
-	limited, err := newArchiveLimitReader(r, maxArchiveEntries, maxArchiveExtractedBytes)
+	limited, err := newArchiveLimitReader(r, maxArchiveEntries, maxArchiveExtractedBytes, caseInsensitive)
 	if err != nil {
 		_ = r.Close()
 		return nil, err
@@ -516,7 +527,12 @@ type archiveLimitReader struct {
 	remaining int64
 }
 
-func newArchiveLimitReader(r archives.Reader, maxEntries int, maxBytes int64) (*archiveLimitReader, error) {
+func newArchiveLimitReader(
+	r archives.Reader,
+	maxEntries int,
+	maxBytes int64,
+	caseInsensitive bool,
+) (*archiveLimitReader, error) {
 	entries, err := r.List()
 	if err != nil {
 		return nil, err
@@ -525,7 +541,7 @@ func newArchiveLimitReader(r archives.Reader, maxEntries int, maxBytes int64) (*
 		return nil, fmt.Errorf("%w: %d entries exceeds limit of %d",
 			errArchiveLimit, len(entries), maxEntries)
 	}
-	if err := checkDuplicateArchivePaths(entries); err != nil {
+	if err := checkDuplicateArchivePaths(entries, caseInsensitive); err != nil {
 		return nil, err
 	}
 
@@ -548,7 +564,7 @@ func newArchiveLimitReader(r archives.Reader, maxEntries int, maxBytes int64) (*
 	}, nil
 }
 
-func checkDuplicateArchivePaths(entries []archives.FileInfo) error {
+func checkDuplicateArchivePaths(entries []archives.FileInfo, caseInsensitive bool) error {
 	seen := make(map[string]string)
 	for _, entry := range entries {
 		if entry.IsDir || fs.FileMode(entry.Mode)&fs.ModeType != 0 {
@@ -564,7 +580,7 @@ func checkDuplicateArchivePaths(entries []archives.FileInfo) error {
 			continue
 		}
 		key := filepath.Clean(local)
-		if runtime.GOOS == "windows" {
+		if caseInsensitive {
 			key = strings.ToLower(key)
 		}
 		if previous, ok := seen[key]; ok {
@@ -574,6 +590,56 @@ func checkDuplicateArchivePaths(entries []archives.FileInfo) error {
 		seen[key] = entry.Path
 	}
 	return nil
+}
+
+func filesystemCaseInsensitive(dir string) (bool, error) {
+	f, err := os.CreateTemp(dir, "brief-case-probe-a")
+	if err != nil {
+		return false, err
+	}
+	name := f.Name()
+	if err := f.Close(); err != nil {
+		_ = os.Remove(name)
+		return false, err
+	}
+	defer func() { _ = os.Remove(name) }()
+
+	upper := filepath.Join(dir, strings.ToUpper(filepath.Base(name)))
+	if upper == name {
+		return false, errors.New("case-sensitivity probe did not produce a distinct path")
+	}
+	if _, err := os.Stat(upper); err == nil {
+		return true, nil
+	} else if errors.Is(err, fs.ErrNotExist) {
+		return false, nil
+	} else {
+		return false, err
+	}
+}
+
+func makeExtractedTreeAccessible(root string) error {
+	return filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		info, err := d.Info()
+		if err != nil {
+			return err
+		}
+		perm := info.Mode().Perm()
+		switch {
+		case d.IsDir():
+			perm |= 0o700
+		case info.Mode().IsRegular():
+			perm |= 0o400
+		default:
+			return nil
+		}
+		if perm == info.Mode().Perm() {
+			return nil
+		}
+		return os.Chmod(path, perm)
+	})
 }
 
 func (r *archiveLimitReader) List() ([]archives.FileInfo, error) {
@@ -637,12 +703,22 @@ func collectNativeObjects(root string, art *brief.Artifact) error {
 		if err != nil {
 			return err
 		}
-		head, err := sniff(f)
-		_ = f.Close()
+		info, err := f.Stat()
 		if err != nil {
+			_ = f.Close()
 			return err
 		}
-		if !isNativeObject(head.Format) {
+		head, err := sniff(f)
+		if err != nil {
+			_ = f.Close()
+			return err
+		}
+		native := isNativeObject(head.Format)
+		if !native && head.Format == "" {
+			native = isPEFile(f, info.Size())
+		}
+		_ = f.Close()
+		if !native {
 			return nil
 		}
 

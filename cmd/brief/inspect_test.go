@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"hash/crc32"
 	"io"
 	"os"
 	"os/exec"
@@ -19,6 +20,7 @@ import (
 
 	"github.com/git-pkgs/archives"
 	"github.com/git-pkgs/magic"
+	"github.com/ulikunitz/xz"
 
 	"github.com/git-pkgs/brief"
 	"github.com/git-pkgs/brief/binary"
@@ -78,6 +80,19 @@ func TestInspectPathPEHeaderBeyondMagicPrefix(t *testing.T) {
 	}
 	if art.Format != magic.FormatPE {
 		t.Fatalf("Format = %q, want %q", art.Format, magic.FormatPE)
+	}
+	if len(art.NativeObjects) != 1 || art.NativeObjects[0].Format != magic.FormatPE {
+		t.Fatalf("NativeObjects = %+v, want one PE object", art.NativeObjects)
+	}
+}
+
+func TestInspectPathArchivePEHeaderBeyondMagicPrefix(t *testing.T) {
+	pe := writeLargeStubPE(t)
+	archive := writeZip(t, map[string]string{"bin/large-stub.exe": pe})
+
+	art, err := inspectPath(archive)
+	if err != nil {
+		t.Fatal(err)
 	}
 	if len(art.NativeObjects) != 1 || art.NativeObjects[0].Format != magic.FormatPE {
 		t.Fatalf("NativeObjects = %+v, want one PE object", art.NativeObjects)
@@ -154,7 +169,58 @@ func TestInspectPathRejectsDuplicateArchivePaths(t *testing.T) {
 	}
 }
 
-func TestArchiveLimits(t *testing.T) {
+func TestInspectPathHandlesRestrictiveArchiveModes(t *testing.T) {
+	t.Run("file", func(t *testing.T) {
+		archive := writeModeTar(t, []tarEntry{
+			{name: "locked", mode: 0, content: "plain text\n"},
+		})
+		art, err := inspectPath(archive)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if art.Entries != 1 {
+			t.Fatalf("Entries = %d, want 1", art.Entries)
+		}
+	})
+
+	t.Run("directory", func(t *testing.T) {
+		archive := writeModeTar(t, []tarEntry{
+			{name: "locked/", mode: 0, directory: true},
+			{name: "locked/file", mode: 0o600, content: "plain text\n"},
+		})
+		art, err := inspectPath(archive)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if art.Entries != 1 {
+			t.Fatalf("Entries = %d, want 1", art.Entries)
+		}
+	})
+}
+
+func TestInspectPathCaseDistinctArchiveEntries(t *testing.T) {
+	archive := writeZip(t, map[string]string{"A": "one", "a": "two"})
+	caseInsensitive, err := filesystemCaseInsensitive(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	art, err := inspectPath(archive)
+	if caseInsensitive {
+		if !errors.Is(err, errArchiveDuplicatePath) {
+			t.Fatalf("inspectPath error = %v, want errArchiveDuplicatePath", err)
+		}
+		return
+	}
+	if err != nil {
+		t.Fatal(err)
+	}
+	if art.Entries != 2 {
+		t.Fatalf("Entries = %d, want 2", art.Entries)
+	}
+}
+
+func TestArchiveInputLimits(t *testing.T) {
 	t.Run("input bytes", func(t *testing.T) {
 		err := checkArchiveInputSize(maxArchiveInputBytes + 1)
 		if !errors.Is(err, errArchiveLimit) {
@@ -168,7 +234,9 @@ func TestArchiveLimits(t *testing.T) {
 			t.Fatalf("ReadAll error = %v, want errArchiveLimit", err)
 		}
 	})
+}
 
+func TestArchivePreflightLimits(t *testing.T) {
 	t.Run("zip entry preflight", func(t *testing.T) {
 		archive := writeZip(t, map[string]string{"a": "one", "b": "two"})
 		data, err := os.ReadFile(archive)
@@ -219,13 +287,54 @@ func TestArchiveLimits(t *testing.T) {
 			t.Fatalf("preflightArtifactArchive error = %v, want errArchiveLimit", err)
 		}
 	})
+}
 
+func TestXZArchivePreflight(t *testing.T) {
+	t.Run("valid dictionary", func(t *testing.T) {
+		archive := writeTarXZ(t, map[string]string{"file": "plain text\n"})
+		art, err := inspectPath(archive)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if art.Entries != 1 {
+			t.Fatalf("Entries = %d, want 1", art.Entries)
+		}
+	})
+
+	t.Run("multiple blocks", func(t *testing.T) {
+		archive := writeTarXZWithBlockSize(t, map[string]string{
+			"file": strings.Repeat("plain text\n", 1_000),
+		}, 512)
+		art, err := inspectPath(archive)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if art.Entries != 1 {
+			t.Fatalf("Entries = %d, want 1", art.Entries)
+		}
+	})
+
+	t.Run("oversized dictionary", func(t *testing.T) {
+		archive := writeTarXZ(t, map[string]string{"file": "plain text\n"})
+		setFirstXZDictionaryCode(t, archive, 40)
+		f, err := os.Open(archive)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer func() { _ = f.Close() }()
+		if err := preflightArtifactArchive(f, archive, magic.FormatXZ, 10, 10); !errors.Is(err, errArchiveLimit) {
+			t.Fatalf("preflightArtifactArchive error = %v, want errArchiveLimit", err)
+		}
+	})
+}
+
+func TestArchiveReaderLimits(t *testing.T) {
 	t.Run("entry count", func(t *testing.T) {
 		r := &fakeArchiveReader{entries: []archives.FileInfo{
 			{Path: "a", Size: 1},
 			{Path: "b", Size: 1},
 		}}
-		if _, err := newArchiveLimitReader(r, 1, 10); !errors.Is(err, errArchiveLimit) {
+		if _, err := newArchiveLimitReader(r, 1, 10, false); !errors.Is(err, errArchiveLimit) {
 			t.Fatalf("newArchiveLimitReader error = %v, want errArchiveLimit", err)
 		}
 	})
@@ -235,14 +344,24 @@ func TestArchiveLimits(t *testing.T) {
 			{Path: "entry", Size: 1},
 			{Path: "./entry", Size: 1},
 		}}
-		if _, err := newArchiveLimitReader(r, 2, 10); !errors.Is(err, errArchiveDuplicatePath) {
+		if _, err := newArchiveLimitReader(r, 2, 10, false); !errors.Is(err, errArchiveDuplicatePath) {
+			t.Fatalf("newArchiveLimitReader error = %v, want errArchiveDuplicatePath", err)
+		}
+	})
+
+	t.Run("case-insensitive duplicate paths", func(t *testing.T) {
+		r := &fakeArchiveReader{entries: []archives.FileInfo{
+			{Path: "Entry", Size: 1},
+			{Path: "entry", Size: 1},
+		}}
+		if _, err := newArchiveLimitReader(r, 2, 10, true); !errors.Is(err, errArchiveDuplicatePath) {
 			t.Fatalf("newArchiveLimitReader error = %v, want errArchiveDuplicatePath", err)
 		}
 	})
 
 	t.Run("declared bytes", func(t *testing.T) {
 		r := &fakeArchiveReader{entries: []archives.FileInfo{{Path: "a", Size: 4}}}
-		if _, err := newArchiveLimitReader(r, 1, 3); !errors.Is(err, errArchiveLimit) {
+		if _, err := newArchiveLimitReader(r, 1, 3, false); !errors.Is(err, errArchiveLimit) {
 			t.Fatalf("newArchiveLimitReader error = %v, want errArchiveLimit", err)
 		}
 	})
@@ -252,7 +371,7 @@ func TestArchiveLimits(t *testing.T) {
 			entries:  []archives.FileInfo{{Path: "a", Size: 1}},
 			contents: map[string][]byte{"a": []byte("1234")},
 		}
-		limited, err := newArchiveLimitReader(r, 1, 3)
+		limited, err := newArchiveLimitReader(r, 1, 3, false)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -465,6 +584,111 @@ func writeTar(tb testing.TB, entries map[string]string) string {
 		tb.Fatal(err)
 	}
 	return path
+}
+
+type tarEntry struct {
+	name      string
+	mode      int64
+	content   string
+	directory bool
+}
+
+func writeModeTar(tb testing.TB, entries []tarEntry) string {
+	tb.Helper()
+	path := filepath.Join(tb.TempDir(), "fixture.tar")
+	f, err := os.Create(path)
+	if err != nil {
+		tb.Fatal(err)
+	}
+	tw := tar.NewWriter(f)
+	for _, entry := range entries {
+		typeflag := byte(tar.TypeReg)
+		if entry.directory {
+			typeflag = tar.TypeDir
+		}
+		header := &tar.Header{
+			Name:     entry.name,
+			Mode:     entry.mode,
+			Size:     int64(len(entry.content)),
+			Typeflag: typeflag,
+		}
+		if err := tw.WriteHeader(header); err != nil {
+			tb.Fatal(err)
+		}
+		if _, err := io.WriteString(tw, entry.content); err != nil {
+			tb.Fatal(err)
+		}
+	}
+	if err := tw.Close(); err != nil {
+		tb.Fatal(err)
+	}
+	if err := f.Close(); err != nil {
+		tb.Fatal(err)
+	}
+	return path
+}
+
+func writeTarXZ(tb testing.TB, entries map[string]string) string {
+	tb.Helper()
+	return writeTarXZWithBlockSize(tb, entries, 0)
+}
+
+func writeTarXZWithBlockSize(tb testing.TB, entries map[string]string, blockSize int64) string {
+	tb.Helper()
+	path := filepath.Join(tb.TempDir(), "fixture.tar.xz")
+	f, err := os.Create(path)
+	if err != nil {
+		tb.Fatal(err)
+	}
+	xw, err := xz.WriterConfig{DictCap: 1 << 20, BlockSize: blockSize}.NewWriter(f)
+	if err != nil {
+		tb.Fatal(err)
+	}
+	tw := tar.NewWriter(xw)
+	for name, content := range entries {
+		header := &tar.Header{Name: name, Mode: 0o644, Size: int64(len(content))}
+		if err := tw.WriteHeader(header); err != nil {
+			tb.Fatal(err)
+		}
+		if _, err := io.WriteString(tw, content); err != nil {
+			tb.Fatal(err)
+		}
+	}
+	if err := tw.Close(); err != nil {
+		tb.Fatal(err)
+	}
+	if err := xw.Close(); err != nil {
+		tb.Fatal(err)
+	}
+	if err := f.Close(); err != nil {
+		tb.Fatal(err)
+	}
+	return path
+}
+
+func setFirstXZDictionaryCode(tb testing.TB, path string, code byte) {
+	tb.Helper()
+	data, err := os.ReadFile(path)
+	if err != nil {
+		tb.Fatal(err)
+	}
+	const xzStreamHeaderLen = 12
+	if len(data) <= xzStreamHeaderLen {
+		tb.Fatal("xz block header missing")
+	}
+	headerLen := (int(data[xzStreamHeaderLen]) + 1) * 4
+	if headerLen < 12 || xzStreamHeaderLen+headerLen > len(data) {
+		tb.Fatalf("invalid xz block header length %d", headerLen)
+	}
+	header := data[xzStreamHeaderLen : xzStreamHeaderLen+headerLen]
+	if header[1] != 0 || header[2] != 0x21 || header[3] != 1 {
+		tb.Fatalf("unexpected xz block header %x", header)
+	}
+	header[4] = code
+	stdbin.LittleEndian.PutUint32(header[len(header)-4:], crc32.ChecksumIEEE(header[:len(header)-4]))
+	if err := os.WriteFile(path, data, 0o644); err != nil {
+		tb.Fatal(err)
+	}
 }
 
 // writeZip creates a zip at a temp path. For each entry, if the value names an

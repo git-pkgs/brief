@@ -2,6 +2,8 @@ module github.com/git-pkgs/brief
 
 go 1.26
 
+toolchain go1.26.6
+
 require (
 	github.com/BurntSushi/toml v1.6.0
 	github.com/git-pkgs/enrichment v0.6.5

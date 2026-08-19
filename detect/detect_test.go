@@ -1565,9 +1565,95 @@ func TestShouldSkipDir(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		if got := engine.shouldSkipDir(tt.name); got != tt.skip {
-			t.Errorf("shouldSkipDir(%q) = %v, want %v", tt.name, got, tt.skip)
+		if got := engine.shouldSkipDirPath(filepath.Join(engine.Root, tt.name)); got != tt.skip {
+			t.Errorf("shouldSkipDirPath(%q) = %v, want %v", tt.name, got, tt.skip)
 		}
+	}
+}
+
+func TestDepsDirectorySkip(t *testing.T) {
+	if _, err := exec.LookPath("git"); err != nil {
+		t.Skip("git not installed")
+	}
+
+	gitInit := func(t *testing.T, dir string) {
+		t.Helper()
+		cmd := exec.Command("git", "init", "-q")
+		cmd.Dir = dir
+		if out, err := cmd.CombinedOutput(); err != nil {
+			t.Fatalf("git init: %v\n%s", err, out)
+		}
+	}
+
+	t.Run("tracked files without Mix", func(t *testing.T) {
+		dir := t.TempDir()
+		gitInit(t, dir)
+		writeProjectFile(t, dir, "deps/crates/example/src/lib.rs", "pub fn fixture() {}\n")
+		cmd := exec.Command("git", "add", "deps/crates/example/src/lib.rs")
+		cmd.Dir = dir
+		if out, err := cmd.CombinedOutput(); err != nil {
+			t.Fatalf("git add: %v\n%s", err, out)
+		}
+
+		engine := New(loadKB(t), dir)
+		if engine.shouldSkipDirPath(filepath.Join(dir, "deps")) {
+			t.Error("deps with tracked files and no sibling mix.exs should be scanned")
+		}
+	})
+
+	t.Run("untracked files", func(t *testing.T) {
+		dir := t.TempDir()
+		gitInit(t, dir)
+		writeProjectFile(t, dir, "deps/example/lib.ex", "defmodule Example do\nend\n")
+
+		engine := New(loadKB(t), dir)
+		if !engine.shouldSkipDirPath(filepath.Join(dir, "deps")) {
+			t.Error("deps with no tracked files should be skipped")
+		}
+	})
+
+	t.Run("Mix sibling", func(t *testing.T) {
+		dir := t.TempDir()
+		writeProjectFile(t, dir, "mix.exs", "defmodule Example.MixProject do\nend\n")
+		writeProjectFile(t, dir, "deps/example/lib.ex", "defmodule Example do\nend\n")
+
+		engine := New(loadKB(t), dir)
+		if !engine.shouldSkipDirPath(filepath.Join(dir, "deps")) {
+			t.Error("deps with a sibling mix.exs should be skipped")
+		}
+	})
+}
+
+func TestSCCArgsIncludeResolvedSkipDirs(t *testing.T) {
+	dir := t.TempDir()
+	engine := New(loadKB(t), dir)
+	engine.SkipDirs = []string{"generated"}
+	args := engine.sccArgs(dir)
+
+	excludeIndex := slices.Index(args, "--exclude-dir")
+	if excludeIndex == -1 || excludeIndex+1 >= len(args) {
+		t.Fatalf("scc args missing --exclude-dir: %v", args)
+	}
+	excluded := strings.Split(args[excludeIndex+1], ",")
+	for _, want := range []string{"node_modules", "target", "vendor", "generated"} {
+		if !slices.Contains(excluded, want) {
+			t.Errorf("scc exclusions should contain %q, got %v", want, excluded)
+		}
+	}
+	if slices.Contains(excluded, "deps") {
+		t.Errorf("scc exclusions should not contain deps without a Mix project, got %v", excluded)
+	}
+
+	writeProjectFile(t, dir, "mix.exs", "defmodule Example.MixProject do\nend\n")
+	if err := os.Mkdir(filepath.Join(dir, "deps"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	engine = New(loadKB(t), dir)
+	args = engine.sccArgs(dir)
+	excludeIndex = slices.Index(args, "--exclude-dir")
+	excluded = strings.Split(args[excludeIndex+1], ",")
+	if !slices.Contains(excluded, "deps") {
+		t.Errorf("scc exclusions should contain Mix deps, got %v", excluded)
 	}
 }
 

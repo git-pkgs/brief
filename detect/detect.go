@@ -55,6 +55,7 @@ type Engine struct {
 	// Lazily populated caches
 	tracked             map[string]bool // git-tracked files relative to Root, nil when TrackedOnly is off
 	trackedDirs         map[string]bool // directories that contain at least one tracked file
+	trackedDeps         map[string]bool // whether a deps directory contains git-tracked files
 	fileExts            map[string]int  // cached file extension counts in the project
 	dirCache            map[string][]string
 	depsLoaded          bool
@@ -100,8 +101,8 @@ func (e *Engine) sortLanguagesByFileCount(report *brief.Report) {
 	})
 }
 
-// skipDirs are directories that should never be walked during detection.
-var skipDirs = map[string]bool{
+// defaultSkipDirs are directories that should never be walked during detection.
+var defaultSkipDirs = map[string]bool{
 	"vendor":       true,
 	"node_modules": true,
 	"__pycache__":  true,
@@ -112,7 +113,6 @@ var skipDirs = map[string]bool{
 	"build":        true,
 	"dist":         true,
 	"_build":       true, // Elixir
-	"deps":         true, // Elixir
 	"Pods":         true, // iOS
 	"third_party":  true,
 	"thirdparty":   true,
@@ -161,12 +161,12 @@ func (e *Engine) isTracked(rel string) bool {
 	return e.tracked[rel] || e.trackedDirs[rel]
 }
 
-// shouldSkipDir returns true if a directory should be skipped during walks.
-func (e *Engine) shouldSkipDir(name string) bool {
+func (e *Engine) shouldSkipDirPath(dirPath string) bool {
+	name := filepath.Base(dirPath)
 	if strings.HasPrefix(name, ".") {
 		return true
 	}
-	if skipDirs[name] {
+	if defaultSkipDirs[name] {
 		return true
 	}
 	for _, d := range e.SkipDirs {
@@ -174,7 +174,39 @@ func (e *Engine) shouldSkipDir(name string) bool {
 			return true
 		}
 	}
+	if name == "deps" {
+		if e.exactFileAt(filepath.Join(filepath.Dir(dirPath), "mix.exs")) {
+			return true
+		}
+		return !e.depsDirHasTrackedFiles(dirPath)
+	}
 	return false
+}
+
+func (e *Engine) exactFileAt(filePath string) bool {
+	info, err := os.Stat(filePath)
+	return err == nil && !info.IsDir()
+}
+
+func (e *Engine) depsDirHasTrackedFiles(dirPath string) bool {
+	rel, err := filepath.Rel(e.Root, dirPath)
+	if err != nil || rel == "." || strings.HasPrefix(rel, ".."+string(filepath.Separator)) {
+		return true
+	}
+	rel = filepath.Clean(rel)
+	if e.tracked != nil {
+		return e.trackedDirs[rel]
+	}
+	if e.trackedDeps == nil {
+		e.trackedDeps = make(map[string]bool)
+	}
+	if hasTracked, ok := e.trackedDeps[rel]; ok {
+		return hasTracked
+	}
+	out, err := e.git(e.Root, "ls-files", "-z", "--", filepath.ToSlash(rel))
+	hasTracked := err != nil || len(out) > 0
+	e.trackedDeps[rel] = hasTracked
+	return hasTracked
 }
 
 // New creates a detection engine for the given project root.
@@ -577,7 +609,7 @@ func (e *Engine) recursiveGlob(pattern string) bool {
 		rel, _ := filepath.Rel(e.Root, path)
 		if d.IsDir() {
 			name := d.Name()
-			if name != "." && e.shouldSkipDir(name) {
+			if name != "." && e.shouldSkipDirPath(path) {
 				return filepath.SkipDir
 			}
 			if !e.isTracked(rel) {
@@ -604,7 +636,7 @@ func (e *Engine) recursiveGlob(pattern string) bool {
 // loadFileExts walks the project to collect file extension counts. Cached for
 // the lifetime of the engine. The walk is bounded by extScanFileLimit rather
 // than directory depth so that deep source layouts such as
-// app/src/main/java/<package>/ are reached; skipDirs already prunes the
+// app/src/main/java/<package>/ are reached; directory skips already prune the
 // expensive vendor/build directories.
 // Uses WalkDir instead of Walk to avoid following symlinks into directories.
 func (e *Engine) loadFileExts() {
@@ -622,7 +654,7 @@ func (e *Engine) loadFileExts() {
 		rel := strings.TrimPrefix(path[rootLen:], string(filepath.Separator))
 		if d.IsDir() {
 			name := d.Name()
-			if name != "." && e.shouldSkipDir(name) {
+			if name != "." && e.shouldSkipDirPath(path) {
 				return filepath.SkipDir
 			}
 			if e.ScanDepth > 0 && strings.Count(rel, string(filepath.Separator))+1 > e.ScanDepth {
@@ -720,7 +752,7 @@ func (e *Engine) globContains(pattern string, contentPatterns []string) bool {
 			return nil
 		}
 		if d.IsDir() {
-			if rel != "." && e.shouldSkipDir(d.Name()) {
+			if rel != "." && e.shouldSkipDirPath(filePath) {
 				return filepath.SkipDir
 			}
 			if e.ScanDepth > 0 && rel != "." &&
@@ -965,7 +997,7 @@ func (e *Engine) cargoManifestRoot() (string, bool) {
 			return nil
 		}
 		if d.IsDir() {
-			if rel != "." && e.shouldSkipDir(d.Name()) {
+			if rel != "." && e.shouldSkipDirPath(filePath) {
 				return filepath.SkipDir
 			}
 			if e.ScanDepth > 0 && rel != "." &&
@@ -1508,7 +1540,7 @@ func (e *Engine) inferStyle() *brief.StyleInfo {
 		}
 		if d.IsDir() {
 			name := d.Name()
-			if name != "." && e.shouldSkipDir(name) {
+			if name != "." && e.shouldSkipDirPath(path) {
 				return filepath.SkipDir
 			}
 			return nil
@@ -1604,7 +1636,7 @@ func (e *Engine) inferFlatLayout(languages []brief.Detection, testDirs []string)
 			continue
 		}
 		name := ent.Name()
-		if e.shouldSkipDir(name) || skip[name] {
+		if e.shouldSkipDirPath(filepath.Join(e.Root, name)) || skip[name] {
 			continue
 		}
 		if e.dirHasExtension(name, exts) {
@@ -2162,7 +2194,7 @@ func (e *Engine) git(dir string, args ...string) ([]byte, error) {
 func (e *Engine) detectLineCount(absPath string) *brief.LineCount {
 	// Try scc first
 	if _, err := exec.LookPath("scc"); err == nil {
-		cmd := exec.Command("scc", "--format", "json", absPath)
+		cmd := exec.Command("scc", e.sccArgs(absPath)...)
 		if out, err := cmd.Output(); err == nil {
 			return parseSCCOutput(out)
 		}
@@ -2177,6 +2209,32 @@ func (e *Engine) detectLineCount(absPath string) *brief.LineCount {
 	}
 
 	return nil
+}
+
+func (e *Engine) sccArgs(absPath string) []string {
+	excluded := make(map[string]bool)
+	for dir := range defaultSkipDirs {
+		excluded[dir] = true
+	}
+	for _, dir := range e.SkipDirs {
+		if dir != "" {
+			excluded[dir] = true
+		}
+	}
+	for _, dir := range []string{".git", ".hg", ".svn"} {
+		excluded[dir] = true
+	}
+	depsPath := filepath.Join(e.Root, "deps")
+	if info, err := os.Stat(depsPath); err == nil && info.IsDir() && e.shouldSkipDirPath(depsPath) {
+		excluded["deps"] = true
+	}
+
+	dirs := make([]string, 0, len(excluded))
+	for dir := range excluded {
+		dirs = append(dirs, dir)
+	}
+	sort.Strings(dirs)
+	return []string{"--format", "json", "--exclude-dir", strings.Join(dirs, ","), absPath}
 }
 
 // parseSCCOutput parses scc --format json output.

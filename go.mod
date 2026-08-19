@@ -7,6 +7,7 @@ toolchain go1.26.6
 require (
 	github.com/BurntSushi/toml v1.6.0
 	github.com/git-pkgs/archives v0.5.0
+	github.com/git-pkgs/clone v0.5.0
 	github.com/git-pkgs/enrichment v0.6.5
 	github.com/git-pkgs/forge v0.8.0
 	github.com/git-pkgs/licensecheck v0.4.1

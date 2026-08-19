@@ -30,6 +30,7 @@ func cmdEnrich(args []string) {
 	keep := fs.Bool("keep", false, "Keep downloaded remote source")
 	depth := fs.Int("depth", -1, "Git clone depth (0 = full clone, default shallow)")
 	dir := fs.String("dir", "", "Directory to clone remote source into")
+	cache := fs.String("cache", "", "Persistent cache directory for remote sources")
 	scanDepth := fs.Int("scan-depth", 0, "Max directory depth for language detection (0 = unlimited)")
 	skip := fs.String("skip", "", "Additional directories to skip, comma-separated")
 	_ = fs.Parse(args)
@@ -43,6 +44,7 @@ func cmdEnrich(args []string) {
 		Keep:  *keep,
 		Depth: *depth,
 		Dir:   *dir,
+		Cache: *cache,
 	})
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "error: %v\n", err)

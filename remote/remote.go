@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"strings"
 
+	gitclone "github.com/git-pkgs/clone"
 	forges "github.com/git-pkgs/forge"
 	"github.com/git-pkgs/purl"
 	"github.com/git-pkgs/registries"
@@ -27,6 +28,7 @@ type Options struct {
 	Keep  bool   // don't delete temp dir after scanning
 	Depth int    // git clone depth (0 = full clone, -1 or unset = default shallow)
 	Dir   string // directory to clone into (empty = temp dir)
+	Cache string // persistent clone cache directory (empty = no cache)
 }
 
 // Resolve takes a source string and returns a local directory to scan.
@@ -134,22 +136,11 @@ func cloneURL(ctx context.Context, url, name string, opts Options) (*Source, err
 		managed = true
 	}
 
-	args := []string{"clone"}
-	if opts.Depth > 0 {
-		args = append(args, "--depth", fmt.Sprintf("%d", opts.Depth))
-	}
-	args = append(args, url, dir)
-
-	cmd := exec.CommandContext(ctx, "git", args...)
-	cmd.Stdout = os.Stderr
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
+	if err := cloneInto(ctx, url, dir, opts); err != nil {
 		if managed {
 			_ = os.RemoveAll(dir)
 		}
-		// git already wrote a (credential-redacted) failure message to
-		// stderr, so don't repeat the raw URL here.
-		return nil, fmt.Errorf("git clone failed: %w", err)
+		return nil, err
 	}
 
 	cleanup := func() {
@@ -159,4 +150,48 @@ func cloneURL(ctx context.Context, url, name string, opts Options) (*Source, err
 	}
 
 	return &Source{Dir: dir, Cleanup: cleanup, Origin: url}, nil
+}
+
+var ensureClone = func(ctx context.Context, url, dst string, full bool) error {
+	return gitclone.Ensure(ctx, gitclone.Retry{}, url, dst, "", full)
+}
+
+var prepareCloneCache = func(ctx context.Context, root, url, dst string) error {
+	cache := gitclone.Cache{Root: root}
+	_, err := cache.Prepare(ctx, url, "", dst)
+	return err
+}
+
+var execClone = func(ctx context.Context, url, dir string, depth int) error {
+	args := []string{"clone"}
+	if depth > 0 {
+		args = append(args, "--depth", fmt.Sprintf("%d", depth))
+	}
+	args = append(args, url, dir)
+
+	cmd := exec.CommandContext(ctx, "git", args...)
+	cmd.Stdout = os.Stderr
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		// Git already wrote a credential-redacted failure to stderr, so do
+		// not repeat the raw URL here.
+		return fmt.Errorf("git clone failed: %w", err)
+	}
+	return nil
+}
+
+func cloneInto(ctx context.Context, url, dir string, opts Options) error {
+	if !strings.HasPrefix(url, "https://") {
+		return execClone(ctx, url, dir, opts.Depth)
+	}
+	if opts.Cache != "" {
+		if err := prepareCloneCache(ctx, opts.Cache, url, dir); err != nil {
+			return fmt.Errorf("preparing clone cache: %w", err)
+		}
+		return nil
+	}
+	if err := ensureClone(ctx, url, dir, opts.Depth == 0); err != nil {
+		return fmt.Errorf("cloning remote: %w", err)
+	}
+	return nil
 }

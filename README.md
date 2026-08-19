@@ -70,7 +70,7 @@ brief crate:serde
 brief pypi:requests
 ```
 
-Remote sources are shallow-cloned by default. Use `--depth 0` for a full clone, `--keep` to preserve the clone, or `--dir ./somewhere` to clone into a specific directory.
+Remote sources are shallow-cloned by default. Use `--depth 0` for a full clone, `--keep` to preserve the clone, or `--dir ./somewhere` to clone into a specific directory. Use `--cache ./cache` to keep one shallow checkout per HTTPS URL and reuse it across runs.
 
 JSON when piped, human-readable on a TTY. Force either with `--json` or `--human`. Use `--category test` to filter to a single category.
 

@@ -1128,6 +1128,14 @@ func TestPythonRustNativeExtensionProjects(t *testing.T) {
 	}
 }
 
+func TestMesonPythonBuildBackendSignal(t *testing.T) {
+	dir := t.TempDir()
+	writeProjectFile(t, dir, "pyproject.toml", "[build-system]\nrequires = ['meson-python']\nbuild-backend = 'mesonpy'\n")
+
+	r := runOn(t, dir)
+	assertToolDetectedWithConfidence(t, r, "native_extension", "meson-python", brief.ConfidenceHigh)
+}
+
 func TestPythonRustNativeExtensionSignals(t *testing.T) {
 	tests := []struct {
 		name    string

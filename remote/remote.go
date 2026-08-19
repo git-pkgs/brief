@@ -4,6 +4,7 @@ package remote
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -28,7 +29,7 @@ type Options struct {
 	Keep  bool   // don't delete temp dir after scanning
 	Depth int    // git clone depth (0 = full clone, -1 or unset = default shallow)
 	Dir   string // directory to clone into (empty = temp dir)
-	Cache string // persistent clone cache directory (empty = no cache)
+	Cache string // persistent shallow clone cache directory (empty = no cache)
 }
 
 // Resolve takes a source string and returns a local directory to scan.
@@ -185,6 +186,12 @@ func cloneInto(ctx context.Context, url, dir string, opts Options) error {
 		return execClone(ctx, url, dir, opts.Depth)
 	}
 	if opts.Cache != "" {
+		if opts.Dir != "" {
+			return errors.New("clone cache cannot be combined with an explicit clone directory")
+		}
+		if opts.Depth == 0 {
+			return errors.New("clone cache does not support full clones (depth 0)")
+		}
 		if err := prepareCloneCache(ctx, opts.Cache, url, dir); err != nil {
 			return fmt.Errorf("preparing clone cache: %w", err)
 		}

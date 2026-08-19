@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -163,7 +164,7 @@ func TestHTTPSCloneCache(t *testing.T) {
 		context.Background(),
 		"https://example.com/owner/repo",
 		"/tmp/brief-checkout",
-		Options{Cache: "/tmp/brief-cache"},
+		Options{Depth: 1, Cache: "/tmp/brief-cache"},
 	)
 	if err != nil {
 		t.Fatalf("cloneInto: %v", err)
@@ -184,10 +185,58 @@ func TestHTTPSCloneCacheError(t *testing.T) {
 		context.Background(),
 		"https://example.com/owner/repo",
 		"/tmp/brief-checkout",
-		Options{Cache: "/tmp/brief-cache"},
+		Options{Depth: 1, Cache: "/tmp/brief-cache"},
 	)
 	if err == nil || !strings.Contains(err.Error(), "preparing clone cache: cache failed") {
 		t.Fatalf("cloneInto error = %v", err)
+	}
+}
+
+func TestHTTPSCloneCacheRejectsFullClone(t *testing.T) {
+	originalCache := prepareCloneCache
+	t.Cleanup(func() { prepareCloneCache = originalCache })
+
+	prepareCloneCache = func(context.Context, string, string, string) error {
+		return errors.New("unexpected cache preparation")
+	}
+	err := cloneInto(
+		context.Background(),
+		"https://example.com/owner/repo",
+		"/tmp/brief-checkout",
+		Options{Depth: 0, Cache: "/tmp/brief-cache"},
+	)
+	if err == nil || !strings.Contains(err.Error(), "clone cache does not support full clones (depth 0)") {
+		t.Fatalf("cloneInto error = %v", err)
+	}
+}
+
+func TestHTTPSCloneCacheRejectsExplicitDirectoryWithoutRemovingIt(t *testing.T) {
+	originalCache := prepareCloneCache
+	t.Cleanup(func() { prepareCloneCache = originalCache })
+
+	prepareCloneCache = func(context.Context, string, string, string) error {
+		return errors.New("unexpected cache preparation")
+	}
+	dir := t.TempDir()
+	sentinel := filepath.Join(dir, "keep.txt")
+	if err := os.WriteFile(sentinel, []byte("keep"), 0o644); err != nil {
+		t.Fatalf("write sentinel: %v", err)
+	}
+
+	_, err := Resolve(
+		context.Background(),
+		"https://example.com/owner/repo",
+		Options{Depth: 1, Dir: dir, Cache: t.TempDir()},
+	)
+	if err == nil || !strings.Contains(err.Error(), "clone cache cannot be combined with an explicit clone directory") {
+		t.Fatalf("Resolve error = %v", err)
+	}
+	content, err := os.ReadFile(sentinel)
+	if err != nil {
+		t.Fatalf("read sentinel: %v", err)
+	}
+	if string(content) != "keep" {
+		t.Fatalf("sentinel content = %q", content)
 	}
 }
 

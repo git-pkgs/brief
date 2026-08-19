@@ -29,7 +29,7 @@ func cmdOutline(args []string) {
 	keep := fs.Bool("keep", false, "Keep downloaded remote source")
 	depth := fs.Int("depth", -1, "Git clone depth (0 = full clone, default shallow)")
 	dir := fs.String("dir", "", "Directory to clone remote source into")
-	cache := fs.String("cache", "", "Persistent cache directory for remote sources")
+	cache := fs.String("cache", "", "Persistent shallow cache for HTTPS remotes (incompatible with -depth 0 and -dir)")
 	_ = fs.Parse(args)
 
 	path := "."

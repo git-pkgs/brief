@@ -28,9 +28,11 @@ import (
 )
 
 const (
-	extScanFileLimit = 10000  // max files to visit when collecting extensions
-	microsPerMS      = 1000.0 // microseconds per millisecond
-	globSplitParts   = 2      // expected parts when splitting "**/" patterns
+	extScanFileLimit  = 10000  // max files to visit when collecting extensions
+	microsPerMS       = 1000.0 // microseconds per millisecond
+	globSplitParts    = 2      // expected parts when splitting "**/" patterns
+	cargoManifestFile = "Cargo.toml"
+	cargoLockFile     = "Cargo.lock"
 
 	rankHigh   = 3
 	rankMedium = 2
@@ -51,16 +53,21 @@ type Engine struct {
 	detectedEcosystems map[string]bool // ecosystems whose language was detected
 
 	// Lazily populated caches
-	tracked     map[string]bool // git-tracked files relative to Root, nil when TrackedOnly is off
-	trackedDirs map[string]bool // directories that contain at least one tracked file
-	fileExts    map[string]int  // cached file extension counts in the project
-	dirCache    map[string][]string
-	depsLoaded  bool
-	runtimeDeps map[string]bool // all runtime/unscoped dependency names
-	devDeps     map[string]bool // development/test/build dependency names
-	allDeps     map[string]bool // union of both
-	parsedDeps  []brief.DepInfo // direct dependencies with PURLs
-	manifests   []brief.ManifestInfo
+	tracked             map[string]bool // git-tracked files relative to Root, nil when TrackedOnly is off
+	trackedDirs         map[string]bool // directories that contain at least one tracked file
+	fileExts            map[string]int  // cached file extension counts in the project
+	dirCache            map[string][]string
+	depsLoaded          bool
+	runtimeDeps         map[string]bool // all runtime/unscoped dependency names
+	devDeps             map[string]bool // development/test/build dependency names
+	allDeps             map[string]bool // union of both
+	parsedDeps          []brief.DepInfo // direct dependencies with PURLs
+	manifests           []brief.ManifestInfo
+	manifestPathsCache  []string
+	manifestPathsLoaded bool
+	cargoRoot           string // relative directory containing the primary Cargo.toml
+	cargoFound          bool
+	cargoLoaded         bool
 }
 
 // sortLanguagesByFileCount reorders detected languages so the one with
@@ -413,8 +420,10 @@ func (e *Engine) detectCategory(category string) []brief.Detection {
 
 		d.ConfigFiles = e.findExisting(tool.Config.Files)
 
-		if tool.Config.Lockfile != "" && e.exists(tool.Config.Lockfile) {
-			d.Lockfile = tool.Config.Lockfile
+		if tool.Config.Lockfile != "" {
+			if lockfiles := e.findExisting([]string{tool.Config.Lockfile}); len(lockfiles) > 0 {
+				d.Lockfile = lockfiles[0]
+			}
 		}
 
 		detections = append(detections, d)
@@ -488,8 +497,33 @@ func (e *Engine) exists(pattern string) bool {
 		return e.globMatches(pattern, false)
 	}
 
-	_, err := os.Stat(filepath.Join(e.Root, pattern))
-	return err == nil && e.isTracked(filepath.FromSlash(pattern))
+	for _, candidate := range e.rootCandidates(pattern) {
+		if e.exactFileExists(candidate) {
+			return true
+		}
+	}
+	return false
+}
+
+func (e *Engine) exactFileExists(file string) bool {
+	info, err := os.Stat(filepath.Join(e.Root, filepath.FromSlash(file)))
+	return err == nil && !info.IsDir() && e.isTracked(filepath.FromSlash(file))
+}
+
+func (e *Engine) rootCandidates(file string) []string {
+	file = filepath.ToSlash(filepath.Clean(file))
+	candidates := []string{file}
+	switch file {
+	case cargoManifestFile, cargoLockFile, ".cargo/config.toml":
+	default:
+		return candidates
+	}
+	root, found := e.cargoManifestRoot()
+	if !found || root == "" {
+		return candidates
+	}
+	candidates = append(candidates, path.Join(root, file))
+	return candidates
 }
 
 // globMatches reports whether a root-level glob pattern matches at least one
@@ -655,11 +689,22 @@ func (e *Engine) contains(file string, patterns []string) bool {
 		return e.globContains(file, patterns)
 	}
 
-	data, err := e.safeReadFile(file)
-	if err != nil {
-		return false
+	files := []string{file}
+	if filepath.ToSlash(file) == cargoManifestFile {
+		for _, manifest := range e.manifestPaths() {
+			if manifest != file && path.Base(filepath.ToSlash(manifest)) == cargoManifestFile {
+				files = append(files, manifest)
+			}
+		}
 	}
-	return containsAny(string(data), patterns)
+
+	for _, candidate := range files {
+		data, err := e.safeReadFile(candidate)
+		if err == nil && containsAny(string(data), patterns) {
+			return true
+		}
+	}
+	return false
 }
 
 func (e *Engine) globContains(pattern string, contentPatterns []string) bool {
@@ -809,6 +854,11 @@ func (e *Engine) loadDeps() {
 
 // manifestPaths returns root manifest files plus workspace member manifests.
 func (e *Engine) manifestPaths() []string {
+	if e.manifestPathsLoaded {
+		return e.manifestPathsCache
+	}
+	e.manifestPathsLoaded = true
+
 	var paths []string
 	seen := make(map[string]bool)
 	add := func(p string) {
@@ -826,6 +876,10 @@ func (e *Engine) manifestPaths() []string {
 	for _, mf := range e.KB.ManifestFiles {
 		add(mf)
 	}
+	if cargoRoot, found := e.cargoManifestRoot(); found && cargoRoot != "" {
+		add(path.Join(cargoRoot, cargoManifestFile))
+		add(path.Join(cargoRoot, cargoLockFile))
+	}
 
 	// GitHub Actions workflow files
 	wfMatches, _ := filepath.Glob(filepath.Join(e.Root, ".github/workflows/*.yml"))
@@ -842,11 +896,16 @@ func (e *Engine) manifestPaths() []string {
 	e.addPackageWorkspaceManifests(add)
 	e.addPnpmWorkspaceManifests(add)
 
+	e.manifestPathsCache = paths
 	return paths
 }
 
 func (e *Engine) addCargoWorkspaceManifests(add func(string)) {
-	data, err := e.safeReadFile("Cargo.toml")
+	cargoRoot, found := e.cargoManifestRoot()
+	if !found {
+		return
+	}
+	data, err := e.safeReadFile(path.Join(cargoRoot, cargoManifestFile))
 	if err != nil {
 		return
 	}
@@ -861,19 +920,76 @@ func (e *Engine) addCargoWorkspaceManifests(add func(string)) {
 		return
 	}
 
-	excluded := e.workspacePatternSet(root.Workspace.Exclude)
+	excluded := e.workspacePatternSetFrom(cargoRoot, root.Workspace.Exclude)
 	for _, member := range root.Workspace.Members {
-		for _, dir := range e.expandWorkspacePattern(member) {
+		for _, dir := range e.expandWorkspacePatternFrom(cargoRoot, member) {
 			if excluded[dir] {
 				continue
 			}
-			add(path.Join(dir, "Cargo.toml"))
-			lockfile := path.Join(dir, "Cargo.lock")
-			if e.exists(lockfile) {
+			add(path.Join(dir, cargoManifestFile))
+			lockfile := path.Join(dir, cargoLockFile)
+			if e.exactFileExists(lockfile) {
 				add(lockfile)
 			}
 		}
 	}
+}
+
+// cargoManifestRoot returns the root Cargo manifest directory. When the
+// repository root has no Cargo.toml but contains Rust source, it finds the
+// shallowest Cargo.toml visible to the configured scan.
+func (e *Engine) cargoManifestRoot() (string, bool) {
+	if e.cargoLoaded {
+		return e.cargoRoot, e.cargoFound
+	}
+	e.cargoLoaded = true
+
+	if e.exactFileExists(cargoManifestFile) {
+		e.cargoFound = true
+		return "", true
+	}
+
+	e.loadFileExts()
+	if e.fileExts[".rs"] == 0 {
+		return "", false
+	}
+
+	bestDepth := 0
+	_ = filepath.WalkDir(e.Root, func(filePath string, d os.DirEntry, err error) error {
+		if err != nil {
+			return nil
+		}
+		rel, err := filepath.Rel(e.Root, filePath)
+		if err != nil {
+			return nil
+		}
+		if d.IsDir() {
+			if rel != "." && e.shouldSkipDir(d.Name()) {
+				return filepath.SkipDir
+			}
+			if e.ScanDepth > 0 && rel != "." &&
+				strings.Count(rel, string(filepath.Separator))+1 > e.ScanDepth {
+				return filepath.SkipDir
+			}
+			if !e.isTracked(rel) {
+				return filepath.SkipDir
+			}
+			return nil
+		}
+		if d.Name() != cargoManifestFile || d.Type()&os.ModeSymlink != 0 || !e.isTracked(rel) {
+			return nil
+		}
+		dir := filepath.ToSlash(filepath.Dir(rel))
+		depth := strings.Count(dir, "/") + 1
+		if !e.cargoFound || depth < bestDepth || (depth == bestDepth && dir < e.cargoRoot) {
+			e.cargoRoot = dir
+			e.cargoFound = true
+			bestDepth = depth
+		}
+		return nil
+	})
+
+	return e.cargoRoot, e.cargoFound
 }
 
 func (e *Engine) addGoWorkspaceManifests(add func(string)) {
@@ -1024,9 +1140,13 @@ func cleanWorkspaceMember(member string) string {
 }
 
 func (e *Engine) workspacePatternSet(patterns []string) map[string]bool {
+	return e.workspacePatternSetFrom("", patterns)
+}
+
+func (e *Engine) workspacePatternSetFrom(base string, patterns []string) map[string]bool {
 	set := make(map[string]bool)
 	for _, pattern := range patterns {
-		for _, dir := range e.expandWorkspacePattern(pattern) {
+		for _, dir := range e.expandWorkspacePatternFrom(base, pattern) {
 			set[dir] = true
 		}
 	}
@@ -1034,9 +1154,16 @@ func (e *Engine) workspacePatternSet(patterns []string) map[string]bool {
 }
 
 func (e *Engine) expandWorkspacePattern(pattern string) []string {
+	return e.expandWorkspacePatternFrom("", pattern)
+}
+
+func (e *Engine) expandWorkspacePatternFrom(base, pattern string) []string {
 	pattern = cleanWorkspaceMember(pattern)
 	if pattern == "." || pattern == "" || strings.HasPrefix(pattern, "../") || filepath.IsAbs(pattern) {
 		return nil
+	}
+	if base != "" {
+		pattern = path.Join(base, pattern)
 	}
 	// filepath.Glob does not implement recursive doublestar matching: `**`
 	// behaves like `*`, so workspace patterns such as packages/** only match
@@ -1086,30 +1213,32 @@ func (e *Engine) hasDependency(tool *kb.ToolDef) bool {
 // hasKey checks if a structured file (JSON, TOML) contains any of the given
 // dot-separated key paths (e.g. "scripts.test" in package.json).
 func (e *Engine) hasKey(file string, keys []string) bool {
-	data, err := e.safeReadFile(file)
-	if err != nil {
-		return false
-	}
-
-	ext := filepath.Ext(file)
-	var parsed map[string]any
-
-	switch ext {
-	case ".json":
-		if err := json.Unmarshal(data, &parsed); err != nil {
-			return false
+	for _, candidate := range e.rootCandidates(file) {
+		data, err := e.safeReadFile(candidate)
+		if err != nil {
+			continue
 		}
-	case ".toml":
-		if _, err := toml.Decode(string(data), &parsed); err != nil {
-			return false
-		}
-	default:
-		return false
-	}
 
-	for _, key := range keys {
-		if lookupKeyPath(parsed, key) {
-			return true
+		ext := filepath.Ext(candidate)
+		var parsed map[string]any
+
+		switch ext {
+		case ".json":
+			if err := json.Unmarshal(data, &parsed); err != nil {
+				continue
+			}
+		case ".toml":
+			if _, err := toml.Decode(string(data), &parsed); err != nil {
+				continue
+			}
+		default:
+			continue
+		}
+
+		for _, key := range keys {
+			if lookupKeyPath(parsed, key) {
+				return true
+			}
 		}
 	}
 	return false
@@ -1137,8 +1266,16 @@ func lookupKeyPath(m map[string]any, path string) bool {
 func (e *Engine) findExisting(paths []string) []string {
 	var found []string
 	for _, p := range paths {
-		if e.exists(p) {
-			found = append(found, p)
+		if kb.HasGlobPattern(p) || strings.HasSuffix(p, "/") {
+			if e.exists(p) {
+				found = append(found, p)
+			}
+			continue
+		}
+		for _, candidate := range e.rootCandidates(p) {
+			if e.exactFileExists(candidate) {
+				found = append(found, candidate)
+			}
 		}
 	}
 	return found

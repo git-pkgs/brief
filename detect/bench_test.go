@@ -96,3 +96,15 @@ func BenchmarkSelfDetect(b *testing.B) {
 		}
 	}
 }
+
+func BenchmarkNestedCargoProject(b *testing.B) {
+	knowledgeBase := loadKBForBench(b)
+	b.ResetTimer()
+	for b.Loop() {
+		engine := New(knowledgeBase, "../testdata/react-compiler-project")
+		_, err := engine.Run()
+		if err != nil {
+			b.Fatal(err)
+		}
+	}
+}

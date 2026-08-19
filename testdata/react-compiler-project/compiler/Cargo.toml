@@ -1,0 +1,3 @@
+[workspace]
+members = ["packages/babel-plugin-react-compiler-rust/native"]
+resolver = "2"

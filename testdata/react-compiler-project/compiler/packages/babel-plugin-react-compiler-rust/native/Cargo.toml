@@ -1,0 +1,7 @@
+[package]
+name = "react-compiler-native"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+napi = "3"

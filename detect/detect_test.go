@@ -731,6 +731,41 @@ checksum = "0000000000000000000000000000000000000000000000000000000000000000"
 	}
 }
 
+func TestCargoWorkspaceMemberFileContains(t *testing.T) {
+	r := runOn(t, "../testdata/cargo-workspace-ruby-project")
+	assertToolDetectedWithConfidence(t, r, "library", "Magnus", brief.ConfidenceHigh)
+}
+
+func TestNestedCargoWorkspace(t *testing.T) {
+	r := runOn(t, "../testdata/react-compiler-project")
+	if !slices.Contains(packageManagerNames(r), "Cargo") {
+		t.Fatalf("expected nested Cargo package manager, got %v", packageManagerNames(r))
+	}
+	assertToolDetected(t, r, "monorepo", "Cargo workspaces")
+	assertToolDetectedWithConfidence(t, r, "native_extension", "napi-rs", brief.ConfidenceHigh)
+
+	var cargo brief.Detection
+	for _, pm := range r.PackageManagers {
+		if pm.Name == "Cargo" {
+			cargo = pm
+			break
+		}
+	}
+	if !slices.Contains(cargo.ConfigFiles, "compiler/Cargo.toml") {
+		t.Errorf("Cargo config files should contain the nested root, got %v", cargo.ConfigFiles)
+	}
+	for _, want := range []string{
+		"compiler/Cargo.toml",
+		"compiler/packages/babel-plugin-react-compiler-rust/native/Cargo.toml",
+	} {
+		if !slices.ContainsFunc(r.Manifests, func(manifest brief.ManifestInfo) bool {
+			return manifest.Ecosystem == "cargo" && manifest.Path == want && manifest.Kind == "manifest"
+		}) {
+			t.Errorf("manifests should contain Cargo manifest %q, got %+v", want, r.Manifests)
+		}
+	}
+}
+
 func TestCargoLockfileDependencies(t *testing.T) {
 	dir := t.TempDir()
 	writeFile(t, dir, "Cargo.toml", `[package]

@@ -1,0 +1,7 @@
+[build-system]
+requires = ["meson-python"]
+build-backend = "mesonpy"
+
+[project]
+name = "meson-python-rust-project"
+version = "0.1.0"

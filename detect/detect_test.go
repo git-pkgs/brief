@@ -1116,6 +1116,7 @@ func TestPythonRustNativeExtensionProjects(t *testing.T) {
 		tool    string
 	}{
 		{name: "Maturin", fixture: "../testdata/maturin-project", tool: "Maturin"},
+		{name: "meson-python", fixture: "../testdata/meson-python-rust-project", tool: "meson-python"},
 		{name: "setuptools-rust", fixture: "../testdata/setuptools-rust-project", tool: "setuptools-rust"},
 	}
 

@@ -1,0 +1,23 @@
+[tool]
+name = "meson-python"
+category = "native_extension"
+homepage = "https://mesonbuild.com/meson-python/"
+docs = "https://mesonbuild.com/meson-python/"
+repo = "https://github.com/mesonbuild/meson-python"
+description = "PEP 517 build backend for Python packages with native extensions built by Meson"
+
+[detect]
+ecosystems = ["python"]
+
+[detect.file_contains]
+"pyproject.toml" = ["build-backend = \"mesonpy\"", "build-backend=\"mesonpy\""]
+
+[commands]
+run = "python -m build"
+alternatives = ["pip install -e ."]
+
+[config]
+files = ["pyproject.toml", "Cargo.toml"]
+
+[taxonomy]
+role = ["native-extension"]

@@ -47,6 +47,7 @@ Or download a binary from [releases](https://github.com/git-pkgs/brief/releases)
 ```
 brief [flags] [path | url]        Detect project toolchain
 brief diff [flags] [ref1] [ref2]  Detect only what changed between refs
+brief inspect [flags] <artifact>  Inspect native objects in a binary or archive
 brief missing [flags] [path]      Show recommended tooling gaps
 brief threat-model [flags] [path] Threat categories implied by detected stack
 brief sinks [flags] [path]        Dangerous functions in detected tools
@@ -109,6 +110,18 @@ Lines:       9295 code  397 files (scc)
 ```
 
 Use `--verbose` to include homepage, docs, and repo links for each detected tool.
+
+## Inspect
+
+`brief inspect` reports the format, architecture, linked libraries, and build metadata of native objects in binaries and package archives. It accepts ELF, Mach-O, PE, zip, tar, gzip, bzip2, and xz inputs, including wheels, gems, and JARs.
+
+```
+brief inspect build/tool
+brief inspect dist/package.whl
+brief inspect --json package.gem
+```
+
+Passing a supported local artifact directly selects the same inspection path, so `brief dist/package.whl` works too. Archive inspection rejects more than 100,000 entries or 512 MiB of input or extracted content.
 
 ## Diff
 

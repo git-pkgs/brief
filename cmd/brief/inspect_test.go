@@ -4,6 +4,7 @@ import (
 	"archive/tar"
 	"archive/zip"
 	"bytes"
+	"compress/gzip"
 	stdbin "encoding/binary"
 	"encoding/json"
 	"errors"
@@ -287,6 +288,50 @@ func TestArchivePreflightLimits(t *testing.T) {
 			t.Fatalf("preflightArtifactArchive error = %v, want errArchiveLimit", err)
 		}
 	})
+
+	t.Run("gem nested tar preflight", func(t *testing.T) {
+		archive := writeGem(t, map[string]string{"a": "one", "b": "two"})
+		f, err := os.Open(archive)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer func() { _ = f.Close() }()
+		if err := preflightArtifactArchive(f, archive, magic.FormatTAR, 1, 1<<20); !errors.Is(err, errArchiveLimit) {
+			t.Fatalf("preflightArtifactArchive error = %v, want errArchiveLimit", err)
+		}
+	})
+}
+
+func TestReadZIP64DirectoryEnd(t *testing.T) {
+	data := make([]byte, zipDirectory64EndLen+zipDirectory64LocLen+zipDirectoryEndLen)
+
+	zip64End := data[:zipDirectory64EndLen]
+	stdbin.LittleEndian.PutUint32(zip64End[:4], zipDirectory64EndSignature)
+	stdbin.LittleEndian.PutUint64(zip64End[4:12], zipDirectory64EndLen-12)
+	stdbin.LittleEndian.PutUint64(zip64End[24:32], 2)
+	stdbin.LittleEndian.PutUint64(zip64End[32:40], 2)
+	stdbin.LittleEndian.PutUint64(zip64End[40:48], 123)
+	stdbin.LittleEndian.PutUint64(zip64End[48:56], 456)
+
+	locator := data[zipDirectory64EndLen : zipDirectory64EndLen+zipDirectory64LocLen]
+	stdbin.LittleEndian.PutUint32(locator[:4], zipDirectory64LocSignature)
+	stdbin.LittleEndian.PutUint64(locator[8:16], 0)
+	stdbin.LittleEndian.PutUint32(locator[16:20], 1)
+
+	classicEnd := data[len(data)-zipDirectoryEndLen:]
+	stdbin.LittleEndian.PutUint32(classicEnd[:4], zipDirectoryEndSignature)
+	stdbin.LittleEndian.PutUint16(classicEnd[8:10], zipUint16Max)
+	stdbin.LittleEndian.PutUint16(classicEnd[10:12], zipUint16Max)
+	stdbin.LittleEndian.PutUint32(classicEnd[12:16], zipUint32Max)
+	stdbin.LittleEndian.PutUint32(classicEnd[16:20], zipUint32Max)
+
+	end, err := readZIPDirectoryEnd(bytes.NewReader(data), int64(len(data)))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if end.offset != 0 || end.directoryRecords != 2 || end.directorySize != 123 || end.directoryOffset != 456 {
+		t.Fatalf("readZIPDirectoryEnd = %+v, want offset 0, 2 records, size 123, offset 456", end)
+	}
 }
 
 func TestXZArchivePreflight(t *testing.T) {
@@ -578,6 +623,50 @@ func writeTar(tb testing.TB, entries map[string]string) string {
 		}
 	}
 	if err := tw.Close(); err != nil {
+		tb.Fatal(err)
+	}
+	if err := f.Close(); err != nil {
+		tb.Fatal(err)
+	}
+	return path
+}
+
+func writeGem(tb testing.TB, entries map[string]string) string {
+	tb.Helper()
+
+	var data bytes.Buffer
+	gz := gzip.NewWriter(&data)
+	tw := tar.NewWriter(gz)
+	for name, content := range entries {
+		header := &tar.Header{Name: name, Mode: 0o644, Size: int64(len(content))}
+		if err := tw.WriteHeader(header); err != nil {
+			tb.Fatal(err)
+		}
+		if _, err := io.WriteString(tw, content); err != nil {
+			tb.Fatal(err)
+		}
+	}
+	if err := tw.Close(); err != nil {
+		tb.Fatal(err)
+	}
+	if err := gz.Close(); err != nil {
+		tb.Fatal(err)
+	}
+
+	path := filepath.Join(tb.TempDir(), "fixture.gem")
+	f, err := os.Create(path)
+	if err != nil {
+		tb.Fatal(err)
+	}
+	outer := tar.NewWriter(f)
+	header := &tar.Header{Name: "data.tar.gz", Mode: 0o644, Size: int64(data.Len())}
+	if err := outer.WriteHeader(header); err != nil {
+		tb.Fatal(err)
+	}
+	if _, err := data.WriteTo(outer); err != nil {
+		tb.Fatal(err)
+	}
+	if err := outer.Close(); err != nil {
 		tb.Fatal(err)
 	}
 	if err := f.Close(); err != nil {

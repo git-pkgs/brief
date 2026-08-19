@@ -14,6 +14,8 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/ecosyste-ms/ecosystems-go v0.4.0 h1:5A+zF+XWT8sYYYjlc2/tI1SmiDGzbHLyT9CapVc5dGA=
 github.com/ecosyste-ms/ecosystems-go v0.4.0/go.mod h1:FVswCrp3DQkur1HjVqfDF/gYrDSEmiFflntcB1G0DbA=
+github.com/git-pkgs/archives v0.5.0 h1:QdowC1jTOSbEOKTYGqVt8ZjIr+yJzy7cmLNWcLPj9Y8=
+github.com/git-pkgs/archives v0.5.0/go.mod h1:tfio0OIuPKEBKHs/UCL5XBUvYmKpnvtnba2iDlfSd6g=
 github.com/git-pkgs/enrichment v0.6.5 h1:U0SPzWVGoK4R8TwojCTASBRTEV+QSs0IitdLmzI/g/k=
 github.com/git-pkgs/enrichment v0.6.5/go.mod h1:Vt2PLMvWPOio9DLyC8Gdhh1yxsHwcRcG+L2Kkc9+kak=
 github.com/git-pkgs/forge v0.8.0 h1:rfG6YujMGEN27Sj5Bd2cYIA1XR8tYd0fU5RdsvSunC4=

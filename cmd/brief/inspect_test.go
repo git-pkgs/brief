@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"hash/crc32"
 	"io"
+	"io/fs"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -424,6 +425,25 @@ func TestArchiveReaderLimits(t *testing.T) {
 			t.Fatalf("ExtractAll error = %v, want errArchiveLimit", err)
 		}
 	})
+}
+
+func TestAccessibleArchiveEntries(t *testing.T) {
+	entries := []archives.FileInfo{
+		{Path: "locked", IsDir: true, Mode: 0, HasMode: true},
+		{Path: "default", IsDir: true},
+		{Path: "file", Mode: 0, HasMode: true},
+	}
+	accessible := accessibleArchiveEntries(entries)
+
+	if got := fs.FileMode(accessible[0].Mode).Perm(); got != 0o700 {
+		t.Fatalf("locked directory mode = %04o, want 0700", got)
+	}
+	if accessible[1].Mode != 0 || accessible[2].Mode != 0 {
+		t.Fatalf("non-recorded or file modes changed: %+v", accessible)
+	}
+	if entries[0].Mode != 0 {
+		t.Fatalf("input entry mode changed to %04o", entries[0].Mode)
+	}
 }
 
 func TestInspectPathNotAnArtifact(t *testing.T) {

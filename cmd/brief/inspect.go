@@ -40,6 +40,7 @@ const (
 	maxArchiveEntries        = 100_000
 	maxArchiveInputBytes     = 512 << 20
 	maxArchiveExtractedBytes = 512 << 20
+	archiveDirectoryAccess   = 0o700
 
 	peHeaderOffsetAt = 0x3c
 	peSignatureLen   = 4
@@ -556,12 +557,25 @@ func newArchiveLimitReader(
 		}
 		total += entry.Size
 	}
+	entries = accessibleArchiveEntries(entries)
 
 	return &archiveLimitReader{
 		Reader:    r,
 		entries:   entries,
 		remaining: maxBytes,
 	}, nil
+}
+
+func accessibleArchiveEntries(entries []archives.FileInfo) []archives.FileInfo {
+	accessible := append([]archives.FileInfo(nil), entries...)
+	for i := range accessible {
+		entry := &accessible[i]
+		if !entry.IsDir || !entry.HasMode {
+			continue
+		}
+		entry.Mode = uint32(fs.FileMode(entry.Mode) | archiveDirectoryAccess)
+	}
+	return accessible
 }
 
 func checkDuplicateArchivePaths(entries []archives.FileInfo, caseInsensitive bool) error {

@@ -74,6 +74,8 @@ Remote sources are shallow-cloned by default. Use `--depth 0` for a full clone, 
 
 JSON when piped, human-readable on a TTY. Force either with `--json` or `--human`. Use `--category test` to filter to a single category.
 
+JSON reports include a `manifests` array with the path, kind, and package ecosystem of every parsed manifest or lockfile. The `dependencies` array keeps direct constraints from manifests and adds pinned transitive packages from lockfiles with `direct` set to `false`.
+
 ```
 brief dev — /home/user/myproject
 

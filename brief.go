@@ -216,6 +216,13 @@ type DepInfo struct {
 	Direct  bool   `json:"direct"`
 }
 
+// ManifestInfo describes a parsed project manifest or lockfile.
+type ManifestInfo struct {
+	Ecosystem string `json:"ecosystem"`
+	Path      string `json:"path"`
+	Kind      string `json:"kind"`
+}
+
 // EnrichmentInfo holds metadata fetched from external sources about the project itself.
 type EnrichmentInfo struct {
 	Repo       *RepoEnrichment        `json:"repo,omitempty"`
@@ -331,6 +338,7 @@ type Report struct {
 	Skills          []Skill                `json:"skills,omitempty"`
 	Git             *GitInfo               `json:"git,omitempty"`
 	Lines           *LineCount             `json:"lines,omitempty"`
+	Manifests       []ManifestInfo         `json:"manifests,omitempty"`
 	Dependencies    []DepInfo              `json:"dependencies,omitempty"`
 	Enrichment      *EnrichmentInfo        `json:"enrichment,omitempty"`
 	Stats           Stats                  `json:"stats"`

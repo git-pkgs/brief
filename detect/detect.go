@@ -60,6 +60,7 @@ type Engine struct {
 	devDeps     map[string]bool // development/test/build dependency names
 	allDeps     map[string]bool // union of both
 	parsedDeps  []brief.DepInfo // direct dependencies with PURLs
+	manifests   []brief.ManifestInfo
 }
 
 // sortLanguagesByFileCount reorders detected languages so the one with
@@ -238,6 +239,7 @@ func (e *Engine) Run() (*brief.Report, error) {
 
 	// Expose parsed dependencies (loadDeps was called lazily during tool matching)
 	e.loadDeps()
+	report.Manifests = e.manifests
 	report.Dependencies = e.parsedDeps
 
 	elapsed := time.Since(start)
@@ -761,6 +763,11 @@ func (e *Engine) loadDeps() {
 		if err != nil {
 			continue
 		}
+		e.manifests = append(e.manifests, brief.ManifestInfo{
+			Ecosystem: result.Ecosystem,
+			Path:      filepath.ToSlash(mf),
+			Kind:      string(result.Kind),
+		})
 
 		for _, dep := range result.Dependencies {
 			e.allDeps[dep.Name] = true

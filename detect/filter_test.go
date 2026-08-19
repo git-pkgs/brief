@@ -1,6 +1,7 @@
 package detect
 
 import (
+	"slices"
 	"testing"
 
 	"github.com/git-pkgs/brief"
@@ -214,6 +215,24 @@ func TestFilterByChangedFiles_PackageManagers(t *testing.T) {
 	}
 	if !foundGoMod {
 		t.Error("expected Go Modules when go.mod changed")
+	}
+	if len(filtered.Manifests) == 0 {
+		t.Error("expected manifests when a manifest changed")
+	}
+}
+
+func TestFilterByChangedFiles_NestedManifest(t *testing.T) {
+	knowledgeBase := loadKB(t)
+	r := &brief.Report{
+		Tools: make(map[string][]brief.Detection),
+		Manifests: []brief.ManifestInfo{
+			{Ecosystem: "cargo", Path: "compiler/Cargo.toml", Kind: "manifest"},
+		},
+	}
+
+	filtered := FilterByChangedFiles(r, knowledgeBase, []string{"compiler/Cargo.toml"})
+	if !slices.Equal(filtered.Manifests, r.Manifests) {
+		t.Errorf("nested manifest change should preserve manifests, got %+v", filtered.Manifests)
 	}
 }
 

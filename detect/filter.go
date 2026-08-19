@@ -31,9 +31,13 @@ func newFilterContext(knowledgeBase *kb.KnowledgeBase, changedFiles []string) *f
 		}
 	}
 
-	manifestChanged := false
+	manifestNames := make(map[string]bool, len(knowledgeBase.ManifestFiles))
 	for _, mf := range knowledgeBase.ManifestFiles {
-		if changed[mf] {
+		manifestNames[path.Base(filepath.ToSlash(mf))] = true
+	}
+	manifestChanged := false
+	for file := range changed {
+		if manifestNames[path.Base(filepath.ToSlash(file))] {
 			manifestChanged = true
 			break
 		}
@@ -73,6 +77,7 @@ func FilterByChangedFiles(r *brief.Report, knowledgeBase *kb.KnowledgeBase, chan
 	filtered.Skills = fc.filterSkills(r.Skills, changedFiles)
 
 	if fc.manifestChanged {
+		filtered.Manifests = r.Manifests
 		filtered.Dependencies = r.Dependencies
 	}
 

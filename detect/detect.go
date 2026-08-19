@@ -868,6 +868,10 @@ func (e *Engine) addCargoWorkspaceManifests(add func(string)) {
 				continue
 			}
 			add(path.Join(dir, "Cargo.toml"))
+			lockfile := path.Join(dir, "Cargo.lock")
+			if e.exists(lockfile) {
+				add(lockfile)
+			}
 		}
 	}
 }

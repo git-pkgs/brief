@@ -766,6 +766,18 @@ func TestNestedCargoWorkspace(t *testing.T) {
 	}
 }
 
+func TestCargoManifestRootPrefersShallowest(t *testing.T) {
+	dir := t.TempDir()
+	writeFile(t, dir, "a/deep/Cargo.toml", "[package]\nname = \"deep\"\nversion = \"0.1.0\"\n")
+	writeFile(t, dir, "a/deep/src/lib.rs", "pub fn deep() {}\n")
+	writeFile(t, dir, "z/Cargo.toml", "[package]\nname = \"shallow\"\nversion = \"0.1.0\"\n")
+
+	root, found := New(loadKB(t), dir).cargoManifestRoot()
+	if !found || root != "z" {
+		t.Fatalf("cargoManifestRoot = %q, %v, want z, true", root, found)
+	}
+}
+
 func TestCargoLockfileDependencies(t *testing.T) {
 	dir := t.TempDir()
 	writeFile(t, dir, "Cargo.toml", `[package]

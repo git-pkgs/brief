@@ -955,6 +955,7 @@ func (e *Engine) cargoManifestRoot() (string, bool) {
 	}
 
 	bestDepth := 0
+	errShallowest := errors.New("found shallowest Cargo manifest")
 	_ = filepath.WalkDir(e.Root, func(filePath string, d os.DirEntry, err error) error {
 		if err != nil {
 			return nil
@@ -985,6 +986,9 @@ func (e *Engine) cargoManifestRoot() (string, bool) {
 			e.cargoRoot = dir
 			e.cargoFound = true
 			bestDepth = depth
+			if depth == 1 {
+				return errShallowest
+			}
 		}
 		return nil
 	})

@@ -1,0 +1,16 @@
+[tool]
+name = "FreeBSD pkg"
+category = "build"
+homepage = "https://github.com/freebsd/pkg"
+docs = "https://man.freebsd.org/cgi/man.cgi?query=pkg-create&sektion=8"
+repo = "https://github.com/freebsd/pkg"
+description = "Creates and describes binary packages for FreeBSD"
+
+[detect]
+files = ["+COMPACT_MANIFEST"]
+
+[commands]
+run = "pkg create"
+
+[taxonomy]
+role = ["build-tool"]

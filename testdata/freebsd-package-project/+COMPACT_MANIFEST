@@ -1,0 +1,6 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "origin": "devel/example",
+  "comment": "Example package"
+}

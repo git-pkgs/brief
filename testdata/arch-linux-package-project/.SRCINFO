@@ -1,0 +1,7 @@
+pkgbase = example
+	pkgdesc = Example package
+	pkgver = 1.0.0
+	pkgrel = 1
+	arch = any
+
+pkgname = example

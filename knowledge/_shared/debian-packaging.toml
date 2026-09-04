@@ -1,0 +1,20 @@
+[tool]
+name = "Debian Packaging"
+category = "build"
+homepage = "https://www.debian.org/doc/manuals/maint-guide/"
+docs = "https://www.debian.org/doc/debian-policy/"
+repo = "https://salsa.debian.org/dpkg-team/dpkg"
+description = "Builds and describes Debian source and binary packages"
+
+[detect]
+files = ["debian/control", "*.dsc"]
+
+[commands]
+run = "dpkg-buildpackage"
+alternatives = ["debuild"]
+
+[config]
+files = ["debian/control"]
+
+[taxonomy]
+role = ["build-tool"]

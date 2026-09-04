@@ -1,0 +1,20 @@
+[tool]
+name = "Conda Build"
+category = "build"
+homepage = "https://docs.conda.io/projects/conda-build/"
+docs = "https://docs.conda.io/projects/conda-build/en/stable/"
+repo = "https://github.com/conda/conda-build"
+description = "Builds conda packages from recipe metadata"
+
+[detect]
+files = ["meta.yaml", "meta.yml", "recipe/meta.yaml", "recipe/meta.yml", "recipe/recipe.yaml", "recipe/recipe.yml"]
+
+[commands]
+run = "conda-build ."
+alternatives = ["rattler-build build", "conda render ."]
+
+[config]
+files = ["meta.yaml", "meta.yml", "recipe/meta.yaml", "recipe/meta.yml", "recipe/recipe.yaml", "recipe/recipe.yml"]
+
+[taxonomy]
+role = ["build-tool"]

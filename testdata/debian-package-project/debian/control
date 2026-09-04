@@ -1,0 +1,9 @@
+Source: example
+Section: devel
+Priority: optional
+Maintainer: Example Maintainer <maintainer@example.com>
+Standards-Version: 4.7.2
+
+Package: example
+Architecture: any
+Description: Example package

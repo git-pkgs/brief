@@ -19,8 +19,8 @@ require (
 	github.com/git-pkgs/spdx v0.3.1
 	github.com/klauspost/compress v1.19.2
 	github.com/ulikunitz/xz v0.5.16
+	go.yaml.in/yaml/v3 v3.0.5
 	golang.org/x/term v0.45.0
-	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
@@ -41,6 +41,6 @@ require (
 	github.com/odvcencio/gotreesitter v0.51.0 // indirect
 	github.com/package-url/packageurl-go v0.1.7 // indirect
 	github.com/pandatix/go-cvss v0.6.4 // indirect
-	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	golang.org/x/sys v0.47.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

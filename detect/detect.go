@@ -26,7 +26,7 @@ import (
 	"github.com/git-pkgs/licensecheck"
 	"github.com/git-pkgs/manifests"
 	"github.com/git-pkgs/spdx"
-	"gopkg.in/yaml.v3"
+	"go.yaml.in/yaml/v3"
 )
 
 const (

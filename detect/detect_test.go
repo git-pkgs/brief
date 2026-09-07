@@ -1986,6 +1986,89 @@ func languageNames(r *brief.Report) []string {
 	return names
 }
 
+func TestSafeReadFileSymlinks(t *testing.T) {
+	t.Run("internal target with symlinked root", func(t *testing.T) {
+		parent := t.TempDir()
+		realRoot := filepath.Join(parent, "project")
+		if err := os.Mkdir(realRoot, 0o755); err != nil {
+			t.Fatal(err)
+		}
+		writeProjectFile(t, realRoot, "real_go.mod", "module example.com/internal\n")
+
+		linkedRoot := filepath.Join(parent, "linked-project")
+		if err := os.Symlink(realRoot, linkedRoot); err != nil {
+			t.Skipf("creating root symlink: %v", err)
+		}
+		if err := os.Symlink("real_go.mod", filepath.Join(realRoot, "go.mod")); err != nil {
+			t.Skipf("creating file symlink: %v", err)
+		}
+
+		data, err := New(nil, linkedRoot).safeReadFile("go.mod")
+		if err != nil {
+			t.Fatalf("safeReadFile: %v", err)
+		}
+		if got, want := string(data), "module example.com/internal\n"; got != want {
+			t.Errorf("safeReadFile returned %q, want %q", got, want)
+		}
+	})
+
+	t.Run("internal target with relative symlinked root", func(t *testing.T) {
+		parent := t.TempDir()
+		realRoot := filepath.Join(parent, "project")
+		if err := os.Mkdir(realRoot, 0o755); err != nil {
+			t.Fatal(err)
+		}
+		writeProjectFile(t, realRoot, "real_go.mod", "module example.com/relative\n")
+		if err := os.Symlink("real_go.mod", filepath.Join(realRoot, "go.mod")); err != nil {
+			t.Skipf("creating file symlink: %v", err)
+		}
+
+		linkedRoot := filepath.Join(parent, "linked-project")
+		if err := os.Symlink("project", linkedRoot); err != nil {
+			t.Skipf("creating root symlink: %v", err)
+		}
+		t.Chdir(parent)
+
+		data, err := New(nil, "linked-project").safeReadFile("go.mod")
+		if err != nil {
+			t.Fatalf("safeReadFile: %v", err)
+		}
+		if got, want := string(data), "module example.com/relative\n"; got != want {
+			t.Errorf("safeReadFile returned %q, want %q", got, want)
+		}
+	})
+
+	t.Run("external target", func(t *testing.T) {
+		root := t.TempDir()
+		externalRoot := t.TempDir()
+		writeProjectFile(t, externalRoot, "external.mod", "module example.com/external\n")
+		if err := os.Symlink(filepath.Join(externalRoot, "external.mod"), filepath.Join(root, "go.mod")); err != nil {
+			t.Skipf("creating file symlink: %v", err)
+		}
+
+		data, err := New(nil, root).safeReadFile("go.mod")
+		if err == nil || !strings.Contains(err.Error(), "symlink escapes project root") {
+			t.Fatalf("safeReadFile error = %v, want symlink escape error", err)
+		}
+		if data != nil {
+			t.Errorf("safeReadFile returned %q for external target, want no data", data)
+		}
+	})
+
+	t.Run("regular file", func(t *testing.T) {
+		root := t.TempDir()
+		writeProjectFile(t, root, "go.mod", "module example.com/regular\n")
+
+		data, err := New(nil, root).safeReadFile("go.mod")
+		if err != nil {
+			t.Fatalf("safeReadFile: %v", err)
+		}
+		if got, want := string(data), "module example.com/regular\n"; got != want {
+			t.Errorf("safeReadFile returned %q, want %q", got, want)
+		}
+	})
+}
+
 func writeProjectFile(t *testing.T, dir, path, content string) {
 	t.Helper()
 	full := filepath.Join(dir, path)

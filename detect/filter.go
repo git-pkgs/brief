@@ -301,7 +301,7 @@ func matchesPathPatterns(patterns []string, changed map[string]bool, changedExts
 			return true
 		}
 		if idx := strings.LastIndex(pattern, "*."); idx >= 0 {
-			ext := pattern[idx+1:]
+			ext := strings.ToLower(pattern[idx+1:])
 			if changedExts[ext] {
 				return true
 			}
@@ -315,7 +315,7 @@ func matchesPathPatterns(patterns []string, changed map[string]bool, changedExts
 		}
 		if strings.ContainsAny(pattern, "*?[") {
 			for f := range changed {
-				if matched, _ := filepath.Match(pattern, f); matched {
+				if matchPathPattern(pattern, f) {
 					return true
 				}
 			}

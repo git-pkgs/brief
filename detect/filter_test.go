@@ -165,6 +165,62 @@ func TestFilterByChangedFiles_Tools(t *testing.T) {
 	}
 }
 
+func TestFilterByChangedFiles_NestedDetectionPatterns(t *testing.T) {
+	dir := t.TempDir()
+	writeFile(t, dir, "analysis/nested/model.R", "x <- 1\n")
+	writeFile(t, dir, "analysis/nested/report.Rmd", "# Report\n")
+	writeFile(t, dir, "ext/pkg/sub/extconf.rb", "require \"mkmf\"\ncreate_makefile(\"example\")\n")
+
+	knowledgeBase := loadKB(t)
+	r, err := New(knowledgeBase, dir).Run()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if !slices.Contains(languageNames(r), "R") {
+		t.Fatal("expected R in the full report")
+	}
+	assertToolDetected(t, r, "docs", "R Markdown")
+	assertToolDetected(t, r, "native_extension", "mkmf")
+
+	filtered := FilterByChangedFiles(r, knowledgeBase, []string{"analysis/nested/model.R"})
+	if !slices.Contains(languageNames(filtered), "R") {
+		t.Error("expected R when a nested .R file changed")
+	}
+	assertToolNotDetected(t, filtered, "native_extension", "mkmf")
+
+	filtered = FilterByChangedFiles(r, knowledgeBase, []string{"analysis/nested/report.Rmd"})
+	assertToolDetected(t, filtered, "docs", "R Markdown")
+
+	filtered = FilterByChangedFiles(r, knowledgeBase, []string{"ext/pkg/sub/extconf.rb"})
+	assertToolDetected(t, filtered, "native_extension", "mkmf")
+	assertToolNotDetected(t, filtered, "docs", "R Markdown")
+}
+
+func TestMatchesPathPatterns(t *testing.T) {
+	tests := []struct {
+		pattern string
+		changed string
+		want    bool
+	}{
+		{pattern: "*.R", changed: "analysis/nested/model.R", want: true},
+		{pattern: "*.Rmd", changed: "analysis/nested/report.Rmd", want: true},
+		{pattern: "*.go", changed: "cmd/main.go", want: true},
+		{pattern: "ext/**/extconf.rb", changed: "ext/extconf.rb", want: true},
+		{pattern: "ext/**/extconf.rb", changed: "ext/pkg/sub/extconf.rb", want: true},
+		{pattern: "ext/**/extconf.rb", changed: "other/pkg/sub/extconf.rb", want: false},
+		{pattern: "config/tool-*", changed: "config/tool-test", want: true},
+		{pattern: "config/tool-*", changed: "config/nested/tool-test", want: false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.pattern+"/"+tt.changed, func(t *testing.T) {
+			fc := newFilterContext(&kb.KnowledgeBase{}, []string{tt.changed})
+			if got := matchesPathPatterns([]string{tt.pattern}, fc.changed, fc.changedExts); got != tt.want {
+				t.Errorf("matchesPathPatterns(%q, %q) = %v, want %v", tt.pattern, tt.changed, got, tt.want)
+			}
+		})
+	}
+}
+
 func TestToolMatchesChangedFiles_FileContainsGlob(t *testing.T) {
 	tool := &kb.ToolDef{
 		Detect: kb.DetectInfo{

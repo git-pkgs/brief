@@ -889,12 +889,27 @@ func (e *Engine) safeReadFileLimit(file string, limit int64) ([]byte, error) {
 		return nil, err
 	}
 	if info.Mode()&os.ModeSymlink != 0 {
-		target, err := filepath.EvalSymlinks(path)
+		absPath, err := filepath.Abs(path)
 		if err != nil {
 			return nil, err
 		}
-		absRoot, _ := filepath.Abs(e.Root)
-		if !strings.HasPrefix(target, absRoot+string(filepath.Separator)) {
+		target, err := filepath.EvalSymlinks(absPath)
+		if err != nil {
+			return nil, err
+		}
+		absRoot, err := filepath.Abs(e.Root)
+		if err != nil {
+			return nil, err
+		}
+		resolvedRoot, err := filepath.EvalSymlinks(absRoot)
+		if err != nil {
+			return nil, err
+		}
+		rel, err := filepath.Rel(resolvedRoot, target)
+		if err != nil {
+			return nil, err
+		}
+		if rel == ".." || strings.HasPrefix(rel, ".."+string(filepath.Separator)) || filepath.IsAbs(rel) {
 			return nil, fmt.Errorf("symlink escapes project root: %s -> %s", file, target)
 		}
 		targetInfo, err := os.Stat(target)

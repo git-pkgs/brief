@@ -223,11 +223,12 @@ type Stats struct {
 
 // DepInfo is a parsed dependency from a manifest file.
 type DepInfo struct {
-	Name    string `json:"name"`
-	Version string `json:"version,omitempty"`
-	PURL    string `json:"purl"`
-	Scope   string `json:"scope,omitempty"` // "runtime", "development", "test", "build"
-	Direct  bool   `json:"direct"`
+	Manifest string `json:"manifest"` // project-relative source manifest or lockfile path
+	Name     string `json:"name"`
+	Version  string `json:"version,omitempty"`
+	PURL     string `json:"purl"`
+	Scope    string `json:"scope,omitempty"` // "runtime", "development", "test", "build"
+	Direct   bool   `json:"direct"`
 }
 
 // ManifestInfo describes a parsed project manifest or lockfile.

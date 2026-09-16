@@ -2,10 +2,22 @@
 // and conventions, then outputs a structured report.
 package brief
 
-import "time"
+import (
+	"runtime/debug"
+	"time"
+)
 
 // Version is set at build time via ldflags.
 var Version = "dev"
+
+func init() {
+	if Version != "dev" {
+		return
+	}
+	if bi, ok := debug.ReadBuildInfo(); ok && bi.Main.Version != "" && bi.Main.Version != "(devel)" {
+		Version = bi.Main.Version
+	}
+}
 
 // Confidence indicates how reliable a detection signal is.
 type Confidence string

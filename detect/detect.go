@@ -1113,11 +1113,12 @@ func (e *Engine) loadDeps() {
 				scope = brief.ScopeBuild
 			}
 			e.parsedDeps = append(e.parsedDeps, brief.DepInfo{
-				Name:    dep.Name,
-				Version: dep.Version,
-				PURL:    dep.PURL,
-				Scope:   scope,
-				Direct:  dep.Direct,
+				Manifest: filepath.ToSlash(mf),
+				Name:     dep.Name,
+				Version:  dep.Version,
+				PURL:     dep.PURL,
+				Scope:    scope,
+				Direct:   dep.Direct,
 			})
 		}
 	}

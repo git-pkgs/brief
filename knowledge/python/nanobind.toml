@@ -1,0 +1,43 @@
+[tool]
+name = "nanobind"
+category = "native_extension"
+homepage = "https://nanobind.readthedocs.io/"
+docs = "https://nanobind.readthedocs.io/"
+repo = "https://github.com/wjakob/nanobind"
+description = "C++ binding library for Python extension modules"
+
+[detect]
+ecosystems = ["python"]
+dev_dependencies = ["nanobind"]
+
+[detect.file_contains]
+"CMakeLists.txt" = ["find_package(nanobind", "nanobind_add_module("]
+
+"pyproject.toml" = [
+  "\"nanobind\"",
+  "\"nanobind ",
+  "\"nanobind>",
+  "\"nanobind<",
+  "\"nanobind=",
+  "\"nanobind~",
+  "\"nanobind!",
+  "\"nanobind[",
+  "'nanobind'",
+  "'nanobind ",
+  "'nanobind>",
+  "'nanobind<",
+  "'nanobind=",
+  "'nanobind~",
+  "'nanobind!",
+  "'nanobind[",
+]
+
+[commands]
+run = "python -m build"
+alternatives = ["pip install -e ."]
+
+[config]
+files = ["pyproject.toml", "setup.py", "CMakeLists.txt"]
+
+[taxonomy]
+role = ["native-extension"]

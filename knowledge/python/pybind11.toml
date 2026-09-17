@@ -1,0 +1,43 @@
+[tool]
+name = "pybind11"
+category = "native_extension"
+homepage = "https://pybind11.readthedocs.io/"
+docs = "https://pybind11.readthedocs.io/"
+repo = "https://github.com/pybind/pybind11"
+description = "C++ bindings for Python extension modules"
+
+[detect]
+ecosystems = ["python"]
+dev_dependencies = ["pybind11"]
+
+[detect.file_contains]
+"CMakeLists.txt" = ["find_package(pybind11", "pybind11_add_module("]
+
+"pyproject.toml" = [
+  "\"pybind11\"",
+  "\"pybind11 ",
+  "\"pybind11>",
+  "\"pybind11<",
+  "\"pybind11=",
+  "\"pybind11~",
+  "\"pybind11!",
+  "\"pybind11[",
+  "'pybind11'",
+  "'pybind11 ",
+  "'pybind11>",
+  "'pybind11<",
+  "'pybind11=",
+  "'pybind11~",
+  "'pybind11!",
+  "'pybind11[",
+]
+
+[commands]
+run = "python -m build"
+alternatives = ["pip install -e ."]
+
+[config]
+files = ["pyproject.toml", "setup.py", "CMakeLists.txt"]
+
+[taxonomy]
+role = ["native-extension"]

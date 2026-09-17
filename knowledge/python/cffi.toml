@@ -1,0 +1,23 @@
+[tool]
+name = "cffi"
+category = "native_extension"
+homepage = "https://cffi.readthedocs.io/"
+docs = "https://cffi.readthedocs.io/"
+repo = "https://github.com/python-cffi/cffi"
+description = "C foreign function interface for Python"
+
+[detect]
+ecosystems = ["python"]
+
+[detect.file_contains]
+"setup.py" = ["cffi_modules=", "cffi_modules ="]
+
+[commands]
+run = "python -m build"
+alternatives = ["pip install -e ."]
+
+[config]
+files = ["pyproject.toml", "setup.py"]
+
+[taxonomy]
+role = ["native-extension"]

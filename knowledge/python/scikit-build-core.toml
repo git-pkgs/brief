@@ -1,0 +1,23 @@
+[tool]
+name = "scikit-build-core"
+category = "native_extension"
+homepage = "https://scikit-build-core.readthedocs.io/"
+docs = "https://scikit-build-core.readthedocs.io/"
+repo = "https://github.com/scikit-build/scikit-build-core"
+description = "PEP 517 build backend for Python packages with CMake extensions"
+
+[detect]
+ecosystems = ["python"]
+
+[detect.file_contains]
+"pyproject.toml" = ["build-backend = \"scikit_build_core.build\"", "build-backend = 'scikit_build_core.build'", "build-backend=\"scikit_build_core.build\"", "build-backend='scikit_build_core.build'"]
+
+[commands]
+run = "python -m build"
+alternatives = ["pip install -e ."]
+
+[config]
+files = ["pyproject.toml", "setup.py", "CMakeLists.txt"]
+
+[taxonomy]
+role = ["native-extension"]

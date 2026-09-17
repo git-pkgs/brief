@@ -1173,6 +1173,18 @@ func (e *Engine) manifestPaths() []string {
 		e.addPnpmWorkspaceManifestsFrom(root, add)
 	}
 
+	// Independent Cargo projects need not be members of a root workspace.
+	// Reuse the bounded file index so nested roots honor exclusions and scan limits.
+	for _, rel := range e.projectFiles {
+		if filepath.Base(rel) != cargoManifestFile {
+			continue
+		}
+		cargoRoot := filepath.ToSlash(filepath.Dir(rel))
+		add(path.Join(cargoRoot, cargoManifestFile))
+		add(path.Join(cargoRoot, cargoLockFile))
+		e.addCargoWorkspaceManifestsFrom(cargoRoot, add)
+	}
+
 	e.manifestPathsCache = paths
 	return paths
 }

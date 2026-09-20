@@ -27,6 +27,9 @@ func Markdown(w io.Writer, r *brief.Report, verbose bool) {
 	mdLayout(w, r.Layout)
 	mdPlatforms(w, r.Platforms)
 	mdResources(w, r.Resources)
+	if r.Resources != nil {
+		mdCitation(w, r.Resources.Citation, verbose)
+	}
 	mdSkills(w, r.Skills)
 	mdGit(w, r.Git)
 	mdLines(w, r.Lines)

@@ -127,6 +127,7 @@ type ResourceInfo struct {
 	Agents    map[string]string `json:"agents,omitempty"`
 
 	Templates *TemplateInfo `json:"templates,omitempty"`
+	Citation  *CitationInfo `json:"citation,omitempty"`
 }
 
 // TemplateInfo lists issue and pull request templates the project provides so
@@ -182,7 +183,7 @@ func (r *ResourceInfo) Empty() bool {
 		r.License == "" &&
 		len(r.Legal) == 0 && len(r.Community) == 0 &&
 		len(r.Security) == 0 && len(r.Metadata) == 0 &&
-		len(r.Agents) == 0 && r.Templates.Empty()
+		len(r.Agents) == 0 && r.Templates.Empty() && r.Citation == nil
 }
 
 // Skill is an agent skill the project provides: packaged instructions an AI

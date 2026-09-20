@@ -15,7 +15,7 @@ require (
 	github.com/git-pkgs/manifests v0.12.0
 	github.com/git-pkgs/outline v0.2.2
 	github.com/git-pkgs/purl v0.1.20
-	github.com/git-pkgs/registries v0.9.1
+	github.com/git-pkgs/registries v0.9.2
 	github.com/git-pkgs/spdx v0.3.2
 	github.com/klauspost/compress v1.20.0
 	github.com/ulikunitz/xz v0.5.16
@@ -31,7 +31,7 @@ require (
 	github.com/git-pkgs/gitignore v1.2.0 // indirect
 	github.com/git-pkgs/packageurl-go v0.3.1 // indirect
 	github.com/git-pkgs/pom v0.1.7 // indirect
-	github.com/git-pkgs/vers v0.7.0 // indirect
+	github.com/git-pkgs/vers v0.7.1 // indirect
 	github.com/git-pkgs/vulns v0.2.3 // indirect
 	github.com/github/go-spdx/v2 v2.7.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect

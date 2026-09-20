@@ -413,10 +413,7 @@ func readZIPDirectoryEnd(r io.ReaderAt, size int64) (zipDirectoryEnd, error) {
 	if size < zipDirectoryEndLen {
 		return zipDirectoryEnd{}, io.ErrUnexpectedEOF
 	}
-	searchLen := int64(zipDirectorySearchLen + zipDirectoryEndLen)
-	if searchLen > size {
-		searchLen = size
-	}
+	searchLen := min(int64(zipDirectorySearchLen+zipDirectoryEndLen), size)
 	buf := make([]byte, int(searchLen))
 	if _, err := r.ReadAt(buf, size-searchLen); err != nil && err != io.EOF {
 		return zipDirectoryEnd{}, err

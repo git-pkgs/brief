@@ -18,8 +18,7 @@ func TestSchemaForType_CoversAllReportFields(t *testing.T) {
 
 	// Every exported, JSON-tagged field on Report should appear in the schema.
 	rt := reflect.TypeFor[brief.Report]()
-	for i := range rt.NumField() {
-		f := rt.Field(i)
+	for f := range rt.Fields() {
 		if !f.IsExported() {
 			continue
 		}

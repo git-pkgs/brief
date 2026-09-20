@@ -561,7 +561,7 @@ func validatePathPattern(pattern string) error {
 		return fmt.Errorf("must stay within the project root")
 	}
 	doublestar := 0
-	for _, segment := range strings.Split(trimmed, "/") {
+	for segment := range strings.SplitSeq(trimmed, "/") {
 		if strings.Contains(segment, "**") {
 			if segment != "**" {
 				return fmt.Errorf("** must occupy a complete path segment")

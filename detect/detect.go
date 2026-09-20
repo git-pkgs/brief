@@ -1112,14 +1112,25 @@ func (e *Engine) loadDeps() {
 			case manifests.Build:
 				scope = brief.ScopeBuild
 			}
-			e.parsedDeps = append(e.parsedDeps, brief.DepInfo{
+			info := brief.DepInfo{
 				Manifest: filepath.ToSlash(mf),
 				Name:     dep.Name,
 				Version:  dep.Version,
 				PURL:     dep.PURL,
 				Scope:    scope,
 				Direct:   dep.Direct,
-			})
+			}
+			if dep.Source.Kind != "" {
+				info.Source = &brief.DepSource{
+					Kind:   string(dep.Source.Kind),
+					Value:  dep.Source.Value,
+					Branch: dep.Source.Branch,
+					Tag:    dep.Source.Tag,
+					Ref:    dep.Source.Ref,
+					Rel:    dep.Source.Rel,
+				}
+			}
+			e.parsedDeps = append(e.parsedDeps, info)
 		}
 	}
 }

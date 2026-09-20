@@ -53,3 +53,46 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 		t.Errorf("dependencies have no manifest: %s", data)
 	}
 }
+
+func TestDependencySourceOverride(t *testing.T) {
+	dir := t.TempDir()
+	writeFile(t, dir, "Cargo.toml", `[package]
+name = "app"
+version = "0.1.0"
+[dependencies]
+serde = "1"
+forked = { git = "https://github.com/example/forked", branch = "patched" }
+internal = { version = "0.2", registry = "corp" }
+`)
+	report := runOn(t, dir)
+	data, err := json.Marshal(report)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var output struct {
+		Dependencies []struct {
+			Name   string
+			Source *struct {
+				Kind   string
+				Value  string
+				Branch string
+			}
+		}
+	}
+	if err := json.Unmarshal(data, &output); err != nil {
+		t.Fatal(err)
+	}
+	byName := make(map[string]*struct{ Kind, Value, Branch string })
+	for _, dep := range output.Dependencies {
+		byName[dep.Name] = dep.Source
+	}
+	if got := byName["serde"]; got != nil {
+		t.Errorf("serde: expected no source override, got %+v", got)
+	}
+	if got := byName["forked"]; got == nil || got.Kind != "git" || got.Value != "https://github.com/example/forked" || got.Branch != "patched" {
+		t.Errorf("forked: got %+v", got)
+	}
+	if got := byName["internal"]; got == nil || got.Kind != "registry" || got.Value != "corp" {
+		t.Errorf("internal: got %+v", got)
+	}
+}

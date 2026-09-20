@@ -238,10 +238,8 @@ func (e *Engine) shouldSkipDirPath(dirPath string) bool {
 	if defaultSkipDirs[name] {
 		return true
 	}
-	for _, d := range e.SkipDirs {
-		if name == d {
-			return true
-		}
+	if slices.Contains(e.SkipDirs, name) {
+		return true
 	}
 	if name == "deps" {
 		if e.exactFileAt(filepath.Join(filepath.Dir(dirPath), "mix.exs")) {
@@ -257,12 +255,7 @@ func (e *Engine) shouldIndexHiddenRoot(dirPath string) bool {
 	if !indexedHiddenRootDirs[name] || !e.isAnalysisRootPath(filepath.Dir(dirPath)) {
 		return false
 	}
-	for _, dir := range e.SkipDirs {
-		if name == dir {
-			return false
-		}
-	}
-	return true
+	return !slices.Contains(e.SkipDirs, name)
 }
 
 func (e *Engine) exactFileAt(filePath string) bool {
@@ -359,21 +352,15 @@ func (e *Engine) Run() (*brief.Report, error) {
 
 	// Run slow detections concurrently.
 	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
+	wg.Go(func() {
 		report.Resources = e.detectResources()
-	}()
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
+	})
+	wg.Go(func() {
 		report.Git = e.detectGit(abs)
-	}()
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
+	})
+	wg.Go(func() {
 		report.Lines = e.detectLineCount(abs)
-	}()
+	})
 	wg.Wait()
 
 	// Expose parsed dependencies (loadDeps was called lazily during tool matching)
@@ -582,10 +569,8 @@ func (e *Engine) detectCategory(category string) []brief.Detection {
 // matchTool checks if a tool definition matches the project.
 // Returns the confidence level, or empty string if no match.
 func (e *Engine) matchTool(tool *kb.ToolDef) brief.Confidence {
-	for _, pattern := range tool.Detect.ExcludeFiles {
-		if e.exists(pattern) {
-			return ""
-		}
+	if slices.ContainsFunc(tool.Detect.ExcludeFiles, e.exists) {
+		return ""
 	}
 
 	best := brief.Confidence("")
@@ -608,11 +593,8 @@ func (e *Engine) matchTool(tool *kb.ToolDef) brief.Confidence {
 		}
 	}
 
-	for _, resource := range tool.Detect.YAMLResources {
-		if e.hasYAMLResource(resource) {
-			best = brief.ConfidenceHigh
-			break
-		}
+	if slices.ContainsFunc(tool.Detect.YAMLResources, e.hasYAMLResource) {
+		best = brief.ConfidenceHigh
 	}
 
 	if len(tool.Detect.Dependencies) > 0 || len(tool.Detect.DevDependencies) > 0 {
@@ -667,12 +649,7 @@ func (e *Engine) exists(pattern string) bool {
 		return e.globMatches(pattern, false)
 	}
 
-	for _, candidate := range e.rootCandidates(pattern) {
-		if e.exactFileExists(candidate) {
-			return true
-		}
-	}
-	return false
+	return slices.ContainsFunc(e.rootCandidates(pattern), e.exactFileExists)
 }
 
 func (e *Engine) exactFileExists(file string) bool {
@@ -1334,8 +1311,8 @@ func (e *Engine) addPnpmWorkspaceManifestsFrom(base string, add func(string)) {
 	var includes []string
 	var excludes []string
 	for _, pattern := range root.Packages {
-		if strings.HasPrefix(pattern, "!") {
-			excludes = append(excludes, strings.TrimPrefix(pattern, "!"))
+		if after, ok := strings.CutPrefix(pattern, "!"); ok {
+			excludes = append(excludes, after)
 			continue
 		}
 		includes = append(includes, pattern)
@@ -1381,7 +1358,7 @@ func packageWorkspacePatterns(workspaces any) []string {
 func parseGoWorkUsePaths(content string) []string {
 	var paths []string
 	inUseBlock := false
-	for _, line := range strings.Split(content, "\n") {
+	for line := range strings.SplitSeq(content, "\n") {
 		line = stripGoWorkComment(line)
 		fields := strings.Fields(line)
 		if len(fields) == 0 {
@@ -1625,9 +1602,9 @@ func parseYAMLTasks(data []byte, sourceName string, cmd string) []brief.Script {
 // parseTargets extracts targets from files with "target:" syntax (Makefile, Justfile).
 func parseTargets(data []byte, sourceName string, cmd string) []brief.Script {
 	var scripts []brief.Script
-	lines := strings.Split(string(data), "\n")
+	lines := strings.SplitSeq(string(data), "\n")
 
-	for _, line := range lines {
+	for line := range lines {
 		line = strings.TrimSpace(line)
 		if strings.HasPrefix(line, "#") || strings.HasPrefix(line, ".") {
 			continue
@@ -1711,7 +1688,7 @@ type styleCounts struct {
 func (sc *styleCounts) addFile(data []byte) {
 	sc.sampled++
 	content := string(data)
-	for _, line := range strings.Split(content, "\n") {
+	for line := range strings.SplitSeq(content, "\n") {
 		if len(line) == 0 {
 			continue
 		}
@@ -2075,12 +2052,12 @@ func (e *Engine) parseSkill(rel string) brief.Skill {
 		return skill
 	}
 	rest := bytes.TrimLeft(data[len(skillFrontmatterDelim):], "\r\n")
-	end := bytes.Index(rest, []byte("\n---"))
-	if end == -1 {
+	before, _, ok := bytes.Cut(rest, []byte("\n---"))
+	if !ok {
 		return skill
 	}
 	var fm skillFrontmatter
-	if yaml.Unmarshal(rest[:end], &fm) == nil {
+	if yaml.Unmarshal(before, &fm) == nil {
 		if fm.Name != "" {
 			skill.Name = fm.Name
 		}
@@ -2267,19 +2244,15 @@ func (e *Engine) detectGit(absPath string) *brief.GitInfo {
 	var wg sync.WaitGroup
 	var mu sync.Mutex
 
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
+	wg.Go(func() {
 		if out, err := e.git(absPath, "branch", "--show-current"); err == nil {
 			mu.Lock()
 			info.Branch = strings.TrimSpace(string(out))
 			mu.Unlock()
 		}
-	}()
+	})
 
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
+	wg.Go(func() {
 		if out, err := e.git(absPath, "rev-parse", "--abbrev-ref", "origin/HEAD"); err == nil {
 			ref := strings.TrimSpace(string(out))
 			if after, ok := strings.CutPrefix(ref, "origin/"); ok {
@@ -2288,13 +2261,11 @@ func (e *Engine) detectGit(absPath string) *brief.GitInfo {
 				mu.Unlock()
 			}
 		}
-	}()
+	})
 
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
+	wg.Go(func() {
 		if out, err := e.git(absPath, "remote"); err == nil {
-			for _, name := range strings.Fields(string(out)) {
+			for name := range strings.FieldsSeq(string(out)) {
 				if url, err := e.git(absPath, "remote", "get-url", name); err == nil {
 					mu.Lock()
 					info.Remotes[name] = redactURL(strings.TrimSpace(string(url)))
@@ -2302,11 +2273,9 @@ func (e *Engine) detectGit(absPath string) *brief.GitInfo {
 				}
 			}
 		}
-	}()
+	})
 
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
+	wg.Go(func() {
 		if out, err := e.git(absPath, "rev-list", "--count", "HEAD"); err == nil {
 			var count int
 			if _, err := fmt.Sscanf(strings.TrimSpace(string(out)), "%d", &count); err == nil {
@@ -2315,7 +2284,7 @@ func (e *Engine) detectGit(absPath string) *brief.GitInfo {
 				mu.Unlock()
 			}
 		}
-	}()
+	})
 
 	wg.Wait()
 

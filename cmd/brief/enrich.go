@@ -116,29 +116,23 @@ func enrich(ctx context.Context, r *brief.Report, root string) *brief.Enrichment
 	// Published packages
 	purls := detectPublishedPURLs(root)
 	if len(purls) > 0 {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
+		wg.Go(func() {
 			enrichPublishedPackages(ctx, purls, info, &mu)
-		}()
+		})
 	}
 
 	// Runtime EOL
 	if r.Platforms != nil {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
+		wg.Go(func() {
 			enrichEOL(ctx, r, info, &mu)
-		}()
+		})
 	}
 
 	// Repo scorecard
 	if r.Git != nil {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
+		wg.Go(func() {
 			enrichScorecard(ctx, r, info, &mu)
-		}()
+		})
 	}
 
 	wg.Wait()
@@ -205,12 +199,10 @@ func goModulePURL(root string) string {
 	if err != nil {
 		return ""
 	}
-	for _, line := range strings.Split(string(data), "\n") {
+	for line := range strings.SplitSeq(string(data), "\n") {
 		line = strings.TrimSpace(line)
-		if strings.HasPrefix(line, "module ") {
-			mod := strings.TrimPrefix(line, "module ")
-			mod = strings.TrimSpace(mod)
-			return "pkg:golang/" + mod
+		if mod, ok := strings.CutPrefix(line, "module "); ok {
+			return "pkg:golang/" + strings.TrimSpace(mod)
 		}
 	}
 	return ""
@@ -249,7 +241,7 @@ func pythonPackagePURL(root string) string {
 	// Try setup.cfg [metadata] name
 	data, err = safeReadManifest(filepath.Join(root, "setup.cfg"))
 	if err == nil {
-		for _, line := range strings.Split(string(data), "\n") {
+		for line := range strings.SplitSeq(string(data), "\n") {
 			line = strings.TrimSpace(line)
 			if strings.HasPrefix(line, "name") && strings.Contains(line, "=") {
 				parts := strings.SplitN(line, "=", 2) //nolint:mnd // key=value split
@@ -269,7 +261,7 @@ func gemPURL(root string) string {
 	if len(matches) > 0 {
 		data, err := safeReadManifest(matches[0])
 		if err == nil {
-			for _, line := range strings.Split(string(data), "\n") {
+			for line := range strings.SplitSeq(string(data), "\n") {
 				line = strings.TrimSpace(line)
 				// Match: spec.name = "foo" or s.name = "foo"
 				if strings.Contains(line, ".name") && strings.Contains(line, "=") {

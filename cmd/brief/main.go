@@ -408,8 +408,7 @@ func schemaForStruct(t reflect.Type, defs map[string]any) map[string]any {
 
 func buildStructSchema(t reflect.Type, defs map[string]any) map[string]any {
 	props := make(map[string]any)
-	for i := range t.NumField() {
-		f := t.Field(i)
+	for f := range t.Fields() {
 		if !f.IsExported() {
 			continue
 		}

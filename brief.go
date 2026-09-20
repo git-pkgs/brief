@@ -223,12 +223,25 @@ type Stats struct {
 
 // DepInfo is a parsed dependency from a manifest file.
 type DepInfo struct {
-	Manifest string `json:"manifest"` // project-relative source manifest or lockfile path
-	Name     string `json:"name"`
-	Version  string `json:"version,omitempty"`
-	PURL     string `json:"purl"`
-	Scope    string `json:"scope,omitempty"` // "runtime", "development", "test", "build"
-	Direct   bool   `json:"direct"`
+	Manifest string     `json:"manifest"` // project-relative source manifest or lockfile path
+	Name     string     `json:"name"`
+	Version  string     `json:"version,omitempty"`
+	PURL     string     `json:"purl"`
+	Scope    string     `json:"scope,omitempty"` // "runtime", "development", "test", "build"
+	Direct   bool       `json:"direct"`
+	Source   *DepSource `json:"source,omitempty"`
+}
+
+// DepSource preserves an explicit dependency source override from the
+// manifest, e.g. a git URL or a named private registry. It is only set
+// when the dependency is not fetched from the ecosystem's default registry.
+type DepSource struct {
+	Kind   string `json:"kind"` // "git", "registry", "path", "github", "url"
+	Value  string `json:"value,omitempty"`
+	Branch string `json:"branch,omitempty"`
+	Tag    string `json:"tag,omitempty"`
+	Ref    string `json:"ref,omitempty"`
+	Rel    string `json:"rel,omitempty"`
 }
 
 // ManifestInfo describes a parsed project manifest or lockfile.

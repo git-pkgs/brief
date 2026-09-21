@@ -103,6 +103,9 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 	printLayout(w, r.Layout)
 	printPlatforms(w, r.Platforms)
 	printResources(w, r.Resources)
+	if r.Resources != nil {
+		printCitation(w, r.Resources.Citation, verbose)
+	}
 	printSkills(w, r.Skills)
 	printGit(w, r.Git)
 	printLines(w, r.Lines)

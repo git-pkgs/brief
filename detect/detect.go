@@ -1913,6 +1913,9 @@ func (e *Engine) detectResources() *brief.ResourceInfo {
 	}
 
 	res.Templates = e.detectTemplates()
+	if rel := res.Metadata["citation"]; strings.EqualFold(filepath.Ext(rel), ".cff") {
+		res.Citation = e.detectCitation(rel)
+	}
 
 	if res.Empty() {
 		return nil

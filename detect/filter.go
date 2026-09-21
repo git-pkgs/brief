@@ -211,6 +211,9 @@ func (fc *filterContext) filterResources(res *brief.ResourceInfo, changedFiles [
 	filterGroup("security", res.Security)
 	filterGroup("metadata", res.Metadata)
 	filterGroup("agents", res.Agents)
+	if res.Citation != nil && hit(res.Citation.Path) {
+		out.Citation = res.Citation
+	}
 
 	if t := res.Templates; t != nil {
 		ft := &brief.TemplateInfo{}

@@ -15,6 +15,8 @@ github.com/ecosyste-ms/ecosystems-go v0.4.0 h1:5A+zF+XWT8sYYYjlc2/tI1SmiDGzbHLyT
 github.com/ecosyste-ms/ecosystems-go v0.4.0/go.mod h1:FVswCrp3DQkur1HjVqfDF/gYrDSEmiFflntcB1G0DbA=
 github.com/git-pkgs/archives v0.7.1 h1:xLGYZkezsukkSXwJN1tAC0oxSe3szTw8PPtILDSHmG8=
 github.com/git-pkgs/archives v0.7.1/go.mod h1:vnRwCQ4eZ87tFzMiQ3GVIrOW6igJyog+2ad5YYCC3xQ=
+github.com/git-pkgs/citation v0.1.0 h1:0toQBjxVOtaUsxRtcDJL9uZ6SYFb6IgbHgKpTpP0cv0=
+github.com/git-pkgs/citation v0.1.0/go.mod h1:4vrS78/jjHeusS+eozjP/d3pX2NogEi1R/7gLVqkgqs=
 github.com/git-pkgs/clone v0.7.3 h1:QxlcCOAxRjPeLygc+gd74XSAE1BCVG6OQvKDczacwcQ=
 github.com/git-pkgs/clone v0.7.3/go.mod h1:AzlK7H7mgTm016cTyePUDCyqLP5KRXqKgOyTsm+KJ3s=
 github.com/git-pkgs/enrichment v0.7.1 h1:8PRYE7gaB8y4M5wnRw/ymNDk0uOHtbQ8CEE7hF09Bv0=

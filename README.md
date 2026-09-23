@@ -383,6 +383,10 @@ Detection uses five primitives: file/directory presence, dependency names from p
 
 ## Library usage
 
+```sh
+go get github.com/git-pkgs/brief
+```
+
 The detection engine, knowledge base, and reporters are separate Go packages. Import them directly instead of shelling out to the binary:
 
 ```go
@@ -409,4 +413,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detection primitives and category def
 
 ## License
 
-MIT
+[MIT](LICENSE).

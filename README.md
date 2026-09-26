@@ -283,6 +283,8 @@ Issue and pull request templates are reported under `resources.templates` so tha
 
 When the citation file is a `CITATION.cff`, `resources.citation` also contains its title, authors, release, identifiers, and preferred citation. The existing `resources.metadata.citation` path is preserved. Human and Markdown output include a short citation summary; `--verbose` adds affiliations, repository URLs, licenses, keywords, and the abstract. Licenses declared in CFF are reported separately from the detected repository license.
 
+When a project contains `codemeta.json`, `resources.codemeta` contains its name, description, software version, repository, licenses, keywords, programming languages, authors, CodeMeta context version, and validation diagnostics. The existing `resources.metadata.codemeta` path is preserved. Human and Markdown output show a short summary; `--verbose` adds the remaining extracted fields.
+
 Parsing and validation have separate statuses, so older CFF versions and invalid metadata can still provide useful fields. Diagnostics include field paths and source positions where available. Unreadable files, malformed YAML, and files over the 1 MiB limit produce citation diagnostics without failing the scan. JSON retains the projected metadata and all diagnostics; human and Markdown summaries limit long values and lists.
 
 ## Agent skills

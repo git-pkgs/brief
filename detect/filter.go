@@ -214,6 +214,9 @@ func (fc *filterContext) filterResources(res *brief.ResourceInfo, changedFiles [
 	if res.Citation != nil && hit(res.Citation.Path) {
 		out.Citation = res.Citation
 	}
+	if res.Codemeta != nil && hit(res.Codemeta.Path) {
+		out.Codemeta = res.Codemeta
+	}
 
 	if t := res.Templates; t != nil {
 		ft := &brief.TemplateInfo{}

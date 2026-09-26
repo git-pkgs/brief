@@ -19,6 +19,8 @@ github.com/git-pkgs/citation v0.1.0 h1:0toQBjxVOtaUsxRtcDJL9uZ6SYFb6IgbHgKpTpP0c
 github.com/git-pkgs/citation v0.1.0/go.mod h1:4vrS78/jjHeusS+eozjP/d3pX2NogEi1R/7gLVqkgqs=
 github.com/git-pkgs/clone v0.7.3 h1:QxlcCOAxRjPeLygc+gd74XSAE1BCVG6OQvKDczacwcQ=
 github.com/git-pkgs/clone v0.7.3/go.mod h1:AzlK7H7mgTm016cTyePUDCyqLP5KRXqKgOyTsm+KJ3s=
+github.com/git-pkgs/codemeta v0.1.0 h1:lgwbN9jKQZ9ngom6XfPN6n64Nq9QHPZ9ocG0nJu0R1w=
+github.com/git-pkgs/codemeta v0.1.0/go.mod h1:AzSAEtGSnc0pnTC4efaP/6jo84k4ppOHWciAMS53oqA=
 github.com/git-pkgs/enrichment v0.7.1 h1:8PRYE7gaB8y4M5wnRw/ymNDk0uOHtbQ8CEE7hF09Bv0=
 github.com/git-pkgs/enrichment v0.7.1/go.mod h1:QYLG8MtVWPqZojnq7KBKK/lllBWSjLnqvJCWvzGuNwU=
 github.com/git-pkgs/forge v0.10.0 h1:ANVH4tErN1Io+Fv3h9vLvjg4Krj00K9ha+RfN53wDr4=

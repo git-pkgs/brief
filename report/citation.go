@@ -15,7 +15,7 @@ type citationRow struct{ label, value string }
 
 func printCitation(w io.Writer, info *brief.CitationInfo, verbose bool) {
 	for _, row := range citationRows(info, verbose) {
-		_, _ = fmt.Fprintf(w, "%-14s %s\n", row.label+":", row.value)
+		_, _ = fmt.Fprintf(w, "%-12s %s\n", row.label+":", row.value)
 	}
 }
 
@@ -66,10 +66,7 @@ func citationRows(info *brief.CitationInfo, verbose bool) []citationRow {
 		add("CFF", info.ParseStatus)
 	}
 	for _, issue := range info.Diagnostics[:min(len(info.Diagnostics), citationAuthorLimit)] {
-		location := issue.Path
-		if issue.Line != 0 {
-			location = fmt.Sprintf("%s:%d:%d %s", info.Path, issue.Line, issue.Column, issue.Path)
-		}
+		location := diagnosticLocation(info.Path, issue.Path, issue.Line, issue.Column)
 		add("CFF issue", strings.TrimSpace(location+" "+issue.Code+": "+issue.Message))
 	}
 	if verbose {

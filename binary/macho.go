@@ -2,7 +2,6 @@ package binary
 
 import (
 	"bytes"
-	"debug/buildinfo"
 	"debug/macho"
 	stdbin "encoding/binary"
 	"errors"
@@ -110,13 +109,13 @@ func inspectMachOFat(r io.ReaderAt, size int64, head [4]byte) (*Object, []byte, 
 			rodata.Write(sliceROData)
 		}
 
-		if bi, err := buildinfo.Read(sr); err == nil {
+		if bi, err := readGoBuild(sr); err == nil {
 			if obj.Go == nil {
-				obj.Go = goBuildFrom(bi)
+				obj.Go = bi
 			}
-			if !producerSeen[bi.GoVersion] {
-				producerSeen[bi.GoVersion] = true
-				obj.Producer = append(obj.Producer, bi.GoVersion)
+			if !producerSeen[bi.Version] {
+				producerSeen[bi.Version] = true
+				obj.Producer = append(obj.Producer, bi.Version)
 			}
 		}
 	}

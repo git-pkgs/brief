@@ -4,7 +4,6 @@
 package binary
 
 import (
-	"debug/buildinfo"
 	"errors"
 	"fmt"
 	"io"
@@ -39,8 +38,8 @@ type Object struct {
 	// is present.
 	Producer []string `json:"producer,omitempty"`
 
-	// Go is set when the object was produced by the Go toolchain and
-	// carries embedded build metadata.
+	// Go is set when the object carries Go build metadata. It is unavailable
+	// under TinyGo.
 	Go *GoBuild `json:"go,omitempty"`
 
 	// Static lists libraries that appear to be statically linked into the
@@ -132,9 +131,9 @@ func InspectReader(r io.ReaderAt, size int64) (*Object, error) {
 	// The fat Mach-O path reads build info from its first slice because
 	// debug/buildinfo cannot open fat containers itself.
 	if obj.Go == nil {
-		if bi, err := buildinfo.Read(sr); err == nil {
-			obj.Go = goBuildFrom(bi)
-			obj.Producer = append(obj.Producer, bi.GoVersion)
+		if bi, err := readGoBuild(sr); err == nil {
+			obj.Go = bi
+			obj.Producer = append(obj.Producer, bi.Version)
 		}
 	}
 
@@ -158,22 +157,4 @@ func dispatch(r *io.SectionReader, size int64, head [4]byte) (*Object, []byte, e
 	default:
 		return nil, nil, ErrUnrecognized
 	}
-}
-
-func goBuildFrom(bi *buildinfo.BuildInfo) *GoBuild {
-	g := &GoBuild{
-		Version: bi.GoVersion,
-		Path:    bi.Path,
-	}
-	if bi.Main.Path != "" {
-		g.Main = bi.Main.Path + "@" + bi.Main.Version
-	}
-	for _, dep := range bi.Deps {
-		if dep.Replace != nil {
-			g.Deps = append(g.Deps, dep.Path+" => "+dep.Replace.Path+"@"+dep.Replace.Version)
-		} else {
-			g.Deps = append(g.Deps, dep.Path+"@"+dep.Version)
-		}
-	}
-	return g
 }

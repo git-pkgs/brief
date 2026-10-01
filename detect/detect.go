@@ -25,6 +25,7 @@ import (
 	"github.com/git-pkgs/brief/kb"
 	"github.com/git-pkgs/licensecheck"
 	"github.com/git-pkgs/manifests"
+	"github.com/git-pkgs/roles"
 	"github.com/git-pkgs/spdx"
 	"go.yaml.in/yaml/v3"
 )
@@ -47,6 +48,7 @@ const (
 	categoryDocs      = "docs"
 	categoryFormat    = "format"
 	categoryLint      = "lint"
+	categoryLanguage  = "language"
 	categoryTest      = "test"
 	categoryTypecheck = "typecheck"
 	lineCounterSCC    = "scc"
@@ -77,6 +79,7 @@ type Engine struct {
 	trackedDirs          map[string]bool // directories that contain at least one tracked file
 	trackedDeps          map[string]bool // whether a deps directory contains git-tracked files
 	fileExts             map[string]int  // cached file extension counts in the project
+	fileRoles            map[string]roles.Set
 	dirCache             map[string][]string
 	depsLoaded           bool
 	runtimeDeps          map[string]bool // all runtime/unscoped dependency names
@@ -112,19 +115,10 @@ func (e *Engine) sortLanguagesByFileCount(report *brief.Report) {
 
 	e.loadFileExts()
 
-	// Score each language by summing file counts for its extensions
 	scores := make(map[string]int)
 	for _, lang := range report.Languages {
-		tool := e.KB.ByName[lang.Name]
-		if tool == nil {
-			continue
-		}
-		for _, pattern := range tool.Detect.Files {
-			// Extract extension from patterns like "*.py" or "**/*.py"
-			if idx := strings.LastIndex(pattern, "*."); idx >= 0 {
-				ext := pattern[idx+1:] // ".py"
-				scores[lang.Name] += e.fileExts[ext]
-			}
+		for _, ext := range e.languageExtensions(lang.Name) {
+			scores[lang.Name] += e.fileExts[ext]
 		}
 	}
 
@@ -336,7 +330,7 @@ func (e *Engine) Run() (*brief.Report, error) {
 		Tools:   make(map[string][]brief.Detection),
 	}
 
-	report.Languages = e.detectCategory("language")
+	report.Languages = e.detectCategory(categoryLanguage)
 	e.sortLanguagesByFileCount(report)
 	e.buildEcosystemSet(report)
 
@@ -434,7 +428,7 @@ func (e *Engine) buildEcosystemSet(report *brief.Report) {
 	e.detectedEcosystems = make(map[string]bool)
 	for _, lang := range report.Languages {
 		for _, tool := range e.KB.Tools {
-			if tool.Tool.Name == lang.Name && tool.Tool.Category == "language" {
+			if tool.Tool.Name == lang.Name && tool.Tool.Category == categoryLanguage {
 				for _, eco := range tool.Detect.Ecosystems {
 					e.detectedEcosystems[eco] = true
 				}
@@ -576,7 +570,13 @@ func (e *Engine) matchTool(tool *kb.ToolDef) brief.Confidence {
 	best := brief.Confidence("")
 
 	for _, pattern := range tool.Detect.Files {
-		if e.exists(pattern) {
+		matches := false
+		if tool.Tool.Category == categoryLanguage && kb.HasGlobPattern(pattern) && !strings.HasSuffix(pattern, "/") {
+			matches = e.languageFileExists(pattern)
+		} else {
+			matches = e.exists(pattern)
+		}
+		if matches {
 			conf := brief.ConfidenceMedium
 			if strings.HasSuffix(pattern, "/") {
 				conf = brief.ConfidenceLow
@@ -632,6 +632,9 @@ func (e *Engine) exists(pattern string) bool {
 		}
 		for _, root := range e.analysisRoots() {
 			candidate := filepath.Join(root, filepath.FromSlash(dir))
+			if !e.projectEvidence(filepath.ToSlash(candidate) + "/") {
+				continue
+			}
 			info, err := os.Stat(filepath.Join(e.Root, candidate))
 			if err == nil && info.IsDir() && e.isTracked(candidate) {
 				return true
@@ -653,6 +656,9 @@ func (e *Engine) exists(pattern string) bool {
 }
 
 func (e *Engine) exactFileExists(file string) bool {
+	if !e.projectEvidence(file) {
+		return false
+	}
 	info, err := os.Stat(filepath.Join(e.Root, filepath.FromSlash(file)))
 	return err == nil && info.Mode().IsRegular() && e.isTracked(filepath.FromSlash(file))
 }
@@ -717,6 +723,7 @@ func (e *Engine) loadProjectFiles() {
 		return
 	}
 	e.projectFilesLoaded = true
+	e.fileRoles = make(map[string]roles.Set)
 	visited := 0
 	e.scanProjectDir(e.Root, "", &visited, false)
 	e.scanEntries = visited
@@ -779,8 +786,9 @@ func (e *Engine) scanProjectEntry(
 	}
 	if !info.IsDir() {
 		if info.Mode().IsRegular() && e.isTracked(rel) {
+			e.fileRoles[rel] = e.pathRoles(rel)
 			e.indexedFiles = append(e.indexedFiles, rel)
-			if !routeOnly {
+			if !routeOnly && e.projectEvidence(rel) {
 				e.projectFiles = append(e.projectFiles, rel)
 			}
 		}
@@ -815,7 +823,7 @@ func (e *Engine) scanProjectEntry(
 		nextRouteOnly = false
 	}
 	e.indexedDirs = append(e.indexedDirs, rel)
-	if !nextRouteOnly {
+	if !nextRouteOnly && e.projectEvidence(filepath.ToSlash(rel)+"/") {
 		e.projectDirs = append(e.projectDirs, rel)
 	}
 	return e.scanProjectDir(filePath, rel, visited, nextRouteOnly)
@@ -844,6 +852,9 @@ func (e *Engine) loadFileExts() {
 	e.loadProjectFiles()
 	e.fileExts = make(map[string]int)
 	for _, rel := range e.projectFiles {
+		if !e.sourceEvidence(rel) {
+			continue
+		}
 		if ext := filepath.Ext(rel); ext != "" {
 			e.fileExts[ext]++
 		}
@@ -1124,6 +1135,9 @@ func (e *Engine) manifestPaths() []string {
 	add := func(p string) {
 		p = filepath.ToSlash(filepath.Clean(p))
 		if p == "." || strings.HasPrefix(p, "../") || filepath.IsAbs(p) {
+			return
+		}
+		if !e.projectEvidence(p) {
 			return
 		}
 		if seen[p] {
@@ -1751,7 +1765,7 @@ func (e *Engine) inferStyle() *brief.StyleInfo {
 		if sc.sampled >= limit {
 			break
 		}
-		if !exts[filepath.Ext(rel)] {
+		if !exts[filepath.Ext(rel)] || !e.sourceEvidence(rel) {
 			continue
 		}
 		data, err := e.safeReadFile(rel)
@@ -1868,7 +1882,7 @@ func (e *Engine) languageExtensions(name string) []string {
 
 func (e *Engine) projectDirHasExtension(dir string, exts []string) bool {
 	for _, file := range e.projectFiles {
-		if filepath.Dir(file) != dir {
+		if filepath.Dir(file) != dir || !e.sourceEvidence(file) {
 			continue
 		}
 		for _, want := range exts {

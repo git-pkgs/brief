@@ -18,6 +18,39 @@ const submoduleHelperRootEnv = "BRIEF_SUBMODULE_HELPER_ROOT"
 const submoduleDiffHelperEnv = "BRIEF_SUBMODULE_DIFF_HELPER"
 const yamlResourceDiffHelperEnv = "BRIEF_YAML_RESOURCE_DIFF_HELPER"
 
+func TestScanUsesPathRoles(t *testing.T) {
+	const helperEnv = "BRIEF_ROLES_HELPER_ROOT"
+	if root := os.Getenv(helperEnv); root != "" {
+		cmdScan([]string{"-json", root})
+		return
+	}
+	root := t.TempDir()
+	writeScanFixture(t, root, "main.go", "package main\nfunc main() {\n\tprintln(1)\n}\n")
+	for _, name := range []string{"evals/fixtures/a/app.py", "evals/fixtures/b/app.py", "skills/semgrep/scripts/scan.py"} {
+		writeScanFixture(t, root, name, "def run():\n    print('fixture')\n")
+	}
+	writeScanFixture(t, root, "fixtures/deploy.yaml", "apiVersion: argoproj.io/v1alpha1\nkind: Application\n")
+	cmd := exec.Command(os.Args[0], "-test.run=^TestScanUsesPathRoles$")
+	cmd.Env = append(os.Environ(), helperEnv+"="+root, "PATH=")
+	out, err := cmd.Output()
+	if err != nil {
+		t.Fatalf("scan command failed: %v", err)
+	}
+	var report brief.Report
+	if err := json.Unmarshal(out, &report); err != nil {
+		t.Fatalf("parsing scan output: %v\n%s", err, out)
+	}
+	if len(report.Languages) != 1 || report.Languages[0].Name != "Go" {
+		t.Errorf("languages = %+v, want only Go", report.Languages)
+	}
+	if report.Style == nil || report.Style.Indentation != "tabs" {
+		t.Errorf("style = %+v, want tabs", report.Style)
+	}
+	if reportHasTool(&report, "infrastructure", "Argo CD") {
+		t.Error("fixture manifest triggered Argo CD")
+	}
+}
+
 func TestScanDefaultsBoundRecursiveDetection(t *testing.T) {
 	if root := os.Getenv(scanHelperRootEnv); root != "" {
 		cmdScan([]string{"-json", root})

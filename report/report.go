@@ -40,6 +40,18 @@ func sanitizeLine(s string) string {
 	}, s)
 }
 
+// diagnosticLocation renders a diagnostic's source position, its field path,
+// or both when the parser reported both.
+func diagnosticLocation(file, path string, line, column int) string {
+	if line == 0 {
+		return path
+	}
+	if path == "" {
+		return fmt.Sprintf("%s:%d:%d", file, line, column)
+	}
+	return fmt.Sprintf("%s:%d:%d %s", file, line, column, path)
+}
+
 // JSON writes the report as JSON.
 func JSON(w io.Writer, r *brief.Report) error {
 	enc := json.NewEncoder(w)
@@ -105,6 +117,7 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 	printResources(w, r.Resources)
 	if r.Resources != nil {
 		printCitation(w, r.Resources.Citation, verbose)
+		printCodemeta(w, r.Resources.Codemeta, verbose)
 	}
 	printSkills(w, r.Skills)
 	printGit(w, r.Git)

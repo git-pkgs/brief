@@ -46,7 +46,7 @@ func TestSchemaForType_GeneratesDefs(t *testing.T) {
 	schemaForType(reflect.TypeFor[brief.Report](), defs)
 
 	// Should have defs for nested struct types like Detection, Command, etc.
-	expectedDefs := []string{"detection", "command", "script", "stats"}
+	expectedDefs := []string{"detection", "command", "script", "stats", "codemetainfo", "codemetaauthor", "codemetadiagnostic"}
 	for _, name := range expectedDefs {
 		if _, ok := defs[name]; !ok {
 			t.Errorf("expected $defs to contain %q", name)

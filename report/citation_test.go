@@ -8,6 +8,18 @@ import (
 	"github.com/git-pkgs/brief"
 )
 
+func TestCitationDiagnosticWithoutFieldPath(t *testing.T) {
+	r := &brief.Report{Resources: &brief.ResourceInfo{Citation: &brief.CitationInfo{
+		Path: "CITATION.cff", ParseStatus: "unsupported_syntax",
+		Diagnostics: []brief.CitationDiagnostic{{Code: "tag", Message: "unsupported YAML tag", Line: 1, Column: 8}},
+	}}}
+	var out bytes.Buffer
+	Human(&out, r, false)
+	if want := "CITATION.cff:1:8 tag: unsupported YAML tag"; !strings.Contains(out.String(), want) {
+		t.Errorf("human output missing %q: %s", want, out.String())
+	}
+}
+
 func TestCitationOutputEscapesAndBounds(t *testing.T) {
 	r := &brief.Report{Resources: &brief.ResourceInfo{Citation: &brief.CitationInfo{
 		Path: "CITATION.cff", ParseStatus: "parsed", ValidationStatus: "invalid",

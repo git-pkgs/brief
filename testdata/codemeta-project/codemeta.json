@@ -1,0 +1,19 @@
+{
+  "@context": "https://w3id.org/codemeta/3.0",
+  "@type": "SoftwareSourceCode",
+  "name": "Example Software",
+  "description": "Software described with CodeMeta.",
+  "version": "1.2.0",
+  "codeRepository": "https://github.com/example/codemeta-project",
+  "license": "https://spdx.org/licenses/MIT.html",
+  "keywords": ["metadata", "science"],
+  "programmingLanguage": ["Go"],
+  "author": [
+    {"@type": "Person", "givenName": "Ada", "familyName": "Lovelace"},
+    {
+      "@type": "Role",
+      "roleName": "creator",
+      "author": {"@type": "Organization", "name": "Research Team"}
+    }
+  ]
+}

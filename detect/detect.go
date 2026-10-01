@@ -548,11 +548,7 @@ func (e *Engine) detectCategory(category string) []brief.Detection {
 
 		d.ConfigFiles = e.findExisting(tool.Config.Files)
 
-		if tool.Config.Lockfile != "" {
-			if lockfiles := e.findExisting([]string{tool.Config.Lockfile}); len(lockfiles) > 0 {
-				d.Lockfile = lockfiles[0]
-			}
-		}
+		d.Lockfile = e.detectLockfile(tool)
 
 		detections = append(detections, d)
 	}
@@ -1150,6 +1146,9 @@ func (e *Engine) manifestPaths() []string {
 	roots := e.analysisRoots()
 	for _, root := range roots {
 		for _, mf := range e.KB.ManifestFiles {
+			if !e.activeBundlerFile(root, mf) {
+				continue
+			}
 			add(path.Join(filepath.ToSlash(root), mf))
 		}
 	}

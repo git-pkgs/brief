@@ -7,7 +7,7 @@ repo = "https://github.com/ruby/ruby"
 description = "Dynamic, object-oriented programming language"
 
 [detect]
-files = ["Gemfile", "Rakefile", "*.rb", "**/*.rb", "*.gemspec"]
+files = ["Gemfile", "gems.rb", "Rakefile", "rakefile", "*.rb", "**/*.rb", "*.gemspec", "**/*.gemspec"]
 ecosystems = ["ruby"]
 
 [taxonomy]

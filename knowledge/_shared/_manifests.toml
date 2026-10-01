@@ -3,6 +3,8 @@ files = [
     ".gitmodules",
     "Gemfile",
     "Gemfile.lock",
+    "gems.rb",
+    "gems.locked",
     "package.json",
     "package-lock.json",
     "yarn.lock",

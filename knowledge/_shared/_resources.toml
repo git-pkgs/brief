@@ -14,7 +14,7 @@ dirs = ["docs", ".github", ".gitlab"]
 [resources.resource]
 name = "Changelog"
 field = "changelog"
-patterns = ["changelog*", "changes*", "history*", "news*"]
+patterns = ["changelog*", "changes*", "history*", "news*", "change", "change.md", "change.txt", "change.rst", "change.adoc"]
 
 [[resources]]
 [resources.resource]
@@ -59,7 +59,7 @@ dirs = ["docs", ".github", ".gitlab"]
 name = "CLA"
 field = "cla"
 group = "legal"
-patterns = ["cla", "cla.md", "cla.txt", "contributor_license_agreement*", "contributor-license-agreement*"]
+patterns = ["cla", "cla.md", "cla.txt", "contributor_license_agreement*", "contributor-license-agreement*", "contributor license agreement", "contributor license agreement.md", "contributor license agreement.txt"]
 dirs = ["docs", ".github", ".gitlab"]
 
 # Community
@@ -77,7 +77,7 @@ dirs = ["docs", ".github", ".gitlab"]
 name = "Code of Conduct"
 field = "code_of_conduct"
 group = "community"
-patterns = ["code_of_conduct", "code_of_conduct.md", "code_of_conduct.txt", "code_of_conduct.rst", "code-of-conduct", "code-of-conduct.md"]
+patterns = ["code_of_conduct", "code_of_conduct.md", "code_of_conduct.txt", "code_of_conduct.rst", "code-of-conduct", "code-of-conduct.md", "code_of_conduct.adoc", "code-of-conduct.txt", "code-of-conduct.rst", "code-of-conduct.adoc"]
 dirs = ["docs", ".github", ".gitlab"]
 
 [[resources]]

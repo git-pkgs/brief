@@ -66,6 +66,14 @@ dirs = ["docs", ".github", ".gitlab"]
 
 [[resources]]
 [resources.resource]
+name = "Accessibility"
+field = "accessibility"
+group = "community"
+patterns = ["accessibility", "accessibility.md", "accessibility.txt", "accessibility.rst", "accessibility.adoc"]
+dirs = [".github", "docs", ".gitlab"]
+
+[[resources]]
+[resources.resource]
 name = "Contributing"
 field = "contributing"
 group = "community"

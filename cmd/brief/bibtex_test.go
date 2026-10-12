@@ -77,3 +77,44 @@ func TestBibTeXCLIDiff(t *testing.T) {
 		t.Fatalf("changed bibtex missing: %+v", r.Resources)
 	}
 }
+
+func TestBibTeXCLIBesideCFF(t *testing.T) {
+	root := t.TempDir()
+	writeScanFixture(t, root, "CITATION.cff", "cff-version: 1.2.0\nmessage: Please cite\ntitle: Example\nauthors:\n  - family-names: Doe\n")
+	writeScanFixture(t, root, "CITATION.bib", "@misc{k, title = {Paper}}\n")
+	var r brief.Report
+	if err := json.Unmarshal(citationCLI(t, root, "--json"), &r); err != nil {
+		t.Fatal(err)
+	}
+	if r.Resources.Citation == nil || r.Resources.Citation.Title != "Example" {
+		t.Fatalf("CFF missing: %+v", r.Resources.Citation)
+	}
+	if info := r.Resources.BibTeX; info == nil || len(info.Entries) != 1 || info.Entries[0].Title != "Paper" {
+		t.Fatalf("BibTeX missing: %+v", info)
+	}
+}
+
+func TestBibTeXCLIExtractionLimits(t *testing.T) {
+	root := t.TempDir()
+	const content = "@misc{k, title = {Example}}\n"
+	for _, name := range []string{"CITATION.md", "README.md"} {
+		writeScanFixture(t, root, name, content+strings.Repeat("\n", 1<<20))
+	}
+	var r brief.Report
+	if err := json.Unmarshal(citationCLI(t, root, "--json"), &r); err != nil {
+		t.Fatal(err)
+	}
+	for _, info := range []*brief.BibTeXInfo{r.Resources.BibTeX, r.Resources.ReadmeBibTeX} {
+		if info == nil || info.ParseStatus != "limit_exceeded" || len(info.Diagnostics) != 1 || info.Diagnostics[0].Code != "byte_limit" {
+			t.Fatalf("limit diagnostic missing: %+v", info)
+		}
+	}
+	for _, mode := range []string{"--human", "--markdown"} {
+		out := string(citationCLI(t, root, mode))
+		for _, want := range []string{"CITATION.md limit", "README.md limit", "byte"} {
+			if !strings.Contains(out, want) {
+				t.Errorf("%s: missing %q in %s", mode, want, out)
+			}
+		}
+	}
+}

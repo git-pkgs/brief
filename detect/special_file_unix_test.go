@@ -60,7 +60,7 @@ func TestBibTeXNamedPipes(t *testing.T) {
 	if info := r.Resources.BibTeX; info != nil && info.ParseStatus != "read_error" {
 		t.Fatalf("named pipe treated as BibTeX data: %+v", info)
 	}
-	if r.Resources.ReadmeBibTeX != nil {
-		t.Fatalf("named pipe README treated as BibTeX data: %+v", r.Resources.ReadmeBibTeX)
+	if info := r.Resources.ReadmeBibTeX; info != nil && (info.ParseStatus != "read_error" || len(info.Entries) != 0) {
+		t.Fatalf("named pipe README treated as BibTeX data: %+v", info)
 	}
 }

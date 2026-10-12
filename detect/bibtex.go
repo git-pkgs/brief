@@ -9,7 +9,12 @@ import (
 	"github.com/git-pkgs/brief"
 )
 
-const bibtexByteLimit = 1 << 20
+const (
+	bibtexByteLimit     = 1 << 20
+	bibtexReadError     = "read_error"
+	bibtexLimitExceeded = "limit_exceeded"
+	bibtexParsed        = "parsed"
+)
 
 // detectBibTeX parses a .bib file, or with extract set finds entries embedded
 // in a document such as a README or a CITATION file in another format.
@@ -17,8 +22,8 @@ func (e *Engine) detectBibTeX(path string, extract bool) *brief.BibTeXInfo {
 	info := &brief.BibTeXInfo{Path: path}
 	data, err := e.safeReadFileLimit(path, bibtexByteLimit+1)
 	if err != nil {
-		info.ParseStatus = "read_error"
-		info.Diagnostics = []brief.CitationDiagnostic{{Code: "read_error", Message: err.Error()}}
+		info.ParseStatus = bibtexReadError
+		info.Diagnostics = []brief.CitationDiagnostic{{Code: bibtexReadError, Message: err.Error()}}
 		return info
 	}
 	opts := bibtex.ParseOptions{MaxBytes: bibtexByteLimit}
@@ -31,7 +36,7 @@ func (e *Engine) detectBibTeX(path string, extract bool) *brief.BibTeXInfo {
 	if err != nil {
 		switch {
 		case errors.Is(err, bibtex.ErrLimit):
-			info.ParseStatus = "limit_exceeded"
+			info.ParseStatus = bibtexLimitExceeded
 		case errors.Is(err, bibtex.ErrUnsupported):
 			info.ParseStatus = "unsupported_encoding"
 		default:
@@ -43,7 +48,7 @@ func (e *Engine) detectBibTeX(path string, extract bool) *brief.BibTeXInfo {
 		}
 		return info
 	}
-	info.ParseStatus = "parsed"
+	info.ParseStatus = bibtexParsed
 	if f.Encoding != "utf-8" {
 		info.Encoding = f.Encoding
 	}
@@ -84,13 +89,40 @@ func bibtexDiagnostic(d bibtex.Diagnostic) brief.CitationDiagnostic {
 
 // detectCitationBibTeX reads a citation file that is not CFF. A .bib file is
 // parsed as BibTeX; CITATION, CITATION.md and similar files often hold a
-// BibTeX entry among prose, so they are reported only when one is found.
+// BibTeX entry among prose, so empty results without diagnostics are omitted.
 func (e *Engine) detectCitationBibTeX(path string) *brief.BibTeXInfo {
 	if strings.EqualFold(filepath.Ext(path), ".bib") {
 		return e.detectBibTeX(path, false)
 	}
-	if info := e.detectBibTeX(path, true); len(info.Entries) > 0 {
+	if info := e.detectBibTeX(path, true); bibtexReportable(info) {
 		return info
+	}
+	return nil
+}
+
+func bibtexReportable(info *brief.BibTeXInfo) bool {
+	return info.ParseStatus != bibtexParsed || len(info.Entries) > 0 || len(info.Diagnostics) > 0
+}
+
+func (e *Engine) detectCitationBibTeXFiles() *brief.BibTeXInfo {
+	for _, rd := range e.KB.Resources {
+		if rd.Resource.Group != "metadata" || rd.Resource.Field != "citation" {
+			continue
+		}
+		for _, pattern := range rd.Resource.Patterns {
+			if strings.EqualFold(filepath.Ext(pattern), ".cff") {
+				continue
+			}
+			resource := rd.Resource
+			resource.Patterns = []string{pattern}
+			_, rel := e.findResource(resource)
+			if rel == "" {
+				continue
+			}
+			if info := e.detectCitationBibTeX(rel); info != nil {
+				return info
+			}
+		}
 	}
 	return nil
 }

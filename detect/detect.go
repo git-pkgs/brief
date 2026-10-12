@@ -1928,11 +1928,10 @@ func (e *Engine) detectResources() *brief.ResourceInfo {
 	res.Templates = e.detectTemplates()
 	if rel := res.Metadata["citation"]; strings.EqualFold(filepath.Ext(rel), ".cff") {
 		res.Citation = e.detectCitation(rel)
-	} else if rel != "" {
-		res.BibTeX = e.detectCitationBibTeX(rel)
 	}
+	res.BibTeX = e.detectCitationBibTeXFiles()
 	if res.Readme != "" {
-		if info := e.detectBibTeX(res.Readme, true); len(info.Entries) > 0 {
+		if info := e.detectBibTeX(res.Readme, true); bibtexReportable(info) {
 			res.ReadmeBibTeX = info
 		}
 	}

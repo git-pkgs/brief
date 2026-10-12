@@ -15,8 +15,8 @@ github.com/ecosyste-ms/ecosystems-go v0.5.0 h1:qZqgar3Do9RrtW327OXlsrGKiRvNdeX8C
 github.com/ecosyste-ms/ecosystems-go v0.5.0/go.mod h1:IhsYBZfxkofxya0O1O2DlhDt281utWJ6VQO0mPVb99I=
 github.com/git-pkgs/archives v0.8.1 h1:IcT1bVsAec8SqJ4m9vTnD644KiadQZ4ERrWnm/30t3o=
 github.com/git-pkgs/archives v0.8.1/go.mod h1:gIyPXPQr5e+YrMqA5KQ7x6pLrFXHNF1+CjdedNJdGUU=
-github.com/git-pkgs/bibtex v0.0.0-20261012114907-9264c8a1559f h1:F8nfnDia3OuR5xgXDrzDHZFpG0HtFwNZV7mXWg+auuk=
-github.com/git-pkgs/bibtex v0.0.0-20261012114907-9264c8a1559f/go.mod h1:6y8kbaIpeP/Ori1v8qy7eEebB+GOCDZYeiG0ylbCpGA=
+github.com/git-pkgs/bibtex v0.0.0-20261012121810-7c94fb7dc3e7 h1:9SCyoVu8Dn/+5WHUqQAbVtCDzhoy+U7VU3E+PKSEGWQ=
+github.com/git-pkgs/bibtex v0.0.0-20261012121810-7c94fb7dc3e7/go.mod h1:6y8kbaIpeP/Ori1v8qy7eEebB+GOCDZYeiG0ylbCpGA=
 github.com/git-pkgs/citation v0.1.0 h1:0toQBjxVOtaUsxRtcDJL9uZ6SYFb6IgbHgKpTpP0cv0=
 github.com/git-pkgs/citation v0.1.0/go.mod h1:4vrS78/jjHeusS+eozjP/d3pX2NogEi1R/7gLVqkgqs=
 github.com/git-pkgs/clone v0.7.5 h1:4wPOTqdYbCooV4MldaIkQxJIa+Z3rJkVFMXJCWNw19c=

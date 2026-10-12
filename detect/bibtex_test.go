@@ -79,6 +79,63 @@ func TestBibTeXCitationDiscovery(t *testing.T) {
 	}
 }
 
+func TestBibTeXBesideOtherCitationFiles(t *testing.T) {
+	t.Setenv("PATH", "")
+	for _, name := range []string{"CITATION.cff", "CITATION"} {
+		t.Run(name, func(t *testing.T) {
+			dir := t.TempDir()
+			writeFile(t, dir, name, "Please cite our software.\n")
+			writeFile(t, dir, "citation.BIB", minimalBibTeX)
+			r, err := New(loadKB(t), dir).Run()
+			if err != nil {
+				t.Fatal(err)
+			}
+			info := r.Resources.BibTeX
+			if info == nil || info.Path != "citation.BIB" || len(info.Entries) != 1 {
+				t.Fatalf("bibtex: %+v", info)
+			}
+			if r.Resources.Metadata["citation"] != name {
+				t.Fatalf("citation path: %v", r.Resources.Metadata)
+			}
+			if name == "CITATION.cff" && r.Resources.Citation == nil {
+				t.Fatal("CFF result missing")
+			}
+		})
+	}
+}
+
+func TestBibTeXExtractionErrors(t *testing.T) {
+	t.Setenv("PATH", "")
+	for _, name := range []string{"CITATION.md", "README.md"} {
+		for _, tc := range []struct {
+			name, content, status, code string
+		}{
+			{"oversized", minimalBibTeX + strings.Repeat("\n", bibtexByteLimit), "limit_exceeded", "byte_limit"},
+			{"UTF-16", "\xff\xfe@\x00", "unsupported_encoding", "encoding"},
+		} {
+			t.Run(name+"/"+tc.name, func(t *testing.T) {
+				dir := t.TempDir()
+				writeFile(t, dir, name, tc.content)
+				r, err := New(loadKB(t), dir).Run()
+				if err != nil {
+					t.Fatal(err)
+				}
+				info := r.Resources.BibTeX
+				if name == "README.md" {
+					info = r.Resources.ReadmeBibTeX
+				}
+				if info == nil || info.ParseStatus != tc.status || len(info.Diagnostics) != 1 || info.Diagnostics[0].Code != tc.code {
+					t.Fatalf("outcome: %+v", info)
+				}
+				changed := FilterByChangedFiles(r, loadKB(t), []string{name})
+				if changed.Resources == nil || changed.Resources.BibTeX == nil && changed.Resources.ReadmeBibTeX == nil {
+					t.Fatal("diff omitted extraction error")
+				}
+			})
+		}
+	}
+}
+
 func TestBibTeXOutcomes(t *testing.T) {
 	t.Setenv("PATH", "")
 	for _, tc := range []struct {
@@ -179,7 +236,7 @@ func TestBibTeXSymlinkEscape(t *testing.T) {
 	if info := r.Resources.BibTeX; info != nil && (info.ParseStatus != "read_error" || len(info.Entries) != 0) {
 		t.Fatalf("escaped root: %+v", info)
 	}
-	if r.Resources.ReadmeBibTeX != nil {
-		t.Fatalf("escaped root via README: %+v", r.Resources.ReadmeBibTeX)
+	if info := r.Resources.ReadmeBibTeX; info != nil && (info.ParseStatus != "read_error" || len(info.Entries) != 0) {
+		t.Fatalf("escaped root via README: %+v", info)
 	}
 }

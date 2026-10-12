@@ -41,3 +41,26 @@ func TestCitationNamedPipe(t *testing.T) {
 		t.Fatalf("named pipe treated as citation data: %+v", r.Resources.Citation)
 	}
 }
+
+func TestBibTeXNamedPipes(t *testing.T) {
+	t.Setenv("PATH", "")
+	dir := t.TempDir()
+	for _, name := range []string{"CITATION.bib", "README.md"} {
+		if err := syscall.Mkfifo(filepath.Join(dir, name), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	r, err := New(loadKB(t), dir).Run()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if r.Resources == nil {
+		return
+	}
+	if info := r.Resources.BibTeX; info != nil && info.ParseStatus != "read_error" {
+		t.Fatalf("named pipe treated as BibTeX data: %+v", info)
+	}
+	if r.Resources.ReadmeBibTeX != nil {
+		t.Fatalf("named pipe README treated as BibTeX data: %+v", r.Resources.ReadmeBibTeX)
+	}
+}

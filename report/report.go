@@ -118,6 +118,8 @@ func Human(w io.Writer, r *brief.Report, verbose bool) {
 	if r.Resources != nil {
 		printCitation(w, r.Resources.Citation, verbose)
 		printCodemeta(w, r.Resources.Codemeta, verbose)
+		printBibTeX(w, r.Resources.BibTeX, verbose)
+		printBibTeX(w, r.Resources.ReadmeBibTeX, verbose)
 	}
 	printSkills(w, r.Skills)
 	printGit(w, r.Git)

@@ -30,6 +30,8 @@ func Markdown(w io.Writer, r *brief.Report, verbose bool) {
 	if r.Resources != nil {
 		mdCitation(w, r.Resources.Citation, verbose)
 		mdCodemeta(w, r.Resources.Codemeta, verbose)
+		mdBibTeX(w, r.Resources.BibTeX, verbose)
+		mdBibTeX(w, r.Resources.ReadmeBibTeX, verbose)
 	}
 	mdSkills(w, r.Skills)
 	mdGit(w, r.Git)

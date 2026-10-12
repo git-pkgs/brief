@@ -1928,6 +1928,13 @@ func (e *Engine) detectResources() *brief.ResourceInfo {
 	res.Templates = e.detectTemplates()
 	if rel := res.Metadata["citation"]; strings.EqualFold(filepath.Ext(rel), ".cff") {
 		res.Citation = e.detectCitation(rel)
+	} else if rel != "" {
+		res.BibTeX = e.detectCitationBibTeX(rel)
+	}
+	if res.Readme != "" {
+		if info := e.detectBibTeX(res.Readme, true); len(info.Entries) > 0 {
+			res.ReadmeBibTeX = info
+		}
 	}
 	if rel := res.Metadata["codemeta"]; strings.EqualFold(filepath.Base(rel), "codemeta.json") {
 		res.Codemeta = e.detectCodemeta(rel)

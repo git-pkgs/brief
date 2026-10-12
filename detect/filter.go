@@ -217,6 +217,12 @@ func (fc *filterContext) filterResources(res *brief.ResourceInfo, changedFiles [
 	if res.Codemeta != nil && hit(res.Codemeta.Path) {
 		out.Codemeta = res.Codemeta
 	}
+	if res.BibTeX != nil && hit(res.BibTeX.Path) {
+		out.BibTeX = res.BibTeX
+	}
+	if res.ReadmeBibTeX != nil && hit(res.ReadmeBibTeX.Path) {
+		out.ReadmeBibTeX = res.ReadmeBibTeX
+	}
 
 	if t := res.Templates; t != nil {
 		ft := &brief.TemplateInfo{}

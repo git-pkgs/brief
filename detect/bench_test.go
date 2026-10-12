@@ -38,6 +38,37 @@ func BenchmarkCitationProject(b *testing.B) {
 	}
 }
 
+func BenchmarkBibTeXProject(b *testing.B) {
+	b.Setenv("PATH", "")
+	knowledgeBase := loadKBForBench(b)
+	for _, name := range []string{"absent", "present"} {
+		b.Run(name, func(b *testing.B) {
+			root := b.TempDir()
+			if name == "present" {
+				for _, file := range []string{"CITATION.bib", "README.md"} {
+					data, err := os.ReadFile(filepath.Join("../testdata/bibtex-project", file))
+					if err != nil {
+						b.Fatal(err)
+					}
+					if err := os.WriteFile(filepath.Join(root, file), data, 0o600); err != nil {
+						b.Fatal(err)
+					}
+				}
+			}
+			b.ReportAllocs()
+			for b.Loop() {
+				r, err := New(knowledgeBase, root).Run()
+				if err != nil {
+					b.Fatal(err)
+				}
+				if name == "present" && (r.Resources == nil || r.Resources.BibTeX == nil || r.Resources.ReadmeBibTeX == nil) {
+					b.Fatal("missing bibtex")
+				}
+			}
+		})
+	}
+}
+
 func loadKBForBench(b *testing.B) *kb.KnowledgeBase {
 	b.Helper()
 	knowledgeBase, err := kb.Load(brief.KnowledgeFS)

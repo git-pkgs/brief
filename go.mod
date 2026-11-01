@@ -11,14 +11,14 @@ require (
 	github.com/git-pkgs/citation v0.1.0
 	github.com/git-pkgs/clone v0.7.5
 	github.com/git-pkgs/codemeta v0.3.0
-	github.com/git-pkgs/enrichment v0.7.2
+	github.com/git-pkgs/enrichment v0.7.4
 	github.com/git-pkgs/forge v0.10.1
 	github.com/git-pkgs/licensecheck v0.4.1
 	github.com/git-pkgs/magic v0.5.0
 	github.com/git-pkgs/manifests v0.12.3
 	github.com/git-pkgs/outline v0.2.3
 	github.com/git-pkgs/purl v0.1.21
-	github.com/git-pkgs/registries v0.9.3
+	github.com/git-pkgs/registries v0.11.0
 	github.com/git-pkgs/roles v0.1.3
 	github.com/git-pkgs/spdx v0.3.3
 	github.com/klauspost/compress v1.20.3

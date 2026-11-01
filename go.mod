@@ -17,7 +17,7 @@ require (
 	github.com/git-pkgs/magic v0.6.0
 	github.com/git-pkgs/manifests v0.12.3
 	github.com/git-pkgs/outline v0.2.3
-	github.com/git-pkgs/purl v0.1.21
+	github.com/git-pkgs/purl v0.1.24
 	github.com/git-pkgs/registries v0.11.1
 	github.com/git-pkgs/roles v0.1.3
 	github.com/git-pkgs/spdx v0.3.3

@@ -13,8 +13,8 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/ecosyste-ms/ecosystems-go v0.5.0 h1:qZqgar3Do9RrtW327OXlsrGKiRvNdeX8CmXb1aX4Njo=
 github.com/ecosyste-ms/ecosystems-go v0.5.0/go.mod h1:IhsYBZfxkofxya0O1O2DlhDt281utWJ6VQO0mPVb99I=
-github.com/git-pkgs/archives v0.8.1 h1:IcT1bVsAec8SqJ4m9vTnD644KiadQZ4ERrWnm/30t3o=
-github.com/git-pkgs/archives v0.8.1/go.mod h1:gIyPXPQr5e+YrMqA5KQ7x6pLrFXHNF1+CjdedNJdGUU=
+github.com/git-pkgs/archives v0.10.0 h1:/qgk0MI6VK2sKOoVTd0B4zs5hwTo+St0X8cYYftzumc=
+github.com/git-pkgs/archives v0.10.0/go.mod h1:GJ/h7NPTUYiPinOUxpYNsHFCUikYZcJXvugBvP1VGNc=
 github.com/git-pkgs/bibtex v0.1.0 h1:G855pDj1/+6Vwzq0UufQyRscY1DTgL9P0DfrozkubHU=
 github.com/git-pkgs/bibtex v0.1.0/go.mod h1:6y8kbaIpeP/Ori1v8qy7eEebB+GOCDZYeiG0ylbCpGA=
 github.com/git-pkgs/citation v0.1.0 h1:0toQBjxVOtaUsxRtcDJL9uZ6SYFb6IgbHgKpTpP0cv0=

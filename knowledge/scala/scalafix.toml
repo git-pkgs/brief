@@ -1,0 +1,22 @@
+[tool]
+name = "Scalafix"
+category = "lint"
+homepage = "https://scalacenter.github.io/scalafix/"
+docs = "https://scalacenter.github.io/scalafix/docs/users/installation.html"
+repo = "https://github.com/scalacenter/scalafix"
+description = "Refactoring and linting tool for Scala"
+
+[detect]
+files = [".scalafix.conf"]
+ecosystems = ["scala"]
+[detect.file_contains]
+"project/plugins.sbt" = ["sbt-scalafix"]
+
+[commands]
+run = "sbt scalafixAll"
+
+[config]
+files = [".scalafix.conf"]
+
+[taxonomy]
+role = ["linter"]

@@ -1,0 +1,24 @@
+[tool]
+name = "utest"
+category = "test"
+homepage = "https://github.com/com-lihaoyi/utest"
+docs = "https://github.com/com-lihaoyi/utest#readme"
+repo = "https://github.com/com-lihaoyi/utest"
+description = "Simple testing framework for Scala"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["\"utest\""]
+"project/Dependencies.scala" = ["\"utest\""]
+"build.mill" = ["::utest:", "TestModule.Utest"]
+"build.sc" = ["::utest:", "TestModule.Utest"]
+"project.scala" = ["::utest:"]
+
+[commands]
+run = "sbt test"
+alternatives = ["./mill __.test", "scala-cli test ."]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

@@ -14,7 +14,7 @@ require (
 	github.com/git-pkgs/enrichment v0.7.4
 	github.com/git-pkgs/forge v0.10.1
 	github.com/git-pkgs/licensecheck v0.4.1
-	github.com/git-pkgs/magic v0.5.0
+	github.com/git-pkgs/magic v0.6.0
 	github.com/git-pkgs/manifests v0.12.3
 	github.com/git-pkgs/outline v0.2.3
 	github.com/git-pkgs/purl v0.1.21

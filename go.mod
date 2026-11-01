@@ -23,7 +23,7 @@ require (
 	github.com/git-pkgs/spdx v0.3.3
 	github.com/klauspost/compress v1.20.3
 	github.com/ulikunitz/xz v0.5.17
-	go.yaml.in/yaml/v3 v3.0.5
+	go.yaml.in/yaml/v3 v3.0.6
 	golang.org/x/term v0.47.0
 )
 

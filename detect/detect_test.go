@@ -2284,8 +2284,8 @@ func TestGitSubmoduleManifestDependencies(t *testing.T) {
 		t.Errorf("manifests should contain %+v, got %+v", wantManifest, report.Manifests)
 	}
 	wantDependencies := map[string]string{
-		"lib/foo":    "pkg:git/lib%2Ffoo?repository_url=https:%2F%2Fgithub.com%2Fexample%2Ffoo.git",
-		"vendor/bar": "pkg:git/vendor%2Fbar?repository_url=git%40github.com:example%2Fbar.git",
+		"github.com/example/foo": "pkg:git/github.com/example/foo",
+		"github.com/example/bar": "pkg:git/github.com/example/bar",
 	}
 	for name, purl := range wantDependencies {
 		if !slices.ContainsFunc(report.Dependencies, func(dependency brief.DepInfo) bool {

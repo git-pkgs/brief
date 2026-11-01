@@ -15,9 +15,9 @@ require (
 	github.com/git-pkgs/forge v0.10.1
 	github.com/git-pkgs/licensecheck v0.4.1
 	github.com/git-pkgs/magic v0.6.0
-	github.com/git-pkgs/manifests v0.12.3
+	github.com/git-pkgs/manifests v0.12.4
 	github.com/git-pkgs/outline v0.2.3
-	github.com/git-pkgs/purl v0.1.21
+	github.com/git-pkgs/purl v0.2.1
 	github.com/git-pkgs/registries v0.11.1
 	github.com/git-pkgs/roles v0.1.3
 	github.com/git-pkgs/spdx v0.3.3
@@ -30,7 +30,7 @@ require (
 require (
 	github.com/apapsch/go-jsonmerge/v2 v2.0.0 // indirect
 	github.com/bazelbuild/buildtools v0.0.0-20260716142318-04cf7de1434f // indirect
-	github.com/bmatcuk/doublestar/v4 v4.10.2 // indirect
+	github.com/bmatcuk/doublestar/v4 v4.10.3 // indirect
 	github.com/ecosyste-ms/ecosystems-go v0.5.0 // indirect
 	github.com/git-pkgs/gitignore v1.3.0 // indirect
 	github.com/git-pkgs/pom v0.1.8 // indirect

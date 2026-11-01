@@ -6,7 +6,7 @@ toolchain go1.26.7
 
 require (
 	github.com/BurntSushi/toml v1.6.0
-	github.com/git-pkgs/archives v0.8.1
+	github.com/git-pkgs/archives v0.10.0
 	github.com/git-pkgs/bibtex v0.1.0
 	github.com/git-pkgs/citation v0.1.0
 	github.com/git-pkgs/clone v0.7.5

@@ -1,0 +1,22 @@
+[tool]
+name = "Doobie"
+category = "library"
+homepage = "https://typelevel.org/doobie/"
+docs = "https://typelevel.org/doobie/"
+repo = "https://github.com/typelevel/doobie"
+description = "Functional JDBC layer for Scala"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["\"doobie-"]
+"project/Dependencies.scala" = ["\"doobie-"]
+"build.mill" = ["::doobie-"]
+"build.sc" = ["::doobie-"]
+"project.scala" = ["::doobie-"]
+
+[taxonomy]
+role = ["library"]
+function = ["data-mapping"]
+layer = ["data-layer"]
+domain = ["database"]

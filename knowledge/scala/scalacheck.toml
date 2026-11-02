@@ -1,0 +1,24 @@
+[tool]
+name = "ScalaCheck"
+category = "test"
+homepage = "https://scalacheck.org"
+docs = "https://scalacheck.org"
+repo = "https://github.com/typelevel/scalacheck"
+description = "Property-based testing for Scala"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["\"org.scalacheck\""]
+"project/Dependencies.scala" = ["\"org.scalacheck\""]
+"build.mill" = ["org.scalacheck:"]
+"build.sc" = ["org.scalacheck:"]
+"project.scala" = ["org.scalacheck:"]
+
+[commands]
+run = "sbt test"
+alternatives = ["./mill __.test", "scala-cli test ."]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

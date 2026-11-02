@@ -1,0 +1,21 @@
+[tool]
+name = "Kafka Streams"
+category = "library"
+homepage = "https://kafka.apache.org/documentation/streams/"
+docs = "https://kafka.apache.org/documentation/streams/"
+repo = "https://github.com/apache/kafka"
+description = "Stream processing library for Apache Kafka"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["\"kafka-streams-scala\"", "\"kafka-streams\""]
+"project/Dependencies.scala" = ["\"kafka-streams-scala\"", "\"kafka-streams\""]
+"build.mill" = ["::kafka-streams-scala:", ":kafka-streams:"]
+"build.sc" = ["::kafka-streams-scala:", ":kafka-streams:"]
+"project.scala" = ["::kafka-streams-scala:", ":kafka-streams:"]
+
+[taxonomy]
+role = ["library"]
+function = ["messaging"]
+layer = ["backend"]

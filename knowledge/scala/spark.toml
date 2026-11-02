@@ -1,0 +1,22 @@
+[tool]
+name = "Apache Spark"
+category = "library"
+homepage = "https://spark.apache.org"
+docs = "https://spark.apache.org/docs/latest/"
+repo = "https://github.com/apache/spark"
+description = "Distributed data processing engine"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["\"org.apache.spark\""]
+"project/Dependencies.scala" = ["\"org.apache.spark\""]
+"build.mill" = ["org.apache.spark:"]
+"build.sc" = ["org.apache.spark:"]
+"project.scala" = ["org.apache.spark:"]
+
+[taxonomy]
+role = ["library"]
+function = ["data-analysis"]
+layer = ["data-layer"]
+domain = ["data-science"]

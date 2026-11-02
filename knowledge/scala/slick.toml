@@ -1,0 +1,22 @@
+[tool]
+name = "Slick"
+category = "library"
+homepage = "https://scala-slick.org"
+docs = "https://scala-slick.org/doc/stable/"
+repo = "https://github.com/slick/slick"
+description = "Functional relational mapping for Scala"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["\"com.typesafe.slick\""]
+"project/Dependencies.scala" = ["\"com.typesafe.slick\""]
+"build.mill" = ["com.typesafe.slick:"]
+"build.sc" = ["com.typesafe.slick:"]
+"project.scala" = ["com.typesafe.slick:"]
+
+[taxonomy]
+role = ["library"]
+function = ["data-mapping"]
+layer = ["data-layer"]
+domain = ["database"]

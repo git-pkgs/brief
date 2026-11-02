@@ -1,0 +1,17 @@
+[tool]
+name = "Bloop"
+category = "build"
+homepage = "https://scalacenter.github.io/bloop/"
+docs = "https://scalacenter.github.io/bloop/docs/what-is-bloop"
+repo = "https://github.com/scalacenter/bloop"
+description = "Build server for fast Scala and Java compilation"
+
+[detect]
+files = [".bloop/", ".bsp/bloop.json"]
+ecosystems = ["scala"]
+
+[config]
+files = [".bsp/bloop.json"]
+
+[taxonomy]
+role = ["build-tool"]

@@ -1,0 +1,22 @@
+[tool]
+name = "http4s"
+category = "library"
+homepage = "https://http4s.org"
+docs = "https://http4s.org"
+repo = "https://github.com/http4s/http4s"
+description = "Typeful functional HTTP library for Scala"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["\"org.http4s\""]
+"project/Dependencies.scala" = ["\"org.http4s\""]
+"build.mill" = ["org.http4s:"]
+"build.sc" = ["org.http4s:"]
+"project.scala" = ["org.http4s:"]
+
+[taxonomy]
+role = ["library"]
+function = ["api-development", "http-client"]
+layer = ["backend"]
+domain = ["web-development"]

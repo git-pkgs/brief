@@ -1,0 +1,21 @@
+[tool]
+name = "Akka"
+category = "library"
+homepage = "https://akka.io"
+docs = "https://doc.akka.io/libraries/akka-core/current/"
+repo = "https://github.com/akka/akka"
+description = "Actor toolkit and streaming runtime for the JVM"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["\"akka-actor\"", "\"akka-actor-typed\"", "\"akka-stream\""]
+"project/Dependencies.scala" = ["\"akka-actor\"", "\"akka-actor-typed\"", "\"akka-stream\""]
+"build.mill" = ["::akka-actor:", "::akka-actor-typed:", "::akka-stream:"]
+"build.sc" = ["::akka-actor:", "::akka-actor-typed:", "::akka-stream:"]
+"project.scala" = ["::akka-actor:", "::akka-actor-typed:", "::akka-stream:"]
+
+[taxonomy]
+role = ["library"]
+function = ["async-runtime", "messaging"]
+layer = ["backend"]

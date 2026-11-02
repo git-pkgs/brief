@@ -1,0 +1,21 @@
+[tool]
+name = "Cats Effect"
+category = "library"
+homepage = "https://typelevel.org/cats-effect/"
+docs = "https://typelevel.org/cats-effect/"
+repo = "https://github.com/typelevel/cats-effect"
+description = "Asynchronous runtime and effect system for Scala"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["\"cats-effect\""]
+"project/Dependencies.scala" = ["\"cats-effect\""]
+"build.mill" = ["::cats-effect:"]
+"build.sc" = ["::cats-effect:"]
+"project.scala" = ["::cats-effect:"]
+
+[taxonomy]
+role = ["library"]
+function = ["async-runtime"]
+layer = ["backend"]

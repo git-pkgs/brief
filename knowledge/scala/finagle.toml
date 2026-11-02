@@ -1,0 +1,22 @@
+[tool]
+name = "Finagle"
+category = "library"
+homepage = "https://twitter.github.io/finagle/"
+docs = "https://twitter.github.io/finagle/"
+repo = "https://github.com/twitter/finagle"
+description = "Extensible RPC system for the JVM"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["\"finagle-"]
+"project/Dependencies.scala" = ["\"finagle-"]
+"build.mill" = ["::finagle-"]
+"build.sc" = ["::finagle-"]
+"project.scala" = ["::finagle-"]
+
+[taxonomy]
+role = ["library"]
+function = ["rpc", "networking"]
+layer = ["backend"]
+domain = ["networking"]

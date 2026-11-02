@@ -1,0 +1,24 @@
+[tool]
+name = "Weaver"
+category = "test"
+homepage = "https://typelevel.org/weaver-test/"
+docs = "https://typelevel.org/weaver-test/"
+repo = "https://github.com/typelevel/weaver-test"
+description = "Test framework for effectful Scala code"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["\"weaver-"]
+"project/Dependencies.scala" = ["\"weaver-"]
+"build.mill" = ["::weaver-"]
+"build.sc" = ["::weaver-"]
+"project.scala" = ["::weaver-"]
+
+[commands]
+run = "sbt test"
+alternatives = ["./mill __.test", "scala-cli test ."]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

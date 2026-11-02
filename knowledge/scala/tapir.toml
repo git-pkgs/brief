@@ -1,0 +1,22 @@
+[tool]
+name = "Tapir"
+category = "library"
+homepage = "https://tapir.softwaremill.com"
+docs = "https://tapir.softwaremill.com"
+repo = "https://github.com/softwaremill/tapir"
+description = "Typed HTTP endpoint definitions for Scala"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["\"com.softwaremill.sttp.tapir\""]
+"project/Dependencies.scala" = ["\"com.softwaremill.sttp.tapir\""]
+"build.mill" = ["com.softwaremill.sttp.tapir:"]
+"build.sc" = ["com.softwaremill.sttp.tapir:"]
+"project.scala" = ["com.softwaremill.sttp.tapir:"]
+
+[taxonomy]
+role = ["library"]
+function = ["api-development"]
+layer = ["backend"]
+domain = ["web-development"]

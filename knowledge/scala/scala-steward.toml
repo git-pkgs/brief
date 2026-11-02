@@ -1,0 +1,17 @@
+[tool]
+name = "Scala Steward"
+category = "dependency_bot"
+homepage = "https://github.com/scala-steward-org/scala-steward"
+docs = "https://github.com/scala-steward-org/scala-steward/blob/main/docs/repo-specific-configuration.md"
+repo = "https://github.com/scala-steward-org/scala-steward"
+description = "Automated dependency updates for Scala projects"
+
+[detect]
+files = [".scala-steward.conf", ".github/.scala-steward.conf", ".config/.scala-steward.conf"]
+ecosystems = ["scala"]
+
+[config]
+files = [".scala-steward.conf", ".github/.scala-steward.conf", ".config/.scala-steward.conf"]
+
+[taxonomy]
+function = ["automation"]

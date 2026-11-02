@@ -1,0 +1,22 @@
+[tool]
+name = "Quill"
+category = "library"
+homepage = "https://zio.dev/zio-quill/"
+docs = "https://zio.dev/zio-quill/"
+repo = "https://github.com/zio/zio-quill"
+description = "Compile-time language integrated queries for Scala"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["\"io.getquill\""]
+"project/Dependencies.scala" = ["\"io.getquill\""]
+"build.mill" = ["io.getquill:"]
+"build.sc" = ["io.getquill:"]
+"project.scala" = ["io.getquill:"]
+
+[taxonomy]
+role = ["library"]
+function = ["data-mapping"]
+layer = ["data-layer"]
+domain = ["database"]

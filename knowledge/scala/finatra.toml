@@ -1,0 +1,22 @@
+[tool]
+name = "Finatra"
+category = "library"
+homepage = "https://twitter.github.io/finatra/"
+docs = "https://twitter.github.io/finatra/"
+repo = "https://github.com/twitter/finatra"
+description = "HTTP and Thrift services framework built on Finagle"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["\"finatra-"]
+"project/Dependencies.scala" = ["\"finatra-"]
+"build.mill" = ["::finatra-"]
+"build.sc" = ["::finatra-"]
+"project.scala" = ["::finatra-"]
+
+[taxonomy]
+role = ["framework"]
+function = ["api-development", "rpc"]
+layer = ["backend"]
+domain = ["web-development"]

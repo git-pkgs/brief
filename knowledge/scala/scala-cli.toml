@@ -1,0 +1,23 @@
+[tool]
+name = "Scala CLI"
+category = "package_manager"
+homepage = "https://scala-cli.virtuslab.org"
+docs = "https://scala-cli.virtuslab.org/docs/overview"
+repo = "https://github.com/VirtusLab/scala-cli"
+description = "Command-line tool to compile, run and test Scala code"
+
+[detect]
+files = ["project.scala"]
+ecosystems = ["scala"]
+[detect.file_contains]
+"project.scala" = ["//> using"]
+
+[commands]
+run = "scala-cli compile ."
+alternatives = ["scala-cli test ."]
+
+[config]
+files = ["project.scala"]
+
+[taxonomy]
+role = ["package-manager"]

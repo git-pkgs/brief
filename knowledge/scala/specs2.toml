@@ -1,0 +1,24 @@
+[tool]
+name = "specs2"
+category = "test"
+homepage = "https://etorreborre.github.io/specs2/"
+docs = "https://etorreborre.github.io/specs2/"
+repo = "https://github.com/etorreborre/specs2"
+description = "Software specifications for Scala"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["\"org.specs2\""]
+"project/Dependencies.scala" = ["\"org.specs2\""]
+"build.mill" = ["org.specs2::", "TestModule.Specs2"]
+"build.sc" = ["org.specs2::", "TestModule.Specs2"]
+"project.scala" = ["org.specs2::"]
+
+[commands]
+run = "sbt test"
+alternatives = ["./mill __.test", "scala-cli test ."]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

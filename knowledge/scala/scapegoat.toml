@@ -1,0 +1,19 @@
+[tool]
+name = "Scapegoat"
+category = "lint"
+homepage = "https://github.com/scapegoat-scala/scapegoat"
+docs = "https://github.com/scapegoat-scala/scapegoat#readme"
+repo = "https://github.com/scapegoat-scala/scapegoat"
+description = "Static code analysis for Scala"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["scapegoat"]
+"project/plugins.sbt" = ["scapegoat"]
+
+[commands]
+run = "sbt scapegoat"
+
+[taxonomy]
+role = ["linter"]

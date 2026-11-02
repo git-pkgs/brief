@@ -1,0 +1,21 @@
+[tool]
+name = "Mill"
+category = "package_manager"
+homepage = "https://mill-build.org"
+docs = "https://mill-build.org/mill/index.html"
+repo = "https://github.com/com-lihaoyi/mill"
+description = "Build tool for Scala, Java and Kotlin"
+
+[detect]
+files = ["build.mill", "build.sc", ".mill-version"]
+ecosystems = ["scala", "java", "kotlin"]
+
+[commands]
+run = "./mill __.compile"
+alternatives = ["mill __.compile"]
+
+[config]
+files = ["build.mill", "build.sc", ".mill-version"]
+
+[taxonomy]
+role = ["package-manager"]

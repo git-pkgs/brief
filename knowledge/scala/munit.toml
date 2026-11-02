@@ -1,0 +1,24 @@
+[tool]
+name = "MUnit"
+category = "test"
+homepage = "https://scalameta.org/munit/"
+docs = "https://scalameta.org/munit/docs/getting-started.html"
+repo = "https://github.com/scalameta/munit"
+description = "Scala testing library with actionable errors"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["\"munit\""]
+"project/Dependencies.scala" = ["\"munit\""]
+"build.mill" = ["::munit:", "TestModule.Munit"]
+"build.sc" = ["::munit:", "TestModule.Munit"]
+"project.scala" = ["::munit:"]
+
+[commands]
+run = "sbt test"
+alternatives = ["./mill __.test", "scala-cli test ."]
+
+[taxonomy]
+role = ["testing-framework"]
+function = ["testing"]

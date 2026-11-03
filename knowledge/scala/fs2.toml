@@ -1,0 +1,20 @@
+[tool]
+name = "fs2"
+category = "library"
+homepage = "https://fs2.io"
+docs = "https://fs2.io"
+repo = "https://github.com/typelevel/fs2"
+description = "Functional streams for Scala"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["\"co.fs2\""]
+"project/Dependencies.scala" = ["\"co.fs2\""]
+"build.mill" = ["co.fs2:"]
+"build.sc" = ["co.fs2:"]
+"project.scala" = ["co.fs2:"]
+
+[taxonomy]
+role = ["library"]
+layer = ["backend"]

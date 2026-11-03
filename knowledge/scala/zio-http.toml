@@ -1,0 +1,22 @@
+[tool]
+name = "ZIO HTTP"
+category = "library"
+homepage = "https://zio.dev/zio-http/"
+docs = "https://zio.dev/zio-http/"
+repo = "https://github.com/zio/zio-http"
+description = "HTTP server and client library built on ZIO"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["\"zio-http\""]
+"project/Dependencies.scala" = ["\"zio-http\""]
+"build.mill" = ["::zio-http:"]
+"build.sc" = ["::zio-http:"]
+"project.scala" = ["::zio-http:"]
+
+[taxonomy]
+role = ["library"]
+function = ["api-development", "http-client"]
+layer = ["backend"]
+domain = ["web-development"]

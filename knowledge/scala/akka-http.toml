@@ -1,0 +1,22 @@
+[tool]
+name = "Akka HTTP"
+category = "library"
+homepage = "https://akka.io"
+docs = "https://doc.akka.io/libraries/akka-http/current/"
+repo = "https://github.com/akka/akka-http"
+description = "HTTP server and client toolkit built on Akka Streams"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["\"akka-http\""]
+"project/Dependencies.scala" = ["\"akka-http\""]
+"build.mill" = ["::akka-http:"]
+"build.sc" = ["::akka-http:"]
+"project.scala" = ["::akka-http:"]
+
+[taxonomy]
+role = ["library"]
+function = ["api-development", "http-client"]
+layer = ["backend"]
+domain = ["web-development"]

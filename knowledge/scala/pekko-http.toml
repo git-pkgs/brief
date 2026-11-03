@@ -1,0 +1,22 @@
+[tool]
+name = "Apache Pekko HTTP"
+category = "library"
+homepage = "https://pekko.apache.org"
+docs = "https://pekko.apache.org/docs/pekko-http/current/"
+repo = "https://github.com/apache/pekko-http"
+description = "HTTP server and client toolkit built on Pekko Streams"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["\"pekko-http\""]
+"project/Dependencies.scala" = ["\"pekko-http\""]
+"build.mill" = ["::pekko-http:"]
+"build.sc" = ["::pekko-http:"]
+"project.scala" = ["::pekko-http:"]
+
+[taxonomy]
+role = ["library"]
+function = ["api-development", "http-client"]
+layer = ["backend"]
+domain = ["web-development"]

@@ -1,0 +1,21 @@
+[tool]
+name = "ZIO"
+category = "library"
+homepage = "https://zio.dev"
+docs = "https://zio.dev"
+repo = "https://github.com/zio/zio"
+description = "Effect system for asynchronous and concurrent Scala"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["\"zio\""]
+"project/Dependencies.scala" = ["\"zio\""]
+"build.mill" = ["dev.zio::zio:"]
+"build.sc" = ["dev.zio::zio:"]
+"project.scala" = ["dev.zio::zio:"]
+
+[taxonomy]
+role = ["library"]
+function = ["async-runtime"]
+layer = ["backend"]

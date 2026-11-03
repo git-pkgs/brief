@@ -1,0 +1,22 @@
+[tool]
+name = "Apache Flink"
+category = "library"
+homepage = "https://flink.apache.org"
+docs = "https://nightlies.apache.org/flink/flink-docs-stable/"
+repo = "https://github.com/apache/flink"
+description = "Stream and batch data processing engine"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["\"org.apache.flink\""]
+"project/Dependencies.scala" = ["\"org.apache.flink\""]
+"build.mill" = ["org.apache.flink:"]
+"build.sc" = ["org.apache.flink:"]
+"project.scala" = ["org.apache.flink:"]
+
+[taxonomy]
+role = ["library"]
+function = ["data-analysis"]
+layer = ["data-layer"]
+domain = ["data-science"]

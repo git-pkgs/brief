@@ -1,0 +1,21 @@
+[tool]
+name = "Monix"
+category = "library"
+homepage = "https://monix.io"
+docs = "https://monix.io"
+repo = "https://github.com/monix/monix"
+description = "Asynchronous programming library for Scala"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["\"io.monix\""]
+"project/Dependencies.scala" = ["\"io.monix\""]
+"build.mill" = ["io.monix:"]
+"build.sc" = ["io.monix:"]
+"project.scala" = ["io.monix:"]
+
+[taxonomy]
+role = ["library"]
+function = ["async-runtime"]
+layer = ["backend"]

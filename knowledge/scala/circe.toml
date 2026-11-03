@@ -1,0 +1,21 @@
+[tool]
+name = "Circe"
+category = "library"
+homepage = "https://circe.github.io/circe/"
+docs = "https://circe.github.io/circe/"
+repo = "https://github.com/circe/circe"
+description = "JSON library for Scala"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["\"io.circe\""]
+"project/Dependencies.scala" = ["\"io.circe\""]
+"build.mill" = ["io.circe:"]
+"build.sc" = ["io.circe:"]
+"project.scala" = ["io.circe:"]
+
+[taxonomy]
+role = ["library"]
+function = ["serialization", "parsing"]
+layer = ["backend"]

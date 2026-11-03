@@ -1,0 +1,21 @@
+[tool]
+name = "Apache Pekko"
+category = "library"
+homepage = "https://pekko.apache.org"
+docs = "https://pekko.apache.org/docs/pekko/current/"
+repo = "https://github.com/apache/pekko"
+description = "Actor toolkit and streaming runtime, forked from Akka"
+
+[detect]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["\"org.apache.pekko\""]
+"project/Dependencies.scala" = ["\"org.apache.pekko\""]
+"build.mill" = ["org.apache.pekko:"]
+"build.sc" = ["org.apache.pekko:"]
+"project.scala" = ["org.apache.pekko:"]
+
+[taxonomy]
+role = ["library"]
+function = ["async-runtime", "messaging"]
+layer = ["backend"]

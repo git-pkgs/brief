@@ -1,0 +1,28 @@
+[tool]
+name = "Play"
+category = "library"
+homepage = "https://www.playframework.com"
+docs = "https://www.playframework.com/documentation/latest/Home"
+repo = "https://github.com/playframework/playframework"
+description = "Web application framework for Scala and Java"
+
+[detect]
+files = ["conf/routes"]
+ecosystems = ["scala"]
+[detect.file_contains]
+"build.sbt" = ["PlayScala", "PlayJava", "PlayMinimalJava"]
+"project/plugins.sbt" = ["\"org.playframework\" % \"sbt-plugin\"", "\"com.typesafe.play\" % \"sbt-plugin\""]
+"build.mill" = ["mill.playlib", "PlayModule"]
+"build.sc" = ["mill.playlib", "PlayModule"]
+
+[commands]
+run = "sbt run"
+
+[config]
+files = ["conf/application.conf", "conf/routes"]
+
+[taxonomy]
+role = ["framework"]
+function = ["api-development", "routing", "templating"]
+layer = ["full-stack"]
+domain = ["web-development"]

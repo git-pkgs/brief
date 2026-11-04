@@ -47,7 +47,6 @@ const renvLock = `{
 }
 `
 
-// assertRenvLockDependencies checks the locked rows collected from lockfile.
 func assertRenvLockDependencies(t *testing.T, r *brief.Report, lockfile string) {
 	t.Helper()
 	wantManifest := brief.ManifestInfo{Ecosystem: "cran", Path: lockfile, Kind: "lockfile"}

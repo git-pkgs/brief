@@ -163,6 +163,21 @@ func BenchmarkSelfDetect(b *testing.B) {
 	}
 }
 
+func BenchmarkChangedToolScan(b *testing.B) {
+	knowledgeBase := loadKBForBench(b)
+	project := os.DirFS("..")
+	options := ToolScanOptions{
+		ChangedFiles: []string{".github/workflows/ci.yml"},
+		Languages:    []string{"go"},
+	}
+	b.ReportAllocs()
+	for b.Loop() {
+		if _, err := NewFS(knowledgeBase, project).RunTools(options); err != nil {
+			b.Fatal(err)
+		}
+	}
+}
+
 func BenchmarkNestedCargoProject(b *testing.B) {
 	knowledgeBase := loadKBForBench(b)
 	b.ResetTimer()

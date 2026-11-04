@@ -166,6 +166,39 @@ func TestRunToolsTrackedOnlyIgnoresUntrackedScripts(t *testing.T) {
 	}
 }
 
+func TestRunToolsRefreshesStateWhenEngineIsReused(t *testing.T) {
+	knowledge := toolScanKnowledgeBase()
+	linter := &kb.ToolDef{
+		Tool:   kb.ToolInfo{Name: "Example Linter", Category: "lint"},
+		Detect: kb.DetectInfo{DevDependencies: []string{"example-linter"}},
+	}
+	knowledge.Tools = append(knowledge.Tools, linter)
+	knowledge.ByName[linter.Tool.Name] = linter
+	knowledge.ByCategory[linter.Tool.Category] = append(knowledge.ByCategory[linter.Tool.Category], linter)
+	knowledge.ManifestFiles = append(knowledge.ManifestFiles, "package.json")
+	project := fstest.MapFS{
+		"package.json": {Data: []byte(`{"devDependencies":{"example-linter":"1.0.0"}}`)},
+	}
+	engine := NewFS(knowledge, project)
+
+	first, err := engine.RunTools(ToolScanOptions{Full: true})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !scanHasTool(first, "lint", "Example Linter") {
+		t.Fatalf("first scan tools: %+v", first.Tools)
+	}
+
+	project["package.json"] = &fstest.MapFile{Data: []byte(`{}`)}
+	second, err := engine.RunTools(ToolScanOptions{ChangedFiles: []string{"package.json"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if scanHasTool(second, "lint", "Example Linter") {
+		t.Fatalf("second scan tools: %+v", second.Tools)
+	}
+}
+
 func toolScanKnowledgeBase() *kb.KnowledgeBase {
 	language := &kb.ToolDef{
 		Tool:   kb.ToolInfo{Name: "Go", Category: "language"},

@@ -109,6 +109,21 @@ type Engine struct {
 	scanEntries          int
 }
 
+func (e *Engine) resetScanState() {
+	*e = Engine{
+		KB:                e.KB,
+		Root:              e.Root,
+		ScanDepth:         e.ScanDepth,
+		ScanLimit:         e.ScanLimit,
+		LineCountTimeout:  e.LineCountTimeout,
+		IncludeSubmodules: e.IncludeSubmodules,
+		SkipDirs:          e.SkipDirs,
+		TrackedOnly:       e.TrackedOnly,
+		fsys:              e.fsys,
+		fsOnly:            e.fsOnly,
+	}
+}
+
 // sortLanguagesByFileCount reorders detected languages so the one with
 // the most source files appears first.
 func (e *Engine) sortLanguagesByFileCount(report *brief.Report) {

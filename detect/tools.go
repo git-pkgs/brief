@@ -40,6 +40,7 @@ type ToolScan struct {
 // RunTools detects tools affected by a project snapshot or its changed files.
 func (e *Engine) RunTools(options ToolScanOptions) (*ToolScan, error) {
 	started := time.Now()
+	e.resetScanState()
 	if err := e.validateOptions(); err != nil {
 		return nil, err
 	}

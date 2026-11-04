@@ -519,9 +519,13 @@ func linkScriptToTool(detections []brief.Detection, cat string, scriptsByName ma
 
 // detectCategory finds all tools in a given category that match the project.
 func (e *Engine) detectCategory(category string) []brief.Detection {
+	return e.detectDefinitions(e.KB.ToolsForCategory(category))
+}
+
+func (e *Engine) detectDefinitions(tools []*kb.ToolDef) []brief.Detection {
 	var detections []brief.Detection
 
-	for _, tool := range e.KB.ToolsForCategory(category) {
+	for _, tool := range tools {
 		e.toolsChecked++
 
 		// Skip ecosystem-specific tools when their language wasn't detected.
@@ -817,13 +821,8 @@ func (e *Engine) scanProjectEntry(
 	if routeOnly && !submoduleRoute && !hiddenRoute {
 		return false
 	}
-	info, err := entry.Info()
-	if err != nil {
-		e.scanTruncated = true
-		return false
-	}
-	if !info.IsDir() {
-		if info.Mode().IsRegular() && e.isTracked(rel) {
+	if !entry.IsDir() {
+		if entry.Type().IsRegular() && e.isTracked(rel) {
 			e.fileRoles[rel] = e.pathRoles(rel)
 			e.indexedFiles = append(e.indexedFiles, rel)
 			if !routeOnly && e.projectEvidence(rel) {

@@ -37,4 +37,5 @@ files = [
     "cpanfile",
     "META.json",
     "DESCRIPTION",
+    "renv.lock",
 ]

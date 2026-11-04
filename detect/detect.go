@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/fs"
 	"net/url"
 	"os"
 	"os/exec"
@@ -58,7 +59,7 @@ const (
 	rankLow    = 1
 )
 
-// Engine runs detection against a project directory.
+// Engine runs detection against a project directory or filesystem.
 type Engine struct {
 	KB                *kb.KnowledgeBase
 	Root              string
@@ -71,6 +72,8 @@ type Engine struct {
 	filesChecked      int
 	toolsChecked      int
 	toolsMatched      int
+	fsys              fs.FS
+	fsOnly            bool
 
 	detectedEcosystems map[string]bool // ecosystems whose language was detected
 
@@ -253,11 +256,18 @@ func (e *Engine) shouldIndexHiddenRoot(dirPath string) bool {
 }
 
 func (e *Engine) exactFileAt(filePath string) bool {
-	info, err := os.Stat(filePath)
+	rel, err := filepath.Rel(e.Root, filePath)
+	if err != nil {
+		return false
+	}
+	info, err := fs.Stat(e.projectFS(), filepath.ToSlash(rel))
 	return err == nil && !info.IsDir()
 }
 
 func (e *Engine) depsDirHasTrackedFiles(dirPath string) bool {
+	if e.fsOnly {
+		return true
+	}
 	rel, err := filepath.Rel(e.Root, dirPath)
 	if err != nil || rel == "." || strings.HasPrefix(rel, ".."+string(filepath.Separator)) {
 		return true
@@ -298,6 +308,16 @@ func New(knowledgeBase *kb.KnowledgeBase, root string) *Engine {
 	}
 }
 
+// NewFS creates a detection engine rooted at "." in fsys. Reports use "." as
+// their path and omit Git metadata, initialized submodules, and line counts.
+// TrackedOnly is unavailable. ScanDepth, ScanLimit, and SkipDirs still apply.
+func NewFS(knowledgeBase *kb.KnowledgeBase, fsys fs.FS) *Engine {
+	e := New(knowledgeBase, ".")
+	e.fsys = fsys
+	e.fsOnly = true
+	return e
+}
+
 // Run performs full detection and returns a Report.
 func (e *Engine) Run() (*brief.Report, error) {
 	start := time.Now()
@@ -305,12 +325,12 @@ func (e *Engine) Run() (*brief.Report, error) {
 		return nil, err
 	}
 
-	abs, err := filepath.Abs(e.Root)
+	abs, err := e.reportPath()
 	if err != nil {
 		return nil, err
 	}
 
-	info, err := os.Stat(abs)
+	info, err := fs.Stat(e.projectFS(), ".")
 	if err != nil {
 		return nil, fmt.Errorf("path does not exist: %s", abs)
 	}
@@ -337,7 +357,7 @@ func (e *Engine) Run() (*brief.Report, error) {
 	report.PackageManagers = e.detectCategory("package_manager")
 	report.Scripts = e.detectScripts()
 	e.detectTools(report)
-	e.detectSelf(abs, report)
+	e.detectSelf(report)
 
 	report.Style = e.detectStyle()
 	report.Layout = e.detectLayout(report.Languages)
@@ -349,12 +369,14 @@ func (e *Engine) Run() (*brief.Report, error) {
 	wg.Go(func() {
 		report.Resources = e.detectResources()
 	})
-	wg.Go(func() {
-		report.Git = e.detectGit(abs)
-	})
-	wg.Go(func() {
-		report.Lines = e.detectLineCount(abs)
-	})
+	if !e.fsOnly {
+		wg.Go(func() {
+			report.Git = e.detectGit(abs)
+		})
+		wg.Go(func() {
+			report.Lines = e.detectLineCount(abs)
+		})
+	}
 	wg.Wait()
 
 	// Expose parsed dependencies (loadDeps was called lazily during tool matching)
@@ -377,6 +399,12 @@ func (e *Engine) Run() (*brief.Report, error) {
 }
 
 func (e *Engine) validateOptions() error {
+	if e.fsOnly && e.fsys == nil {
+		return fmt.Errorf("filesystem must not be nil")
+	}
+	if e.fsOnly && e.TrackedOnly {
+		return fmt.Errorf("TrackedOnly requires a project directory")
+	}
 	if e.ScanDepth < 0 {
 		return fmt.Errorf("scan depth must not be negative")
 	}
@@ -391,8 +419,8 @@ func (e *Engine) validateOptions() error {
 
 const selfModulePath = "github.com/git-pkgs/brief"
 
-func (e *Engine) detectSelf(root string, report *brief.Report) {
-	data, err := os.ReadFile(filepath.Join(root, "go.mod"))
+func (e *Engine) detectSelf(report *brief.Report) {
+	data, err := e.safeReadFile("go.mod")
 	if err != nil {
 		return
 	}
@@ -631,7 +659,7 @@ func (e *Engine) exists(pattern string) bool {
 			if !e.projectEvidence(filepath.ToSlash(candidate) + "/") {
 				continue
 			}
-			info, err := os.Stat(filepath.Join(e.Root, candidate))
+			info, err := fs.Stat(e.projectFS(), filepath.ToSlash(candidate))
 			if err == nil && info.IsDir() && e.isTracked(candidate) {
 				return true
 			}
@@ -655,7 +683,7 @@ func (e *Engine) exactFileExists(file string) bool {
 	if !e.projectEvidence(file) {
 		return false
 	}
-	info, err := os.Stat(filepath.Join(e.Root, filepath.FromSlash(file)))
+	info, err := fs.Stat(e.projectFS(), filepath.ToSlash(file))
 	return err == nil && info.Mode().IsRegular() && e.isTracked(filepath.FromSlash(file))
 }
 
@@ -731,12 +759,26 @@ func (e *Engine) loadProjectFiles() {
 }
 
 func (e *Engine) scanProjectDir(dirPath, relDir string, visited *int, routeOnly bool) bool {
-	dir, err := os.Open(dirPath)
+	file, err := e.projectFS().Open(baseOrDot(filepath.ToSlash(relDir)))
 	if err != nil {
 		e.scanTruncated = true
 		return false
 	}
-	defer func() { _ = dir.Close() }()
+	defer func() { _ = file.Close() }()
+	dir, ok := file.(fs.ReadDirFile)
+	if !ok {
+		entries, err := fs.ReadDir(e.projectFS(), baseOrDot(filepath.ToSlash(relDir)))
+		if err != nil {
+			e.scanTruncated = true
+			return false
+		}
+		for _, entry := range entries {
+			if e.scanProjectEntry(dirPath, relDir, entry, visited, routeOnly) {
+				return true
+			}
+		}
+		return false
+	}
 
 	for {
 		entries, readErr := dir.ReadDir(scanReadBatchSize)
@@ -757,7 +799,7 @@ func (e *Engine) scanProjectDir(dirPath, relDir string, visited *int, routeOnly 
 
 func (e *Engine) scanProjectEntry(
 	dirPath, relDir string,
-	entry os.DirEntry,
+	entry fs.DirEntry,
 	visited *int,
 	routeOnly bool,
 ) bool {
@@ -857,71 +899,25 @@ func (e *Engine) loadFileExts() {
 	}
 }
 
-// safeReadFile reads a file within the project root, rejecting symlinks
-// that point outside the root to prevent file disclosure attacks.
-// It opens the file via O_NOFOLLOW to avoid TOCTOU races between stat and read.
+// safeReadFile reads a regular file through the project filesystem.
 func (e *Engine) safeReadFile(file string) ([]byte, error) {
 	return e.safeReadFileLimit(file, 0)
 }
 
-// safeReadFileLimit applies safeReadFile's path checks and reads at most limit
-// bytes. A non-positive limit reads the complete file.
+// safeReadFileLimit reads at most limit bytes; a non-positive limit reads all.
 func (e *Engine) safeReadFileLimit(file string, limit int64) ([]byte, error) {
-	path := filepath.Join(e.Root, file)
-	info, err := os.Lstat(path)
-	if err != nil {
-		return nil, err
-	}
-	if info.Mode()&os.ModeSymlink != 0 {
-		absPath, err := filepath.Abs(path)
-		if err != nil {
-			return nil, err
-		}
-		target, err := filepath.EvalSymlinks(absPath)
-		if err != nil {
-			return nil, err
-		}
-		absRoot, err := filepath.Abs(e.Root)
-		if err != nil {
-			return nil, err
-		}
-		resolvedRoot, err := filepath.EvalSymlinks(absRoot)
-		if err != nil {
-			return nil, err
-		}
-		rel, err := filepath.Rel(resolvedRoot, target)
-		if err != nil {
-			return nil, err
-		}
-		if rel == ".." || strings.HasPrefix(rel, ".."+string(filepath.Separator)) || filepath.IsAbs(rel) {
-			return nil, fmt.Errorf("symlink escapes project root: %s -> %s", file, target)
-		}
-		targetInfo, err := os.Stat(target)
-		if err != nil {
-			return nil, err
-		}
-		if !targetInfo.Mode().IsRegular() {
-			return nil, fmt.Errorf("path is not a regular file: %s", file)
-		}
-		// Safe symlink within root: open the resolved target without following
-		// a symlink swapped into place after the checks above.
-		f, err := openNoFollow(target)
-		if err != nil {
-			return nil, err
-		}
-		defer func() { _ = f.Close() }()
-		return readFileLimit(f, limit)
-	}
-	if !info.Mode().IsRegular() {
-		return nil, fmt.Errorf("path is not a regular file: %s", file)
-	}
-	// Not a symlink: open with O_NOFOLLOW so a symlink swap between
-	// the Lstat and Open is rejected by the kernel.
-	f, err := openNoFollow(path)
+	f, err := e.projectFS().Open(filepath.ToSlash(file))
 	if err != nil {
 		return nil, err
 	}
 	defer func() { _ = f.Close() }()
+	info, err := f.Stat()
+	if err != nil {
+		return nil, err
+	}
+	if !info.Mode().IsRegular() {
+		return nil, fmt.Errorf("path is not a regular file: %s", file)
+	}
 	return readFileLimit(f, limit)
 }
 
@@ -1902,7 +1898,7 @@ func (e *Engine) detectResources() *brief.ResourceInfo {
 	res := &brief.ResourceInfo{}
 
 	for _, rd := range e.KB.Resources {
-		abs, rel := e.findResource(rd.Resource)
+		rel := e.findResource(rd.Resource)
 		if rel == "" {
 			continue
 		}
@@ -1921,7 +1917,7 @@ func (e *Engine) detectResources() *brief.ResourceInfo {
 			res.Roadmap = rel
 		case "license":
 			res.License = rel
-			res.LicenseType = detectLicenseType(abs)
+			res.LicenseType = e.detectLicenseType(rel)
 		}
 	}
 
@@ -2015,9 +2011,8 @@ func (e *Engine) collectTemplates(dir string, into *[]string, config *string) {
 
 // findResource searches for the first file matching any of the resource's
 // patterns, in the repo root and then each configured subdirectory. Matching
-// is case-insensitive. It returns the absolute path and the path relative to
-// the repo root.
-func (e *Engine) findResource(r kb.ResourceInfo) (abs, rel string) {
+// is case-insensitive. It returns the path relative to the repo root.
+func (e *Engine) findResource(r kb.ResourceInfo) string {
 	dirs := append([]string{"."}, r.Dirs...)
 	for _, dir := range dirs {
 		entries := e.dirFiles(dir)
@@ -2031,11 +2026,11 @@ func (e *Engine) findResource(r kb.ResourceInfo) (abs, rel string) {
 				if dir != "." {
 					relPath = path.Join(dir, name)
 				}
-				return filepath.Join(e.Root, filepath.FromSlash(relPath)), relPath
+				return relPath
 			}
 		}
 	}
-	return "", ""
+	return ""
 }
 
 var skillFrontmatterDelim = []byte("---")
@@ -2166,17 +2161,13 @@ func (e *Engine) parseCIMatrices(platforms *brief.PlatformInfo) {
 		for _, rel := range e.indexedFiles {
 			rel = filepath.ToSlash(rel)
 			if matchPathPattern(fp.Pattern, rel) {
-				e.parseCIWorkflow(filepath.Join(e.Root, filepath.FromSlash(rel)), ci.MatrixKeys, platforms)
+				e.parseCIWorkflow(rel, ci.MatrixKeys, platforms)
 			}
 		}
 	}
 }
 
-func (e *Engine) parseCIWorkflow(path string, matrixKeys map[string]string, platforms *brief.PlatformInfo) {
-	rel, err := filepath.Rel(e.Root, path)
-	if err != nil {
-		return
-	}
+func (e *Engine) parseCIWorkflow(rel string, matrixKeys map[string]string, platforms *brief.PlatformInfo) {
 	data, err := e.safeReadFile(rel)
 	if err != nil {
 		return
@@ -2582,13 +2573,8 @@ func parseTokeiOutput(data []byte) *brief.LineCount {
 }
 
 // detectLicenseType reads a license file and identifies its SPDX license type.
-func detectLicenseType(path string) string {
-	// Reject symlinks to prevent file disclosure
-	info, err := os.Lstat(path)
-	if err != nil || info.Mode()&os.ModeSymlink != 0 {
-		return ""
-	}
-	data, err := os.ReadFile(path)
+func (e *Engine) detectLicenseType(path string) string {
+	data, err := e.safeReadFile(path)
 	if err != nil || len(data) == 0 {
 		return ""
 	}

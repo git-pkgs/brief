@@ -110,7 +110,7 @@ func (e *Engine) detectCitationBibTeXFiles() *brief.BibTeXInfo {
 			}
 			resource := rd.Resource
 			resource.Patterns = []string{pattern}
-			_, rel := e.findResource(resource)
+			rel := e.findResource(resource)
 			if rel == "" {
 				continue
 			}

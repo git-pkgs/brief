@@ -19,6 +19,9 @@ func (e *Engine) loadSubmodules() {
 		return
 	}
 	e.submodulesLoaded = true
+	if e.fsOnly {
+		return
+	}
 	e.loadSubmodulesFrom(e.Root, "", make(map[string]bool))
 	sort.Slice(e.submodules, func(i, j int) bool {
 		return e.submodules[i].Path < e.submodules[j].Path

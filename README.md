@@ -411,6 +411,8 @@ r, _ := engine.Run()
 report.JSON(os.Stdout, r)
 ```
 
+Use `detect.NewFS(knowledgeBase, fsys)` to scan an `fs.FS` snapshot without a checkout. It reads paths relative to `.` and uses `.` as the report path. The same detection rules and scan bounds apply. Snapshot reports omit Git metadata, initialized submodules, and external line counts; `TrackedOnly` returns an error. Use `fs.Sub` to scan a subdirectory.
+
 ## Contributing
 
 Adding a new tool: create a TOML file in the appropriate ecosystem directory under `knowledge/`, add test fixtures in `testdata/`, run `go test ./...`.

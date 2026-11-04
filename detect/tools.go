@@ -71,12 +71,8 @@ func (e *Engine) RunTools(options ToolScanOptions) (*ToolScan, error) {
 		if category == categoryLanguage {
 			continue
 		}
-		var definitions []*kb.ToolDef
-		for _, tool := range e.KB.ToolsForCategory(category) {
-			if !options.Full && !toolAffected(tool, changes, options.LanguagesChanged) {
-				continue
-			}
-			definitions = append(definitions, tool)
+		definitions := e.toolScanDefinitions(category, options.Full, changes, options.LanguagesChanged)
+		for _, tool := range definitions {
 			result.Checked = append(result.Checked, ToolRef{Name: tool.Tool.Name, Category: category})
 		}
 		if detections := e.detectDefinitions(definitions); len(detections) > 0 {
@@ -101,6 +97,25 @@ func (e *Engine) RunTools(options ToolScanOptions) (*ToolScan, error) {
 		ScanTruncated: e.scanTruncated || e.scanDepthTruncated,
 	}
 	return result, nil
+}
+
+func (e *Engine) toolScanDefinitions(category string, full bool, changes *filterContext, languagesChanged bool) []*kb.ToolDef {
+	definitions := e.KB.ToolsForCategory(category)
+	if full {
+		return definitions
+	}
+	var affected []*kb.ToolDef
+	for _, tool := range definitions {
+		if toolAffected(tool, changes, languagesChanged) {
+			affected = append(affected, tool)
+		}
+	}
+	if len(affected) > 0 {
+		if _, ok := categoryScriptNames[category]; ok {
+			return definitions
+		}
+	}
+	return affected
 }
 
 func (e *Engine) linkToolScanScripts(detections []brief.Detection, category string, scriptsByName map[string]brief.Script) map[string]brief.Script {

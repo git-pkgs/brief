@@ -1,6 +1,9 @@
 package detect
 
 import (
+	"os"
+	"os/exec"
+	"path/filepath"
 	"testing"
 	"testing/fstest"
 
@@ -98,6 +101,71 @@ func TestRunToolsLinksChangedProjectScripts(t *testing.T) {
 	}
 }
 
+func TestRunToolsLinksScriptsAgainstFullCategory(t *testing.T) {
+	knowledge := toolScanKnowledgeBase()
+	project := fstest.MapFS{
+		"builder.yml":       {Data: []byte("build: true\n")},
+		"other-builder.yml": {Data: []byte("build: true\n")},
+		"package.json":      {Data: []byte(`{"scripts":{"build":"builder --release"}}`)},
+	}
+
+	scan, err := NewFS(knowledge, project).RunTools(ToolScanOptions{ChangedFiles: []string{"other-builder.yml"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !scanCheckedTool(scan, "build", "Builder") || !scanCheckedTool(scan, "build", "Other Builder") {
+		t.Fatalf("checked tools: %+v", scan.Checked)
+	}
+	detections := scan.Tools["build"]
+	if len(detections) != 2 {
+		t.Fatalf("build tools: %+v", detections)
+	}
+	if command := detections[0].Command; command == nil || command.Source != brief.SourceProjectScript {
+		t.Fatalf("first build command: %+v", command)
+	}
+	if command := detections[1].Command; command == nil || command.Source != brief.SourceKnowledgeBase {
+		t.Fatalf("second build command: %+v", command)
+	}
+
+	delete(project, "builder.yml")
+	scan, err = NewFS(knowledge, project).RunTools(ToolScanOptions{ChangedFiles: []string{"builder.yml"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	detections = scan.Tools["build"]
+	if len(detections) != 1 || detections[0].Name != "Other Builder" {
+		t.Fatalf("build tools after removal: %+v", detections)
+	}
+	if command := detections[0].Command; command == nil || command.Source != brief.SourceProjectScript {
+		t.Fatalf("remaining build command: %+v", command)
+	}
+}
+
+func TestRunToolsTrackedOnlyIgnoresUntrackedScripts(t *testing.T) {
+	if _, err := exec.LookPath("git"); err != nil {
+		t.Skip("git not installed")
+	}
+	dir := t.TempDir()
+	writeToolScanFile(t, dir, "builder.yml", "build: true\n")
+	runToolScanGit(t, dir, "init", "-q")
+	runToolScanGit(t, dir, "add", "builder.yml")
+	writeToolScanFile(t, dir, "package.json", `{"scripts":{"build":"builder --release"}}`)
+
+	engine := New(toolScanKnowledgeBase(), dir)
+	engine.TrackedOnly = true
+	scan, err := engine.RunTools(ToolScanOptions{Full: true})
+	if err != nil {
+		t.Fatal(err)
+	}
+	detections := scan.Tools["build"]
+	if len(detections) != 1 {
+		t.Fatalf("build tools: %+v", detections)
+	}
+	if command := detections[0].Command; command == nil || command.Run != "builder" || command.Source != brief.SourceKnowledgeBase {
+		t.Fatalf("build command: %+v", command)
+	}
+}
+
 func toolScanKnowledgeBase() *kb.KnowledgeBase {
 	language := &kb.ToolDef{
 		Tool:   kb.ToolInfo{Name: "Go", Category: "language"},
@@ -122,13 +190,34 @@ func toolScanKnowledgeBase() *kb.KnowledgeBase {
 		Detect:   kb.DetectInfo{Files: []string{"builder.yml"}},
 		Commands: kb.CommandInfo{Run: "builder"},
 	}
+	otherBuilder := &kb.ToolDef{
+		Tool:     kb.ToolInfo{Name: "Other Builder", Category: "build"},
+		Detect:   kb.DetectInfo{Files: []string{"other-builder.yml"}},
+		Commands: kb.CommandInfo{Run: "other-builder"},
+	}
 	return &kb.KnowledgeBase{
-		Tools:         []*kb.ToolDef{language, ci, security, packageManager, builder},
-		ByName:        map[string]*kb.ToolDef{"Go": language, "GitHub Actions": ci, "gosec": security, "npm": packageManager, "Builder": builder},
-		ByCategory:    map[string][]*kb.ToolDef{"language": {language}, "ci": {ci}, "security": {security}, "package_manager": {packageManager}, "build": {builder}},
+		Tools:         []*kb.ToolDef{language, ci, security, packageManager, builder, otherBuilder},
+		ByName:        map[string]*kb.ToolDef{"Go": language, "GitHub Actions": ci, "gosec": security, "npm": packageManager, "Builder": builder, "Other Builder": otherBuilder},
+		ByCategory:    map[string][]*kb.ToolDef{"language": {language}, "ci": {ci}, "security": {security}, "package_manager": {packageManager}, "build": {builder, otherBuilder}},
 		Ecosystems:    map[string][]*kb.ToolDef{"go": {language, security}},
 		ManifestFiles: []string{"go.mod"},
 		ScriptSources: []kb.ScriptSourceDef{{Source: kb.SourceInfo{Name: "package.json", File: "package.json", Format: "json_scripts"}}},
+	}
+}
+
+func writeToolScanFile(t *testing.T, dir, name, content string) {
+	t.Helper()
+	if err := os.WriteFile(filepath.Join(dir, name), []byte(content), 0o644); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func runToolScanGit(t *testing.T, dir string, args ...string) {
+	t.Helper()
+	command := exec.Command("git", args...)
+	command.Dir = dir
+	if output, err := command.CombinedOutput(); err != nil {
+		t.Fatalf("git %v: %v\n%s", args, err, output)
 	}
 }
 

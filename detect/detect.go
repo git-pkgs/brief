@@ -1546,6 +1546,9 @@ func (e *Engine) detectScripts() []brief.Script {
 	var scripts []brief.Script
 
 	for _, src := range e.KB.ScriptSources {
+		if !e.isTracked(filepath.FromSlash(src.Source.File)) {
+			continue
+		}
 		data, err := e.safeReadFile(src.Source.File)
 		if err != nil {
 			continue

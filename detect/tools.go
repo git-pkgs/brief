@@ -62,6 +62,7 @@ func (e *Engine) RunTools(options ToolScanOptions) (*ToolScan, error) {
 
 	e.detectedEcosystems = ecosystemsForLanguages(e.KB, options.Languages)
 	result := &ToolScan{Tools: make(map[string][]brief.Detection)}
+	var scriptsByName map[string]brief.Script
 	var changes *filterContext
 	if !options.Full {
 		changes = newFilterContext(e.KB, options.ChangedFiles)
@@ -79,6 +80,7 @@ func (e *Engine) RunTools(options ToolScanOptions) (*ToolScan, error) {
 			result.Checked = append(result.Checked, ToolRef{Name: tool.Tool.Name, Category: category})
 		}
 		if detections := e.detectDefinitions(definitions); len(detections) > 0 {
+			scriptsByName = e.linkToolScanScripts(detections, category, scriptsByName)
 			result.Tools[category] = detections
 		}
 	}
@@ -99,6 +101,20 @@ func (e *Engine) RunTools(options ToolScanOptions) (*ToolScan, error) {
 		ScanTruncated: e.scanTruncated || e.scanDepthTruncated,
 	}
 	return result, nil
+}
+
+func (e *Engine) linkToolScanScripts(detections []brief.Detection, category string, scriptsByName map[string]brief.Script) map[string]brief.Script {
+	if _, ok := categoryScriptNames[category]; !ok {
+		return scriptsByName
+	}
+	if scriptsByName == nil {
+		scriptsByName = make(map[string]brief.Script)
+		for _, script := range e.detectScripts() {
+			scriptsByName[script.Name] = script
+		}
+	}
+	linkScriptToTool(detections, category, scriptsByName)
+	return scriptsByName
 }
 
 func ecosystemsForLanguages(knowledge *kb.KnowledgeBase, languages []string) map[string]bool {
@@ -141,6 +157,9 @@ func languageKey(name string) string {
 }
 
 func toolAffected(tool *kb.ToolDef, changes *filterContext, languagesChanged bool) bool {
+	if scriptSourceChanged(tool.Tool.Category, changes) {
+		return true
+	}
 	if languagesChanged && len(tool.Detect.Ecosystems) > 0 {
 		return true
 	}
@@ -151,4 +170,16 @@ func toolAffected(tool *kb.ToolDef, changes *filterContext, languagesChanged boo
 		return true
 	}
 	return changes.manifestChanged && (len(tool.Detect.Dependencies) > 0 || len(tool.Detect.DevDependencies) > 0)
+}
+
+func scriptSourceChanged(category string, changes *filterContext) bool {
+	if _, ok := categoryScriptNames[category]; !ok {
+		return false
+	}
+	for _, source := range changes.kb.ScriptSources {
+		if changes.changed[source.Source.File] {
+			return true
+		}
+	}
+	return false
 }

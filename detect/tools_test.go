@@ -4,6 +4,7 @@ import (
 	"testing"
 	"testing/fstest"
 
+	"github.com/git-pkgs/brief"
 	"github.com/git-pkgs/brief/kb"
 )
 
@@ -73,6 +74,30 @@ func TestEcosystemsForLanguageAliases(t *testing.T) {
 	}
 }
 
+func TestRunToolsLinksChangedProjectScripts(t *testing.T) {
+	knowledge := toolScanKnowledgeBase()
+	project := fstest.MapFS{
+		"builder.yml":  {Data: []byte("build: true\n")},
+		"package.json": {Data: []byte(`{"scripts":{"build":"builder --release"}}`)},
+	}
+
+	scan, err := NewFS(knowledge, project).RunTools(ToolScanOptions{ChangedFiles: []string{"package.json"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !scanCheckedTool(scan, "build", "Builder") {
+		t.Fatalf("checked tools: %+v", scan.Checked)
+	}
+	detections := scan.Tools["build"]
+	if len(detections) != 1 {
+		t.Fatalf("build tools: %+v", detections)
+	}
+	command := detections[0].Command
+	if command == nil || command.Run != "builder --release" || command.Source != brief.SourceProjectScript {
+		t.Fatalf("build command: %+v", command)
+	}
+}
+
 func toolScanKnowledgeBase() *kb.KnowledgeBase {
 	language := &kb.ToolDef{
 		Tool:   kb.ToolInfo{Name: "Go", Category: "language"},
@@ -92,18 +117,33 @@ func toolScanKnowledgeBase() *kb.KnowledgeBase {
 		Tool:   kb.ToolInfo{Name: "npm", Category: "package_manager"},
 		Detect: kb.DetectInfo{Files: []string{"package.json"}},
 	}
+	builder := &kb.ToolDef{
+		Tool:     kb.ToolInfo{Name: "Builder", Category: "build"},
+		Detect:   kb.DetectInfo{Files: []string{"builder.yml"}},
+		Commands: kb.CommandInfo{Run: "builder"},
+	}
 	return &kb.KnowledgeBase{
-		Tools:         []*kb.ToolDef{language, ci, security, packageManager},
-		ByName:        map[string]*kb.ToolDef{"Go": language, "GitHub Actions": ci, "gosec": security, "npm": packageManager},
-		ByCategory:    map[string][]*kb.ToolDef{"language": {language}, "ci": {ci}, "security": {security}, "package_manager": {packageManager}},
+		Tools:         []*kb.ToolDef{language, ci, security, packageManager, builder},
+		ByName:        map[string]*kb.ToolDef{"Go": language, "GitHub Actions": ci, "gosec": security, "npm": packageManager, "Builder": builder},
+		ByCategory:    map[string][]*kb.ToolDef{"language": {language}, "ci": {ci}, "security": {security}, "package_manager": {packageManager}, "build": {builder}},
 		Ecosystems:    map[string][]*kb.ToolDef{"go": {language, security}},
 		ManifestFiles: []string{"go.mod"},
+		ScriptSources: []kb.ScriptSourceDef{{Source: kb.SourceInfo{Name: "package.json", File: "package.json", Format: "json_scripts"}}},
 	}
 }
 
 func scanHasTool(scan *ToolScan, category, name string) bool {
 	for _, detection := range scan.Tools[category] {
 		if detection.Name == name {
+			return true
+		}
+	}
+	return false
+}
+
+func scanCheckedTool(scan *ToolScan, category, name string) bool {
+	for _, tool := range scan.Checked {
+		if tool.Category == category && tool.Name == name {
 			return true
 		}
 	}

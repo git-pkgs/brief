@@ -150,9 +150,15 @@ func TestFilterByChangedFiles_KeepsDependencyDetectedLanguageForManifest(t *test
 	}
 	knowledgeBase := &kb.KnowledgeBase{
 		ByName:        map[string]*kb.ToolDef{"TypeScript": typeScript},
-		ManifestFiles: []string{"yarn.lock"},
+		ManifestFiles: []string{"yarn.lock", "Cargo.toml"},
 	}
-	report := &brief.Report{Languages: []brief.Detection{{Name: "TypeScript"}}}
+	report := &brief.Report{
+		Languages: []brief.Detection{{Name: "TypeScript"}},
+		Dependencies: []brief.DepInfo{{
+			Manifest: "apps/web/yarn.lock",
+			Name:     "typescript",
+		}},
+	}
 
 	filtered := FilterByChangedFiles(report, knowledgeBase, []string{"apps/web/yarn.lock"})
 	if len(filtered.Languages) != 1 || filtered.Languages[0].Name != "TypeScript" {
@@ -162,6 +168,11 @@ func TestFilterByChangedFiles_KeepsDependencyDetectedLanguageForManifest(t *test
 	filtered = FilterByChangedFiles(report, knowledgeBase, []string{"README.md"})
 	if len(filtered.Languages) != 0 {
 		t.Fatalf("unrelated languages = %#v", filtered.Languages)
+	}
+
+	filtered = FilterByChangedFiles(report, knowledgeBase, []string{"Cargo.toml"})
+	if len(filtered.Languages) != 0 {
+		t.Fatalf("unrelated manifest languages = %#v", filtered.Languages)
 	}
 }
 

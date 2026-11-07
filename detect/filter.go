@@ -12,10 +12,12 @@ import (
 
 // filterContext holds precomputed data used by filter helpers.
 type filterContext struct {
-	changed         map[string]bool
-	changedExts     map[string]bool
-	manifestChanged bool
-	kb              *kb.KnowledgeBase
+	changed                map[string]bool
+	changedExts            map[string]bool
+	changedDependencies    map[string]bool
+	changedDevDependencies map[string]bool
+	manifestChanged        bool
+	kb                     *kb.KnowledgeBase
 }
 
 func newFilterContext(knowledgeBase *kb.KnowledgeBase, changedFiles []string) *filterContext {
@@ -55,6 +57,7 @@ func newFilterContext(knowledgeBase *kb.KnowledgeBase, changedFiles []string) *f
 // only detections relevant to the given set of changed files.
 func FilterByChangedFiles(r *brief.Report, knowledgeBase *kb.KnowledgeBase, changedFiles []string) *brief.Report {
 	fc := newFilterContext(knowledgeBase, changedFiles)
+	fc.setChangedDependencies(r.Dependencies)
 
 	filtered := &brief.Report{
 		Version:      r.Version,
@@ -137,8 +140,36 @@ func (fc *filterContext) filterTools(tools map[string][]brief.Detection, out map
 }
 
 func (fc *filterContext) toolAffected(tool *kb.ToolDef) bool {
-	return toolMatchesChangedFiles(tool, fc.changed, fc.changedExts) ||
-		fc.manifestChanged && (len(tool.Detect.Dependencies) > 0 || len(tool.Detect.DevDependencies) > 0)
+	return toolMatchesChangedFiles(tool, fc.changed, fc.changedExts) || fc.dependencyAffected(tool)
+}
+
+func (fc *filterContext) setChangedDependencies(dependencies []brief.DepInfo) {
+	fc.changedDependencies = make(map[string]bool)
+	fc.changedDevDependencies = make(map[string]bool)
+	for _, dependency := range dependencies {
+		if !fc.changed[dependency.Manifest] {
+			continue
+		}
+		fc.changedDependencies[dependency.Name] = true
+		switch brief.Scope(dependency.Scope) {
+		case brief.ScopeDevelopment, brief.ScopeTest, brief.ScopeBuild:
+			fc.changedDevDependencies[dependency.Name] = true
+		}
+	}
+}
+
+func (fc *filterContext) dependencyAffected(tool *kb.ToolDef) bool {
+	for _, dependency := range tool.Detect.Dependencies {
+		if fc.changedDependencies[dependency] {
+			return true
+		}
+	}
+	for _, dependency := range tool.Detect.DevDependencies {
+		if fc.changedDevDependencies[dependency] {
+			return true
+		}
+	}
+	return false
 }
 
 func (fc *filterContext) filterStyle(style *brief.StyleInfo) *brief.StyleInfo {

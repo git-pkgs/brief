@@ -24,10 +24,9 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/git-pkgs/brief"
 	"github.com/git-pkgs/brief/kb"
-	"github.com/git-pkgs/licensecheck"
+	"github.com/git-pkgs/licenses"
 	"github.com/git-pkgs/manifests"
 	"github.com/git-pkgs/roles"
-	"github.com/git-pkgs/spdx"
 	"go.yaml.in/yaml/v3"
 )
 
@@ -2596,19 +2595,20 @@ func (e *Engine) detectLicenseType(path string) string {
 		return ""
 	}
 
-	cov := licensecheck.Scan(data)
-	if len(cov.Match) == 0 {
+	matcher, err := resourceLicenseMatcher()
+	if err != nil {
 		return ""
 	}
-
-	id := cov.Match[0].ID
-	// Normalize to a valid SPDX identifier
-	normalized, err := spdx.Normalize(id)
-	if err != nil {
-		return id // return raw ID if normalization fails
+	result, err := matcher.Match(context.Background(), data)
+	if err != nil || len(result.Detections) == 0 {
+		return ""
 	}
-	return normalized
+	return result.Detections[0].Expression
 }
+
+var resourceLicenseMatcher = sync.OnceValues(func() (*licenses.Matcher, error) {
+	return licenses.New()
+})
 
 // recommendedCategories are tool categories that every project benefits from.
 var recommendedCategories = map[string]string{

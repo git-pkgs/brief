@@ -88,7 +88,7 @@ func (fc *filterContext) filterDetections(dets []brief.Detection) []brief.Detect
 	var result []brief.Detection
 	for _, det := range dets {
 		tool := fc.kb.ByName[det.Name]
-		if tool != nil && toolMatchesChangedFiles(tool, fc.changed, fc.changedExts) {
+		if tool != nil && fc.toolAffected(tool) {
 			result = append(result, det)
 		}
 	}
@@ -129,15 +129,16 @@ func (fc *filterContext) filterTools(tools map[string][]brief.Detection, out map
 			if tool == nil {
 				continue
 			}
-			keep := toolMatchesChangedFiles(tool, fc.changed, fc.changedExts)
-			if !keep && fc.manifestChanged && (len(tool.Detect.Dependencies) > 0 || len(tool.Detect.DevDependencies) > 0) {
-				keep = true
-			}
-			if keep {
+			if fc.toolAffected(tool) {
 				out[cat] = append(out[cat], det)
 			}
 		}
 	}
+}
+
+func (fc *filterContext) toolAffected(tool *kb.ToolDef) bool {
+	return toolMatchesChangedFiles(tool, fc.changed, fc.changedExts) ||
+		fc.manifestChanged && (len(tool.Detect.Dependencies) > 0 || len(tool.Detect.DevDependencies) > 0)
 }
 
 func (fc *filterContext) filterStyle(style *brief.StyleInfo) *brief.StyleInfo {

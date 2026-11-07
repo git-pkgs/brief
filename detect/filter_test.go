@@ -141,6 +141,30 @@ func TestFilterByChangedFiles_Languages(t *testing.T) {
 	}
 }
 
+func TestFilterByChangedFiles_KeepsDependencyDetectedLanguageForManifest(t *testing.T) {
+	typeScript := &kb.ToolDef{
+		Tool: kb.ToolInfo{Name: "TypeScript", Category: "language"},
+		Detect: kb.DetectInfo{
+			Dependencies: []string{"typescript"},
+		},
+	}
+	knowledgeBase := &kb.KnowledgeBase{
+		ByName:        map[string]*kb.ToolDef{"TypeScript": typeScript},
+		ManifestFiles: []string{"yarn.lock"},
+	}
+	report := &brief.Report{Languages: []brief.Detection{{Name: "TypeScript"}}}
+
+	filtered := FilterByChangedFiles(report, knowledgeBase, []string{"apps/web/yarn.lock"})
+	if len(filtered.Languages) != 1 || filtered.Languages[0].Name != "TypeScript" {
+		t.Fatalf("languages = %#v", filtered.Languages)
+	}
+
+	filtered = FilterByChangedFiles(report, knowledgeBase, []string{"README.md"})
+	if len(filtered.Languages) != 0 {
+		t.Fatalf("unrelated languages = %#v", filtered.Languages)
+	}
+}
+
 func TestFilterByChangedFiles_Tools(t *testing.T) {
 	knowledgeBase := loadKB(t)
 

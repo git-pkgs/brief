@@ -12,16 +12,18 @@ import (
 
 // filterContext holds precomputed data used by filter helpers.
 type filterContext struct {
-	changed         map[string]bool
-	changedExts     map[string]bool
-	manifestChanged bool
-	kb              *kb.KnowledgeBase
+	changed                map[string]bool
+	changedExts            map[string]bool
+	changedDependencies    map[string]bool
+	changedDevDependencies map[string]bool
+	manifestChanged        bool
+	kb                     *kb.KnowledgeBase
 }
 
 func newFilterContext(knowledgeBase *kb.KnowledgeBase, changedFiles []string) *filterContext {
 	changed := make(map[string]bool, len(changedFiles))
 	for _, f := range changedFiles {
-		changed[f] = true
+		changed[filepath.ToSlash(filepath.Clean(f))] = true
 	}
 
 	changedExts := make(map[string]bool)
@@ -55,6 +57,7 @@ func newFilterContext(knowledgeBase *kb.KnowledgeBase, changedFiles []string) *f
 // only detections relevant to the given set of changed files.
 func FilterByChangedFiles(r *brief.Report, knowledgeBase *kb.KnowledgeBase, changedFiles []string) *brief.Report {
 	fc := newFilterContext(knowledgeBase, changedFiles)
+	fc.setChangedDependencies(r.Dependencies, r.Manifests)
 
 	filtered := &brief.Report{
 		Version:      r.Version,
@@ -88,7 +91,7 @@ func (fc *filterContext) filterDetections(dets []brief.Detection) []brief.Detect
 	var result []brief.Detection
 	for _, det := range dets {
 		tool := fc.kb.ByName[det.Name]
-		if tool != nil && toolMatchesChangedFiles(tool, fc.changed, fc.changedExts) {
+		if tool != nil && fc.toolAffected(tool) {
 			result = append(result, det)
 		}
 	}
@@ -129,15 +132,89 @@ func (fc *filterContext) filterTools(tools map[string][]brief.Detection, out map
 			if tool == nil {
 				continue
 			}
-			keep := toolMatchesChangedFiles(tool, fc.changed, fc.changedExts)
-			if !keep && fc.manifestChanged && (len(tool.Detect.Dependencies) > 0 || len(tool.Detect.DevDependencies) > 0) {
-				keep = true
-			}
-			if keep {
+			if fc.toolAffected(tool) {
 				out[cat] = append(out[cat], det)
 			}
 		}
 	}
+}
+
+func (fc *filterContext) toolAffected(tool *kb.ToolDef) bool {
+	return toolMatchesChangedFiles(tool, fc.changed, fc.changedExts) || fc.dependencyAffected(tool)
+}
+
+func (fc *filterContext) setChangedDependencies(dependencies []brief.DepInfo, manifests []brief.ManifestInfo) {
+	fc.changedDependencies = make(map[string]bool)
+	fc.changedDevDependencies = make(map[string]bool)
+	manifestByPath := make(map[string]brief.ManifestInfo, len(manifests))
+	for _, manifest := range manifests {
+		manifest.Path = filepath.ToSlash(filepath.Clean(manifest.Path))
+		manifestByPath[manifest.Path] = manifest
+	}
+
+	devDependencyManifests := make(map[string][]brief.ManifestInfo)
+	for _, dependency := range dependencies {
+		if !isDevelopmentScope(dependency.Scope) {
+			continue
+		}
+		manifest := manifestByPath[filepath.ToSlash(filepath.Clean(dependency.Manifest))]
+		if manifest.Kind == "manifest" {
+			devDependencyManifests[dependency.Name] = append(devDependencyManifests[dependency.Name], manifest)
+		}
+	}
+
+	for _, dependency := range dependencies {
+		manifest := filepath.ToSlash(filepath.Clean(dependency.Manifest))
+		if !fc.changed[manifest] {
+			continue
+		}
+		fc.changedDependencies[dependency.Name] = true
+		if isDevelopmentScope(dependency.Scope) || lockfileHasDevelopmentDeclaration(
+			manifestByPath[manifest], devDependencyManifests[dependency.Name],
+		) {
+			fc.changedDevDependencies[dependency.Name] = true
+		}
+	}
+}
+
+func isDevelopmentScope(scope string) bool {
+	switch brief.Scope(scope) {
+	case brief.ScopeDevelopment, brief.ScopeTest, brief.ScopeBuild:
+		return true
+	default:
+		return false
+	}
+}
+
+func lockfileHasDevelopmentDeclaration(lockfile brief.ManifestInfo, manifests []brief.ManifestInfo) bool {
+	if lockfile.Kind != "lockfile" {
+		return false
+	}
+	lockfileDir := path.Dir(lockfile.Path)
+	for _, manifest := range manifests {
+		if manifest.Ecosystem != lockfile.Ecosystem {
+			continue
+		}
+		manifestDir := path.Dir(manifest.Path)
+		if lockfileDir == "." || manifestDir == lockfileDir || strings.HasPrefix(manifestDir, lockfileDir+"/") {
+			return true
+		}
+	}
+	return false
+}
+
+func (fc *filterContext) dependencyAffected(tool *kb.ToolDef) bool {
+	for _, dependency := range tool.Detect.Dependencies {
+		if fc.changedDependencies[dependency] {
+			return true
+		}
+	}
+	for _, dependency := range tool.Detect.DevDependencies {
+		if fc.changedDevDependencies[dependency] {
+			return true
+		}
+	}
+	return false
 }
 
 func (fc *filterContext) filterStyle(style *brief.StyleInfo) *brief.StyleInfo {

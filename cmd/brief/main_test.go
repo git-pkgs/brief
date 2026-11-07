@@ -14,6 +14,9 @@ import (
 
 const scanHelperRootEnv = "BRIEF_SCAN_HELPER_ROOT"
 const diffHelperEnv = "BRIEF_DIFF_HELPER"
+const dependencyLanguageDiffHelperEnv = "BRIEF_DEPENDENCY_LANGUAGE_DIFF_HELPER"
+const developmentToolDiffHelperEnv = "BRIEF_DEVELOPMENT_TOOL_DIFF_HELPER"
+const nonASCIIManifestDiffHelperEnv = "BRIEF_NON_ASCII_MANIFEST_DIFF_HELPER"
 const submoduleHelperRootEnv = "BRIEF_SUBMODULE_HELPER_ROOT"
 const submoduleDiffHelperEnv = "BRIEF_SUBMODULE_DIFF_HELPER"
 const yamlResourceDiffHelperEnv = "BRIEF_YAML_RESOURCE_DIFF_HELPER"
@@ -143,6 +146,117 @@ func TestDiffReportsYAMLResourceWithUppercaseExtension(t *testing.T) {
 	}
 	if !reportHasTool(&report, "infrastructure", "Argo CD") {
 		t.Fatalf("tools = %+v, want Argo CD from changed manifest.YAML", report.Tools)
+	}
+}
+
+func TestDiffExcludesDependencyLanguageForUnrelatedManifest(t *testing.T) {
+	if os.Getenv(dependencyLanguageDiffHelperEnv) != "" {
+		cmdDiff([]string{"-json", "HEAD"})
+		os.Exit(0)
+	}
+	if _, err := exec.LookPath("git"); err != nil {
+		t.Skip("git not installed")
+	}
+
+	dir := t.TempDir()
+	initGitScanFixture(t, dir)
+	writeScanFixture(t, dir, "package.json", `{"devDependencies":{"typescript":"^5.0.0"}}`)
+	writeScanFixture(t, dir, "Cargo.toml", "[package]\nname = \"example\"\nversion = \"0.1.0\"\n")
+	runGitFixture(t, dir, "add", "package.json", "Cargo.toml")
+	runGitFixture(t, dir, "commit", "-q", "-m", "initial")
+	writeScanFixture(t, dir, "Cargo.toml", "[package]\nname = \"example\"\nversion = \"0.2.0\"\n")
+
+	cmd := exec.Command(os.Args[0], "-test.run=^TestDiffExcludesDependencyLanguageForUnrelatedManifest$")
+	cmd.Dir = dir
+	cmd.Env = append(os.Environ(), dependencyLanguageDiffHelperEnv+"=1")
+	out, err := cmd.Output()
+	if err != nil {
+		t.Fatalf("diff command failed: %v", err)
+	}
+
+	var report brief.Report
+	if err := json.Unmarshal(out, &report); err != nil {
+		t.Fatalf("parsing diff output: %v\n%s", err, out)
+	}
+	if slices.ContainsFunc(report.Languages, func(language brief.Detection) bool {
+		return language.Name == "TypeScript"
+	}) {
+		t.Fatalf("languages = %+v, did not want TypeScript for Cargo.toml", report.Languages)
+	}
+}
+
+func TestDiffRetainsDevelopmentToolForChangedYarnLock(t *testing.T) {
+	if os.Getenv(developmentToolDiffHelperEnv) != "" {
+		cmdDiff([]string{"-json", "HEAD"})
+		os.Exit(0)
+	}
+	if _, err := exec.LookPath("git"); err != nil {
+		t.Skip("git not installed")
+	}
+
+	dir := t.TempDir()
+	initGitScanFixture(t, dir)
+	writeScanFixture(t, dir, "package.json", `{"devDependencies":{"@storybook/react":"^8.0.0"}}`)
+	writeScanFixture(t, dir, "yarn.lock", `"@storybook/react@^8.0.0":
+  version "8.0.0"
+`)
+	runGitFixture(t, dir, "add", "package.json", "yarn.lock")
+	runGitFixture(t, dir, "commit", "-q", "-m", "initial")
+	writeScanFixture(t, dir, "yarn.lock", `"@storybook/react@^8.0.0":
+  version "8.0.1"
+`)
+
+	cmd := exec.Command(os.Args[0], "-test.run=^TestDiffRetainsDevelopmentToolForChangedYarnLock$")
+	cmd.Dir = dir
+	cmd.Env = append(os.Environ(), developmentToolDiffHelperEnv+"=1")
+	out, err := cmd.Output()
+	if err != nil {
+		t.Fatalf("diff command failed: %v", err)
+	}
+
+	var report brief.Report
+	if err := json.Unmarshal(out, &report); err != nil {
+		t.Fatalf("parsing diff output: %v\n%s", err, out)
+	}
+	if !reportHasTool(&report, "docs", "Storybook") {
+		t.Fatalf("tools = %+v, want Storybook for changed yarn.lock", report.Tools)
+	}
+}
+
+func TestDiffRetainsDependencyLanguageForNonASCIIManifest(t *testing.T) {
+	if os.Getenv(nonASCIIManifestDiffHelperEnv) != "" {
+		cmdDiff([]string{"-json", "HEAD"})
+		os.Exit(0)
+	}
+	if _, err := exec.LookPath("git"); err != nil {
+		t.Skip("git not installed")
+	}
+
+	dir := t.TempDir()
+	initGitScanFixture(t, dir)
+	manifest := "packages/café/package.json"
+	writeScanFixture(t, dir, "package.json", `{"workspaces":["packages/*"]}`)
+	writeScanFixture(t, dir, manifest, `{"devDependencies":{"typescript":"5.0.0"}}`)
+	runGitFixture(t, dir, "add", "package.json", manifest)
+	runGitFixture(t, dir, "commit", "-q", "-m", "initial")
+	writeScanFixture(t, dir, manifest, `{"devDependencies":{"typescript":"5.1.0"}}`)
+
+	cmd := exec.Command(os.Args[0], "-test.run=^TestDiffRetainsDependencyLanguageForNonASCIIManifest$")
+	cmd.Dir = dir
+	cmd.Env = append(os.Environ(), nonASCIIManifestDiffHelperEnv+"=1")
+	out, err := cmd.Output()
+	if err != nil {
+		t.Fatalf("diff command failed: %v", err)
+	}
+
+	var report brief.Report
+	if err := json.Unmarshal(out, &report); err != nil {
+		t.Fatalf("parsing diff output: %v\n%s", err, out)
+	}
+	if !slices.ContainsFunc(report.Languages, func(language brief.Detection) bool {
+		return language.Name == "TypeScript"
+	}) {
+		t.Fatalf("languages = %+v, want TypeScript for %s", report.Languages, manifest)
 	}
 }
 

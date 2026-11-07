@@ -141,6 +141,75 @@ func TestFilterByChangedFiles_Languages(t *testing.T) {
 	}
 }
 
+func TestFilterByChangedFiles_KeepsDependencyDetectedLanguageForManifest(t *testing.T) {
+	typeScript := &kb.ToolDef{
+		Tool: kb.ToolInfo{Name: "TypeScript", Category: "language"},
+		Detect: kb.DetectInfo{
+			Dependencies: []string{"typescript"},
+		},
+	}
+	knowledgeBase := &kb.KnowledgeBase{
+		ByName:        map[string]*kb.ToolDef{"TypeScript": typeScript},
+		ManifestFiles: []string{"yarn.lock", "Cargo.toml"},
+	}
+	report := &brief.Report{
+		Languages: []brief.Detection{{Name: "TypeScript"}},
+		Dependencies: []brief.DepInfo{{
+			Manifest: "apps/web/yarn.lock",
+			Name:     "typescript",
+		}},
+	}
+
+	filtered := FilterByChangedFiles(report, knowledgeBase, []string{"./apps/web/yarn.lock"})
+	if len(filtered.Languages) != 1 || filtered.Languages[0].Name != "TypeScript" {
+		t.Fatalf("languages = %#v", filtered.Languages)
+	}
+
+	filtered = FilterByChangedFiles(report, knowledgeBase, []string{"README.md"})
+	if len(filtered.Languages) != 0 {
+		t.Fatalf("unrelated languages = %#v", filtered.Languages)
+	}
+
+	filtered = FilterByChangedFiles(report, knowledgeBase, []string{"Cargo.toml"})
+	if len(filtered.Languages) != 0 {
+		t.Fatalf("unrelated manifest languages = %#v", filtered.Languages)
+	}
+}
+
+func TestFilterByChangedFiles_KeepsDevelopmentToolForScopeLessLockfile(t *testing.T) {
+	storyBook := &kb.ToolDef{
+		Tool:   kb.ToolInfo{Name: "Storybook", Category: "docs"},
+		Detect: kb.DetectInfo{DevDependencies: []string{"@storybook/react"}},
+	}
+	knowledgeBase := &kb.KnowledgeBase{
+		ByName:        map[string]*kb.ToolDef{"Storybook": storyBook},
+		ManifestFiles: []string{"package.json", "yarn.lock"},
+	}
+	report := &brief.Report{
+		Tools: map[string][]brief.Detection{
+			"docs": {{Name: "Storybook"}},
+		},
+		Manifests: []brief.ManifestInfo{
+			{Ecosystem: "npm", Path: "apps/web/package.json", Kind: "manifest"},
+			{Ecosystem: "npm", Path: "apps/web/yarn.lock", Kind: "lockfile"},
+			{Ecosystem: "npm", Path: "services/api/package.json", Kind: "manifest"},
+			{Ecosystem: "npm", Path: "services/api/yarn.lock", Kind: "lockfile"},
+		},
+		Dependencies: []brief.DepInfo{
+			{Manifest: "apps/web/package.json", Name: "@storybook/react", Scope: string(brief.ScopeDevelopment)},
+			{Manifest: "apps/web/yarn.lock", Name: "@storybook/react", Scope: string(brief.ScopeRuntime)},
+			{Manifest: "services/api/package.json", Name: "@storybook/react", Scope: string(brief.ScopeRuntime)},
+			{Manifest: "services/api/yarn.lock", Name: "@storybook/react", Scope: string(brief.ScopeRuntime)},
+		},
+	}
+
+	filtered := FilterByChangedFiles(report, knowledgeBase, []string{"apps/web/yarn.lock"})
+	assertToolDetected(t, filtered, "docs", "Storybook")
+
+	filtered = FilterByChangedFiles(report, knowledgeBase, []string{"services/api/yarn.lock"})
+	assertToolNotDetected(t, filtered, "docs", "Storybook")
+}
+
 func TestFilterByChangedFiles_Tools(t *testing.T) {
 	knowledgeBase := loadKB(t)
 

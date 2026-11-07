@@ -6,10 +6,10 @@ docs = "https://docs.sonarsource.com/sonarqube/"
 description = "Code quality and security analysis"
 
 [detect]
-files = ["sonar-project.properties", ".sonarcloud.properties"]
+files = ["**/sonar-project.properties", "**/.sonarcloud.properties"]
 
 [config]
-files = ["sonar-project.properties", ".sonarcloud.properties"]
+files = ["**/sonar-project.properties", "**/.sonarcloud.properties"]
 
 [taxonomy]
 function = ["security-scanning"]

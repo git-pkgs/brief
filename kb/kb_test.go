@@ -93,6 +93,25 @@ func TestThreatMappingsLoad(t *testing.T) {
 	}
 }
 
+func TestSecurityEvidenceDefinitionsLoad(t *testing.T) {
+	t.Parallel()
+
+	base, err := kb.Load(brief.KnowledgeFS)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if tool := base.ByName["Qodana"]; tool == nil || !tool.MatchesPath("services/api/qodana.yaml") {
+		t.Fatalf("Qodana definition = %#v", tool)
+	}
+	if tool := base.ByName["SonarQube"]; tool == nil || !tool.MatchesPath("services/api/sonar-project.properties") {
+		t.Fatalf("SonarQube definition = %#v", tool)
+	}
+	resource := base.Resource("metadata", "sbom")
+	if resource == nil || !resource.MatchesPath("services/api/bom.cdx.json") {
+		t.Fatalf("SBOM resource = %#v", resource)
+	}
+}
+
 func TestValidate(t *testing.T) {
 	base := loadKB(t)
 	if err := base.Validate(); err != nil {

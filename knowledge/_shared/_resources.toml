@@ -14,7 +14,7 @@ dirs = ["docs", ".github", ".gitlab"]
 [resources.resource]
 name = "Changelog"
 field = "changelog"
-patterns = ["changelog*", "changes*", "history*", "news*", "change", "change.md", "change.txt", "change.rst", "change.adoc"]
+patterns = ["changelog", "changelog.md", "changelog.txt", "changelog.rst", "changelog.adoc", "changes", "changes.md", "changes.txt", "changes.rst", "changes.adoc", "history", "history.md", "history.txt", "history.rst", "history.adoc", "news", "news.md", "news.txt", "news.rst", "news.adoc", "change", "change.md", "change.txt", "change.rst", "change.adoc"]
 
 [[resources]]
 [resources.resource]
@@ -142,15 +142,16 @@ dirs = ["docs", ".github", ".gitlab"]
 name = "Security Policy"
 field = "policy"
 group = "security"
-patterns = ["security", "security.md", "security.txt", "security.rst", "security.adoc"]
-dirs = ["docs", ".github", ".gitlab"]
+patterns = ["security", "security.md", "security.markdown", "security.txt", "security.rst", "security.adoc"]
+dirs = ["doc", "docs", ".github", ".gitlab"]
 
 [[resources]]
 [resources.resource]
 name = "Threat Model"
 field = "threat_model"
 group = "security"
-patterns = ["threat_model", "threat_model.md", "threat_model.txt", "threat-model", "threat-model.md"]
+patterns = ["threat_model", "threat_model.md", "threat_model.markdown", "threat_model.txt", "threat_model.rst", "threat_model.adoc", "threat_model.pdf", "*_threat_model", "*_threat_model.md", "*_threat_model.markdown", "*_threat_model.txt", "*_threat_model.rst", "*_threat_model.adoc", "*_threat_model.pdf", "threat-model", "threat-model.md", "threat-model.markdown", "threat-model.txt", "threat-model.rst", "threat-model.adoc", "threat-model.pdf", "*-threat-model", "*-threat-model.md", "*-threat-model.markdown", "*-threat-model.txt", "*-threat-model.rst", "*-threat-model.adoc", "*-threat-model.pdf"]
+recursive = true
 
 [[resources]]
 [resources.resource]
@@ -161,10 +162,19 @@ patterns = ["audit", "audit.md", "audit.txt", "audit.rst"]
 
 [[resources]]
 [resources.resource]
+name = "Security Audit"
+field = "security_audit"
+group = "security"
+patterns = ["security-audit", "security-audit*.md", "security-audit*.markdown", "security-audit*.txt", "security-audit*.rst", "security-audit*.adoc", "security-audit*.pdf", "security_audit", "security_audit*.md", "security_audit*.markdown", "security_audit*.txt", "security_audit*.rst", "security_audit*.adoc", "security_audit*.pdf", "security-review", "security-review*.md", "security-review*.markdown", "security-review*.txt", "security-review*.rst", "security-review*.adoc", "security-review*.pdf", "security_review", "security_review*.md", "security_review*.markdown", "security_review*.txt", "security_review*.rst", "security_review*.adoc", "security_review*.pdf"]
+recursive = true
+
+[[resources]]
+[resources.resource]
 name = "Disclosure"
 field = "disclosure"
 group = "security"
-patterns = ["disclosure", "disclosure.md", "disclosure.txt"]
+patterns = ["disclosure", "disclosure.md", "disclosure.markdown", "disclosure.txt", "disclosure.rst", "disclosure.adoc"]
+dirs = ["doc", "docs", ".github", ".gitlab"]
 
 # Metadata (machine-readable)
 
@@ -204,6 +214,14 @@ name = "Zenodo"
 field = "zenodo"
 group = "metadata"
 patterns = [".zenodo.json"]
+
+[[resources]]
+[resources.resource]
+name = "SBOM"
+field = "sbom"
+group = "metadata"
+patterns = ["bom.json", "bom.xml", "*.cdx.json", "*.cdx.xml", "*.spdx", "*.spdx.json", "*.spdx.xml", "*.spdx.yml", "*.spdx.yaml", "*.spdx.rdf", "*.spdx.rdf.xml"]
+recursive = true
 
 # Agents (AI coding tool instruction files)
 

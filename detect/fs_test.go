@@ -200,6 +200,34 @@ func TestNewFSResourcesAndPlatforms(t *testing.T) {
 	}
 }
 
+func TestNewFSRecursiveSBOMResource(t *testing.T) {
+	r := snapshotReport(t, fstest.MapFS{
+		"packages/api/service.spdx.json": {Data: []byte("{}\n")},
+	})
+	if r.Resources == nil || r.Resources.Metadata["sbom"] != "packages/api/service.spdx.json" {
+		t.Fatalf("resources = %+v", r.Resources)
+	}
+}
+
+func TestNewFSChangelogResourceIgnoresSourceFiles(t *testing.T) {
+	r := snapshotReport(t, fstest.MapFS{
+		"history.go": {Data: []byte("package example\n")},
+		"HISTORY.md": {Data: []byte("# History\n")},
+	})
+	if r.Resources == nil || r.Resources.Changelog != "HISTORY.md" {
+		t.Fatalf("resources = %+v", r.Resources)
+	}
+}
+
+func TestNewFSNestedSecurityConfigs(t *testing.T) {
+	r := snapshotReport(t, fstest.MapFS{
+		"services/api/qodana.yaml":              {Data: []byte("version: 1.0\n")},
+		"services/web/sonar-project.properties": {Data: []byte("sonar.projectKey=web\n")},
+	})
+	snapshotTool(t, r, "security", "Qodana")
+	snapshotTool(t, r, "security", "SonarQube")
+}
+
 func TestNewFSSubdirectoryAndSkipDirs(t *testing.T) {
 	files := fstest.MapFS{
 		"repo/src/main.go":       {Data: []byte("package main\n")},

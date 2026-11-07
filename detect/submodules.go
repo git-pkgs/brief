@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+
+	"github.com/git-pkgs/brief/kb"
 )
 
 type submoduleInfo struct {
@@ -172,11 +174,11 @@ func (e *Engine) pathAtAnalysisRoot(rel string) string {
 
 func (e *Engine) matchesProjectPattern(pattern, rel string) bool {
 	slashRel := filepath.ToSlash(rel)
-	if matchPathPattern(pattern, slashRel) {
+	if kb.MatchPathPattern(pattern, slashRel) {
 		return true
 	}
 	local := e.pathAtAnalysisRoot(rel)
-	return local != rel && matchPathPattern(pattern, filepath.ToSlash(local))
+	return local != rel && kb.MatchPathPattern(pattern, filepath.ToSlash(local))
 }
 
 func (e *Engine) isAnalysisRootPath(root string) bool {

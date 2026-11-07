@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"flag"
 	"fmt"
@@ -162,66 +163,69 @@ func gitChangedFiles(ctx context.Context, root, ref1, ref2 string, includeUncomm
 	seen := make(map[string]bool)
 	var files []string
 
-	addFiles := func(output string) {
-		for f := range strings.SplitSeq(strings.TrimSpace(output), "\n") {
-			f = strings.TrimSpace(f)
-			if f != "" && !seen[f] {
-				seen[f] = true
-				files = append(files, f)
+	addFiles := func(output []byte) {
+		for entry := range bytes.SplitSeq(output, []byte{0}) {
+			if len(entry) == 0 {
+				continue
+			}
+			file := string(entry)
+			if !seen[file] {
+				seen[file] = true
+				files = append(files, file)
 			}
 		}
 	}
 
 	if ref2 != "" {
 		// Two-ref diff: just diff between the two.
-		cmd := exec.CommandContext(ctx, "git", "diff", "--name-only", ref1+"..."+ref2)
+		cmd := exec.CommandContext(ctx, "git", "diff", "--name-only", "-z", ref1+"..."+ref2)
 		cmd.Dir = root
 		out, err := cmd.Output()
 		if err != nil {
 			// Try two-dot diff if three-dot fails.
-			cmd = exec.CommandContext(ctx, "git", "diff", "--name-only", ref1, ref2)
+			cmd = exec.CommandContext(ctx, "git", "diff", "--name-only", "-z", ref1, ref2)
 			cmd.Dir = root
 			out, err = cmd.Output()
 			if err != nil {
 				return nil, fmt.Errorf("git diff %s %s: %w", ref1, ref2, err)
 			}
 		}
-		addFiles(string(out))
+		addFiles(out)
 	} else {
 		// Compare ref1 to HEAD.
-		cmd := exec.CommandContext(ctx, "git", "diff", "--name-only", ref1+"...HEAD")
+		cmd := exec.CommandContext(ctx, "git", "diff", "--name-only", "-z", ref1+"...HEAD")
 		cmd.Dir = root
 		out, err := cmd.Output()
 		if err != nil {
-			cmd = exec.CommandContext(ctx, "git", "diff", "--name-only", ref1, "HEAD")
+			cmd = exec.CommandContext(ctx, "git", "diff", "--name-only", "-z", ref1, "HEAD")
 			cmd.Dir = root
 			out, err = cmd.Output()
 			if err != nil {
 				return nil, fmt.Errorf("git diff %s: %w", ref1, err)
 			}
 		}
-		addFiles(string(out))
+		addFiles(out)
 
 		if includeUncommitted {
 			// Staged changes.
-			cmd = exec.CommandContext(ctx, "git", "diff", "--name-only", "--cached")
+			cmd = exec.CommandContext(ctx, "git", "diff", "--name-only", "-z", "--cached")
 			cmd.Dir = root
 			if out, err := cmd.Output(); err == nil {
-				addFiles(string(out))
+				addFiles(out)
 			}
 
 			// Unstaged changes.
-			cmd = exec.CommandContext(ctx, "git", "diff", "--name-only")
+			cmd = exec.CommandContext(ctx, "git", "diff", "--name-only", "-z")
 			cmd.Dir = root
 			if out, err := cmd.Output(); err == nil {
-				addFiles(string(out))
+				addFiles(out)
 			}
 
 			// Untracked files.
-			cmd = exec.CommandContext(ctx, "git", "ls-files", "--others", "--exclude-standard")
+			cmd = exec.CommandContext(ctx, "git", "ls-files", "--others", "--exclude-standard", "-z")
 			cmd.Dir = root
 			if out, err := cmd.Output(); err == nil {
-				addFiles(string(out))
+				addFiles(out)
 			}
 		}
 	}

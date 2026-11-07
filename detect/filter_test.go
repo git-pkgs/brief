@@ -160,7 +160,7 @@ func TestFilterByChangedFiles_KeepsDependencyDetectedLanguageForManifest(t *test
 		}},
 	}
 
-	filtered := FilterByChangedFiles(report, knowledgeBase, []string{"apps/web/yarn.lock"})
+	filtered := FilterByChangedFiles(report, knowledgeBase, []string{"./apps/web/yarn.lock"})
 	if len(filtered.Languages) != 1 || filtered.Languages[0].Name != "TypeScript" {
 		t.Fatalf("languages = %#v", filtered.Languages)
 	}

@@ -15,6 +15,7 @@ import (
 const scanHelperRootEnv = "BRIEF_SCAN_HELPER_ROOT"
 const diffHelperEnv = "BRIEF_DIFF_HELPER"
 const dependencyLanguageDiffHelperEnv = "BRIEF_DEPENDENCY_LANGUAGE_DIFF_HELPER"
+const nonASCIIManifestDiffHelperEnv = "BRIEF_NON_ASCII_MANIFEST_DIFF_HELPER"
 const submoduleHelperRootEnv = "BRIEF_SUBMODULE_HELPER_ROOT"
 const submoduleDiffHelperEnv = "BRIEF_SUBMODULE_DIFF_HELPER"
 const yamlResourceDiffHelperEnv = "BRIEF_YAML_RESOURCE_DIFF_HELPER"
@@ -180,6 +181,43 @@ func TestDiffExcludesDependencyLanguageForUnrelatedManifest(t *testing.T) {
 		return language.Name == "TypeScript"
 	}) {
 		t.Fatalf("languages = %+v, did not want TypeScript for Cargo.toml", report.Languages)
+	}
+}
+
+func TestDiffRetainsDependencyLanguageForNonASCIIManifest(t *testing.T) {
+	if os.Getenv(nonASCIIManifestDiffHelperEnv) != "" {
+		cmdDiff([]string{"-json", "HEAD"})
+		os.Exit(0)
+	}
+	if _, err := exec.LookPath("git"); err != nil {
+		t.Skip("git not installed")
+	}
+
+	dir := t.TempDir()
+	initGitScanFixture(t, dir)
+	manifest := "packages/café/package.json"
+	writeScanFixture(t, dir, "package.json", `{"workspaces":["packages/*"]}`)
+	writeScanFixture(t, dir, manifest, `{"devDependencies":{"typescript":"5.0.0"}}`)
+	runGitFixture(t, dir, "add", "package.json", manifest)
+	runGitFixture(t, dir, "commit", "-q", "-m", "initial")
+	writeScanFixture(t, dir, manifest, `{"devDependencies":{"typescript":"5.1.0"}}`)
+
+	cmd := exec.Command(os.Args[0], "-test.run=^TestDiffRetainsDependencyLanguageForNonASCIIManifest$")
+	cmd.Dir = dir
+	cmd.Env = append(os.Environ(), nonASCIIManifestDiffHelperEnv+"=1")
+	out, err := cmd.Output()
+	if err != nil {
+		t.Fatalf("diff command failed: %v", err)
+	}
+
+	var report brief.Report
+	if err := json.Unmarshal(out, &report); err != nil {
+		t.Fatalf("parsing diff output: %v\n%s", err, out)
+	}
+	if !slices.ContainsFunc(report.Languages, func(language brief.Detection) bool {
+		return language.Name == "TypeScript"
+	}) {
+		t.Fatalf("languages = %+v, want TypeScript for %s", report.Languages, manifest)
 	}
 }
 

@@ -23,7 +23,7 @@ type filterContext struct {
 func newFilterContext(knowledgeBase *kb.KnowledgeBase, changedFiles []string) *filterContext {
 	changed := make(map[string]bool, len(changedFiles))
 	for _, f := range changedFiles {
-		changed[f] = true
+		changed[filepath.ToSlash(filepath.Clean(f))] = true
 	}
 
 	changedExts := make(map[string]bool)
@@ -147,7 +147,8 @@ func (fc *filterContext) setChangedDependencies(dependencies []brief.DepInfo) {
 	fc.changedDependencies = make(map[string]bool)
 	fc.changedDevDependencies = make(map[string]bool)
 	for _, dependency := range dependencies {
-		if !fc.changed[dependency.Manifest] {
+		manifest := filepath.ToSlash(filepath.Clean(dependency.Manifest))
+		if !fc.changed[manifest] {
 			continue
 		}
 		fc.changedDependencies[dependency.Name] = true

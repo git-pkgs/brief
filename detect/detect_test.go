@@ -262,6 +262,22 @@ func TestRubyResources(t *testing.T) {
 	}
 }
 
+func TestResourceLicenseTypeUsesSPDXDeclaration(t *testing.T) {
+	dir := t.TempDir()
+	writeFile(t, dir, "LICENSE", "SPDX-License-Identifier: Apache-2.0\n")
+
+	r, err := New(loadKB(t), dir).Run()
+	if err != nil {
+		t.Fatalf("Run: %v", err)
+	}
+	if r.Resources == nil {
+		t.Fatal("resources are nil")
+	}
+	if r.Resources.LicenseType != "Apache-2.0" {
+		t.Fatalf("license type = %q, want Apache-2.0", r.Resources.LicenseType)
+	}
+}
+
 func TestResourceGroups(t *testing.T) {
 	dir := t.TempDir()
 	touch := func(p string) {

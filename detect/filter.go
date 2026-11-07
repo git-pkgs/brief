@@ -57,7 +57,7 @@ func newFilterContext(knowledgeBase *kb.KnowledgeBase, changedFiles []string) *f
 // only detections relevant to the given set of changed files.
 func FilterByChangedFiles(r *brief.Report, knowledgeBase *kb.KnowledgeBase, changedFiles []string) *brief.Report {
 	fc := newFilterContext(knowledgeBase, changedFiles)
-	fc.setChangedDependencies(r.Dependencies)
+	fc.setChangedDependencies(r.Dependencies, r.Manifests)
 
 	filtered := &brief.Report{
 		Version:      r.Version,
@@ -143,20 +143,64 @@ func (fc *filterContext) toolAffected(tool *kb.ToolDef) bool {
 	return toolMatchesChangedFiles(tool, fc.changed, fc.changedExts) || fc.dependencyAffected(tool)
 }
 
-func (fc *filterContext) setChangedDependencies(dependencies []brief.DepInfo) {
+func (fc *filterContext) setChangedDependencies(dependencies []brief.DepInfo, manifests []brief.ManifestInfo) {
 	fc.changedDependencies = make(map[string]bool)
 	fc.changedDevDependencies = make(map[string]bool)
+	manifestByPath := make(map[string]brief.ManifestInfo, len(manifests))
+	for _, manifest := range manifests {
+		manifest.Path = filepath.ToSlash(filepath.Clean(manifest.Path))
+		manifestByPath[manifest.Path] = manifest
+	}
+
+	devDependencyManifests := make(map[string][]brief.ManifestInfo)
+	for _, dependency := range dependencies {
+		if !isDevelopmentScope(dependency.Scope) {
+			continue
+		}
+		manifest := manifestByPath[filepath.ToSlash(filepath.Clean(dependency.Manifest))]
+		if manifest.Kind == "manifest" {
+			devDependencyManifests[dependency.Name] = append(devDependencyManifests[dependency.Name], manifest)
+		}
+	}
+
 	for _, dependency := range dependencies {
 		manifest := filepath.ToSlash(filepath.Clean(dependency.Manifest))
 		if !fc.changed[manifest] {
 			continue
 		}
 		fc.changedDependencies[dependency.Name] = true
-		switch brief.Scope(dependency.Scope) {
-		case brief.ScopeDevelopment, brief.ScopeTest, brief.ScopeBuild:
+		if isDevelopmentScope(dependency.Scope) || lockfileHasDevelopmentDeclaration(
+			manifestByPath[manifest], devDependencyManifests[dependency.Name],
+		) {
 			fc.changedDevDependencies[dependency.Name] = true
 		}
 	}
+}
+
+func isDevelopmentScope(scope string) bool {
+	switch brief.Scope(scope) {
+	case brief.ScopeDevelopment, brief.ScopeTest, brief.ScopeBuild:
+		return true
+	default:
+		return false
+	}
+}
+
+func lockfileHasDevelopmentDeclaration(lockfile brief.ManifestInfo, manifests []brief.ManifestInfo) bool {
+	if lockfile.Kind != "lockfile" {
+		return false
+	}
+	lockfileDir := path.Dir(lockfile.Path)
+	for _, manifest := range manifests {
+		if manifest.Ecosystem != lockfile.Ecosystem {
+			continue
+		}
+		manifestDir := path.Dir(manifest.Path)
+		if lockfileDir == "." || manifestDir == lockfileDir || strings.HasPrefix(manifestDir, lockfileDir+"/") {
+			return true
+		}
+	}
+	return false
 }
 
 func (fc *filterContext) dependencyAffected(tool *kb.ToolDef) bool {

@@ -1024,31 +1024,6 @@ func (e *Engine) hasYAMLResource(signal kb.YAMLResourceInfo) bool {
 	return false
 }
 
-// matchPathPattern matches slash-separated paths and treats ** as zero or more
-// complete path segments.
-func matchPathPattern(pattern, name string) bool {
-	pattern = filepath.ToSlash(pattern)
-	name = filepath.ToSlash(name)
-	return matchPathSegments(strings.Split(pattern, "/"), strings.Split(name, "/"))
-}
-
-func matchPathSegments(pattern, name []string) bool {
-	if len(pattern) == 0 {
-		return len(name) == 0
-	}
-	if pattern[0] == "**" {
-		if matchPathSegments(pattern[1:], name) {
-			return true
-		}
-		return len(name) > 0 && matchPathSegments(pattern, name[1:])
-	}
-	if len(name) == 0 {
-		return false
-	}
-	matched, err := path.Match(pattern[0], name[0])
-	return err == nil && matched && matchPathSegments(pattern[1:], name[1:])
-}
-
 // loadDeps parses all manifest files in the project using the manifests library
 // and populates the dependency caches. Called lazily on first dependency check.
 func (e *Engine) loadDeps() {
@@ -1457,7 +1432,7 @@ func (e *Engine) expandWorkspacePatternFrom(base, pattern string) []string {
 	var dirs []string
 	for _, rel := range e.projectDirs {
 		slashRel := filepath.ToSlash(rel)
-		if matchPathPattern(pattern, slashRel) {
+		if kb.MatchPathPattern(pattern, slashRel) {
 			dirs = append(dirs, slashRel)
 		}
 	}
@@ -2046,6 +2021,14 @@ func (e *Engine) findResource(r kb.ResourceInfo) string {
 			}
 		}
 	}
+	if r.Recursive {
+		e.loadProjectFiles()
+		for _, file := range e.indexedFiles {
+			if r.MatchesPath(file) && e.projectEvidence(file) {
+				return filepath.ToSlash(file)
+			}
+		}
+	}
 	return ""
 }
 
@@ -2176,7 +2159,7 @@ func (e *Engine) parseCIMatrices(platforms *brief.PlatformInfo) {
 	for _, fp := range ci.Files {
 		for _, rel := range e.indexedFiles {
 			rel = filepath.ToSlash(rel)
-			if matchPathPattern(fp.Pattern, rel) {
+			if kb.MatchPathPattern(fp.Pattern, rel) {
 				e.parseCIWorkflow(rel, ci.MatrixKeys, platforms)
 			}
 		}

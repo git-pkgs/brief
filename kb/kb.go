@@ -160,11 +160,12 @@ type ResourceDef struct {
 
 // ResourceInfo holds the detection rules for a resource file.
 type ResourceInfo struct {
-	Name     string   `toml:"name"`
-	Field    string   `toml:"field"`    // JSON field name in output
-	Group    string   `toml:"group"`    // optional group: legal, community, security, metadata, agents
-	Patterns []string `toml:"patterns"` // file patterns to match
-	Dirs     []string `toml:"dirs"`     // additional subdirectories to search (root is always searched first)
+	Name      string   `toml:"name"`
+	Field     string   `toml:"field"`     // JSON field name in output
+	Group     string   `toml:"group"`     // optional group: legal, community, security, metadata, agents
+	Patterns  []string `toml:"patterns"`  // file patterns to match
+	Dirs      []string `toml:"dirs"`      // additional subdirectories to search (root is always searched first)
+	Recursive bool     `toml:"recursive"` // search every project directory
 }
 
 // LayoutDef defines directory layout patterns to detect.
@@ -587,6 +588,17 @@ func (base *KnowledgeBase) ToolsForCategory(category string) []*ToolDef {
 // ToolsForEcosystem returns all tools for a given ecosystem.
 func (base *KnowledgeBase) ToolsForEcosystem(ecosystem string) []*ToolDef {
 	return base.Ecosystems[ecosystem]
+}
+
+// Resource returns the resource definition for a group and output field.
+func (base *KnowledgeBase) Resource(group, field string) *ResourceInfo {
+	for i := range base.Resources {
+		resource := &base.Resources[i].Resource
+		if resource.Group == group && resource.Field == field {
+			return resource
+		}
+	}
+	return nil
 }
 
 // Categories returns all known tool categories.

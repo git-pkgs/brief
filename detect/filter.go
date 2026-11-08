@@ -410,7 +410,7 @@ func matchesPathPatterns(patterns []string, changed map[string]bool, changedExts
 		}
 		if strings.ContainsAny(pattern, "*?[") {
 			for f := range changed {
-				if matchPathPattern(pattern, f) {
+				if kb.MatchPathPattern(pattern, f) {
 					return true
 				}
 			}
@@ -439,7 +439,7 @@ func matchesContentPatterns(patterns map[string][]string, changed map[string]boo
 		}
 		if kb.HasGlobPattern(pattern) {
 			for file := range changed {
-				if matchPathPattern(pattern, file) {
+				if kb.MatchPathPattern(pattern, file) {
 					return true
 				}
 			}

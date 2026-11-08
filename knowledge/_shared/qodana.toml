@@ -1,0 +1,15 @@
+[tool]
+name = "Qodana"
+category = "security"
+homepage = "https://www.jetbrains.com/qodana/"
+docs = "https://www.jetbrains.com/help/qodana/"
+description = "Static analysis and code quality"
+
+[detect]
+files = ["**/qodana.yaml", "**/qodana.yml"]
+
+[config]
+files = ["**/qodana.yaml", "**/qodana.yml"]
+
+[taxonomy]
+function = ["security-scanning"]

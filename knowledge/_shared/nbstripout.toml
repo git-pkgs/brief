@@ -1,0 +1,22 @@
+[tool]
+name = "nbstripout"
+category = "format"
+homepage = "https://github.com/kynan/nbstripout"
+docs = "https://github.com/kynan/nbstripout#usage"
+repo = "https://github.com/kynan/nbstripout"
+description = "Remove saved outputs from Jupyter notebooks"
+
+[detect]
+dependencies = ["nbstripout"]
+dev_dependencies = ["nbstripout"]
+
+[detect.file_contains]
+".gitattributes" = ["filter=nbstripout"]
+".pre-commit-config.yaml" = ["id: nbstripout"]
+
+[config]
+files = [".gitattributes", ".pre-commit-config.yaml"]
+
+[taxonomy]
+role = ["formatter"]
+technology = ["jupyter"]

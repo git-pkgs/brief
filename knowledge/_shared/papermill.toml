@@ -1,0 +1,16 @@
+[tool]
+name = "Papermill"
+category = "build"
+homepage = "https://papermill.readthedocs.io/en/latest/"
+docs = "https://papermill.readthedocs.io/en/latest/usage-execute.html"
+repo = "https://github.com/nteract/papermill"
+description = "Run parameterized Jupyter notebooks"
+
+[detect]
+dependencies = ["papermill"]
+dev_dependencies = ["papermill"]
+
+[taxonomy]
+role = ["orchestrator"]
+function = ["workflow-orchestration"]
+technology = ["jupyter"]

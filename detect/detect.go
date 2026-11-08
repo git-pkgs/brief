@@ -68,11 +68,13 @@ type Engine struct {
 	IncludeSubmodules bool          // include initialized Git submodule contents
 	SkipDirs          []string      // additional directories to skip during walks
 	TrackedOnly       bool          // only consider files tracked by git
+	NotebookStats     bool          // include bounded Jupyter code-cell statistics
 	filesChecked      int
 	toolsChecked      int
 	toolsMatched      int
 	fsys              fs.FS
 	fsOnly            bool
+	notebooks         *brief.NotebookInfo
 
 	detectedEcosystems map[string]bool // ecosystems whose language was detected
 
@@ -118,6 +120,7 @@ func (e *Engine) resetScanState() {
 		IncludeSubmodules: e.IncludeSubmodules,
 		SkipDirs:          e.SkipDirs,
 		TrackedOnly:       e.TrackedOnly,
+		NotebookStats:     e.NotebookStats,
 		fsys:              e.fsys,
 		fsOnly:            e.fsOnly,
 	}
@@ -364,6 +367,10 @@ func (e *Engine) Run() (*brief.Report, error) {
 		Tools:   make(map[string][]brief.Detection),
 	}
 
+	if e.NotebookStats {
+		e.notebooks = e.detectNotebooks()
+		report.Notebooks = e.notebooks
+	}
 	report.Languages = e.detectCategory(categoryLanguage)
 	e.sortLanguagesByFileCount(report)
 	e.buildEcosystemSet(report)
@@ -593,6 +600,9 @@ func (e *Engine) detectDefinitions(tools []*kb.ToolDef) []brief.Detection {
 		}
 
 		d.ConfigFiles = e.findExisting(tool.Config.Files)
+		if tool.Tool.Category == categoryLanguage {
+			d.ConfigFiles = append(d.ConfigFiles, e.notebookLanguagePaths(tool.Tool.Name)...)
+		}
 
 		d.Lockfile = e.detectLockfile(tool)
 
@@ -609,7 +619,7 @@ func (e *Engine) matchTool(tool *kb.ToolDef) brief.Confidence {
 		return ""
 	}
 
-	best := brief.Confidence("")
+	best := e.notebookLanguageConfidence(tool)
 
 	for _, pattern := range tool.Detect.Files {
 		matches := false

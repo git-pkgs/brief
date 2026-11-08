@@ -215,6 +215,26 @@ type LineCount struct {
 	Source     string         `json:"source"` // "scc", "tokei", or "fallback"
 }
 
+// NotebookInfo contains bounded Jupyter source statistics, separate from line counters.
+type NotebookInfo struct {
+	Files        []NotebookFile `json:"files"`
+	ReadBytes    int64          `json:"read_bytes"`
+	SkippedFiles int            `json:"skipped_files"`
+}
+
+// NotebookFile describes code cells without returning code or saved outputs.
+type NotebookFile struct {
+	Path           string `json:"path"`
+	Status         string `json:"status"`
+	Language       string `json:"language,omitempty"`
+	LanguageSource string `json:"language_source,omitempty"`
+	CodeCells      int    `json:"code_cells"`
+	CodeLines      int    `json:"code_lines"`
+	CodeBytes      int    `json:"code_bytes"`
+	OutputBytes    int    `json:"output_bytes"` // Serialized code-cell outputs JSON, including syntax and whitespace.
+	FileBytes      int64  `json:"file_bytes"`
+}
+
 // Stats holds performance and coverage metrics from the detection run.
 type Stats struct {
 	Duration      time.Duration `json:"-"`
@@ -371,6 +391,7 @@ type Report struct {
 	Skills          []Skill                `json:"skills,omitempty"`
 	Git             *GitInfo               `json:"git,omitempty"`
 	Lines           *LineCount             `json:"lines,omitempty"`
+	Notebooks       *NotebookInfo          `json:"notebooks,omitempty"`
 	Manifests       []ManifestInfo         `json:"manifests,omitempty"`
 	Dependencies    []DepInfo              `json:"dependencies,omitempty"`
 	Enrichment      *EnrichmentInfo        `json:"enrichment,omitempty"`

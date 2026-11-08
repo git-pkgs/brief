@@ -231,7 +231,7 @@ type NotebookFile struct {
 	CodeCells      int    `json:"code_cells"`
 	CodeLines      int    `json:"code_lines"`
 	CodeBytes      int    `json:"code_bytes"`
-	OutputBytes    int    `json:"output_bytes"`
+	OutputBytes    int    `json:"output_bytes"` // Serialized code-cell outputs JSON, including syntax and whitespace.
 	FileBytes      int64  `json:"file_bytes"`
 }
 

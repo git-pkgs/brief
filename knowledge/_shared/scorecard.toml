@@ -1,0 +1,16 @@
+[tool]
+name = "OpenSSF Scorecard"
+category = "security"
+homepage = "https://securityscorecards.dev"
+docs = "https://github.com/ossf/scorecard#readme"
+repo = "https://github.com/ossf/scorecard"
+description = "Security health checks for open source projects"
+
+[detect]
+dependencies = ["ossf/scorecard-action"]
+
+[commands]
+run = "scorecard --local=."
+
+[taxonomy]
+function = ["security-scanning"]

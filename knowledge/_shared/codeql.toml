@@ -1,0 +1,13 @@
+[tool]
+name = "CodeQL"
+category = "security"
+homepage = "https://codeql.github.com"
+docs = "https://docs.github.com/en/code-security/code-scanning/introduction-to-code-scanning/about-code-scanning-with-codeql"
+repo = "https://github.com/github/codeql-action"
+description = "Semantic code analysis for finding security vulnerabilities"
+
+[detect]
+dependencies = ["github/codeql-action/init", "github/codeql-action/analyze", "github/codeql-action/autobuild"]
+
+[taxonomy]
+function = ["security-scanning"]

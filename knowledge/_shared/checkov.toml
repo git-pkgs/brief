@@ -1,0 +1,21 @@
+[tool]
+name = "Checkov"
+category = "security"
+homepage = "https://www.checkov.io"
+docs = "https://www.checkov.io/1.Welcome/Quick%20Start.html"
+repo = "https://github.com/bridgecrewio/checkov"
+description = "Static analysis for infrastructure-as-code configuration"
+
+[detect]
+files = [".checkov.yaml", ".checkov.yml"]
+dependencies = ["checkov", "bridgecrewio/checkov-action"]
+dev_dependencies = ["checkov"]
+
+[commands]
+run = "checkov -d ."
+
+[config]
+files = [".checkov.yaml", ".checkov.yml"]
+
+[taxonomy]
+function = ["security-scanning"]

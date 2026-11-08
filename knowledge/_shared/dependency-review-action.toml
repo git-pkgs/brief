@@ -1,0 +1,13 @@
+[tool]
+name = "Dependency Review Action"
+category = "security"
+homepage = "https://github.com/actions/dependency-review-action"
+docs = "https://github.com/actions/dependency-review-action#readme"
+repo = "https://github.com/actions/dependency-review-action"
+description = "Pull request dependency review for known vulnerabilities and license policy violations"
+
+[detect]
+dependencies = ["actions/dependency-review-action"]
+
+[taxonomy]
+function = ["security-scanning"]

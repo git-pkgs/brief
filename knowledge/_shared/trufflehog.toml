@@ -8,6 +8,7 @@ description = "Secrets scanner"
 
 [detect]
 files = [".trufflehog.yml", ".trufflehog.yaml"]
+dependencies = ["trufflesecurity/trufflehog"]
 
 [commands]
 run = "trufflehog filesystem ."

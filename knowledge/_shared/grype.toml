@@ -8,6 +8,7 @@ description = "Vulnerability scanner for container images and filesystems"
 
 [detect]
 files = [".grype.yaml", ".grype/config.yaml"]
+dependencies = ["anchore/scan-action", "anchore/scan-action/download-grype"]
 
 [commands]
 run = "grype dir:."

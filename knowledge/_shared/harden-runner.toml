@@ -1,0 +1,14 @@
+[tool]
+name = "Harden-Runner"
+category = "security"
+homepage = "https://github.com/step-security/harden-runner"
+docs = "https://github.com/step-security/harden-runner#readme"
+repo = "https://github.com/step-security/harden-runner"
+description = "Runtime security and network monitoring for GitHub Actions runners"
+
+[detect]
+dependencies = ["step-security/harden-runner"]
+
+[taxonomy]
+function = ["ci-cd"]
+domain = ["security"]

@@ -7,7 +7,7 @@ repo = "https://github.com/jupytext/jupytext"
 description = "Pair Jupyter notebooks with text representations"
 
 [detect]
-files = ["jupytext.toml"]
+files = ["jupytext", "jupytext.toml", "jupytext.yml", "jupytext.yaml", "jupytext.json", ".jupytext", ".jupytext.toml", ".jupytext.yml", ".jupytext.yaml", ".jupytext.json", ".jupytext.py"]
 dependencies = ["jupytext"]
 dev_dependencies = ["jupytext"]
 
@@ -15,7 +15,7 @@ dev_dependencies = ["jupytext"]
 "pyproject.toml" = ["tool.jupytext"]
 
 [config]
-files = ["jupytext.toml", "pyproject.toml"]
+files = ["jupytext", "jupytext.toml", "jupytext.yml", "jupytext.yaml", "jupytext.json", ".jupytext", ".jupytext.toml", ".jupytext.yml", ".jupytext.yaml", ".jupytext.json", ".jupytext.py", "pyproject.toml"]
 
 [taxonomy]
 role = ["formatter"]

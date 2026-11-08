@@ -1,6 +1,9 @@
 package detect
 
-import "testing"
+import (
+	"slices"
+	"testing"
+)
 
 func TestNotebookToolConfigurations(t *testing.T) {
 	cases := []struct {
@@ -16,6 +19,35 @@ func TestNotebookToolConfigurations(t *testing.T) {
 			dir := t.TempDir()
 			writeProjectFile(t, dir, tc.path, tc.content)
 			assertToolDetected(t, runOn(t, dir), tc.category, tc.name)
+		})
+	}
+}
+
+func TestJupytextConfigurationFilenames(t *testing.T) {
+	cases := []struct{ path, content string }{
+		{"jupytext", `formats = "ipynb,py:percent"`},
+		{"jupytext.toml", `formats = "ipynb,py:percent"`},
+		{"jupytext.yml", "formats: ipynb,py:percent\n"},
+		{"jupytext.yaml", "formats: ipynb,py:percent\n"},
+		{"jupytext.json", `{"formats":"ipynb,py:percent"}`},
+		{".jupytext", `formats = "ipynb,py:percent"`},
+		{".jupytext.toml", `formats = "ipynb,py:percent"`},
+		{".jupytext.yml", "formats: ipynb,py:percent\n"},
+		{".jupytext.yaml", "formats: ipynb,py:percent\n"},
+		{".jupytext.json", `{"formats":"ipynb,py:percent"}`},
+		{".jupytext.py", "c = get_config()\nc.JupytextConfiguration.formats = 'ipynb,py:percent'\n"},
+	}
+	for _, tc := range cases {
+		t.Run(tc.path, func(t *testing.T) {
+			dir := t.TempDir()
+			writeProjectFile(t, dir, tc.path, tc.content)
+			report := runOn(t, dir)
+			assertToolDetected(t, report, categoryFormat, "Jupytext")
+			for _, tool := range report.Tools[categoryFormat] {
+				if tool.Name == "Jupytext" && !slices.Equal(tool.ConfigFiles, []string{tc.path}) {
+					t.Fatalf("configuration path missing or duplicated: %+v", tool.ConfigFiles)
+				}
+			}
 		})
 	}
 }

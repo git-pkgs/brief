@@ -2024,7 +2024,7 @@ func (e *Engine) findResource(r kb.ResourceInfo) string {
 	if r.Recursive {
 		e.loadProjectFiles()
 		for _, file := range e.indexedFiles {
-			if r.MatchesPath(file) {
+			if r.MatchesPath(file) && e.projectEvidence(file) {
 				return filepath.ToSlash(file)
 			}
 		}

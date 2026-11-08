@@ -209,6 +209,15 @@ func TestNewFSRecursiveSBOMResource(t *testing.T) {
 	}
 }
 
+func TestNewFSRecursiveSBOMResourceIgnoresFixtures(t *testing.T) {
+	r := snapshotReport(t, fstest.MapFS{
+		"fixtures/bom.json": {Data: []byte("{}\n")},
+	})
+	if r.Resources != nil && r.Resources.Metadata["sbom"] != "" {
+		t.Fatalf("resources = %+v", r.Resources)
+	}
+}
+
 func TestNewFSChangelogResourceIgnoresSourceFiles(t *testing.T) {
 	r := snapshotReport(t, fstest.MapFS{
 		"history.go": {Data: []byte("package example\n")},

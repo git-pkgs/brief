@@ -11,7 +11,7 @@ require (
 	github.com/git-pkgs/citation v0.1.0
 	github.com/git-pkgs/clone v0.7.5
 	github.com/git-pkgs/codemeta v0.3.0
-	github.com/git-pkgs/enrichment v0.7.4
+	github.com/git-pkgs/enrichment v0.7.5
 	github.com/git-pkgs/forge v0.10.1
 	github.com/git-pkgs/licenses v0.10.1-0.20261107154534-00c5bf03ade8
 	github.com/git-pkgs/magic v0.6.0

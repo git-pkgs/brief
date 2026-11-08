@@ -1,0 +1,23 @@
+[tool]
+name = "Jupytext"
+category = "format"
+homepage = "https://jupytext.org/"
+docs = "https://jupytext.readthedocs.io/en/latest/config.html"
+repo = "https://github.com/jupytext/jupytext"
+description = "Pair Jupyter notebooks with text representations"
+
+[detect]
+files = ["jupytext.toml"]
+dependencies = ["jupytext"]
+dev_dependencies = ["jupytext"]
+
+[detect.key_exists]
+"pyproject.toml" = ["tool.jupytext"]
+
+[config]
+files = ["jupytext.toml", "pyproject.toml"]
+
+[taxonomy]
+role = ["formatter"]
+function = ["literate-programming"]
+technology = ["jupyter"]

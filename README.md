@@ -76,6 +76,10 @@ Path roles filter the files used as detection evidence. Fixtures, vendored files
 
 Remote sources are shallow-cloned by default. Use `--depth 0` for a full clone, `--keep` to preserve the clone, or `--dir ./somewhere` to clone into a specific directory. Use `--cache ./cache` to keep one shallow checkout per HTTPS URL and reuse it across runs. Cache mode cannot be combined with `--depth 0` or `--dir`.
 
+Use `brief --json --notebooks .` to add Jupyter code-cell statistics. The `notebooks` field reports kernel language and its metadata source, code cells, physical source lines and bytes, with saved-output bytes kept separate. It supports notebook formats 3 and 4, follows scan exclusions and reports malformed or oversized files. Parsing is limited to 32 files, 8.39 MB per file and 33.55 MB read in total. Opt-in scans can detect known kernel languages when code cells are present and the notebooks meet the existing language-evidence rules. Parsing remains opt-in and external line counts are retained; code and saved outputs are never returned.
+
+Jupytext, nbstripout and Papermill are detected from dependencies or their project configuration. Notebook parsing is optional for these tool detections.
+
 JSON when piped, human-readable on a TTY. Force either with `--json` or `--human`. Use `--category test` to filter to a single category.
 
 JSON reports include a `manifests` array with the path, kind, and package ecosystem of every parsed manifest or lockfile. The `dependencies` array includes constraints from manifests and pinned packages from lockfiles, preserving directness and scope when the source records them. For Cargo, direct constraints come from `Cargo.toml`; pinned `Cargo.lock` entries are reported with `direct` set to `false`.
@@ -310,13 +314,13 @@ Language ecosystems and development tools across multiple categories.
 
 **Lint:** Ameba, Biome, Checkstyle, Clippy, Credo, ESLint, Flake8, Fortitude, HLint, Husky, Lefthook, Overcommit, PHP_CodeSniffer, PMD, Pylint, Revive, Roslyn Analyzers, RuboCop, Ruff, Scalafix, Scapegoat, ShellCheck, SpotBugs, Stylelint, SwiftLint, Vale, WartRemover, actionlint, clang-tidy, clj-kondo, commitlint, cspell, dart analyze, deno lint, detekt, elvis, golangci-lint, hadolint, lintr, markdownlint, oxlint, pre-commit, typos.
 
-**Format:** Black, JuliaFormatter, Ormolu, PHP CS Fixer, Prettier, Runic, Spotless, StandardRB, SwiftFormat, clang-format, cljfmt, crystal tool format, dart format, deno fmt, dotnet format, dprint, erlfmt, gleam format, gofmt, google-java-format, isort, ktlint, mix format, nimpretty, ocamlformat, rustfmt, scalafmt, styler, yapf, zig fmt.
+**Format:** Black, JuliaFormatter, Jupytext, Ormolu, PHP CS Fixer, Prettier, Runic, Spotless, StandardRB, SwiftFormat, clang-format, cljfmt, crystal tool format, dart format, deno fmt, dotnet format, dprint, erlfmt, gleam format, gofmt, google-java-format, isort, ktlint, mix format, nbstripout, nimpretty, ocamlformat, rustfmt, scalafmt, styler, yapf, zig fmt.
 
 **Typecheck:** Dialyxir, Dialyzer, Flow, PHPStan, Pyright, Sorbet, Steep, mypy, tsc.
 
 **Docs:** Docsify, Documenter.jl, Docusaurus, Dokka, Doxygen, ExDoc, Hugo, Javadoc, Jekyll, MkDocs, MultiQC, MyST-Parser, Nextra, Quarto, R Markdown, Read the Docs, Redoc, Sphinx, Starlight, Storybook, Swagger UI, TypeDoc, VitePress, Yard, Zensical, cargo doc, dart doc, deno doc, knitr, mdBook, phpDocumentor, pkgdown, pkgsite, roxygen2.
 
-**Build:** Actix Web, AdonisJS, Angular, Arch Linux Packaging, Astro, Autotools, Axum, Babashka, BitBake, Bloop, CMake, Conda Build, Debian Packaging, Django, Dune, Echo, Electron, Eleventy, Ember.js, Express, FastAPI, Fastify, Fiber, Flask, Flutter, Foundry, FreeBSD pkg, Gatsby, Gin, GoReleaser, Hardhat, Hono, Invoke, Just, Koa, Laravel, Less, Mage, Make, Meson, Meteor, NestJS, Next.js, Nextflow, Nuxt, Parcel, Phoenix, PostCSS, Qwik, Rails, Rake, React Native, Remix, Rocket, Rollup, Rspack, SWC, Sass, Sinatra, Snakemake, Spin, Spring Boot, Svelte, SvelteKit, Symfony, Task, Tauri, Vite, Vue, Webpack, cibuildwheel, cross, esbuild, nf-core, targets, tsup.
+**Build:** Actix Web, AdonisJS, Angular, Arch Linux Packaging, Astro, Autotools, Axum, Babashka, BitBake, Bloop, CMake, Conda Build, Debian Packaging, Django, Dune, Echo, Electron, Eleventy, Ember.js, Express, FastAPI, Fastify, Fiber, Flask, Flutter, Foundry, FreeBSD pkg, Gatsby, Gin, GoReleaser, Hardhat, Hono, Invoke, Just, Koa, Laravel, Less, Mage, Make, Meson, Meteor, NestJS, Next.js, Nextflow, Nuxt, Papermill, Parcel, Phoenix, PostCSS, Qwik, Rails, Rake, React Native, Remix, Rocket, Rollup, Rspack, SWC, Sass, Sinatra, Snakemake, Spin, Spring Boot, Svelte, SvelteKit, Symfony, Task, Tauri, Vite, Vue, Webpack, cibuildwheel, cross, esbuild, nf-core, targets, tsup.
 
 **Native Ext:** Maturin, Neon, Rustler, cffi, meson-python, mkmf, nanobind, napi-rs, node-gyp, phpize, pybind11, rb-sys, scikit-build-core, setuptools Extension, setuptools-rust.
 

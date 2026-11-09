@@ -3,6 +3,7 @@ package detect
 import (
 	"slices"
 	"testing"
+	"testing/fstest"
 
 	"github.com/git-pkgs/brief"
 )
@@ -95,4 +96,31 @@ func TestSnakemakeSmkConfigFile(t *testing.T) {
 		return
 	}
 	t.Fatal("expected Snakemake in build category")
+}
+
+func TestSnakemakeWorkflowFilenames(t *testing.T) {
+	for _, tt := range []struct{ path, pattern string }{
+		{"Snakefile", "Snakefile"},
+		{"snakefile", "snakefile"},
+		{"workflow/Snakefile", "**/Snakefile"},
+		{"workflow/snakefile", "**/snakefile"},
+	} {
+		t.Run(tt.path, func(t *testing.T) {
+			engine := NewFS(loadKB(t), fstest.MapFS{tt.path: {Data: []byte("rule all:\n    input: []\n")}})
+			report, err := engine.Run()
+			if err != nil {
+				t.Fatal(err)
+			}
+			assertToolDetected(t, report, "build", "Snakemake")
+			for _, tool := range report.Tools["build"] {
+				if tool.Name == "Snakemake" && !slices.Contains(tool.ConfigFiles, tt.pattern) {
+					t.Errorf("config files = %v, want %q", tool.ConfigFiles, tt.pattern)
+				}
+			}
+		})
+	}
+}
+
+func TestLowercaseSnakemakeProject(t *testing.T) {
+	assertToolDetected(t, runOn(t, "../testdata/snakemake-project"), "build", "Snakemake")
 }

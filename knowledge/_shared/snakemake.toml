@@ -7,7 +7,7 @@ repo = "https://github.com/snakemake/snakemake"
 description = "Workflow system for reproducible data analysis"
 
 [detect]
-files = ["Snakefile", "**/Snakefile", "*.smk", "**/*.smk"]
+files = ["Snakefile", "snakefile", "**/Snakefile", "**/snakefile", "*.smk", "**/*.smk"]
 dependencies = ["snakemake"]
 dev_dependencies = ["snakemake"]
 
@@ -15,7 +15,7 @@ dev_dependencies = ["snakemake"]
 run = "snakemake"
 
 [config]
-files = ["Snakefile", "**/Snakefile", "*.smk", "**/*.smk"]
+files = ["Snakefile", "snakefile", "**/Snakefile", "**/snakefile", "*.smk", "**/*.smk"]
 
 [taxonomy]
 role = ["orchestrator"]

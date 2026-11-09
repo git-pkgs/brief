@@ -380,6 +380,7 @@ func TestResearchToolTaxonomy(t *testing.T) {
 		"targets":           {"role:build-tool", "role:orchestrator", "function:workflow-orchestration", "domain:data-science", "domain:research", "domain:scientific-computing", "audience:data-scientist", "audience:researcher"},
 		"R Markdown":        {"function:documentation", "function:literate-programming", "function:report-generation"},
 		"knitr":             {"function:documentation", "function:literate-programming", "function:report-generation"},
+		"PyMoDAQ":           {"role:application", "domain:research", "domain:scientific-computing"},
 	}
 	for name, tags := range want {
 		tool := base.ByName[name]

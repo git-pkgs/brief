@@ -1,0 +1,15 @@
+[tool]
+name = "PyMoDAQ"
+category = "library"
+homepage = "https://pymodaq.cnrs.fr/"
+docs = "https://pymodaq.cnrs.fr/en/latest/"
+repo = "https://github.com/PyMoDAQ/PyMoDAQ"
+description = "Modular data acquisition and control for scientific instruments"
+
+[detect]
+dependencies = ["pymodaq"]
+ecosystems = ["python"]
+
+[taxonomy]
+role = ["application"]
+domain = ["research", "scientific-computing"]

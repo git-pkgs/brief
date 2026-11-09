@@ -26,6 +26,7 @@ import (
 	"github.com/git-pkgs/brief/kb"
 	"github.com/git-pkgs/licenses"
 	"github.com/git-pkgs/manifests"
+	"github.com/git-pkgs/purl"
 	"github.com/git-pkgs/roles"
 	"go.yaml.in/yaml/v3"
 )
@@ -86,8 +87,8 @@ type Engine struct {
 	fileRoles            map[string]roles.Set
 	dirCache             map[string][]string
 	depsLoaded           bool
-	runtimeDeps          map[string]bool // all runtime/unscoped dependency names
-	devDeps              map[string]bool // development/test/build dependency names
+	runtimeDeps          map[string]bool // all runtime/unscoped dependency keys
+	devDeps              map[string]bool // development/test/build dependency keys
 	allDeps              map[string]bool // union of both
 	parsedDeps           []brief.DepInfo // direct dependencies with PURLs
 	manifests            []brief.ManifestInfo
@@ -1064,12 +1065,13 @@ func (e *Engine) loadDeps() {
 		})
 
 		for _, dep := range result.Dependencies {
-			e.allDeps[dep.Name] = true
+			key := dependencyKey(dep.Ecosystem, dep.Name)
+			e.allDeps[key] = true
 			switch dep.Scope {
 			case manifests.Development, manifests.Test, manifests.Build:
-				e.devDeps[dep.Name] = true
+				e.devDeps[key] = true
 			default:
-				e.runtimeDeps[dep.Name] = true
+				e.runtimeDeps[key] = true
 			}
 			// Include transitive deps from lockfiles and Go manifests.
 			// Go is special: go.mod acts as both manifest and lockfile,
@@ -1455,16 +1457,25 @@ func (e *Engine) hasDependency(tool *kb.ToolDef) bool {
 	e.loadDeps()
 
 	for _, dep := range tool.Detect.Dependencies {
-		if e.allDeps[dep] {
+		if e.allDeps[dep] || e.allDeps[dependencyKey("pypi", dep)] {
 			return true
 		}
 	}
 	for _, dep := range tool.Detect.DevDependencies {
-		if e.devDeps[dep] {
+		if e.devDeps[dep] || e.devDeps[dependencyKey("pypi", dep)] {
 			return true
 		}
 	}
 	return false
+}
+
+func dependencyKey(ecosystem, name string) string {
+	if ecosystem == "pypi" {
+		if key := purl.BuildPURLString(ecosystem, name, "", ""); key != "" {
+			return key
+		}
+	}
+	return name
 }
 
 // hasKey checks if a structured file (JSON, TOML) contains any of the given

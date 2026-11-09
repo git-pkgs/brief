@@ -159,7 +159,8 @@ func (fc *filterContext) setChangedDependencies(dependencies []brief.DepInfo, ma
 		}
 		manifest := manifestByPath[filepath.ToSlash(filepath.Clean(dependency.Manifest))]
 		if manifest.Kind == "manifest" {
-			devDependencyManifests[dependency.Name] = append(devDependencyManifests[dependency.Name], manifest)
+			key := reportDependencyKey(dependency, manifest)
+			devDependencyManifests[key] = append(devDependencyManifests[key], manifest)
 		}
 	}
 
@@ -168,13 +169,22 @@ func (fc *filterContext) setChangedDependencies(dependencies []brief.DepInfo, ma
 		if !fc.changed[manifest] {
 			continue
 		}
-		fc.changedDependencies[dependency.Name] = true
+		key := reportDependencyKey(dependency, manifestByPath[manifest])
+		fc.changedDependencies[key] = true
 		if isDevelopmentScope(dependency.Scope) || lockfileHasDevelopmentDeclaration(
-			manifestByPath[manifest], devDependencyManifests[dependency.Name],
+			manifestByPath[manifest], devDependencyManifests[key],
 		) {
-			fc.changedDevDependencies[dependency.Name] = true
+			fc.changedDevDependencies[key] = true
 		}
 	}
+}
+
+func reportDependencyKey(dependency brief.DepInfo, manifest brief.ManifestInfo) string {
+	ecosystem := manifest.Ecosystem
+	if strings.HasPrefix(dependency.PURL, "pkg:pypi/") {
+		ecosystem = "pypi"
+	}
+	return dependencyKey(ecosystem, dependency.Name)
 }
 
 func isDevelopmentScope(scope string) bool {
@@ -205,12 +215,12 @@ func lockfileHasDevelopmentDeclaration(lockfile brief.ManifestInfo, manifests []
 
 func (fc *filterContext) dependencyAffected(tool *kb.ToolDef) bool {
 	for _, dependency := range tool.Detect.Dependencies {
-		if fc.changedDependencies[dependency] {
+		if fc.changedDependencies[dependency] || fc.changedDependencies[dependencyKey("pypi", dependency)] {
 			return true
 		}
 	}
 	for _, dependency := range tool.Detect.DevDependencies {
-		if fc.changedDevDependencies[dependency] {
+		if fc.changedDevDependencies[dependency] || fc.changedDevDependencies[dependencyKey("pypi", dependency)] {
 			return true
 		}
 	}

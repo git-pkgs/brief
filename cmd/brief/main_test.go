@@ -20,6 +20,70 @@ const nonASCIIManifestDiffHelperEnv = "BRIEF_NON_ASCII_MANIFEST_DIFF_HELPER"
 const submoduleHelperRootEnv = "BRIEF_SUBMODULE_HELPER_ROOT"
 const submoduleDiffHelperEnv = "BRIEF_SUBMODULE_DIFF_HELPER"
 const yamlResourceDiffHelperEnv = "BRIEF_YAML_RESOURCE_DIFF_HELPER"
+const securityToolsHelperEnv = "BRIEF_SECURITY_TOOLS_HELPER_ROOT"
+
+func TestScanDetectsSecurityActions(t *testing.T) {
+	if root := os.Getenv(securityToolsHelperEnv); root != "" {
+		cmdScan([]string{"-json", root})
+		return
+	}
+
+	root := t.TempDir()
+	writeScanFixture(t, root, "Cargo.toml", "[package]\nname = \"security-actions\"\nversion = \"0.1.0\"\n")
+	writeScanFixture(t, root, ".github/workflows/security.yml", `name: security
+on: [push]
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: zizmorcore/zizmor-action@v0
+      - uses: anchore/sbom-action/download-syft@v0
+      - uses: EmbarkStudios/cargo-deny-action@v2
+      - uses: gitleaks/gitleaks-action@v2
+      - uses: bridgecrewio/checkov-action@v12
+      - uses: GitGuardian/ggshield-action@v1
+      - uses: actions/dependency-review-action@v4
+      - uses: step-security/harden-runner@v2
+      - uses: ossf/scorecard-action@v2
+      - uses: github/codeql-action/init@v3
+      - uses: anchore/scan-action/download-grype@v6
+      - uses: aquasecurity/trivy-action@v0
+      - uses: trufflesecurity/trufflehog@main
+      - uses: snyk/actions/node@master
+`)
+
+	cmd := exec.Command(os.Args[0], "-test.run=^TestScanDetectsSecurityActions$")
+	cmd.Env = append(os.Environ(), securityToolsHelperEnv+"="+root, "PATH=")
+	out, err := cmd.Output()
+	if err != nil {
+		t.Fatalf("scan command failed: %v", err)
+	}
+
+	var report brief.Report
+	if err := json.Unmarshal(out, &report); err != nil {
+		t.Fatalf("parsing scan output: %v\n%s", err, out)
+	}
+	for _, name := range []string{
+		"zizmor",
+		"Syft",
+		"cargo-deny",
+		"Gitleaks",
+		"Checkov",
+		"ggshield",
+		"Dependency Review Action",
+		"Harden-Runner",
+		"OpenSSF Scorecard",
+		"CodeQL",
+		"Grype",
+		"Trivy",
+		"TruffleHog",
+		"Snyk",
+	} {
+		if !reportHasTool(&report, "security", name) {
+			t.Errorf("expected %s in security category", name)
+		}
+	}
+}
 
 func TestScanUsesPathRoles(t *testing.T) {
 	const helperEnv = "BRIEF_ROLES_HELPER_ROOT"

@@ -1,0 +1,22 @@
+[tool]
+name = "cargo-deny"
+category = "security"
+homepage = "https://embarkstudios.github.io/cargo-deny"
+docs = "https://embarkstudios.github.io/cargo-deny"
+repo = "https://github.com/EmbarkStudios/cargo-deny"
+description = "Cargo dependency checks for advisories, licenses, sources, and duplicate versions"
+
+[detect]
+files = ["deny.toml", ".deny.toml", ".cargo/deny.toml", ".config/deny.toml"]
+dependencies = ["EmbarkStudios/cargo-deny-action"]
+ecosystems = ["rust"]
+
+[commands]
+run = "cargo deny check"
+
+[config]
+files = ["deny.toml", ".deny.toml", ".cargo/deny.toml", ".config/deny.toml"]
+
+[taxonomy]
+function = ["security-scanning"]
+technology = ["rust"]

@@ -330,7 +330,7 @@ Language ecosystems and development tools across multiple categories.
 
 **Database:** ActiveRecord, Alembic, Atlas, Dbmate, Diesel, Drizzle, Ecto, Flyway, GORM, Goose, Knex.js, Liquibase, MikroORM, Mongoose, Peewee, Prisma, SQLAlchemy, SQLite, Sequel, Sequelize, Tortoise ORM, TypeORM, pgx, sqlx.
 
-**Security:** Bandit, Brakeman, Grype, OWASP Dependency-Check, Qodana, SOPS, Semgrep, Snyk, SonarQube, Trivy, TruffleHog, bundler-audit, cargo-audit, govulncheck, npm audit, osv-scanner, pip-audit.
+**Security:** Bandit, Brakeman, Checkov, CodeQL, Dependency Review Action, Gitleaks, Grype, Harden-Runner, OWASP Dependency-Check, OpenSSF Scorecard, Qodana, SOPS, Secretlint, Semgrep, Snyk, SonarQube, Syft, Trivy, TruffleHog, bundler-audit, cargo-audit, cargo-deny, detect-secrets, ggshield, govulncheck, npm audit, osv-scanner, pip-audit, zizmor.
 
 **CI:** Azure Pipelines, Buildkite, CircleCI, Cloudflare Workers, Dagger, Drone, Earthly, Fly.io, GitHub Actions, GitLab CI, Jenkins, Netlify, Render, Travis CI, Vercel.
 

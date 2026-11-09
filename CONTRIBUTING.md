@@ -132,7 +132,7 @@ Shared tools that work across languages (Docker, GitHub Actions, Dependabot) sho
 | `library` | Detection-only library or runtime dependency |
 | `codegen` | Code generator or schema-driven tooling |
 | `database` | Database, ORM, migration, or query tooling |
-| `security` | Security scanner |
+| `security` | Security analysis, hardening, or supply-chain tool |
 | `ci` | Continuous integration |
 | `container` | Container tooling |
 | `infrastructure` | Infrastructure-as-code or deployment tooling |

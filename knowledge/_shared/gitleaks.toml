@@ -1,0 +1,20 @@
+[tool]
+name = "Gitleaks"
+category = "security"
+homepage = "https://gitleaks.io"
+docs = "https://github.com/gitleaks/gitleaks#readme"
+repo = "https://github.com/gitleaks/gitleaks"
+description = "Secret scanner for Git repositories, files, and directories"
+
+[detect]
+files = [".gitleaks.toml", ".gitleaksignore"]
+dependencies = ["gitleaks/gitleaks-action"]
+
+[commands]
+run = "gitleaks git ."
+
+[config]
+files = [".gitleaks.toml", ".gitleaksignore"]
+
+[taxonomy]
+function = ["security-scanning"]

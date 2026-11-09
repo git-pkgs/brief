@@ -7,6 +7,8 @@ description = "Developer security platform"
 
 [detect]
 files = [".snyk"]
+dependencies = ["snyk", "snyk/actions/cocoapods", "snyk/actions/docker", "snyk/actions/dotnet", "snyk/actions/golang", "snyk/actions/gradle", "snyk/actions/iac", "snyk/actions/maven", "snyk/actions/node", "snyk/actions/php", "snyk/actions/python", "snyk/actions/ruby", "snyk/actions/scala", "snyk/actions/setup"]
+dev_dependencies = ["snyk"]
 
 [commands]
 run = "snyk test"

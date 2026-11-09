@@ -1,0 +1,20 @@
+[tool]
+name = "zizmor"
+category = "security"
+homepage = "https://zizmor.sh"
+docs = "https://docs.zizmor.sh"
+repo = "https://github.com/zizmorcore/zizmor"
+description = "Static analysis for GitHub Actions workflows"
+
+[detect]
+files = [".github/zizmor.yml", ".github/zizmor.yaml", "zizmor.yml", "zizmor.yaml"]
+dependencies = ["zizmorcore/zizmor-action"]
+
+[commands]
+run = "zizmor .github/workflows/"
+
+[config]
+files = [".github/zizmor.yml", ".github/zizmor.yaml", "zizmor.yml", "zizmor.yaml"]
+
+[taxonomy]
+function = ["security-scanning"]

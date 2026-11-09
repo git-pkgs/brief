@@ -1,0 +1,21 @@
+[tool]
+name = "Syft"
+category = "security"
+homepage = "https://github.com/anchore/syft"
+docs = "https://github.com/anchore/syft#readme"
+repo = "https://github.com/anchore/syft"
+description = "Software bill of materials generator for container images and filesystems"
+
+[detect]
+files = [".syft.yaml"]
+dependencies = ["anchore/sbom-action", "anchore/sbom-action/download-syft"]
+
+[commands]
+run = "syft dir:."
+
+[config]
+files = [".syft.yaml"]
+
+[taxonomy]
+function = ["sbom"]
+domain = ["security"]

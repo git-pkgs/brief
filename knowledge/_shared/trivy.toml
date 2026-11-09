@@ -8,6 +8,7 @@ description = "Vulnerability scanner for containers and code"
 
 [detect]
 files = [".trivy.yaml", "trivy.yaml"]
+dependencies = ["aquasecurity/trivy-action"]
 
 [commands]
 run = "trivy fs ."

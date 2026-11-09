@@ -1,0 +1,21 @@
+[tool]
+name = "ggshield"
+category = "security"
+homepage = "https://www.gitguardian.com/ggshield"
+docs = "https://docs.gitguardian.com/ggshield-docs/getting-started"
+repo = "https://github.com/GitGuardian/ggshield"
+description = "Secret scanner for repositories, commits, files, and CI"
+
+[detect]
+files = [".gitguardian.yaml", ".gitguardian.yml"]
+dependencies = ["ggshield", "GitGuardian/ggshield-action"]
+dev_dependencies = ["ggshield"]
+
+[commands]
+run = "ggshield secret scan repo ."
+
+[config]
+files = [".gitguardian.yaml", ".gitguardian.yml"]
+
+[taxonomy]
+function = ["security-scanning"]

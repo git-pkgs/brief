@@ -14,7 +14,7 @@ dirs = ["docs", ".github", ".gitlab"]
 [resources.resource]
 name = "Changelog"
 field = "changelog"
-patterns = ["changelog", "changelog.md", "changelog.txt", "changelog.rst", "changelog.adoc", "changes", "changes.md", "changes.txt", "changes.rst", "changes.adoc", "history", "history.md", "history.txt", "history.rst", "history.adoc", "news", "news.md", "news.txt", "news.rst", "news.adoc", "change", "change.md", "change.txt", "change.rst", "change.adoc"]
+patterns = ["changelog", "changelog.md", "changelog.markdown", "changelog.txt", "changelog.rst", "changelog.adoc", "changelog-*.md", "changelog-*.markdown", "changelog-*.txt", "changelog-*.rst", "changelog-*.adoc", "changes", "changes.md", "changes.markdown", "changes.txt", "changes.rst", "changes.adoc", "history", "history.md", "history.markdown", "history.txt", "history.rst", "history.adoc", "news", "news.md", "news.markdown", "news.txt", "news.rst", "news.adoc", "change", "change.md", "change.markdown", "change.txt", "change.rst", "change.adoc"]
 
 [[resources]]
 [resources.resource]

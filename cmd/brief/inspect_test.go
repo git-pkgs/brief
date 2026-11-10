@@ -204,6 +204,49 @@ func TestInspectCondaCommand(t *testing.T) {
 	}
 }
 
+func TestInspectTarGlobalPAXHeader(t *testing.T) {
+	const helperEnv = "BRIEF_INSPECT_PAX_HELPER"
+	if archive := os.Getenv(helperEnv); archive != "" {
+		cmdInspect([]string{"-json", archive})
+		os.Exit(0)
+	}
+	var buf bytes.Buffer
+	tw := tar.NewWriter(&buf)
+	if err := tw.WriteHeader(&tar.Header{
+		Name: "pax_global_header", Typeflag: tar.TypeXGlobalHeader,
+		PAXRecords: map[string]string{"comment": "archive metadata"},
+	}); err != nil {
+		t.Fatal(err)
+	}
+	const content = "# Example project\n"
+	if err := tw.WriteHeader(&tar.Header{Name: "README.md", Mode: 0o644, Size: int64(len(content))}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := io.WriteString(tw, content); err != nil {
+		t.Fatal(err)
+	}
+	if err := tw.Close(); err != nil {
+		t.Fatal(err)
+	}
+	archive := filepath.Join(t.TempDir(), "fixture.tar")
+	if err := os.WriteFile(archive, buf.Bytes(), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	cmd := exec.Command(os.Args[0], "-test.run=^TestInspectTarGlobalPAXHeader$")
+	cmd.Env = append(os.Environ(), helperEnv+"="+archive)
+	out, err := cmd.Output()
+	if err != nil {
+		t.Fatalf("inspect failed: %v", err)
+	}
+	var art brief.Artifact
+	if err := json.Unmarshal(out, &art); err != nil {
+		t.Fatalf("parsing inspect output: %v\n%s", err, out)
+	}
+	if art.Format != magic.FormatTAR || art.Entries != 1 {
+		t.Fatalf("format = %q, entries = %d, want tar with one file", art.Format, art.Entries)
+	}
+}
+
 func TestInspectPathUsesDetectedArchiveFormat(t *testing.T) {
 	archive := writeZip(t, map[string]string{
 		"README.txt": "zip content\n",

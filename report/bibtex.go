@@ -21,7 +21,7 @@ func mdBibTeX(w io.Writer, info *brief.BibTeXInfo, verbose bool) {
 	}
 	_, _ = fmt.Fprint(w, "\n**BibTeX:**\n\n")
 	for _, row := range rows {
-		_, _ = fmt.Fprintf(w, "- %s: %s\n", row.label, escapeCitationMarkdown(row.value))
+		_, _ = fmt.Fprintf(w, "- %s: %s\n", row.label, escapeMarkdown(row.value))
 	}
 }
 

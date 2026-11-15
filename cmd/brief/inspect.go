@@ -70,6 +70,7 @@ func cmdInspect(args []string) {
 	fs := flag.NewFlagSet("brief inspect", flag.ExitOnError)
 	jsonFlag := fs.Bool("json", false, "Force JSON output")
 	humanFlag := fs.Bool("human", false, "Force human-readable output")
+	markdownFlag := fs.Bool("markdown", false, "Force markdown output")
 	_ = fs.Parse(args)
 
 	if fs.NArg() == 0 {
@@ -83,7 +84,9 @@ func cmdInspect(args []string) {
 		os.Exit(1)
 	}
 
-	if *jsonFlag || (!*humanFlag && !isTTY()) {
+	if *markdownFlag {
+		report.ArtifactMarkdown(os.Stdout, art)
+	} else if *jsonFlag || (!*humanFlag && !isTTY()) {
 		writeJSONOrExit(report.ArtifactJSON(os.Stdout, art))
 	} else {
 		report.ArtifactHuman(os.Stdout, art)
@@ -818,13 +821,16 @@ func isPEFile(f *os.File, size int64) bool {
 
 // inspectAutoArgs builds the argument slice for an auto-routed inspect call
 // from cmdScan's already-parsed shared flags.
-func inspectAutoArgs(jsonFlag, humanFlag bool, path string) []string {
+func inspectAutoArgs(jsonFlag, humanFlag, markdownFlag bool, path string) []string {
 	var args []string
 	if jsonFlag {
 		args = append(args, "-json")
 	}
 	if humanFlag {
 		args = append(args, "-human")
+	}
+	if markdownFlag {
+		args = append(args, "-markdown")
 	}
 	return append(args, "--", path)
 }

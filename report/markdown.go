@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"strings"
+	"unicode"
 
 	"github.com/git-pkgs/brief"
 )
@@ -430,4 +431,66 @@ func SinksMarkdown(w io.Writer, r *brief.SinkReport) {
 	for _, s := range r.Sinks {
 		_, _ = fmt.Fprintf(w, "| %s | `%s` | %s | %s |\n", s.Tool, s.Symbol, s.Threat, s.CWE)
 	}
+}
+
+// ArtifactMarkdown writes the artifact report in Markdown format.
+func ArtifactMarkdown(w io.Writer, a *brief.Artifact) {
+	text := func(value string) string {
+		value = strings.Map(func(r rune) rune {
+			if unicode.Is(unicode.Cf, r) {
+				return -1
+			}
+			return r
+		}, sanitizeLine(value))
+		return strings.ReplaceAll(escapeMarkdown(value), "#", `\#`)
+	}
+	list := func(header string, values []string) {
+		items := make([]string, len(values))
+		for i, value := range values {
+			items[i] = text(value)
+		}
+		mdTruncatedList(w, header, items)
+	}
+	field := func(label, value string) {
+		if value != "" {
+			_, _ = fmt.Fprintf(w, "**%s:** %s\n\n", label, text(value))
+		}
+	}
+	_, _ = fmt.Fprintf(w, "# brief %s — %s\n\n", text(a.Version), text(a.Path))
+	field("Format", a.Format)
+	field("SHA256", a.SHA256)
+	if a.Entries > 0 {
+		_, _ = fmt.Fprintf(w, "**Entries:** %d files, %d native objects\n\n", a.Entries, len(a.NativeObjects))
+	}
+
+	for _, obj := range a.NativeObjects {
+		_, _ = fmt.Fprintf(w, "## Object: %s\n\n", text(obj.Path))
+		field("Format", obj.Format)
+		field("Architecture", obj.Arch)
+		field("SOName", obj.SOName)
+		list("Producers", obj.Producer)
+		list("Needed", obj.Needed)
+		if obj.Go != nil {
+			field("Go", obj.Go.Version)
+			field("Go path", obj.Go.Path)
+			field("Go main", obj.Go.Main)
+			list("Go dependencies", obj.Go.Deps)
+		}
+		for _, hint := range obj.Static {
+			label := hint.Library
+			if hint.Version != "" {
+				label += " " + hint.Version
+			}
+			field("Static (low confidence)", label)
+			field("Matched text", hint.Match)
+		}
+	}
+	_, _ = fmt.Fprintf(w, "---\n\n%.1fms\n", a.DurationMS)
+}
+
+func escapeMarkdown(value string) string {
+	return strings.NewReplacer(
+		"\\", "\\\\", "`", "\\`", "*", "\\*", "_", "\\_", "[", "\\[", "]", "\\]",
+		"<", "&lt;", ">", "&gt;", "&", "&amp;", "|", "\\|",
+	).Replace(value)
 }

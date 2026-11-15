@@ -21,7 +21,7 @@ func mdCodemeta(w io.Writer, info *brief.CodemetaInfo, verbose bool) {
 	}
 	_, _ = fmt.Fprint(w, "\n**CodeMeta:**\n\n")
 	for _, row := range rows {
-		_, _ = fmt.Fprintf(w, "- %s: %s\n", row.label, escapeCitationMarkdown(citationText(row.value)))
+		_, _ = fmt.Fprintf(w, "- %s: %s\n", row.label, escapeMarkdown(citationText(row.value)))
 	}
 }
 

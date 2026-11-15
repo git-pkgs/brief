@@ -25,8 +25,8 @@ github.com/git-pkgs/codemeta v0.3.0 h1:zkWndmquCv2tPIHCHb+JXx3eKjmxRoD48f4/3sNAl
 github.com/git-pkgs/codemeta v0.3.0/go.mod h1:R1vGXVohTa22vVKaV3/8xVs3+tcgvqc4ziaMikdXc/I=
 github.com/git-pkgs/enrichment v0.7.5 h1:jbfFzf7+HSS7el8AuMri4vHXq2izIIZDVIU0uYI5LFM=
 github.com/git-pkgs/enrichment v0.7.5/go.mod h1:TbxC/nGQN96YCbdoiDs8a9z3gk2zXmLVS1989/jvnsU=
-github.com/git-pkgs/forge v0.10.1 h1:xuR5U63u7mo3uEDWZwwyr6pXnviejrss3D9He/eGD+M=
-github.com/git-pkgs/forge v0.10.1/go.mod h1:bVXtYNMFoXxIuN837/Ru5sJxDU7VlRWkl4X890vQCAU=
+github.com/git-pkgs/forge v0.11.0 h1:Tpp8WXB4Brb9IRfx/BosLCVJJclOJ2CpBBvNdf2FwRs=
+github.com/git-pkgs/forge v0.11.0/go.mod h1:n2PiPQNwZPUKQpKudSbCiwiNNTiXe+1CU8TEcxvMh2c=
 github.com/git-pkgs/gitignore v1.3.0 h1:/lcTRp3QYzZDG1CyCLBZO2gxMb6oQWC5EnttSQg4zmU=
 github.com/git-pkgs/gitignore v1.3.0/go.mod h1:zleLGZ4PhQrUXrJSsVQWKoeEllEjJH49+DjyKpzIFPM=
 github.com/git-pkgs/licenses v0.10.1-0.20261107154534-00c5bf03ade8 h1:zT8x522Q2ldx0AexnfXNXI3FmPphc8m+430ha3eDTIQ=

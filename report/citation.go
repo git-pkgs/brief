@@ -26,7 +26,7 @@ func mdCitation(w io.Writer, info *brief.CitationInfo, verbose bool) {
 	}
 	_, _ = fmt.Fprint(w, "\n**Citation:**\n\n")
 	for _, row := range rows {
-		_, _ = fmt.Fprintf(w, "- %s: %s\n", row.label, escapeCitationMarkdown(row.value))
+		_, _ = fmt.Fprintf(w, "- %s: %s\n", row.label, escapeMarkdown(row.value))
 	}
 }
 
@@ -138,11 +138,4 @@ func citationText(value string) string {
 		return string(runes[:maxRunes]) + "..."
 	}
 	return value
-}
-
-func escapeCitationMarkdown(value string) string {
-	return strings.NewReplacer(
-		"\\", "\\\\", "`", "\\`", "*", "\\*", "_", "\\_", "[", "\\[", "]", "\\]",
-		"<", "&lt;", ">", "&gt;", "&", "&amp;", "|", "\\|",
-	).Replace(value)
 }

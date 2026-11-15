@@ -1,0 +1,21 @@
+[tool]
+name = "APM"
+category = "package_manager"
+homepage = "https://microsoft.github.io/apm/"
+docs = "https://microsoft.github.io/apm/reference/manifest-schema/"
+repo = "https://github.com/microsoft/apm"
+description = "Agent Package Manager for AI agent skills, prompts and plugins"
+
+[detect]
+files = ["apm.yml", "apm.lock.yaml", "apm.lock"]
+
+[commands]
+run = "apm install"
+alternatives = ["apm install --frozen", "apm deps list"]
+
+[config]
+files = ["apm.yml", "apm.lock.yaml", "apm.lock"]
+lockfile = "apm.lock.yaml"
+
+[taxonomy]
+role = ["package-manager"]

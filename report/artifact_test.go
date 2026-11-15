@@ -118,7 +118,7 @@ func TestArtifactMarkdownEscapesMetadata(t *testing.T) {
 	}
 	var out bytes.Buffer
 	ArtifactMarkdown(&out, art)
-	want := "\\[link\\](url)\\|\\`\\*\\_&lt;script&gt; ## forged end"
+	want := "\\[link\\](url)\\|\\`\\*\\_&lt;script&gt; \\#\\# forged end"
 	if n := strings.Count(out.String(), want); n != 17 {
 		t.Errorf("escaped metadata occurrences = %d, want 17:\n%s", n, out.String())
 	}
@@ -126,5 +126,14 @@ func TestArtifactMarkdownEscapesMetadata(t *testing.T) {
 		if strings.Contains(out.String(), unwanted) {
 			t.Errorf("unescaped metadata %q: %s", unwanted, out.String())
 		}
+	}
+}
+
+func TestArtifactMarkdownEscapesListHeading(t *testing.T) {
+	art := &brief.Artifact{NativeObjects: []binary.Object{{Path: "lib.so", Producer: []string{"# forged"}}}}
+	var out bytes.Buffer
+	ArtifactMarkdown(&out, art)
+	if !strings.Contains(out.String(), "- \\# forged\n") {
+		t.Errorf("expected escaped heading marker in list item:\n%s", out.String())
 	}
 }

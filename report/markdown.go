@@ -442,7 +442,7 @@ func ArtifactMarkdown(w io.Writer, a *brief.Artifact) {
 			}
 			return r
 		}, sanitizeLine(value))
-		return escapeMarkdown(value)
+		return strings.ReplaceAll(escapeMarkdown(value), "#", `\#`)
 	}
 	list := func(header string, values []string) {
 		items := make([]string, len(values))

@@ -38,4 +38,7 @@ files = [
     "META.json",
     "DESCRIPTION",
     "renv.lock",
+    "apm.yml",
+    "apm.lock.yaml",
+    "apm.lock",
 ]

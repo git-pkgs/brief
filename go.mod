@@ -19,7 +19,7 @@ require (
 	github.com/git-pkgs/outline v0.2.4
 	github.com/git-pkgs/purl v0.2.1
 	github.com/git-pkgs/registries v0.13.2
-	github.com/git-pkgs/roles v0.1.3
+	github.com/git-pkgs/roles v0.1.4
 	github.com/klauspost/compress v1.20.4
 	github.com/ulikunitz/xz v0.5.17
 	go.yaml.in/yaml/v3 v3.0.6

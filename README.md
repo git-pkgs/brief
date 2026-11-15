@@ -129,6 +129,8 @@ Use `--verbose` to include homepage, docs, and repo links for each detected tool
 brief inspect build/tool
 brief inspect dist/package.whl
 brief inspect --json package.gem
+brief inspect --markdown dist/package.whl
+brief --markdown dist/package.whl
 ```
 
 Passing a supported local artifact directly selects the same inspection path, so `brief dist/package.whl` works too. Archive inspection rejects more than 100,000 entries or 512 MiB of input or extracted content.

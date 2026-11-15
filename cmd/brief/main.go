@@ -99,11 +99,11 @@ func cmdScan(args []string) {
 
 	// A regular-file argument that sniffs as a native object or archive is
 	// routed to inspect so `brief foo.whl` and `brief foo.so` work without
-	// the subcommand. Only the shared -json/-human flags carry over;
+	// the subcommand. Only the shared -json/-human/-markdown flags carry over;
 	// scan-specific flags are dropped rather than passed to a FlagSet that
 	// would reject them.
 	if shouldAutoInspect(path) {
-		cmdInspect(inspectAutoArgs(*jsonFlag, *humanFlag, path))
+		cmdInspect(inspectAutoArgs(*jsonFlag, *humanFlag, *markdownFlag, path))
 		return
 	}
 

@@ -32,6 +32,41 @@ import (
 
 const inspectCondaHelperEnv = "BRIEF_INSPECT_CONDA_HELPER"
 
+func TestInspectMarkdownCommand(t *testing.T) {
+	const helperEnv = "BRIEF_INSPECT_MARKDOWN_HELPER"
+	if mode := os.Getenv(helperEnv); mode != "" {
+		for i, arg := range os.Args {
+			if arg == "--" {
+				if mode == "auto" {
+					cmdScan(os.Args[i+1:])
+				} else {
+					cmdInspect(os.Args[i+1:])
+				}
+				os.Exit(0)
+			}
+		}
+		t.Fatal("missing helper arguments")
+	}
+
+	path := writeZip(t, map[string]string{"README.txt": "example package\n"})
+	for _, mode := range []string{"explicit", "auto"} {
+		for _, flags := range [][]string{{"--markdown"}, {"--markdown", "--json"}, {"--markdown", "--human"}} {
+			t.Run(mode+strings.Join(flags, ""), func(t *testing.T) {
+				args := append([]string{"-test.run=^TestInspectMarkdownCommand$", "--"}, flags...)
+				cmd := exec.Command(os.Args[0], append(args, path)...)
+				cmd.Env = append(os.Environ(), helperEnv+"="+mode)
+				out, err := cmd.CombinedOutput()
+				if err != nil {
+					t.Fatalf("inspect failed: %v\n%s", err, out)
+				}
+				if !bytes.HasPrefix(out, []byte("# brief ")) || !bytes.Contains(out, []byte("**Format:** zip")) {
+					t.Fatalf("expected Markdown artifact output, got:\n%s", out)
+				}
+			})
+		}
+	}
+}
+
 func TestInspectPathBareObject(t *testing.T) {
 	bin := buildHello(t, runtime.GOOS, runtime.GOARCH)
 

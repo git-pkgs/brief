@@ -60,3 +60,25 @@ func (e *Engine) languageFileExists(pattern string) bool {
 	}
 	return false
 }
+
+func (e *Engine) typeScriptDeclarationsOnly() *bool {
+	e.loadProjectFiles()
+	var hasDeclaration bool
+	for _, rel := range e.projectFiles {
+		ext := filepath.Ext(rel)
+		switch ext {
+		case ".ts", ".tsx", ".mts", ".cts":
+			if !e.languageEvidence(rel) {
+				continue
+			}
+			if ext == ".tsx" || !strings.HasSuffix(rel, ".d"+ext) {
+				return new(false)
+			}
+			hasDeclaration = true
+		}
+	}
+	if hasDeclaration {
+		return new(true)
+	}
+	return nil
+}

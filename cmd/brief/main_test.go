@@ -118,6 +118,96 @@ func TestScanUsesPathRoles(t *testing.T) {
 	}
 }
 
+func TestScanReportsTypeScriptDeclarationOnly(t *testing.T) {
+	const helperEnv = "BRIEF_TYPESCRIPT_FILES_HELPER_ROOT"
+	if root := os.Getenv(helperEnv); root != "" {
+		cmdScan([]string{"-json", root})
+		return
+	}
+
+	tests := []struct {
+		name  string
+		files []string
+		want  string
+	}{
+		{
+			name:  "declarations with JavaScript",
+			files: []string{"index.d.ts", "dist/ignored.ts", "testdata/ignored.mts"},
+			want:  "true",
+		},
+		{
+			name:  "declarations and implementation",
+			files: []string{"index.d.ts", "src/index.ts"},
+			want:  "false",
+		},
+		{
+			name:  "ES module declarations",
+			files: []string{"types/index.d.mts"},
+			want:  "true",
+		},
+		{
+			name:  "CommonJS declarations",
+			files: []string{"types/index.d.cts"},
+			want:  "true",
+		},
+		{
+			name:  "CommonJS implementation",
+			files: []string{"types/index.d.cts", "src/index.cts"},
+			want:  "false",
+		},
+		{
+			name:  "nested JSX implementation",
+			files: []string{"src/view.tsx"},
+			want:  "false",
+		},
+		{
+			name:  "configuration only",
+			files: []string{"tsconfig.json"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			root := t.TempDir()
+			writeScanFixture(t, root, "index.js", "exports.answer = () => 42;\n")
+			for _, file := range tt.files {
+				writeScanFixture(t, root, file, "{}\n")
+			}
+			cmd := exec.Command(os.Args[0], "-test.run=^TestScanReportsTypeScriptDeclarationOnly$")
+			cmd.Env = append(os.Environ(), helperEnv+"="+root, "PATH=")
+			out, err := cmd.Output()
+			if err != nil {
+				t.Fatalf("scan command failed: %v", err)
+			}
+			var report struct {
+				Languages []struct {
+					Name             string          `json:"name"`
+					DeclarationsOnly json.RawMessage `json:"declarations_only"`
+				} `json:"languages"`
+			}
+			if err := json.Unmarshal(out, &report); err != nil {
+				t.Fatalf("parsing scan output: %v\n%s", err, out)
+			}
+			found := false
+			for _, language := range report.Languages {
+				got := string(language.DeclarationsOnly)
+				if language.Name != "TypeScript" {
+					if got != "" {
+						t.Errorf("%s has unexpected declarations_only metadata", language.Name)
+					}
+					continue
+				}
+				found = true
+				if got != tt.want {
+					t.Errorf("declarations_only = %q, want %q (empty means omitted)", got, tt.want)
+				}
+			}
+			if !found {
+				t.Fatal("TypeScript language missing")
+			}
+		})
+	}
+}
+
 func TestScanDefaultsBoundRecursiveDetection(t *testing.T) {
 	if root := os.Getenv(scanHelperRootEnv); root != "" {
 		cmdScan([]string{"-json", root})

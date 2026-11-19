@@ -24,6 +24,7 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/git-pkgs/brief"
 	"github.com/git-pkgs/brief/kb"
+	"github.com/git-pkgs/gitignore"
 	"github.com/git-pkgs/licenses"
 	"github.com/git-pkgs/manifests"
 	"github.com/git-pkgs/purl"
@@ -80,8 +81,10 @@ type Engine struct {
 	detectedEcosystems map[string]bool // ecosystems whose language was detected
 
 	// Lazily populated caches
-	tracked              map[string]bool // git-tracked files relative to Root, nil when TrackedOnly is off
+	tracked              map[string]bool // git-tracked files relative to Root
 	trackedDirs          map[string]bool // directories that contain at least one tracked file
+	ignoreMatchers       map[string]*gitignore.Matcher
+	ignoreTrackedLoaded  bool
 	trackedDeps          map[string]bool // whether a deps directory contains git-tracked files
 	fileExts             map[string]int  // cached file extension counts in the project
 	fileRoles            map[string]roles.Set
@@ -231,7 +234,7 @@ func (e *Engine) addTrackedFiles(prefix string, output []byte) {
 // isTracked reports whether a path relative to Root should be considered.
 // Always true when TrackedOnly is off. The root itself is always allowed.
 func (e *Engine) isTracked(rel string) bool {
-	if e.tracked == nil {
+	if !e.TrackedOnly || e.tracked == nil {
 		return true
 	}
 	if rel == "" || rel == "." {
@@ -442,7 +445,7 @@ func (e *Engine) validateOptions() error {
 const selfModulePath = "github.com/git-pkgs/brief"
 
 func (e *Engine) detectSelf(report *brief.Report) {
-	data, err := e.safeReadFile("go.mod")
+	data, err := e.readEvidenceFile("go.mod")
 	if err != nil {
 		return
 	}
@@ -689,7 +692,7 @@ func (e *Engine) exists(pattern string) bool {
 				continue
 			}
 			info, err := fs.Stat(e.projectFS(), filepath.ToSlash(candidate))
-			if err == nil && info.IsDir() && e.isTracked(candidate) {
+			if err == nil && info.IsDir() && e.isTracked(candidate) && !e.ignoredProjectPath(candidate, true) {
 				return true
 			}
 		}
@@ -713,7 +716,8 @@ func (e *Engine) exactFileExists(file string) bool {
 		return false
 	}
 	info, err := fs.Stat(e.projectFS(), filepath.ToSlash(file))
-	return err == nil && info.Mode().IsRegular() && e.isTracked(filepath.FromSlash(file))
+	return err == nil && info.Mode().IsRegular() &&
+		e.isTracked(filepath.FromSlash(file)) && !e.ignoredProjectPath(file, false)
 }
 
 func (e *Engine) rootCandidates(file string) []string {
@@ -794,6 +798,7 @@ func (e *Engine) scanProjectDir(dirPath, relDir string, visited *int, routeOnly 
 		return false
 	}
 	defer func() { _ = file.Close() }()
+	e.loadIgnoreRules(relDir)
 	dir, ok := file.(fs.ReadDirFile)
 	if !ok {
 		entries, err := fs.ReadDir(e.projectFS(), baseOrDot(filepath.ToSlash(relDir)))
@@ -847,7 +852,7 @@ func (e *Engine) scanProjectEntry(
 		return false
 	}
 	if !entry.IsDir() {
-		if entry.Type().IsRegular() && e.isTracked(rel) {
+		if entry.Type().IsRegular() && e.isTracked(rel) && !e.ignoredProjectPath(rel, false) {
 			e.fileRoles[rel] = e.pathRoles(rel)
 			e.indexedFiles = append(e.indexedFiles, rel)
 			if !routeOnly && e.projectEvidence(rel) {
@@ -872,7 +877,7 @@ func (e *Engine) scanProjectEntry(
 		}
 		nextRouteOnly = true
 	}
-	if !e.isTracked(rel) {
+	if !e.isTracked(rel) || e.ignoredProjectPath(rel, true) {
 		return false
 	}
 	if e.ScanDepth > 0 && pathDepth(rel) > e.ScanDepth {
@@ -969,7 +974,7 @@ func (e *Engine) contains(file string, patterns []string) bool {
 	}
 
 	for _, candidate := range files {
-		data, err := e.safeReadFile(candidate)
+		data, err := e.readEvidenceFile(candidate)
 		if err == nil && containsAny(string(data), patterns) {
 			return true
 		}
@@ -1049,7 +1054,7 @@ func (e *Engine) loadDeps() {
 	manifestPaths := e.manifestPaths()
 
 	for _, mf := range manifestPaths {
-		data, err := e.safeReadFile(mf)
+		data, err := e.readEvidenceFile(mf)
 		if err != nil {
 			continue
 		}
@@ -1187,7 +1192,7 @@ func (e *Engine) manifestPaths() []string {
 }
 
 func (e *Engine) addCargoWorkspaceManifestsFrom(cargoRoot string, add func(string)) {
-	data, err := e.safeReadFile(path.Join(cargoRoot, cargoManifestFile))
+	data, err := e.readEvidenceFile(path.Join(cargoRoot, cargoManifestFile))
 	if err != nil {
 		return
 	}
@@ -1274,7 +1279,7 @@ func baseOrDot(base string) string {
 }
 
 func (e *Engine) addGoWorkspaceManifestsFrom(base string, add func(string)) {
-	data, err := e.safeReadFile(path.Join(filepath.ToSlash(base), "go.work"))
+	data, err := e.readEvidenceFile(path.Join(filepath.ToSlash(base), "go.work"))
 	if err != nil {
 		return
 	}
@@ -1286,7 +1291,7 @@ func (e *Engine) addGoWorkspaceManifestsFrom(base string, add func(string)) {
 }
 
 func (e *Engine) addPackageWorkspaceManifestsFrom(base string, add func(string)) {
-	data, err := e.safeReadFile(path.Join(filepath.ToSlash(base), "package.json"))
+	data, err := e.readEvidenceFile(path.Join(filepath.ToSlash(base), "package.json"))
 	if err != nil {
 		return
 	}
@@ -1305,7 +1310,7 @@ func (e *Engine) addPackageWorkspaceManifestsFrom(base string, add func(string))
 }
 
 func (e *Engine) addPnpmWorkspaceManifestsFrom(base string, add func(string)) {
-	data, err := e.safeReadFile(path.Join(filepath.ToSlash(base), "pnpm-workspace.yaml"))
+	data, err := e.readEvidenceFile(path.Join(filepath.ToSlash(base), "pnpm-workspace.yaml"))
 	if err != nil {
 		return
 	}
@@ -1482,7 +1487,7 @@ func dependencyKey(ecosystem, name string) string {
 // dot-separated key paths (e.g. "scripts.test" in package.json).
 func (e *Engine) hasKey(file string, keys []string) bool {
 	for _, candidate := range e.rootCandidates(file) {
-		data, err := e.safeReadFile(candidate)
+		data, err := e.readEvidenceFile(candidate)
 		if err != nil {
 			continue
 		}
@@ -1559,7 +1564,7 @@ func (e *Engine) detectScripts() []brief.Script {
 		if !e.isTracked(filepath.FromSlash(src.Source.File)) {
 			continue
 		}
-		data, err := e.safeReadFile(src.Source.File)
+		data, err := e.readEvidenceFile(src.Source.File)
 		if err != nil {
 			continue
 		}
@@ -2147,7 +2152,7 @@ func (e *Engine) detectPlatforms() *brief.PlatformInfo {
 
 	for _, rt := range e.KB.Runtimes {
 		for _, file := range rt.Runtime.Files {
-			data, err := e.safeReadFile(file)
+			data, err := e.readEvidenceFile(file)
 			if err != nil {
 				continue
 			}

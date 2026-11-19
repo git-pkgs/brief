@@ -1985,6 +1985,7 @@ func TestTrackedOnlyIgnoresDepthOfUntrackedDirectories(t *testing.T) {
 
 	engine := New(loadKB(t), dir)
 	engine.ScanDepth = 1
+	engine.TrackedOnly = true
 	engine.tracked = map[string]bool{filepath.Join("one", "tracked.go"): true}
 	engine.trackedDirs = map[string]bool{"one": true}
 	engine.loadProjectFiles()

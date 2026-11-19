@@ -13,6 +13,7 @@ require (
 	github.com/git-pkgs/codemeta v0.3.0
 	github.com/git-pkgs/enrichment v0.7.5
 	github.com/git-pkgs/forge v0.11.0
+	github.com/git-pkgs/gitignore v1.3.0
 	github.com/git-pkgs/licenses v0.10.1-0.20261107154534-00c5bf03ade8
 	github.com/git-pkgs/magic v0.6.0
 	github.com/git-pkgs/manifests v0.14.0
@@ -31,7 +32,6 @@ require (
 	github.com/bazelbuild/buildtools v0.0.0-20260904073137-eaa4d125b423 // indirect
 	github.com/bmatcuk/doublestar/v4 v4.10.4 // indirect
 	github.com/ecosyste-ms/ecosystems-go v0.5.0 // indirect
-	github.com/git-pkgs/gitignore v1.3.0 // indirect
 	github.com/git-pkgs/pom v0.1.8 // indirect
 	github.com/git-pkgs/spdx v0.3.6 // indirect
 	github.com/git-pkgs/vers v0.7.2 // indirect

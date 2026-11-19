@@ -69,6 +69,8 @@ type Detection struct {
 	Repo        string     `json:"repo,omitempty"`
 	Description string     `json:"description,omitempty"`
 	Taxonomy    *Taxonomy  `json:"taxonomy,omitempty"`
+	// DeclarationsOnly describes TypeScript file evidence when available.
+	DeclarationsOnly *bool `json:"declarations_only,omitempty"`
 }
 
 // Taxonomy holds oss-taxonomy facet classifications carried through from

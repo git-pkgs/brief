@@ -82,6 +82,8 @@ Jupytext, nbstripout and Papermill are detected from dependencies or their proje
 
 JSON when piped, human-readable on a TTY. Force either with `--json` or `--human`. Use `--category test` to filter to a single category.
 
+In `languages`, a TypeScript entry has `declarations_only: true` when every TypeScript file matching the scan is a declaration (`.d.ts`, `.d.mts`, or `.d.cts`). It is `false` if the scan found a TypeScript implementation file and omitted when TypeScript was detected without matching files, for example from `tsconfig.json`. This uses the same scan bounds and language evidence filters as detection.
+
 JSON reports include a `manifests` array with the path, kind, and package ecosystem of every parsed manifest or lockfile. The `dependencies` array includes constraints from manifests and pinned packages from lockfiles, preserving directness and scope when the source records them. For Cargo, direct constraints come from `Cargo.toml`; pinned `Cargo.lock` entries are reported with `direct` set to `false`.
 
 ```

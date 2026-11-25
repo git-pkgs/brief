@@ -24,7 +24,6 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/git-pkgs/brief"
 	"github.com/git-pkgs/brief/kb"
-	"github.com/git-pkgs/gitignore"
 	"github.com/git-pkgs/licenses"
 	"github.com/git-pkgs/manifests"
 	"github.com/git-pkgs/purl"
@@ -83,7 +82,7 @@ type Engine struct {
 	// Lazily populated caches
 	tracked              map[string]bool // git-tracked files relative to Root
 	trackedDirs          map[string]bool // directories that contain at least one tracked file
-	ignoreMatchers       map[string]*gitignore.Matcher
+	ignoreMatchers       map[string]*projectIgnoreRules
 	ignoreTrackedLoaded  bool
 	trackedDeps          map[string]bool // whether a deps directory contains git-tracked files
 	fileExts             map[string]int  // cached file extension counts in the project

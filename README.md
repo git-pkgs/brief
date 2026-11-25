@@ -74,7 +74,7 @@ Local scans inspect up to eight directory levels and 10,000 filesystem entries b
 
 Path roles filter the files used as detection evidence. Fixtures, vendored files, caches and build output do not contribute tools or dependencies. Language file matching also excludes generated files, tests, examples, benchmarks, fuzz targets, documentation and helper scripts. Ranking, inferred style and inferred source directories use the remaining source-role files and unclassified paths such as `main.go`. Project manifests can establish a language without counting as source files. Test files remain available for test-tool detection, and generated lockfiles remain dependency evidence. These filters do not change external line-count totals.
 
-The bounded scan respects `.gitignore` rules from the project root and directories it visits. Ignored untracked paths are excluded from detection, while tracked source and new files that are not ignored remain available. Each included submodule uses its own rules.
+The bounded scan respects `.gitignore` rules in the directories it visits and their ancestors up to the Git worktree root. It also reads the repository's `.git/info/exclude` and skips the machine-specific `core.excludesFile`. Ignored untracked paths are excluded from detection, while tracked source and new files that are not ignored remain available. Each included submodule uses its own rules.
 
 Remote sources are shallow-cloned by default. Use `--depth 0` for a full clone, `--keep` to preserve the clone, or `--dir ./somewhere` to clone into a specific directory. Use `--cache ./cache` to keep one shallow checkout per HTTPS URL and reuse it across runs. Cache mode cannot be combined with `--depth 0` or `--dir`.
 

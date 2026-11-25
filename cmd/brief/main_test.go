@@ -131,8 +131,8 @@ func TestScanReportsTypeScriptDeclarationOnly(t *testing.T) {
 		want  string
 	}{
 		{
-			name:  "declarations with JavaScript",
-			files: []string{"index.d.ts", "dist/ignored.ts", "testdata/ignored.mts"},
+			name:  "declarations with JavaScript and nested configuration",
+			files: []string{"index.d.ts", "types/tsconfig.json", "dist/ignored.ts", "testdata/ignored.mts"},
 			want:  "true",
 		},
 		{

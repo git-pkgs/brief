@@ -604,7 +604,7 @@ func (e *Engine) detectDefinitions(tools []*kb.ToolDef) []brief.Detection {
 		if tool.Tool.Category == categoryLanguage {
 			d.ConfigFiles = append(d.ConfigFiles, e.notebookLanguagePaths(tool.Tool.Name)...)
 			if d.Name == "TypeScript" {
-				d.DeclarationsOnly = e.typeScriptDeclarationsOnly()
+				d.DeclarationsOnly = e.typeScriptDeclarationsOnly(tool)
 			}
 		}
 

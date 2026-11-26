@@ -58,17 +58,18 @@ type Command struct {
 
 // Detection is a single detected tool or feature.
 type Detection struct {
-	Name        string     `json:"name"`
-	Category    string     `json:"category"`
-	Confidence  Confidence `json:"confidence"`
-	Command     *Command   `json:"command,omitempty"`
-	ConfigFiles []string   `json:"config_files,omitempty"`
-	Lockfile    string     `json:"lockfile,omitempty"`
-	Homepage    string     `json:"homepage,omitempty"`
-	Docs        string     `json:"docs,omitempty"`
-	Repo        string     `json:"repo,omitempty"`
-	Description string     `json:"description,omitempty"`
-	Taxonomy    *Taxonomy  `json:"taxonomy,omitempty"`
+	Name             string     `json:"name"`
+	Category         string     `json:"category"`
+	Confidence       Confidence `json:"confidence"`
+	Command          *Command   `json:"command,omitempty"`
+	ConfigFiles      []string   `json:"config_files,omitempty"`
+	Lockfile         string     `json:"lockfile,omitempty"`
+	Homepage         string     `json:"homepage,omitempty"`
+	Docs             string     `json:"docs,omitempty"`
+	Repo             string     `json:"repo,omitempty"`
+	Description      string     `json:"description,omitempty"`
+	Taxonomy         *Taxonomy  `json:"taxonomy,omitempty"`
+	DeclarationsOnly *bool      `json:"declarations_only,omitempty"`
 }
 
 // Taxonomy holds oss-taxonomy facet classifications carried through from

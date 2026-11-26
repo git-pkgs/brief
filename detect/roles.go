@@ -2,8 +2,10 @@ package detect
 
 import (
 	"path/filepath"
+	"slices"
 	"strings"
 
+	"github.com/git-pkgs/brief/kb"
 	"github.com/git-pkgs/roles"
 )
 
@@ -59,4 +61,31 @@ func (e *Engine) languageFileExists(pattern string) bool {
 		}
 	}
 	return false
+}
+
+func (e *Engine) typeScriptDeclarationsOnly(tool *kb.ToolDef) *bool {
+	e.loadProjectFiles()
+	var hasDeclaration bool
+	for _, rel := range e.projectFiles {
+		if !slices.ContainsFunc(tool.Detect.Files, func(pattern string) bool {
+			return e.matchesProjectPattern(pattern, rel)
+		}) || !e.languageEvidence(rel) {
+			continue
+		}
+		// A config can establish the language without being source evidence.
+		if slices.ContainsFunc(tool.Config.Files, func(pattern string) bool {
+			return e.matchesProjectPattern(pattern, rel) || kb.MatchPathPattern(pattern, filepath.Base(rel))
+		}) {
+			continue
+		}
+		ext := filepath.Ext(rel)
+		if ext == ".tsx" || !strings.HasSuffix(rel, ".d"+ext) {
+			return new(false)
+		}
+		hasDeclaration = true
+	}
+	if hasDeclaration {
+		return new(true)
+	}
+	return nil
 }

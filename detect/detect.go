@@ -603,6 +603,9 @@ func (e *Engine) detectDefinitions(tools []*kb.ToolDef) []brief.Detection {
 		d.ConfigFiles = e.findExisting(tool.Config.Files)
 		if tool.Tool.Category == categoryLanguage {
 			d.ConfigFiles = append(d.ConfigFiles, e.notebookLanguagePaths(tool.Tool.Name)...)
+			if d.Name == "TypeScript" {
+				d.DeclarationsOnly = e.typeScriptDeclarationsOnly(tool)
+			}
 		}
 
 		d.Lockfile = e.detectLockfile(tool)
